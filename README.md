@@ -1,5 +1,9 @@
 # VULK - Vulkan 3d engine
 
+## Project status
+
+[![Build Status](https://travis-ci.org/js78/vulk.svg?branch=master)](https://travis-ci.org/js78/vulk)
+
 ## What is it ?
 
 Vulk is a 3d engine aimed to provide the best graphical experience with Vulkan API.
