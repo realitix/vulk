@@ -19,12 +19,25 @@ Currently it's just a hobby project but it could become something big one day.
 
 ```
 vulk/
-    graphic/ -> graphic engine
-        renderer/ -> graphic api
+    graphic/
+        renderer/
+            vulkan/
+            webgl/
+            opengl/
         d3/
             material/
             core/
         d2/
-        renderer.py
 
+```
+
+## How it works
+
+It's similar to LibGDX because I like their 3D API.
+
+```
+scene = Scene()
+camera = PerspectiveCamera()
+renderer = VulkanRenderer()
+renderer.render(scene, camera)
 ```

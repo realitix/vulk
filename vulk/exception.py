@@ -1,0 +1,2 @@
+class VulkError(Exception):
+    pass
