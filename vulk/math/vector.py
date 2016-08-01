@@ -1,16 +1,15 @@
+import array
 import collections
 import math
-import numpy
 
 
 class Vector():
 
-    def __init__(self, *args, coordinate_type=numpy.float32):
+    def __init__(self, *args):
         if len(args) < 2 or len(args) > 3:
             raise TypeError("Vector takes only two or three coordinates,"
                             " %s given" % len(args))
-        self._coordinate_type = coordinate_type
-        self._coordinates = [coordinate_type(v) for v in args]
+        self._coordinates = array.array('f', args)
 
     def __iter__(self):
         return iter(self._coordinates)
@@ -39,6 +38,10 @@ class Vector():
     def __imul__(self, value):
         return self.__mul__(value)
 
+    def __matmul__(self, value):
+        v = self._check_value(value)
+        return self._cross2(v) if len(v) == 2 else self._cross3(v)
+
     def __truediv__(self, value):
         self._update_coordinates(value, "__truediv__")
         return self
@@ -50,27 +53,40 @@ class Vector():
         return self.coordinates[key]
 
     def __setitem__(self, key, value):
-        self._coordinates[key] = self._coordinate_type(value)
+        self._coordinates[key] = value
 
     def __str__(self):
-        return "[%s]" % (",".join([str(v) for v in self.coordinates]))
+        return str(self._coordinates)
 
     def __eq__(self, other):
         return self.coordinates == other.coordinates
 
-    def _update_coordinates(self, value, operator):
+    def _check_value(self, value):
         if isinstance(value, collections.Iterable):
-            if len(value) is not len(self):
+            if len(value) != len(self):
                 raise ValueError("Dimension of vector is %s but %s "
                                  "coordinates given" %
                                  (len(self), len(value)))
         else:
             value = [value] * len(self)
+        return value
+
+    def _update_coordinates(self, value, operator):
+        values = self._check_value(value)
 
         for i in range(len(self)):
             # Get operator (__add__, __sub__, __mul__) and give it the value
-            self._coordinates[i] = getattr(self._coordinates[i], operator)(
-                self._coordinate_type(value[i]))
+            self._coordinates[i] = getattr(self._coordinates[i],
+                                           operator)(values[i])
+
+    def _cross2(self, values):
+        return self.x * values[1] - self.y * values[0]
+
+    def _cross3(self, values):
+        self.x = self.y * values[2] - self.z * values[1]
+        self.y = self.z * values[0] - self.x * values[2]
+        self.z = self.x * values[1] - self.y * values[0]
+        return self
 
     @property
     def coordinates(self):
@@ -78,15 +94,10 @@ class Vector():
 
     @coordinates.setter
     def coordinates(self, value):
-        if not isinstance(value, collections.Iterable):
-            raise ValueError("Vector waits for an iterable argument, "
-                             "%s given" % value)
-        if len(value) is not len(self):
-            raise ValueError("Dimension of vector is %s but %s coordinates"
-                             " given" % (len(self), len(value)))
+        values = self._check_value(value)
 
         for i in range(len(self)):
-            self._coordinates[i] = self._coordinate_type(value[i])
+            self._coordinates[i] = values[i]
 
     @property
     def x(self):
@@ -94,7 +105,7 @@ class Vector():
 
     @x.setter
     def x(self, value):
-        self._coordinates[0] = self._coordinate_type(value)
+        self._coordinates[0] = value
 
     @property
     def y(self):
@@ -102,7 +113,7 @@ class Vector():
 
     @y.setter
     def y(self, value):
-        self._coordinates[1] = self._coordinate_type(value)
+        self._coordinates[1] = value
 
     @property
     def z(self):
@@ -116,13 +127,18 @@ class Vector():
         if len(self) < 3:
             raise ValueError("Dimension of vector is %s so you can't "
                              "set z value")
-        self._coordinates[2] = self._coordinate_type(value)
+        self._coordinates[2] = value
 
+    @property
     def size(self):
         return math.sqrt(self.x * self.x + self.y * self.y + self.z * self.z)
 
+    @property
     def size2(self):
         return self.x * self.x + self.y * self.y + self.z * self.z
+
+    def normalize(self):
+        return self * (1 / self.size)
 
 X = Vector(1, 0, 0)
 Y = Vector(0, 1, 0)
