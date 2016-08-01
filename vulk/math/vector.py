@@ -4,12 +4,8 @@ import math
 
 
 class Vector():
-
-    def __init__(self, *args):
-        if len(args) < 2 or len(args) > 3:
-            raise TypeError("Vector takes only two or three coordinates,"
-                            " %s given" % len(args))
-        self._coordinates = array.array('f', args)
+    def __init__(self, coordinates):
+        self._coordinates = array.array('f', coordinates)
 
     def __iter__(self):
         return iter(self._coordinates)
@@ -37,10 +33,6 @@ class Vector():
 
     def __imul__(self, value):
         return self.__mul__(value)
-
-    def __matmul__(self, value):
-        v = self._check_value(value)
-        return self._cross2(v) if len(v) == 2 else self._cross3(v)
 
     def __truediv__(self, value):
         self._update_coordinates(value, "__truediv__")
@@ -79,15 +71,6 @@ class Vector():
             self._coordinates[i] = getattr(self._coordinates[i],
                                            operator)(values[i])
 
-    def _cross2(self, values):
-        return self.x * values[1] - self.y * values[0]
-
-    def _cross3(self, values):
-        self.x = self.y * values[2] - self.z * values[1]
-        self.y = self.z * values[0] - self.x * values[2]
-        self.z = self.x * values[1] - self.y * values[0]
-        return self
-
     @property
     def coordinates(self):
         return self._coordinates
@@ -116,31 +99,51 @@ class Vector():
         self._coordinates[1] = value
 
     @property
-    def z(self):
-        if len(self) < 3:
-            raise ValueError("Dimension of vector is %s so you can't "
-                             "access z value")
-        return self._coordinates[2]
-
-    @z.setter
-    def z(self, value):
-        if len(self) < 3:
-            raise ValueError("Dimension of vector is %s so you can't "
-                             "set z value")
-        self._coordinates[2] = value
-
-    @property
     def size(self):
-        return math.sqrt(self.x * self.x + self.y * self.y + self.z * self.z)
+        return math.sqrt(self.size2)
 
     @property
     def size2(self):
-        return self.x * self.x + self.y * self.y + self.z * self.z
+        return sum([c ** 2 for c in self._coordinates])
 
     def normalize(self):
         return self * (1 / self.size)
 
-X = Vector(1, 0, 0)
-Y = Vector(0, 1, 0)
-Z = Vector(0, 0, 1)
-Zero = Vector(0, 0, 0)
+
+class Vector2(Vector):
+    def __init__(self, x, y):
+        super().__init__((x, y))
+
+    def __matmul__(self, value):
+        values = self._check_value(value)
+        return self.x * values[1] - self.y * values[0]
+
+Vector2.X = Vector2(1, 0)
+Vector2.Y = Vector2(0, 1)
+Vector2.Zero = Vector2(0, 0)
+
+
+class Vector3(Vector):
+
+    def __init__(self, x, y, z):
+        super().__init__((x, y, z))
+
+    def __matmul__(self, value):
+        values = self._check_value(value)
+        self.x = self.y * values[2] - self.z * values[1]
+        self.y = self.z * values[0] - self.x * values[2]
+        self.z = self.x * values[1] - self.y * values[0]
+        return self
+
+    @property
+    def z(self):
+        return self._coordinates[2]
+
+    @z.setter
+    def z(self, value):
+        self._coordinates[2] = value
+
+Vector3.X = Vector3(1, 0, 0)
+Vector3.Y = Vector3(0, 1, 0)
+Vector3.Z = Vector3(0, 0, 1)
+Vector3.Zero = Vector3(0, 0, 0)
