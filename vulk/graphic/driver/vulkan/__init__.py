@@ -1,3 +1,3 @@
-from vulk.graphic.renderer.vulkan import vulkanrenderer
+from vulk.graphic.driver.vulkan import vulkandriver
 
-renderer = vulkanrenderer.VulkanRenderer
+driver = vulkandriver.VulkanDriver

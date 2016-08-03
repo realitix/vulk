@@ -6,52 +6,49 @@ from vulk import exception
 from vulk.app.util import sdl2 as vulk_sdl2
 
 
-class DesktopApp():
+class DesktopContainer():
     """Launch app on desktop
 
-    TODO: All opengl specific tonfiguration should be in Window"""
+    """
 
-    def __init__(self, app, config, drivers_names=["opengl", "vulkan"]):
+    def __init__(self, app, config=None, driver_names=["opengl", "vulkan"]):
         self.app = app
-        self.driver_names = drivers_names
-        self.config = config
+        self.driver_names = driver_names
 
-    def __enter__(self):
+        self.config = {
+            'title': 'Vulk',
+            'size': (400, 400),
+            'position': (sdl2.video.SDL_WINDOWPOS_UNDEFINED,
+                         sdl2.video.SDL_WINDOWPOS_UNDEFINED)
+        }
+        self.config.update(config if config else {})
+
         self.init_driver()
-        self.init_window()
-
-    def __exit__(self, *args):
-        self.window = None
-        sdl2.ext.quit()
 
     def init_driver(self):
         for driver_name in self.driver_names:
             try:
                 driver_module = importlib.import_module(
-                    driver_name,
-                    "vulk.graphic.driver")
+                    "vulk.graphic.driver.%s" % driver_name)
                 self.driver = driver_module.driver()
-            except exception.VulkException:
+            except exception.VulkError:
                 self.driver = None
             else:
                 break
         else:
-            raise exception.VulkException(
+            raise exception.VulkError(
                 "Can't load driver in %s" % str(self.driver_names))
 
-    def init_window(self):
-        sdl2.ext.init()
-        flags = sdl2.SDL_WINDOW_SHOWN
-
-        self.window = sdl2.ext.Window("Test", size=(800, 600), flags=flags)
-
     def run(self):
-        with self.app() as app:
-            running = True
-            while running:
-                events = sdl2.ext.get_events()
-                if sdl2.SDL_QUIT in events:
-                    running = False
-                    break
-                app.render()
-                self.window.refresh()
+        win = vulk_sdl2.OpenGLWindow(
+            self.config['title'], self.config['size'],
+            self.config['position'], (1, 3))
+
+        with win as window:
+            with self.app() as app:
+                while True:
+                    events = sdl2.ext.get_events()
+                    if sdl2.SDL_QUIT in [e.type for e in events]:
+                        break
+                    app.render()
+                    window.refresh()

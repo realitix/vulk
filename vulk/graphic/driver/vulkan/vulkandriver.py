@@ -10,11 +10,9 @@ class VulkanRenderer(baserenderer.BaseRenderer):
 
     def init_renderer(self):
         super.initRenderer()
-        
         window = base.Window(width=width, height=height)
         instance = base.VulkanInstance(window)
         self.swapchain = base.VulkanSwapChain(instance)
-        
 
     def render(self):
         super.render()
