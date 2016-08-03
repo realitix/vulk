@@ -4,38 +4,38 @@ import math
 
 
 class Vector():
-    def __init__(self, coordinates):
-        self._coordinates = array.array('f', coordinates)
+    def __init__(self, values):
+        self._values = array.array('f', values)
 
     def __iter__(self):
-        return iter(self._coordinates)
+        return iter(self._values)
 
     def __len__(self):
-        return len(self._coordinates)
+        return len(self._values)
 
     def __add__(self, value):
-        self._update_coordinates(value, "__add__")
+        self._update_values(value, "__add__")
         return self
 
     def __iadd__(self, value):
         return self.__add__(value)
 
     def __sub__(self, value):
-        self._update_coordinates(value, "__sub__")
+        self._update_values(value, "__sub__")
         return self
 
     def __isub__(self, value):
         return self.__sub__(value)
 
     def __mul__(self, value):
-        self._update_coordinates(value, "__mul__")
+        self._update_values(value, "__mul__")
         return self
 
     def __imul__(self, value):
         return self.__mul__(value)
 
     def __truediv__(self, value):
-        self._update_coordinates(value, "__truediv__")
+        self._update_values(value, "__truediv__")
         return self
 
     def __itruediv__(self, value):
@@ -45,10 +45,10 @@ class Vector():
         return self.coordinates[key]
 
     def __setitem__(self, key, value):
-        self._coordinates[key] = value
+        self._values[key] = value
 
     def __str__(self):
-        return str(self._coordinates)
+        return str(self._values)
 
     def __eq__(self, other):
         return self.coordinates == other.coordinates
@@ -63,40 +63,40 @@ class Vector():
             value = [value] * len(self)
         return value
 
-    def _update_coordinates(self, value, operator):
+    def _update_values(self, value, operator):
         values = self._check_value(value)
 
         for i in range(len(self)):
             # Get operator (__add__, __sub__, __mul__) and give it the value
-            self._coordinates[i] = getattr(self._coordinates[i],
+            self._values[i] = getattr(self._values[i],
                                            operator)(values[i])
 
     @property
     def coordinates(self):
-        return self._coordinates
+        return self._values
 
     @coordinates.setter
     def coordinates(self, value):
         values = self._check_value(value)
 
         for i in range(len(self)):
-            self._coordinates[i] = values[i]
+            self._values[i] = values[i]
 
     @property
     def x(self):
-        return self._coordinates[0]
+        return self._values[0]
 
     @x.setter
     def x(self, value):
-        self._coordinates[0] = value
+        self._values[0] = value
 
     @property
     def y(self):
-        return self._coordinates[1]
+        return self._values[1]
 
     @y.setter
     def y(self, value):
-        self._coordinates[1] = value
+        self._values[1] = value
 
     @property
     def size(self):
@@ -104,7 +104,7 @@ class Vector():
 
     @property
     def size2(self):
-        return sum([c ** 2 for c in self._coordinates])
+        return sum([c ** 2 for c in self._values])
 
     def normalize(self):
         return self * (1 / self.size)
@@ -137,11 +137,11 @@ class Vector3(Vector):
 
     @property
     def z(self):
-        return self._coordinates[2]
+        return self._values[2]
 
     @z.setter
     def z(self, value):
-        self._coordinates[2] = value
+        self._values[2] = value
 
 Vector3.X = Vector3(1, 0, 0)
 Vector3.Y = Vector3(0, 1, 0)
