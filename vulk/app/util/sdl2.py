@@ -13,7 +13,7 @@ class OpenGLWindow(sdl2.ext.Window):
     def __enter__(self):
         sdl2.ext.init()
 
-        self.init_attributes()
+        self._init_window_attributes()
 
         window = sdl2.video.SDL_CreateWindow(
             bytes(self._title, "utf-8"), self.position[0], self.position[1],
@@ -24,7 +24,7 @@ class OpenGLWindow(sdl2.ext.Window):
 
         self.window = window.contents
 
-        self.init_opengl_context()
+        self._init_opengl_context()
 
         return self
 
@@ -35,7 +35,7 @@ class OpenGLWindow(sdl2.ext.Window):
         self.window = None
         sdl2.ext.quit()
 
-    def init_opengl_context(self):
+    def _init_opengl_context(self):
         self.glcontext = sdl2.video.SDL_GL_CreateContext(self.window)
         if self.glcontext == 0:
             sdl2.video.SDL_DestroyWindow(self.window)
@@ -43,21 +43,17 @@ class OpenGLWindow(sdl2.ext.Window):
             sdl2.ext.quit()
             raise sdl2.ext.SDLError()
 
-    def init_attributes(self):
+    def _init_window_attributes(self):
         attributes = {
             sdl2.SDL_GL_CONTEXT_MINOR_VERSION: self.required_version[0],
             sdl2.SDL_GL_CONTEXT_MAJOR_VERSION: self.required_version[1],
             sdl2.SDL_GL_DOUBLEBUFFER: 1,
-            sdl2.SDL_GL_DEPTH_SIZE: 16
+            sdl2.SDL_GL_DEPTH_SIZE: 16,
+            sdl2.SDL_GL_CONTEXT_PROFILE_MASK: sdl2.SDL_GL_CONTEXT_PROFILE_CORE
         }
 
         for key, value in attributes.items():
             sdl2.video.SDL_GL_SetAttribute(key, value)
-
-    def get_attributes(self):
-        attrs = ["red_size", "green_size", "blue_size", "alpha_size",
-                 "depth_size", "stencil_size", "context_major_version",
-                 "context_minor_version"]
 
     def refresh(self):
         sdl2.video.SDL_GL_SwapWindow(self.window)

@@ -2,4 +2,6 @@ codeclimate-test-reporter
 flake8
 numpy
 pylint
+pyopengl
+pysdl2
 pytest
