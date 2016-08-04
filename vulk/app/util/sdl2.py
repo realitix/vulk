@@ -54,6 +54,11 @@ class OpenGLWindow(sdl2.ext.Window):
         for key, value in attributes.items():
             sdl2.video.SDL_GL_SetAttribute(key, value)
 
+    def get_attributes(self):
+        attrs = ["red_size", "green_size", "blue_size", "alpha_size",
+                 "depth_size", "stencil_size", "context_major_version",
+                 "context_minor_version"]
+
     def refresh(self):
         sdl2.video.SDL_GL_SwapWindow(self.window)
 
