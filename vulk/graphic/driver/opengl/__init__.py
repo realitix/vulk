@@ -1,10 +1,3 @@
-import OpenGL.GLU as glu
-import OpenGL.GL as gl
+from vulk.graphic.driver.opengl import opengldriver
 
-
-class TODO():
-    def __init__(self):
-        ext = gl.glGetString(gl.GL_EXTENSIONS)
-        print(glu.gluCheckExtension("GL_ARB_conservative_depth",ext))
-
-driver = TODO
+driver = opengldriver.OpenGLDriver

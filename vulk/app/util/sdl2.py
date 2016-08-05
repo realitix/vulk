@@ -45,8 +45,8 @@ class OpenGLWindow(sdl2.ext.Window):
 
     def _init_window_attributes(self):
         attributes = {
-            sdl2.SDL_GL_CONTEXT_MINOR_VERSION: self.required_version[0],
-            sdl2.SDL_GL_CONTEXT_MAJOR_VERSION: self.required_version[1],
+            sdl2.SDL_GL_CONTEXT_MINOR_VERSION: 3,
+            sdl2.SDL_GL_CONTEXT_MAJOR_VERSION: 3,
             sdl2.SDL_GL_DOUBLEBUFFER: 1,
             sdl2.SDL_GL_DEPTH_SIZE: 16,
             sdl2.SDL_GL_CONTEXT_PROFILE_MASK: sdl2.SDL_GL_CONTEXT_PROFILE_CORE

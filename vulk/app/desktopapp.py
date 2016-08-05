@@ -1,4 +1,6 @@
 import importlib
+import time
+
 import sdl2
 import sdl2.ext
 
@@ -45,7 +47,7 @@ class DesktopContainer():
             self.config['position'], (1, 3))
 
         with win as window:
-            with self.app() as app:
+            with self.app(self.driver) as app:
                 while True:
                     events = sdl2.ext.get_events()
                     if sdl2.SDL_QUIT in [e.type for e in events]:
