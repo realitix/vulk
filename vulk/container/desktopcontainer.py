@@ -5,7 +5,7 @@ import sdl2
 import sdl2.ext
 
 from vulk import exception
-from vulk.app.util import sdl2 as vulk_sdl2
+from vulk.container.util import sdl2 as vulk_sdl2
 
 
 class DesktopContainer():
