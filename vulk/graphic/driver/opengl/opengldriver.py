@@ -1,6 +1,10 @@
+import OpenGL
 import OpenGL.GL as gl
 
 from vulk.graphic.driver.opengl import vao, shaderprogram
+
+
+OpenGL.ERROR_ON_COPY = True
 
 
 class OpenGLDriver():

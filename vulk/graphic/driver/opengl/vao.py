@@ -95,7 +95,7 @@ class Vao():
     def update_indices(self, values, offset=0):
         self.dirty = True
         start = offset * 2
-        fmt = '=%dh' % len(values)
+        fmt = '=%dH' % len(values)
         struct.pack_into(fmt, self.indices_buffer, start, *values)
 
     def bind_shader(self, shader):
@@ -104,8 +104,11 @@ class Vao():
 
         # Bind attributes
         offset = 0
-        for attribute_name, size in self.attributes:
+        for attribute_name, size in self.attributes.items():
             index = gl.glGetAttribLocation(shader, attribute_name)
+            if index == -1:
+                raise Exception()
+
             data_type = gl.GL_FLOAT
             normalized = False
             stride = self.vertex_size * 4
@@ -125,8 +128,21 @@ class Vao():
 
         # Bind data
         gl.glBufferData(gl.GL_ELEMENT_ARRAY_BUFFER, len(self.indices_buffer),
-                        self._indices, self.usage)
+                        self.indices_buffer.tobytes(), self.usage)
 
         # Unbind vao and ibo
         gl.glBindBuffer(gl.GL_ELEMENT_ARRAY_BUFFER, 0)
+        gl.glBindVertexArray(0)
+
+    def bind_vbo(self):
+        # Bind vao and vbo
+        gl.glBindVertexArray(self.vao)
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.vbo)
+
+        # Bind data
+        gl.glBufferData(gl.GL_ARRAY_BUFFER, len(self.vertices_buffer),
+                        self.vertices_buffer.tobytes(), self.usage)
+
+        # Unbind vao and vbo
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
         gl.glBindVertexArray(0)
