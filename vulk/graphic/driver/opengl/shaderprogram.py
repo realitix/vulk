@@ -1,4 +1,5 @@
-import OpenGL as gl
+import OpenGL.GL as gl
+import OpenGL.GL.shaders as gl_shaders
 
 
 class ShaderProgram():
@@ -7,7 +8,7 @@ class ShaderProgram():
         shaders = []
 
         def add_shader(shader, gl_shader):
-            shaders.append(gl.shaders.compileShader(shader, gl_shader))
+            shaders.append(gl_shaders.compileShader(shader, gl_shader))
 
         add_shader(vertex, gl.GL_VERTEX_SHADER)
         add_shader(fragment, gl.GL_FRAGMENT_SHADER)
@@ -18,12 +19,12 @@ class ShaderProgram():
             gl.GL_TESS_CONTROL_SHADER: tesselation_control,
             gl.GL_TESS_EVALUATION_SHADER: tesselation_evaluation}
 
-        for key, value in optionals:
+        for key, value in optionals.items():
             if value:
                 add_shader(value, key)
 
         self._shaders = shaders
-        self._shader_program = gl.shaders.compileProgram(*self._shaders)
+        self._shader_program = gl_shaders.compileProgram(*self._shaders)
 
     def __enter__(self):
         gl.glUseProgram(self._shader_program)

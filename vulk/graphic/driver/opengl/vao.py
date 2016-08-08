@@ -8,11 +8,7 @@ class Vao():
     """OpenGL Vertex Array Object
 
     Specify attributes:
-    {'position': {
-        'size': 4,
-        'type': GL_FLOAT,
-        'normalized': False
-    }}
+        {'position': 4, 'normal': 3}
     default type is GL_FLOAT
     Warning: attributes must be an OrderedDict
     """
@@ -23,7 +19,7 @@ class Vao():
         :param num_vertices: number of vertices
         :type num_vertices: int
         :param attributes: shader attributes
-        :type attributes: dict(dict())
+        :type attributes: dict()
         :returns: Vao
         """
 
@@ -40,35 +36,47 @@ class Vao():
 
     def __enter__(self):
         if self.dirty:
-            self.load_vbo()
+            self.bind_vbo()
 
         gl.glBindVertexArray(self.vao)
 
     def __exit__(self, *args):
         gl.glBindVertexArray(0)
 
+    def delete(self):
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
+        gl.glDeleteBuffers(1, [self.vbo])
+        gl.glDeleteVertexArrays(1, [self.vao])
+
+        self.vbo = None
+        self.vao = None
+        self.vertices_buffer = None
+        self._vertices = None
+
     @property
     def vertices(self):
         return self.vertices_buffer
 
     @vertices.setter
-    def vertices(self, values, offset=0):
+    def vertices(self, values):
+        self.update_vertices(values, 0)
+
+    def update_vertices(self, values, offset=0):
         self.dirty = True
         start = offset * self.vertex_size * 4
         fmt = '=%df' % len(values)
         struct.pack_into(fmt, self.vertices_buffer, start, *values)
 
-    def load_shader(self, shader):
+    def bind_shader(self, shader):
         # Bind vao
         gl.glBindVertexArray(self.vao)
 
         # Bind attributes
         offset = 0
-        for attribute_name, params in self.attributes:
+        for attribute_name, size in self.attributes:
             index = gl.glGetAttribLocation(shader, attribute_name)
-            size = params.get('size', 4)
-            data_type = params.get('type', gl.GL_FLOAT)
-            normalized = params.get('normalized', False)
+            data_type = gl.GL_FLOAT
+            normalized = False
             stride = self.vertex_size * 4
 
             gl.glEnableVertexAttribArray(index)
@@ -79,7 +87,7 @@ class Vao():
         # Unbind vao
         gl.glBindVertexArray(0)
 
-    def load_vbo(self):
+    def bind_vbo(self):
         # Bind vao and vbo
         gl.glBindVertexArray(self.vao)
         gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.vbo)
