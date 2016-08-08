@@ -38,6 +38,15 @@ class Vao():
         self.vbo = gl.glGenBuffers(1)
         self.dirty = True
 
+    def __enter__(self):
+        if self.dirty:
+            self.load_vbo()
+
+        gl.glBindVertexArray(self.vao)
+
+    def __exit__(self, *args):
+        gl.glBindVertexArray(0)
+
     @property
     def vertices(self):
         return self.vertices_buffer
@@ -49,19 +58,9 @@ class Vao():
         fmt = '=%df' % len(values)
         struct.pack_into(fmt, self.vertices_buffer, start, *values)
 
-    def bind(self, shader):
-        if self.dirty:
-            self.reload(shader)
-
+    def load_shader(self, shader):
+        # Bind vao
         gl.glBindVertexArray(self.vao)
-
-    def unbind(self):
-        gl.glBindVertexArray(0)
-
-    def reload(self, shader):
-        # Bind vao and vbo
-        gl.glBindVertexArray(self.vao)
-        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.vbo)
 
         # Bind attributes
         offset = 0
@@ -77,10 +76,18 @@ class Vao():
                                      stride, ctypes.c_void_p(offset))
             offset += size * 4  # float = 4 bytes
 
+        # Unbind vao
+        gl.glBindVertexArray(0)
+
+    def load_vbo(self):
+        # Bind vao and vbo
+        gl.glBindVertexArray(self.vao)
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.vbo)
+
         # Bind data
         gl.glBufferData(gl.GL_ARRAY_BUFFER, len(self.vertices_buffer),
                         self._vertices, self.usage)
 
         # Unbind vao and vbo
-        gl.glBindVertexArray(0)
         gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
+        gl.glBindVertexArray(0)
