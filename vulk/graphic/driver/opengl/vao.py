@@ -48,8 +48,7 @@ class Vao():
     def __enter__(self):
         self.is_bound = True
         if self.dirty:
-            self.bind_vbo()
-            self.bind_ibo()
+            self.bind_data()
 
         gl.glBindVertexArray(self.vao)
 
@@ -122,28 +121,15 @@ class Vao():
         # Unbind vao
         gl.glBindVertexArray(0)
 
-    def bind_ibo(self):
-        # Bind vao and ibo
+    def bind_data(self):
         gl.glBindVertexArray(self.vao)
-        gl.glBindBuffer(gl.GL_ELEMENT_ARRAY_BUFFER, self.ibo)
 
-        # Bind data
-        gl.glBufferData(gl.GL_ELEMENT_ARRAY_BUFFER, len(self.indices_buffer),
-                        self.indices_buffer.tobytes(), self.usage)
+        data = [(gl.GL_ELEMENT_ARRAY_BUFFER, self.ibo, self.indices_buffer),
+                (gl.GL_ARRAY_BUFFER, self.vbo, self.vertices_buffer)]
 
-        # Unbind vao and ibo
-        gl.glBindBuffer(gl.GL_ELEMENT_ARRAY_BUFFER, 0)
-        gl.glBindVertexArray(0)
+        for target, handle, buffer in data:
+            gl.glBindBuffer(target, handle)
+            gl.glBufferData(target, len(buffer), buffer.tobytes(), self.usage)
+            gl.glBindBuffer(target, 0)
 
-    def bind_vbo(self):
-        # Bind vao and vbo
-        gl.glBindVertexArray(self.vao)
-        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.vbo)
-
-        # Bind data
-        gl.glBufferData(gl.GL_ARRAY_BUFFER, len(self.vertices_buffer),
-                        self.vertices_buffer.tobytes(), self.usage)
-
-        # Unbind vao and vbo
-        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
         gl.glBindVertexArray(0)
