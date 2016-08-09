@@ -1,11 +1,9 @@
-import OpenGL
+import ctypes
+
 import OpenGL.GL as gl
 
 from vulk.graphic.driver.opengl import vao, shaderprogram
 from vulk.graphic.driver.opengl.constant import gl_constant
-
-
-OpenGL.ERROR_ON_COPY = True
 
 
 class OpenGLDriver():
@@ -32,4 +30,4 @@ def clear(color=None, depth=None):
 
 def render(primitive_type, offset, count):
     gl.glDrawElements(gl_constant(primitive_type), count,
-                      gl.GL_UNSIGNED_SHORT, offset * 2)
+                      gl.GL_UNSIGNED_SHORT, ctypes.c_void_p(offset * 2))

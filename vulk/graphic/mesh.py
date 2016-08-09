@@ -2,6 +2,7 @@ class Mesh():
     def __init__(self, driver, num_vertices, num_indices, attributes):
         self.driver = driver
         self._data = driver.mesh_data(num_vertices, num_indices, attributes)
+        self.bound_attributes = False
 
     @property
     def vertices(self):
@@ -25,9 +26,14 @@ class Mesh():
     def update_indices(self, values, offset=0):
         self._data.update_indices(values, offset)
 
-    def bind_shader(self, shader_program):
-        self._data.bind_shader(shader_program)
+    def bind_attributes(self, shader_program):
+        self._data.bind_attributes(shader_program)
+        self.bound_attributes = True
 
     def render(self, primitive_type, offset, count):
+        if not self.bound_attributes:
+            raise Exception("Attributes not bounded, "
+                            "you must call bind_attributes")
+
         with self._data:
             self.driver.render(primitive_type, offset, count)

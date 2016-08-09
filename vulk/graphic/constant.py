@@ -1,7 +1,7 @@
-from enum import Enum, unique
+from enum import IntEnum
 
 
-@unique
-class Constant(Enum):
-    # Primitive
-    TRIANGLES = 0
+Constant = IntEnum(
+    'Constant',
+    """TRIANGLES
+    """)

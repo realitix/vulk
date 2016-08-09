@@ -43,17 +43,17 @@ class Vao():
         self.vbo_handle = gl.glGenBuffers(1)
         self.ibo_handle = gl.glGenBuffers(1)
         self.dirty = True
-        self.is_bound = False
+        self.bound = False
 
     def __enter__(self):
-        gl.glBindVertexArray(self.vao_handle)
-        self.is_bound = True
-
         if self.dirty:
             self.bind_data()
 
+        gl.glBindVertexArray(self.vao_handle)
+        self.bound = True
+
     def __exit__(self, *args):
-        self.is_bound = False
+        self.bound = False
         gl.glBindVertexArray(0)
 
     def delete(self):
@@ -97,9 +97,10 @@ class Vao():
         fmt = '=%dH' % len(values)
         struct.pack_into(fmt, self.indices_buffer, start, *values)
 
-    def bind_shader(self, shader_program):
-        # Bind vao
+    def bind_attributes(self, shader_program):
+        # Bind vao then vbo
         gl.glBindVertexArray(self.vao_handle)
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.vbo_handle)
 
         # Bind attributes
         offset = 0
@@ -118,12 +119,12 @@ class Vao():
                                      stride, ctypes.c_void_p(offset))
             offset += size * 4  # float = 4 bytes
 
-        # Unbind vao
+        # Unbind vao then vbo
         gl.glBindVertexArray(0)
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
 
     def bind_data(self):
-        if not self.is_bound:
-            gl.glBindVertexArray(self.vao_handle)
+        gl.glBindVertexArray(self.vao_handle)
 
         data = [
             (gl.GL_ELEMENT_ARRAY_BUFFER, self.ibo_handle, self.indices_buffer),
@@ -132,7 +133,9 @@ class Vao():
         for target, handle, buffer in data:
             gl.glBindBuffer(target, handle)
             gl.glBufferData(target, len(buffer), buffer.tobytes(), self.usage)
-            gl.glBindBuffer(target, 0)
 
-        if not self.is_bound:
-            gl.glBindVertexArray(0)
+        gl.glBindVertexArray(0)
+        gl.glBindBuffer(gl.GL_ELEMENT_ARRAY_BUFFER, 0)
+        gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
+
+        self.dirty = False
