@@ -98,14 +98,15 @@ class Vao():
         fmt = '=%dH' % len(values)
         struct.pack_into(fmt, self.indices_buffer, start, *values)
 
-    def bind_shader(self, shader):
+    def bind_shader(self, shader_program):
         # Bind vao
         gl.glBindVertexArray(self.vao)
 
         # Bind attributes
         offset = 0
         for attribute_name, size in self.attributes.items():
-            index = gl.glGetAttribLocation(shader, attribute_name)
+            index = gl.glGetAttribLocation(shader_program.handle,
+                                           attribute_name)
             if index == -1:
                 raise Exception()
 

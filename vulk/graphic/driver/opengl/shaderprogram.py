@@ -24,10 +24,10 @@ class ShaderProgram():
                 add_shader(value, key)
 
         self._shaders = shaders
-        self._shader_program = gl_shaders.compileProgram(*self._shaders)
+        self.handle = gl_shaders.compileProgram(*self._shaders)
 
     def __enter__(self):
-        gl.glUseProgram(self._shader_program)
+        gl.glUseProgram(self.handle)
         return self
 
     def __exit__(self, *args):
@@ -39,7 +39,7 @@ class ShaderProgram():
         for shader in self._shaders:
             gl.glDeleteShader(shader)
 
-        gl.glDeleteProgram(self._shader_program)
+        gl.glDeleteProgram(self.handle)
 
         self._shaders = None
-        self._shader_program = None
+        self.handle = None

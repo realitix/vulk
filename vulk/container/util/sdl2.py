@@ -2,13 +2,15 @@ import ctypes
 import sdl2
 
 
-class OpenGLWindow(sdl2.ext.Window):
+class OpenGLWindow():
     def __init__(self, title, size, position, required_version):
         self.required_version = required_version
         self.flags = sdl2.SDL_WINDOW_SHOWN | sdl2.SDL_WINDOW_OPENGL
         self._title = title
         self._size = size
         self.position = position
+        self.glcontext = None
+        self.window = None
 
     def __enter__(self):
         sdl2.ext.init()

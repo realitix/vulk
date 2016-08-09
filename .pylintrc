@@ -1,0 +1,3 @@
+[MASTER]
+ignore=tests
+disable=R,C

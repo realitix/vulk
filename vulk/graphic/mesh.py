@@ -31,5 +31,5 @@ class Mesh():
     def update_indices(self, values, offset=0):
         self._vertices.update_indices(values, offset)
 
-    def bind_shader(self, shader):
-        self._vertices.bind_shader(shader)
+    def bind_shader(self, shader_program):
+        self._vertices.bind_shader(shader_program)

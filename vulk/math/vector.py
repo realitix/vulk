@@ -69,7 +69,7 @@ class Vector():
         for i in range(len(self)):
             # Get operator (__add__, __sub__, __mul__) and give it the value
             self._values[i] = getattr(self._values[i],
-                                           operator)(values[i])
+                                      operator)(values[i])
 
     @property
     def coordinates(self):

@@ -12,5 +12,5 @@ class BaseApp(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def render():
+    def render(self):
         return

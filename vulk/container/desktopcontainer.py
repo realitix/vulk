@@ -1,5 +1,4 @@
 import importlib
-import time
 
 import sdl2
 import sdl2.ext
@@ -13,7 +12,7 @@ class DesktopContainer():
 
     """
 
-    def __init__(self, app, config=None, driver_names=["opengl", "vulkan"]):
+    def __init__(self, app, config=None, driver_names=("opengl", "vulkan")):
         self.app = app
         self.driver_names = driver_names
 
