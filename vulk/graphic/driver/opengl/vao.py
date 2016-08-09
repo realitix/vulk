@@ -39,18 +39,18 @@ class Vao():
         self._indices = bytearray(num_indices * 2)
         self.indices_buffer = memoryview(self._indices)
 
-        self.vao = gl.glGenVertexArrays(1)
-        self.vbo = gl.glGenBuffers(1)
-        self.ibo = gl.glGenBuffers(1)
+        self.vao_handle = gl.glGenVertexArrays(1)
+        self.vbo_handle = gl.glGenBuffers(1)
+        self.ibo_handle = gl.glGenBuffers(1)
         self.dirty = True
         self.is_bound = False
 
     def __enter__(self):
+        gl.glBindVertexArray(self.vao_handle)
         self.is_bound = True
+
         if self.dirty:
             self.bind_data()
-
-        gl.glBindVertexArray(self.vao)
 
     def __exit__(self, *args):
         self.is_bound = False
@@ -58,12 +58,12 @@ class Vao():
 
     def delete(self):
         gl.glBindBuffer(gl.GL_ARRAY_BUFFER, 0)
-        gl.glDeleteBuffers(2, [self.ibo, self.vbo])
-        gl.glDeleteVertexArrays(1, [self.vao])
+        gl.glDeleteBuffers(2, [self.ibo_handle, self.vbo_handle])
+        gl.glDeleteVertexArrays(1, [self.vao_handle])
 
-        self.vbo = None
-        self.vao = None
-        self.ibo = None
+        self.vbo_handle = None
+        self.vao_handle = None
+        self.ibo_handle = None
         self.vertices_buffer = None
         self._vertices = None
         self.indices_buffer = None
@@ -99,7 +99,7 @@ class Vao():
 
     def bind_shader(self, shader_program):
         # Bind vao
-        gl.glBindVertexArray(self.vao)
+        gl.glBindVertexArray(self.vao_handle)
 
         # Bind attributes
         offset = 0
@@ -122,14 +122,17 @@ class Vao():
         gl.glBindVertexArray(0)
 
     def bind_data(self):
-        gl.glBindVertexArray(self.vao)
+        if not self.is_bound:
+            gl.glBindVertexArray(self.vao_handle)
 
-        data = [(gl.GL_ELEMENT_ARRAY_BUFFER, self.ibo, self.indices_buffer),
-                (gl.GL_ARRAY_BUFFER, self.vbo, self.vertices_buffer)]
+        data = [
+            (gl.GL_ELEMENT_ARRAY_BUFFER, self.ibo_handle, self.indices_buffer),
+            (gl.GL_ARRAY_BUFFER, self.vbo_handle, self.vertices_buffer)]
 
         for target, handle, buffer in data:
             gl.glBindBuffer(target, handle)
             gl.glBufferData(target, len(buffer), buffer.tobytes(), self.usage)
             gl.glBindBuffer(target, 0)
 
-        gl.glBindVertexArray(0)
+        if not self.is_bound:
+            gl.glBindVertexArray(0)
