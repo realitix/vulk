@@ -23,5 +23,6 @@ setup(
         "Programming Language :: Python :: 3.5",
         "Topic :: Multimedia :: Graphics :: 3D Rendering"
     ],
-    license="Apache"
+    license="Apache",
+    entry_points = {'console_scripts': ['vulk = vulk.cli:main']}
 )

@@ -1,4 +1,5 @@
 codeclimate-test-reporter
+docopt
 flake8
 numpy
 pylint

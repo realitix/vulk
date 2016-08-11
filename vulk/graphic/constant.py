@@ -1,7 +1,5 @@
-from enum import IntEnum
+from enum import Enum
 
 
-Constant = IntEnum(
-    'Constant',
-    """TRIANGLES
-    """)
+class Constant(Enum):
+    TRIANGLES = 1
