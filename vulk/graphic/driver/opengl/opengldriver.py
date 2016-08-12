@@ -7,7 +7,7 @@ from vulk.graphic.driver.opengl.constant import gl_constant
 
 
 class OpenGLDriver():
-    def __init__(self):
+    def __init__(self, config):
         self.mesh_data = vao.Vao
         self.shader_program = shaderprogram.ShaderProgram
         self.clear = clear

@@ -1,0 +1,2 @@
+class GL():
+    gl = None

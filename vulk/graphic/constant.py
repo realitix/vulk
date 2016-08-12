@@ -1,5 +1,1 @@
-from enum import Enum
-
-
-class Constant(Enum):
-    TRIANGLES = 1
+TRIANGLES = 1

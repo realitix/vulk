@@ -7,8 +7,8 @@ class BaseContainer():
 
     def __init__(self, app, config, driver_names):
         self.app = app
-        self.driver = self.get_driver(driver_names)
         self.config = config
+        self.driver = self.get_driver(driver_names)
 
     def get_driver(self, driver_names):
         driver = None
@@ -17,7 +17,7 @@ class BaseContainer():
             try:
                 driver_module = importlib.import_module(
                     "vulk.graphic.driver.%s" % driver_name)
-                driver = driver_module.driver()
+                driver = driver_module.driver(self.config)
             except exception.VulkError:
                 pass
             else:

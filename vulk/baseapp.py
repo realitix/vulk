@@ -1,7 +1,11 @@
 import abc
 
 
-class BaseApp(abc.ABC):
+class BaseApp(metaclass=abc.ABCMeta):
+    """App must inherit this class
+
+    We can't use abc.ABC because brython does not support python3.4
+    """
     def __init__(self, driver):
         self.driver = driver
 
@@ -12,5 +16,5 @@ class BaseApp(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def render(self):
+    def render(self, delta):
         return

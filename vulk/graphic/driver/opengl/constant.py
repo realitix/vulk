@@ -1,6 +1,6 @@
 import OpenGL.GL as gl
 
-from vulk.graphic.constant import Constant as c
+from vulk.graphic import constant as c
 
 
 def gl_constant(constant):

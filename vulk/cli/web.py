@@ -52,11 +52,12 @@ class WebCompiler():
         # Copy vulk
         vulk_path = os.path.dirname(
             importlib.util.find_spec(self.vulk_module).origin)
+        dest_dir = os.path.join(self.lib_dir, self.vulk_module)
         try:
-            shutil.copytree(vulk_path,
-                            os.path.join(self.lib_dir, self.vulk_module))
-        except FileExistsError:
+            shutil.rmtree(dest_dir)
+        except FileNotFoundError:
             pass
+        shutil.copytree(vulk_path, dest_dir)
 
     def copy_app(self):
         app = importlib.util.find_spec(self.app_module)
