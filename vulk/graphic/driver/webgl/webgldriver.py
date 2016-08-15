@@ -1,6 +1,8 @@
-from vulk.graphic.driver.webgl.gl import GL
-from vulk.graphic.driver.webgl.constant import gl_constant
 from vulk import exception
+from vulk.graphic.driver.webgl.constant import gl_constant
+from vulk.graphic.driver.webgl.gl import GL
+from vulk.graphic.driver.webgl.meshdata import MeshData
+from vulk.graphic.driver.webgl.shaderprogram import ShaderProgram
 
 
 class WebGLDriver():
@@ -11,8 +13,8 @@ class WebGLDriver():
         if not GL.gl:
             raise exception.VulkError("Can't create webgl context")
 
-        # self.mesh_data = vao.Vao
-        # self.shader_program = shaderprogram.ShaderProgram
+        self.mesh_data = MeshData
+        self.shader_program = ShaderProgram
         self.clear = clear
         self.render = render
 

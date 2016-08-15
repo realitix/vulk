@@ -31,5 +31,5 @@ class DesktopContainer(BaseContainer):
                     events = sdl2.ext.get_events()
                     if sdl2.SDL_QUIT in [e.type for e in events]:
                         break
-                    app.render()
+                    app.render(0)
                     window.refresh()

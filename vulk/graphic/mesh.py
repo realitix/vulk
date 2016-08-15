@@ -26,8 +26,8 @@ class Mesh():
     def update_indices(self, values, offset=0):
         self._data.update_indices(values, offset)
 
-    def bind_attributes(self, shader_program):
-        self._data.bind_attributes(shader_program)
+    def prepare(self, shader_program):
+        self._data.prepare(shader_program)
         self.bound_attributes = True
 
     def render(self, primitive_type, offset, count):

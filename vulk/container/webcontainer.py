@@ -25,6 +25,7 @@ class WebContainer():
         # Fixme: super().__init__(app, config, driver_names)
 
     def run(self):
+        self.app(self.driver)
         self.animate(0)
 
     def animate(self, delta):

@@ -97,7 +97,7 @@ class Vao():
         fmt = '=%dH' % len(values)
         struct.pack_into(fmt, self.indices_buffer, start, *values)
 
-    def bind_attributes(self, shader_program):
+    def prepare(self, shader_program):
         # Bind vao then vbo
         gl.glBindVertexArray(self.vao_handle)
         gl.glBindBuffer(gl.GL_ARRAY_BUFFER, self.vbo_handle)
