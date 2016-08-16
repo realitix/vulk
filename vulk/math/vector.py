@@ -2,6 +2,8 @@ import array
 import collections
 import math
 
+from vulk.math.matrix import Matrix4
+
 
 class Vector():
     def __init__(self, values):
@@ -106,13 +108,29 @@ class Vector():
     def size2(self):
         return sum([c ** 2 for c in self._values])
 
-    def normalize(self):
+    def nor(self):
         return self * (1 / self.size)
+
+    def dot(self, value):
+        values = self._check_value(value)
+        return sum([values[i]*self.coordinates[i] for i in range(len(self))])
+
+    def set(self, value):
+        self.coordinates = value
+        return self
+
+    def sub(self, value):
+        return self.__sub__(value)
 
 
 class Vector2(Vector):
-    def __init__(self, x, y):
-        super().__init__((x, y))
+    def __init__(self, *args):
+        if not args:
+            super().__init__((0, 0))
+        elif len(args) == 2:
+            super().__init__(args)
+        else:
+            raise ValueError("Vector2 needs 2 components")
 
     def __matmul__(self, value):
         values = self._check_value(value)
@@ -125,8 +143,16 @@ Vector2.Zero = Vector2(0, 0)
 
 class Vector3(Vector):
 
-    def __init__(self, x, y, z):
-        super().__init__((x, y, z))
+    def __init__(self, *args):
+        if not args:
+            super().__init__((0, 0, 0))
+        elif len(args) == 3:
+            super().__init__(args)
+        else:
+            raise ValueError("Vector3 needs 3 components")
+
+    def __copy__(self):
+        return Vector3(self.coordinates)
 
     def __matmul__(self, value):
         values = self._check_value(value)
@@ -142,6 +168,42 @@ class Vector3(Vector):
     @z.setter
     def z(self, value):
         self._values[2] = value
+
+    def crs(self, value):
+        """Cross product
+
+        Sets this vector to the cross product between it and the other vector.
+        """
+        values = self._check_value(value)
+        self.x = self.y * values[2] - self.z * values[1]
+        self.y = self.z * values[0] - self.x * values[2]
+        self.z = self.x * values[1] - self.y * values[0]
+        return self
+
+    def project(self, matrix):
+        """Multiply by matrix
+
+        Multiplies this vector by the given matrix dividing by w, assuming the
+        fourth (w) component of the vector is 1. This is mostly used to
+        project/unproject vectors via a perspective projection matrix.
+
+        :param matrix: Given Matrix4
+        """
+        c = matrix.values
+        x = self.x
+        y = self.y
+        z = self.z
+        w = 1 / (x * c[Matrix4.M30] + y * c[Matrix4.M31] +
+                 z * c[Matrix4.M32] + c[Matrix4.M33])
+
+        self.x = (x * c[Matrix4.M00] + y * c[Matrix4.M01] +
+                  z * c[Matrix4.M02] + c[Matrix4.M03]) * w
+        self.y = (x * c[Matrix4.M10] + y * c[Matrix4.M11] +
+                  z * c[Matrix4.M12] + c[Matrix4.M13]) * w
+        self.z = (x * c[Matrix4.M20] + y * c[Matrix4.M21] +
+                  z * c[Matrix4.M22] + c[Matrix4.M23]) * w
+
+        return self
 
 Vector3.X = Vector3(1, 0, 0)
 Vector3.Y = Vector3(0, 1, 0)

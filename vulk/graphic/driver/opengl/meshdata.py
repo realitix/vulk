@@ -4,7 +4,7 @@ import struct
 import OpenGL.GL as gl
 
 
-class Vao():
+class MeshData():
     """OpenGL Vertex Array Object
 
     Specify attributes:

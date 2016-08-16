@@ -2,13 +2,13 @@ import ctypes
 
 import OpenGL.GL as gl
 
-from vulk.graphic.driver.opengl import vao, shaderprogram
+from vulk.graphic.driver.opengl import meshdata, shaderprogram
 from vulk.graphic.driver.opengl.constant import gl_constant
 
 
 class OpenGLDriver():
     def __init__(self, config):
-        self.mesh_data = vao.Vao
+        self.mesh_data = meshdata.MeshData
         self.shader_program = shaderprogram.ShaderProgram
         self.clear = clear
         self.render = render

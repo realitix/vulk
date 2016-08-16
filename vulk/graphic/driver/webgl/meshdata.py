@@ -1,6 +1,7 @@
 from browser import window
 from javascript import JSConstructor
 
+from vulk import exception
 from vulk.graphic.driver.webgl.gl import GL
 
 
@@ -26,7 +27,7 @@ class MeshData():
         :returns: Vao
         """
 
-        if usage is None:
+        if not usage:
             usage = GL.gl.STATIC_DRAW
 
         self.vertex_size = sum([x for x in attributes.values()])
@@ -54,8 +55,8 @@ class MeshData():
         self.cached_locations = None
 
     def __enter__(self):
-        GL.gl.BindBuffer(GL.gl.ARRAY_BUFFER, self.vbo_handle)
-        GL.gl.BindBuffer(GL.gl.ELEMENT_ARRAY_BUFFER, self.ibo_handle)
+        GL.gl.bindBuffer(GL.gl.ARRAY_BUFFER, self.vbo_handle)
+        GL.gl.bindBuffer(GL.gl.ELEMENT_ARRAY_BUFFER, self.ibo_handle)
 
         for l in self.cached_locations:
             GL.gl.enableVertexAttribArray(l[0])
@@ -67,8 +68,8 @@ class MeshData():
             self.upload_data()
 
     def __exit__(self, *args):
-        GL.gl.BindBuffer(GL.gl.ARRAY_BUFFER, 0)
-        GL.gl.BindBuffer(GL.gl.ELEMENT_ARRAY_BUFFER, 0)
+        GL.gl.bindBuffer(GL.gl.ARRAY_BUFFER, None)
+        GL.gl.bindBuffer(GL.gl.ELEMENT_ARRAY_BUFFER, None)
         self.bound = False
 
     def delete(self):
@@ -113,7 +114,8 @@ class MeshData():
             index = GL.gl.getAttribLocation(shader_program.handle,
                                             attribute_name)
             if index == -1:
-                raise Exception()
+                raise exception.VulkError("Can't find {} attribute in "
+                                          "shader".format(attribute_name))
 
             data_type = GL.gl.FLOAT
             normalized = False
@@ -124,11 +126,11 @@ class MeshData():
 
             offset += size * 4  # float = 4 bytes
 
+        self.cached_locations = cached_locations
+
     def upload_data(self):
-        GL.gl.BufferData(
-            GL.gl.ARRAY_BUFFER, self.vertices_buffer.byteLength,
-            self.vertices_buffer, self.usage)
-        GL.gl.BufferData(
-            GL.gl.ELEMENT_ARRAY_BUFFER, self.indices_buffer.byteLength,
-            self.indices_buffer, self.usage)
+        GL.gl.bufferData(
+            GL.gl.ARRAY_BUFFER, self.vertices_buffer, self.usage)
+        GL.gl.bufferData(
+            GL.gl.ELEMENT_ARRAY_BUFFER, self.indices_buffer, self.usage)
         self.dirty = False

@@ -33,7 +33,7 @@ class Mesh():
     def render(self, primitive_type, offset, count):
         if not self.bound_attributes:
             raise Exception("Attributes not bounded, "
-                            "you must call bind_attributes")
+                            "you must call prepare")
 
         with self._data:
             self.driver.render(primitive_type, offset, count)
