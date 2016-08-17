@@ -45,22 +45,18 @@ class Matrix3(Matrix):
 
 
 class Matrix4(Matrix):
-    M00 = 0
-    M01 = 4
-    M02 = 8
-    M03 = 12
-    M10 = 1
-    M11 = 5
-    M12 = 9
-    M13 = 13
-    M20 = 2
-    M21 = 6
-    M22 = 10
-    M23 = 14
-    M30 = 3
-    M31 = 7
-    M32 = 11
-    M33 = 15
+    """Matrix4 class
+
+    The matrix is not represented as a multidimensional array but as a simple
+    array. To access directly to components, you must use matrix.values
+    property and the Mxx keys.
+    Mxy: x represents the row and y the colums so M10 is the row 2
+    and column 1.
+    """
+    M = {0:  0,  1: 4,  2: 8,   3: 12,
+         10: 1, 11: 5, 12: 9,  13: 13,
+         20: 2, 21: 6, 22: 10, 23: 14,
+         30: 3, 31: 7, 32: 11, 33: 15}
 
     def __init__(self, *args):
         if not args:
@@ -82,6 +78,12 @@ class Matrix4(Matrix):
                 v[i] = 0
         return self
 
+    def set(self, matrix):
+        for i in range(len(self.values)):
+            self.values[i] = matrix.values[i]
+
+        return self
+
     def to_projection(self, near, far, fov, aspect):
         fd = 1 / math.tan((fov * (math.pi / 180)) / 2.0)
         a1 = (far + near) / (near - far)
@@ -89,12 +91,13 @@ class Matrix4(Matrix):
         self.idt()
 
         v = self.values
-        v[Matrix4.M00] = fd / aspect
-        v[Matrix4.M11] = fd
-        v[Matrix4.M22] = a1
-        v[Matrix4.M32] = -1
-        v[Matrix4.M23] = a2
-        v[Matrix4.M33] = 0
+        m = Matrix4.M
+        v[m[0]] = fd / aspect
+        v[m[11]] = fd
+        v[m[22]] = a1
+        v[m[32]] = -1
+        v[m[23]] = a2
+        v[m[33]] = 0
 
         return self
 
@@ -106,14 +109,48 @@ class Matrix4(Matrix):
         self.idt()
 
         v = self.values
-        v[Matrix4.M00] = tmp1.x
-        v[Matrix4.M01] = tmp1.y
-        v[Matrix4.M02] = tmp1.z
-        v[Matrix4.M10] = tmp2.x
-        v[Matrix4.M11] = tmp2.y
-        v[Matrix4.M12] = tmp2.z
-        v[Matrix4.M20] = -tmp0.x
-        v[Matrix4.M21] = -tmp0.y
-        v[Matrix4.M22] = -tmp0.z
+        m = Matrix4.M
+        v[m[0]] = tmp1.x
+        v[m[1]] = tmp1.y
+        v[m[2]] = tmp1.z
+        v[m[10]] = tmp2.x
+        v[m[11]] = tmp2.y
+        v[m[12]] = tmp2.z
+        v[m[20]] = -tmp0.x
+        v[m[21]] = -tmp0.y
+        v[m[22]] = -tmp0.z
 
         return self
+
+    def to_look_at2(self, position, target, up):
+        tmp_v = Vector3()
+        tmp_v.set(target).sub(position)
+        self.to_look_at(tmp_v, up)
+
+        tmp_m = Matrix4()
+        tmp_m.to_translation(-position.x, -position.y, -position.z)
+        return self.mul(tmp_m)
+
+    def to_translation(self, vector):
+        self.idt()
+
+        self.values[Matrix4.M03] = vector.x
+        self.values[Matrix4.M13] = vector.y
+        self.values[Matrix4.M23] = vector.z
+
+        return self
+
+    def mul(self, matrix):
+        tmp = Matrix4()
+        ma = self.values
+        mb = matrix.values
+        m = Matrix4.M
+
+        for key in Matrix4.M.viewkeys():
+            k0 = key // 10
+            k1 = key % 10
+            tmp.values[key] = (ma[m[k0]] * mb[m[k1]] +
+                               ma[m[k0 + 1]] * mb[m[k1 + 10]] +
+                               ma[m[k0 + 2]] * mb[m[k1 + 20]] +
+                               ma[m[k0 + 3]] * mb[m[k1 + 30]] +
+        return self.set(tmp)
