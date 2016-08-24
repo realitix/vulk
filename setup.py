@@ -1,7 +1,9 @@
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages, Extension
 
 import vulk
 
+vulkanmodule = Extension('vulkan',
+                         sources=['vulk/extension/vulkanmodule.c'])
 setup(
     name="vulk",
     version=vulk.__version__,
@@ -24,5 +26,6 @@ setup(
         "Topic :: Multimedia :: Graphics :: 3D Rendering"
     ],
     license="Apache",
-    entry_points = {'console_scripts': ['vulk = vulk.cli:main']}
+    entry_points={'console_scripts': ['vulk = vulk.cli:main']},
+    ext_modules=[vulkanmodule]
 )
