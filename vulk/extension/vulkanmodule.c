@@ -1315,23 +1315,23 @@ typedef void (VKAPI_PTR *PFN_vkVoidFunction)(void);
 
 typedef struct VkApplicationInfo {
     VkStructureType    sType;
-    const void*        pNext;
-    const char*        pApplicationName;
+    void*        pNext;
+    char*        pApplicationName;
     uint32_t           applicationVersion;
-    const char*        pEngineName;
+    char*        pEngineName;
     uint32_t           engineVersion;
     uint32_t           apiVersion;
 } VkApplicationInfo;
 
 typedef struct VkInstanceCreateInfo {
     VkStructureType             sType;
-    const void*                 pNext;
+    void*                 pNext;
     VkInstanceCreateFlags       flags;
-    const VkApplicationInfo*    pApplicationInfo;
+    VkApplicationInfo*    pApplicationInfo;
     uint32_t                    enabledLayerCount;
-    const char* const*          ppEnabledLayerNames;
+    char* *         ppEnabledLayerNames;
     uint32_t                    enabledExtensionCount;
-    const char* const*          ppEnabledExtensionNames;
+    char* *         ppEnabledExtensionNames;
 } VkInstanceCreateInfo;
 
 typedef struct VkAllocationCallbacks {
@@ -1576,24 +1576,24 @@ typedef struct VkPhysicalDeviceMemoryProperties {
 
 typedef struct VkDeviceQueueCreateInfo {
     VkStructureType             sType;
-    const void*                 pNext;
+    void*                 pNext;
     VkDeviceQueueCreateFlags    flags;
     uint32_t                    queueFamilyIndex;
     uint32_t                    queueCount;
-    const float*                pQueuePriorities;
+    float*                pQueuePriorities;
 } VkDeviceQueueCreateInfo;
 
 typedef struct VkDeviceCreateInfo {
     VkStructureType                    sType;
-    const void*                        pNext;
+    void*                        pNext;
     VkDeviceCreateFlags                flags;
     uint32_t                           queueCreateInfoCount;
-    const VkDeviceQueueCreateInfo*     pQueueCreateInfos;
+    VkDeviceQueueCreateInfo*     pQueueCreateInfos;
     uint32_t                           enabledLayerCount;
-    const char* const*                 ppEnabledLayerNames;
+    char* *                ppEnabledLayerNames;
     uint32_t                           enabledExtensionCount;
-    const char* const*                 ppEnabledExtensionNames;
-    const VkPhysicalDeviceFeatures*    pEnabledFeatures;
+    char* *                ppEnabledExtensionNames;
+    VkPhysicalDeviceFeatures*    pEnabledFeatures;
 } VkDeviceCreateInfo;
 
 typedef struct VkExtensionProperties {
@@ -1610,26 +1610,26 @@ typedef struct VkLayerProperties {
 
 typedef struct VkSubmitInfo {
     VkStructureType                sType;
-    const void*                    pNext;
+    void*                    pNext;
     uint32_t                       waitSemaphoreCount;
-    const VkSemaphore*             pWaitSemaphores;
-    const VkPipelineStageFlags*    pWaitDstStageMask;
+    VkSemaphore*             pWaitSemaphores;
+    VkPipelineStageFlags*    pWaitDstStageMask;
     uint32_t                       commandBufferCount;
-    const VkCommandBuffer*         pCommandBuffers;
+    VkCommandBuffer*         pCommandBuffers;
     uint32_t                       signalSemaphoreCount;
-    const VkSemaphore*             pSignalSemaphores;
+    VkSemaphore*             pSignalSemaphores;
 } VkSubmitInfo;
 
 typedef struct VkMemoryAllocateInfo {
     VkStructureType    sType;
-    const void*        pNext;
+    void*        pNext;
     VkDeviceSize       allocationSize;
     uint32_t           memoryTypeIndex;
 } VkMemoryAllocateInfo;
 
 typedef struct VkMappedMemoryRange {
     VkStructureType    sType;
-    const void*        pNext;
+    void*        pNext;
     VkDeviceMemory     memory;
     VkDeviceSize       offset;
     VkDeviceSize       size;
@@ -1666,13 +1666,13 @@ typedef struct VkSparseMemoryBind {
 typedef struct VkSparseBufferMemoryBindInfo {
     VkBuffer                     buffer;
     uint32_t                     bindCount;
-    const VkSparseMemoryBind*    pBinds;
+    VkSparseMemoryBind*    pBinds;
 } VkSparseBufferMemoryBindInfo;
 
 typedef struct VkSparseImageOpaqueMemoryBindInfo {
     VkImage                      image;
     uint32_t                     bindCount;
-    const VkSparseMemoryBind*    pBinds;
+    VkSparseMemoryBind*    pBinds;
 } VkSparseImageOpaqueMemoryBindInfo;
 
 typedef struct VkImageSubresource {
@@ -1699,45 +1699,45 @@ typedef struct VkSparseImageMemoryBind {
 typedef struct VkSparseImageMemoryBindInfo {
     VkImage                           image;
     uint32_t                          bindCount;
-    const VkSparseImageMemoryBind*    pBinds;
+    VkSparseImageMemoryBind*    pBinds;
 } VkSparseImageMemoryBindInfo;
 
 typedef struct VkBindSparseInfo {
     VkStructureType                             sType;
-    const void*                                 pNext;
+    void*                                 pNext;
     uint32_t                                    waitSemaphoreCount;
-    const VkSemaphore*                          pWaitSemaphores;
+    VkSemaphore*                          pWaitSemaphores;
     uint32_t                                    bufferBindCount;
-    const VkSparseBufferMemoryBindInfo*         pBufferBinds;
+    VkSparseBufferMemoryBindInfo*         pBufferBinds;
     uint32_t                                    imageOpaqueBindCount;
-    const VkSparseImageOpaqueMemoryBindInfo*    pImageOpaqueBinds;
+    VkSparseImageOpaqueMemoryBindInfo*    pImageOpaqueBinds;
     uint32_t                                    imageBindCount;
-    const VkSparseImageMemoryBindInfo*          pImageBinds;
+    VkSparseImageMemoryBindInfo*          pImageBinds;
     uint32_t                                    signalSemaphoreCount;
-    const VkSemaphore*                          pSignalSemaphores;
+    VkSemaphore*                          pSignalSemaphores;
 } VkBindSparseInfo;
 
 typedef struct VkFenceCreateInfo {
     VkStructureType       sType;
-    const void*           pNext;
+    void*           pNext;
     VkFenceCreateFlags    flags;
 } VkFenceCreateInfo;
 
 typedef struct VkSemaphoreCreateInfo {
     VkStructureType           sType;
-    const void*               pNext;
+    void*               pNext;
     VkSemaphoreCreateFlags    flags;
 } VkSemaphoreCreateInfo;
 
 typedef struct VkEventCreateInfo {
     VkStructureType       sType;
-    const void*           pNext;
+    void*           pNext;
     VkEventCreateFlags    flags;
 } VkEventCreateInfo;
 
 typedef struct VkQueryPoolCreateInfo {
     VkStructureType                  sType;
-    const void*                      pNext;
+    void*                      pNext;
     VkQueryPoolCreateFlags           flags;
     VkQueryType                      queryType;
     uint32_t                         queryCount;
@@ -1746,18 +1746,18 @@ typedef struct VkQueryPoolCreateInfo {
 
 typedef struct VkBufferCreateInfo {
     VkStructureType        sType;
-    const void*            pNext;
+    void*            pNext;
     VkBufferCreateFlags    flags;
     VkDeviceSize           size;
     VkBufferUsageFlags     usage;
     VkSharingMode          sharingMode;
     uint32_t               queueFamilyIndexCount;
-    const uint32_t*        pQueueFamilyIndices;
+    uint32_t*        pQueueFamilyIndices;
 } VkBufferCreateInfo;
 
 typedef struct VkBufferViewCreateInfo {
     VkStructureType            sType;
-    const void*                pNext;
+    void*                pNext;
     VkBufferViewCreateFlags    flags;
     VkBuffer                   buffer;
     VkFormat                   format;
@@ -1767,7 +1767,7 @@ typedef struct VkBufferViewCreateInfo {
 
 typedef struct VkImageCreateInfo {
     VkStructureType          sType;
-    const void*              pNext;
+    void*              pNext;
     VkImageCreateFlags       flags;
     VkImageType              imageType;
     VkFormat                 format;
@@ -1779,7 +1779,7 @@ typedef struct VkImageCreateInfo {
     VkImageUsageFlags        usage;
     VkSharingMode            sharingMode;
     uint32_t                 queueFamilyIndexCount;
-    const uint32_t*          pQueueFamilyIndices;
+    uint32_t*          pQueueFamilyIndices;
     VkImageLayout            initialLayout;
 } VkImageCreateInfo;
 
@@ -1808,7 +1808,7 @@ typedef struct VkImageSubresourceRange {
 
 typedef struct VkImageViewCreateInfo {
     VkStructureType            sType;
-    const void*                pNext;
+    void*                pNext;
     VkImageViewCreateFlags     flags;
     VkImage                    image;
     VkImageViewType            viewType;
@@ -1819,18 +1819,18 @@ typedef struct VkImageViewCreateInfo {
 
 typedef struct VkShaderModuleCreateInfo {
     VkStructureType              sType;
-    const void*                  pNext;
+    void*                  pNext;
     VkShaderModuleCreateFlags    flags;
     size_t                       codeSize;
-    const uint32_t*              pCode;
+    uint32_t*              pCode;
 } VkShaderModuleCreateInfo;
 
 typedef struct VkPipelineCacheCreateInfo {
     VkStructureType               sType;
-    const void*                   pNext;
+    void*                   pNext;
     VkPipelineCacheCreateFlags    flags;
     size_t                        initialDataSize;
-    const void*                   pInitialData;
+    void*                   pInitialData;
 } VkPipelineCacheCreateInfo;
 
 typedef struct VkSpecializationMapEntry {
@@ -1841,19 +1841,19 @@ typedef struct VkSpecializationMapEntry {
 
 typedef struct VkSpecializationInfo {
     uint32_t                           mapEntryCount;
-    const VkSpecializationMapEntry*    pMapEntries;
+    VkSpecializationMapEntry*    pMapEntries;
     size_t                             dataSize;
-    const void*                        pData;
+    void*                        pData;
 } VkSpecializationInfo;
 
 typedef struct VkPipelineShaderStageCreateInfo {
     VkStructureType                     sType;
-    const void*                         pNext;
+    void*                         pNext;
     VkPipelineShaderStageCreateFlags    flags;
     VkShaderStageFlagBits               stage;
     VkShaderModule                      module;
-    const char*                         pName;
-    const VkSpecializationInfo*         pSpecializationInfo;
+    char*                         pName;
+    VkSpecializationInfo*         pSpecializationInfo;
 } VkPipelineShaderStageCreateInfo;
 
 typedef struct VkVertexInputBindingDescription {
@@ -1871,17 +1871,17 @@ typedef struct VkVertexInputAttributeDescription {
 
 typedef struct VkPipelineVertexInputStateCreateInfo {
     VkStructureType                             sType;
-    const void*                                 pNext;
+    void*                                 pNext;
     VkPipelineVertexInputStateCreateFlags       flags;
     uint32_t                                    vertexBindingDescriptionCount;
-    const VkVertexInputBindingDescription*      pVertexBindingDescriptions;
+    VkVertexInputBindingDescription*      pVertexBindingDescriptions;
     uint32_t                                    vertexAttributeDescriptionCount;
-    const VkVertexInputAttributeDescription*    pVertexAttributeDescriptions;
+    VkVertexInputAttributeDescription*    pVertexAttributeDescriptions;
 } VkPipelineVertexInputStateCreateInfo;
 
 typedef struct VkPipelineInputAssemblyStateCreateInfo {
     VkStructureType                            sType;
-    const void*                                pNext;
+    void*                                pNext;
     VkPipelineInputAssemblyStateCreateFlags    flags;
     VkPrimitiveTopology                        topology;
     VkBool32                                   primitiveRestartEnable;
@@ -1889,7 +1889,7 @@ typedef struct VkPipelineInputAssemblyStateCreateInfo {
 
 typedef struct VkPipelineTessellationStateCreateInfo {
     VkStructureType                           sType;
-    const void*                               pNext;
+    void*                               pNext;
     VkPipelineTessellationStateCreateFlags    flags;
     uint32_t                                  patchControlPoints;
 } VkPipelineTessellationStateCreateInfo;
@@ -1920,17 +1920,17 @@ typedef struct VkRect2D {
 
 typedef struct VkPipelineViewportStateCreateInfo {
     VkStructureType                       sType;
-    const void*                           pNext;
+    void*                           pNext;
     VkPipelineViewportStateCreateFlags    flags;
     uint32_t                              viewportCount;
-    const VkViewport*                     pViewports;
+    VkViewport*                     pViewports;
     uint32_t                              scissorCount;
-    const VkRect2D*                       pScissors;
+    VkRect2D*                       pScissors;
 } VkPipelineViewportStateCreateInfo;
 
 typedef struct VkPipelineRasterizationStateCreateInfo {
     VkStructureType                            sType;
-    const void*                                pNext;
+    void*                                pNext;
     VkPipelineRasterizationStateCreateFlags    flags;
     VkBool32                                   depthClampEnable;
     VkBool32                                   rasterizerDiscardEnable;
@@ -1946,12 +1946,12 @@ typedef struct VkPipelineRasterizationStateCreateInfo {
 
 typedef struct VkPipelineMultisampleStateCreateInfo {
     VkStructureType                          sType;
-    const void*                              pNext;
+    void*                              pNext;
     VkPipelineMultisampleStateCreateFlags    flags;
     VkSampleCountFlagBits                    rasterizationSamples;
     VkBool32                                 sampleShadingEnable;
     float                                    minSampleShading;
-    const VkSampleMask*                      pSampleMask;
+    VkSampleMask*                      pSampleMask;
     VkBool32                                 alphaToCoverageEnable;
     VkBool32                                 alphaToOneEnable;
 } VkPipelineMultisampleStateCreateInfo;
@@ -1968,7 +1968,7 @@ typedef struct VkStencilOpState {
 
 typedef struct VkPipelineDepthStencilStateCreateInfo {
     VkStructureType                           sType;
-    const void*                               pNext;
+    void*                               pNext;
     VkPipelineDepthStencilStateCreateFlags    flags;
     VkBool32                                  depthTestEnable;
     VkBool32                                  depthWriteEnable;
@@ -1994,38 +1994,38 @@ typedef struct VkPipelineColorBlendAttachmentState {
 
 typedef struct VkPipelineColorBlendStateCreateInfo {
     VkStructureType                               sType;
-    const void*                                   pNext;
+    void*                                   pNext;
     VkPipelineColorBlendStateCreateFlags          flags;
     VkBool32                                      logicOpEnable;
     VkLogicOp                                     logicOp;
     uint32_t                                      attachmentCount;
-    const VkPipelineColorBlendAttachmentState*    pAttachments;
+    VkPipelineColorBlendAttachmentState*    pAttachments;
     float                                         blendConstants[4];
 } VkPipelineColorBlendStateCreateInfo;
 
 typedef struct VkPipelineDynamicStateCreateInfo {
     VkStructureType                      sType;
-    const void*                          pNext;
+    void*                          pNext;
     VkPipelineDynamicStateCreateFlags    flags;
     uint32_t                             dynamicStateCount;
-    const VkDynamicState*                pDynamicStates;
+    VkDynamicState*                pDynamicStates;
 } VkPipelineDynamicStateCreateInfo;
 
 typedef struct VkGraphicsPipelineCreateInfo {
     VkStructureType                                  sType;
-    const void*                                      pNext;
+    void*                                      pNext;
     VkPipelineCreateFlags                            flags;
     uint32_t                                         stageCount;
-    const VkPipelineShaderStageCreateInfo*           pStages;
-    const VkPipelineVertexInputStateCreateInfo*      pVertexInputState;
-    const VkPipelineInputAssemblyStateCreateInfo*    pInputAssemblyState;
-    const VkPipelineTessellationStateCreateInfo*     pTessellationState;
-    const VkPipelineViewportStateCreateInfo*         pViewportState;
-    const VkPipelineRasterizationStateCreateInfo*    pRasterizationState;
-    const VkPipelineMultisampleStateCreateInfo*      pMultisampleState;
-    const VkPipelineDepthStencilStateCreateInfo*     pDepthStencilState;
-    const VkPipelineColorBlendStateCreateInfo*       pColorBlendState;
-    const VkPipelineDynamicStateCreateInfo*          pDynamicState;
+    VkPipelineShaderStageCreateInfo*           pStages;
+    VkPipelineVertexInputStateCreateInfo*      pVertexInputState;
+    VkPipelineInputAssemblyStateCreateInfo*    pInputAssemblyState;
+    VkPipelineTessellationStateCreateInfo*     pTessellationState;
+    VkPipelineViewportStateCreateInfo*         pViewportState;
+    VkPipelineRasterizationStateCreateInfo*    pRasterizationState;
+    VkPipelineMultisampleStateCreateInfo*      pMultisampleState;
+    VkPipelineDepthStencilStateCreateInfo*     pDepthStencilState;
+    VkPipelineColorBlendStateCreateInfo*       pColorBlendState;
+    VkPipelineDynamicStateCreateInfo*          pDynamicState;
     VkPipelineLayout                                 layout;
     VkRenderPass                                     renderPass;
     uint32_t                                         subpass;
@@ -2035,7 +2035,7 @@ typedef struct VkGraphicsPipelineCreateInfo {
 
 typedef struct VkComputePipelineCreateInfo {
     VkStructureType                    sType;
-    const void*                        pNext;
+    void*                        pNext;
     VkPipelineCreateFlags              flags;
     VkPipelineShaderStageCreateInfo    stage;
     VkPipelineLayout                   layout;
@@ -2051,17 +2051,17 @@ typedef struct VkPushConstantRange {
 
 typedef struct VkPipelineLayoutCreateInfo {
     VkStructureType                 sType;
-    const void*                     pNext;
+    void*                     pNext;
     VkPipelineLayoutCreateFlags     flags;
     uint32_t                        setLayoutCount;
-    const VkDescriptorSetLayout*    pSetLayouts;
+    VkDescriptorSetLayout*    pSetLayouts;
     uint32_t                        pushConstantRangeCount;
-    const VkPushConstantRange*      pPushConstantRanges;
+    VkPushConstantRange*      pPushConstantRanges;
 } VkPipelineLayoutCreateInfo;
 
 typedef struct VkSamplerCreateInfo {
     VkStructureType         sType;
-    const void*             pNext;
+    void*             pNext;
     VkSamplerCreateFlags    flags;
     VkFilter                magFilter;
     VkFilter                minFilter;
@@ -2085,15 +2085,15 @@ typedef struct VkDescriptorSetLayoutBinding {
     VkDescriptorType      descriptorType;
     uint32_t              descriptorCount;
     VkShaderStageFlags    stageFlags;
-    const VkSampler*      pImmutableSamplers;
+    VkSampler*      pImmutableSamplers;
 } VkDescriptorSetLayoutBinding;
 
 typedef struct VkDescriptorSetLayoutCreateInfo {
     VkStructureType                        sType;
-    const void*                            pNext;
+    void*                            pNext;
     VkDescriptorSetLayoutCreateFlags       flags;
     uint32_t                               bindingCount;
-    const VkDescriptorSetLayoutBinding*    pBindings;
+    VkDescriptorSetLayoutBinding*    pBindings;
 } VkDescriptorSetLayoutCreateInfo;
 
 typedef struct VkDescriptorPoolSize {
@@ -2103,19 +2103,19 @@ typedef struct VkDescriptorPoolSize {
 
 typedef struct VkDescriptorPoolCreateInfo {
     VkStructureType                sType;
-    const void*                    pNext;
+    void*                    pNext;
     VkDescriptorPoolCreateFlags    flags;
     uint32_t                       maxSets;
     uint32_t                       poolSizeCount;
-    const VkDescriptorPoolSize*    pPoolSizes;
+    VkDescriptorPoolSize*    pPoolSizes;
 } VkDescriptorPoolCreateInfo;
 
 typedef struct VkDescriptorSetAllocateInfo {
     VkStructureType                 sType;
-    const void*                     pNext;
+    void*                     pNext;
     VkDescriptorPool                descriptorPool;
     uint32_t                        descriptorSetCount;
-    const VkDescriptorSetLayout*    pSetLayouts;
+    VkDescriptorSetLayout*    pSetLayouts;
 } VkDescriptorSetAllocateInfo;
 
 typedef struct VkDescriptorImageInfo {
@@ -2132,20 +2132,20 @@ typedef struct VkDescriptorBufferInfo {
 
 typedef struct VkWriteDescriptorSet {
     VkStructureType                  sType;
-    const void*                      pNext;
+    void*                      pNext;
     VkDescriptorSet                  dstSet;
     uint32_t                         dstBinding;
     uint32_t                         dstArrayElement;
     uint32_t                         descriptorCount;
     VkDescriptorType                 descriptorType;
-    const VkDescriptorImageInfo*     pImageInfo;
-    const VkDescriptorBufferInfo*    pBufferInfo;
-    const VkBufferView*              pTexelBufferView;
+    VkDescriptorImageInfo*     pImageInfo;
+    VkDescriptorBufferInfo*    pBufferInfo;
+    VkBufferView*              pTexelBufferView;
 } VkWriteDescriptorSet;
 
 typedef struct VkCopyDescriptorSet {
     VkStructureType    sType;
-    const void*        pNext;
+    void*        pNext;
     VkDescriptorSet    srcSet;
     uint32_t           srcBinding;
     uint32_t           srcArrayElement;
@@ -2157,11 +2157,11 @@ typedef struct VkCopyDescriptorSet {
 
 typedef struct VkFramebufferCreateInfo {
     VkStructureType             sType;
-    const void*                 pNext;
+    void*                 pNext;
     VkFramebufferCreateFlags    flags;
     VkRenderPass                renderPass;
     uint32_t                    attachmentCount;
-    const VkImageView*          pAttachments;
+    VkImageView*          pAttachments;
     uint32_t                    width;
     uint32_t                    height;
     uint32_t                    layers;
@@ -2188,13 +2188,13 @@ typedef struct VkSubpassDescription {
     VkSubpassDescriptionFlags       flags;
     VkPipelineBindPoint             pipelineBindPoint;
     uint32_t                        inputAttachmentCount;
-    const VkAttachmentReference*    pInputAttachments;
+    VkAttachmentReference*    pInputAttachments;
     uint32_t                        colorAttachmentCount;
-    const VkAttachmentReference*    pColorAttachments;
-    const VkAttachmentReference*    pResolveAttachments;
-    const VkAttachmentReference*    pDepthStencilAttachment;
+    VkAttachmentReference*    pColorAttachments;
+    VkAttachmentReference*    pResolveAttachments;
+    VkAttachmentReference*    pDepthStencilAttachment;
     uint32_t                        preserveAttachmentCount;
-    const uint32_t*                 pPreserveAttachments;
+    uint32_t*                 pPreserveAttachments;
 } VkSubpassDescription;
 
 typedef struct VkSubpassDependency {
@@ -2209,26 +2209,26 @@ typedef struct VkSubpassDependency {
 
 typedef struct VkRenderPassCreateInfo {
     VkStructureType                   sType;
-    const void*                       pNext;
+    void*                       pNext;
     VkRenderPassCreateFlags           flags;
     uint32_t                          attachmentCount;
-    const VkAttachmentDescription*    pAttachments;
+    VkAttachmentDescription*    pAttachments;
     uint32_t                          subpassCount;
-    const VkSubpassDescription*       pSubpasses;
+    VkSubpassDescription*       pSubpasses;
     uint32_t                          dependencyCount;
-    const VkSubpassDependency*        pDependencies;
+    VkSubpassDependency*        pDependencies;
 } VkRenderPassCreateInfo;
 
 typedef struct VkCommandPoolCreateInfo {
     VkStructureType             sType;
-    const void*                 pNext;
+    void*                 pNext;
     VkCommandPoolCreateFlags    flags;
     uint32_t                    queueFamilyIndex;
 } VkCommandPoolCreateInfo;
 
 typedef struct VkCommandBufferAllocateInfo {
     VkStructureType         sType;
-    const void*             pNext;
+    void*             pNext;
     VkCommandPool           commandPool;
     VkCommandBufferLevel    level;
     uint32_t                commandBufferCount;
@@ -2236,7 +2236,7 @@ typedef struct VkCommandBufferAllocateInfo {
 
 typedef struct VkCommandBufferInheritanceInfo {
     VkStructureType                  sType;
-    const void*                      pNext;
+    void*                      pNext;
     VkRenderPass                     renderPass;
     uint32_t                         subpass;
     VkFramebuffer                    framebuffer;
@@ -2247,9 +2247,9 @@ typedef struct VkCommandBufferInheritanceInfo {
 
 typedef struct VkCommandBufferBeginInfo {
     VkStructureType                          sType;
-    const void*                              pNext;
+    void*                              pNext;
     VkCommandBufferUsageFlags                flags;
-    const VkCommandBufferInheritanceInfo*    pInheritanceInfo;
+    VkCommandBufferInheritanceInfo*    pInheritanceInfo;
 } VkCommandBufferBeginInfo;
 
 typedef struct VkBufferCopy {
@@ -2327,14 +2327,14 @@ typedef struct VkImageResolve {
 
 typedef struct VkMemoryBarrier {
     VkStructureType    sType;
-    const void*        pNext;
+    void*        pNext;
     VkAccessFlags      srcAccessMask;
     VkAccessFlags      dstAccessMask;
 } VkMemoryBarrier;
 
 typedef struct VkBufferMemoryBarrier {
     VkStructureType    sType;
-    const void*        pNext;
+    void*        pNext;
     VkAccessFlags      srcAccessMask;
     VkAccessFlags      dstAccessMask;
     uint32_t           srcQueueFamilyIndex;
@@ -2346,7 +2346,7 @@ typedef struct VkBufferMemoryBarrier {
 
 typedef struct VkImageMemoryBarrier {
     VkStructureType            sType;
-    const void*                pNext;
+    void*                pNext;
     VkAccessFlags              srcAccessMask;
     VkAccessFlags              dstAccessMask;
     VkImageLayout              oldLayout;
@@ -2359,12 +2359,12 @@ typedef struct VkImageMemoryBarrier {
 
 typedef struct VkRenderPassBeginInfo {
     VkStructureType        sType;
-    const void*            pNext;
+    void*            pNext;
     VkRenderPass           renderPass;
     VkFramebuffer          framebuffer;
     VkRect2D               renderArea;
     uint32_t               clearValueCount;
-    const VkClearValue*    pClearValues;
+    VkClearValue*    pClearValues;
 } VkRenderPassBeginInfo;
 
 typedef struct VkDispatchIndirectCommand {
@@ -2389,8 +2389,8 @@ typedef struct VkDrawIndirectCommand {
 } VkDrawIndirectCommand;
 
 
-typedef VkResult (VKAPI_PTR *PFN_vkCreateInstance)(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance);
-typedef void (VKAPI_PTR *PFN_vkDestroyInstance)(VkInstance instance, const VkAllocationCallbacks* pAllocator);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateInstance)(const VkInstanceCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkInstance* pInstance);
+typedef void (VKAPI_PTR *PFN_vkDestroyInstance)(VkInstance instance, VkAllocationCallbacks* pAllocator);
 typedef VkResult (VKAPI_PTR *PFN_vkEnumeratePhysicalDevices)(VkInstance instance, uint32_t* pPhysicalDeviceCount, VkPhysicalDevice* pPhysicalDevices);
 typedef void (VKAPI_PTR *PFN_vkGetPhysicalDeviceFeatures)(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures* pFeatures);
 typedef void (VKAPI_PTR *PFN_vkGetPhysicalDeviceFormatProperties)(VkPhysicalDevice physicalDevice, VkFormat format, VkFormatProperties* pFormatProperties);
@@ -2398,24 +2398,24 @@ typedef VkResult (VKAPI_PTR *PFN_vkGetPhysicalDeviceImageFormatProperties)(VkPhy
 typedef void (VKAPI_PTR *PFN_vkGetPhysicalDeviceProperties)(VkPhysicalDevice physicalDevice, VkPhysicalDeviceProperties* pProperties);
 typedef void (VKAPI_PTR *PFN_vkGetPhysicalDeviceQueueFamilyProperties)(VkPhysicalDevice physicalDevice, uint32_t* pQueueFamilyPropertyCount, VkQueueFamilyProperties* pQueueFamilyProperties);
 typedef void (VKAPI_PTR *PFN_vkGetPhysicalDeviceMemoryProperties)(VkPhysicalDevice physicalDevice, VkPhysicalDeviceMemoryProperties* pMemoryProperties);
-typedef PFN_vkVoidFunction (VKAPI_PTR *PFN_vkGetInstanceProcAddr)(VkInstance instance, const char* pName);
-typedef PFN_vkVoidFunction (VKAPI_PTR *PFN_vkGetDeviceProcAddr)(VkDevice device, const char* pName);
-typedef VkResult (VKAPI_PTR *PFN_vkCreateDevice)(VkPhysicalDevice physicalDevice, const VkDeviceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDevice* pDevice);
-typedef void (VKAPI_PTR *PFN_vkDestroyDevice)(VkDevice device, const VkAllocationCallbacks* pAllocator);
+typedef PFN_vkVoidFunction (VKAPI_PTR *PFN_vkGetInstanceProcAddr)(VkInstance instance, char* pName);
+typedef PFN_vkVoidFunction (VKAPI_PTR *PFN_vkGetDeviceProcAddr)(VkDevice device, char* pName);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateDevice)(VkPhysicalDevice physicalDevice, VkDeviceCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDevice* pDevice);
+typedef void (VKAPI_PTR *PFN_vkDestroyDevice)(VkDevice device, VkAllocationCallbacks* pAllocator);
 typedef VkResult (VKAPI_PTR *PFN_vkEnumerateInstanceExtensionProperties)(const char* pLayerName, uint32_t* pPropertyCount, VkExtensionProperties* pProperties);
-typedef VkResult (VKAPI_PTR *PFN_vkEnumerateDeviceExtensionProperties)(VkPhysicalDevice physicalDevice, const char* pLayerName, uint32_t* pPropertyCount, VkExtensionProperties* pProperties);
+typedef VkResult (VKAPI_PTR *PFN_vkEnumerateDeviceExtensionProperties)(VkPhysicalDevice physicalDevice, char* pLayerName, uint32_t* pPropertyCount, VkExtensionProperties* pProperties);
 typedef VkResult (VKAPI_PTR *PFN_vkEnumerateInstanceLayerProperties)(uint32_t* pPropertyCount, VkLayerProperties* pProperties);
 typedef VkResult (VKAPI_PTR *PFN_vkEnumerateDeviceLayerProperties)(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkLayerProperties* pProperties);
 typedef void (VKAPI_PTR *PFN_vkGetDeviceQueue)(VkDevice device, uint32_t queueFamilyIndex, uint32_t queueIndex, VkQueue* pQueue);
-typedef VkResult (VKAPI_PTR *PFN_vkQueueSubmit)(VkQueue queue, uint32_t submitCount, const VkSubmitInfo* pSubmits, VkFence fence);
+typedef VkResult (VKAPI_PTR *PFN_vkQueueSubmit)(VkQueue queue, uint32_t submitCount, VkSubmitInfo* pSubmits, VkFence fence);
 typedef VkResult (VKAPI_PTR *PFN_vkQueueWaitIdle)(VkQueue queue);
 typedef VkResult (VKAPI_PTR *PFN_vkDeviceWaitIdle)(VkDevice device);
-typedef VkResult (VKAPI_PTR *PFN_vkAllocateMemory)(VkDevice device, const VkMemoryAllocateInfo* pAllocateInfo, const VkAllocationCallbacks* pAllocator, VkDeviceMemory* pMemory);
-typedef void (VKAPI_PTR *PFN_vkFreeMemory)(VkDevice device, VkDeviceMemory memory, const VkAllocationCallbacks* pAllocator);
+typedef VkResult (VKAPI_PTR *PFN_vkAllocateMemory)(VkDevice device, VkMemoryAllocateInfo* pAllocateInfo, VkAllocationCallbacks* pAllocator, VkDeviceMemory* pMemory);
+typedef void (VKAPI_PTR *PFN_vkFreeMemory)(VkDevice device, VkDeviceMemory memory, VkAllocationCallbacks* pAllocator);
 typedef VkResult (VKAPI_PTR *PFN_vkMapMemory)(VkDevice device, VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void** ppData);
 typedef void (VKAPI_PTR *PFN_vkUnmapMemory)(VkDevice device, VkDeviceMemory memory);
-typedef VkResult (VKAPI_PTR *PFN_vkFlushMappedMemoryRanges)(VkDevice device, uint32_t memoryRangeCount, const VkMappedMemoryRange* pMemoryRanges);
-typedef VkResult (VKAPI_PTR *PFN_vkInvalidateMappedMemoryRanges)(VkDevice device, uint32_t memoryRangeCount, const VkMappedMemoryRange* pMemoryRanges);
+typedef VkResult (VKAPI_PTR *PFN_vkFlushMappedMemoryRanges)(VkDevice device, uint32_t memoryRangeCount, VkMappedMemoryRange* pMemoryRanges);
+typedef VkResult (VKAPI_PTR *PFN_vkInvalidateMappedMemoryRanges)(VkDevice device, uint32_t memoryRangeCount, VkMappedMemoryRange* pMemoryRanges);
 typedef void (VKAPI_PTR *PFN_vkGetDeviceMemoryCommitment)(VkDevice device, VkDeviceMemory memory, VkDeviceSize* pCommittedMemoryInBytes);
 typedef VkResult (VKAPI_PTR *PFN_vkBindBufferMemory)(VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset);
 typedef VkResult (VKAPI_PTR *PFN_vkBindImageMemory)(VkDevice device, VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset);
@@ -2423,119 +2423,119 @@ typedef void (VKAPI_PTR *PFN_vkGetBufferMemoryRequirements)(VkDevice device, VkB
 typedef void (VKAPI_PTR *PFN_vkGetImageMemoryRequirements)(VkDevice device, VkImage image, VkMemoryRequirements* pMemoryRequirements);
 typedef void (VKAPI_PTR *PFN_vkGetImageSparseMemoryRequirements)(VkDevice device, VkImage image, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements* pSparseMemoryRequirements);
 typedef void (VKAPI_PTR *PFN_vkGetPhysicalDeviceSparseImageFormatProperties)(VkPhysicalDevice physicalDevice, VkFormat format, VkImageType type, VkSampleCountFlagBits samples, VkImageUsageFlags usage, VkImageTiling tiling, uint32_t* pPropertyCount, VkSparseImageFormatProperties* pProperties);
-typedef VkResult (VKAPI_PTR *PFN_vkQueueBindSparse)(VkQueue queue, uint32_t bindInfoCount, const VkBindSparseInfo* pBindInfo, VkFence fence);
-typedef VkResult (VKAPI_PTR *PFN_vkCreateFence)(VkDevice device, const VkFenceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkFence* pFence);
-typedef void (VKAPI_PTR *PFN_vkDestroyFence)(VkDevice device, VkFence fence, const VkAllocationCallbacks* pAllocator);
-typedef VkResult (VKAPI_PTR *PFN_vkResetFences)(VkDevice device, uint32_t fenceCount, const VkFence* pFences);
+typedef VkResult (VKAPI_PTR *PFN_vkQueueBindSparse)(VkQueue queue, uint32_t bindInfoCount, VkBindSparseInfo* pBindInfo, VkFence fence);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateFence)(VkDevice device, VkFenceCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkFence* pFence);
+typedef void (VKAPI_PTR *PFN_vkDestroyFence)(VkDevice device, VkFence fence, VkAllocationCallbacks* pAllocator);
+typedef VkResult (VKAPI_PTR *PFN_vkResetFences)(VkDevice device, uint32_t fenceCount, VkFence* pFences);
 typedef VkResult (VKAPI_PTR *PFN_vkGetFenceStatus)(VkDevice device, VkFence fence);
-typedef VkResult (VKAPI_PTR *PFN_vkWaitForFences)(VkDevice device, uint32_t fenceCount, const VkFence* pFences, VkBool32 waitAll, uint64_t timeout);
-typedef VkResult (VKAPI_PTR *PFN_vkCreateSemaphore)(VkDevice device, const VkSemaphoreCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSemaphore* pSemaphore);
-typedef void (VKAPI_PTR *PFN_vkDestroySemaphore)(VkDevice device, VkSemaphore semaphore, const VkAllocationCallbacks* pAllocator);
-typedef VkResult (VKAPI_PTR *PFN_vkCreateEvent)(VkDevice device, const VkEventCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkEvent* pEvent);
-typedef void (VKAPI_PTR *PFN_vkDestroyEvent)(VkDevice device, VkEvent event, const VkAllocationCallbacks* pAllocator);
+typedef VkResult (VKAPI_PTR *PFN_vkWaitForFences)(VkDevice device, uint32_t fenceCount, VkFence* pFences, VkBool32 waitAll, uint64_t timeout);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateSemaphore)(VkDevice device, VkSemaphoreCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSemaphore* pSemaphore);
+typedef void (VKAPI_PTR *PFN_vkDestroySemaphore)(VkDevice device, VkSemaphore semaphore, VkAllocationCallbacks* pAllocator);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateEvent)(VkDevice device, VkEventCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkEvent* pEvent);
+typedef void (VKAPI_PTR *PFN_vkDestroyEvent)(VkDevice device, VkEvent event, VkAllocationCallbacks* pAllocator);
 typedef VkResult (VKAPI_PTR *PFN_vkGetEventStatus)(VkDevice device, VkEvent event);
 typedef VkResult (VKAPI_PTR *PFN_vkSetEvent)(VkDevice device, VkEvent event);
 typedef VkResult (VKAPI_PTR *PFN_vkResetEvent)(VkDevice device, VkEvent event);
-typedef VkResult (VKAPI_PTR *PFN_vkCreateQueryPool)(VkDevice device, const VkQueryPoolCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkQueryPool* pQueryPool);
-typedef void (VKAPI_PTR *PFN_vkDestroyQueryPool)(VkDevice device, VkQueryPool queryPool, const VkAllocationCallbacks* pAllocator);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateQueryPool)(VkDevice device, VkQueryPoolCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkQueryPool* pQueryPool);
+typedef void (VKAPI_PTR *PFN_vkDestroyQueryPool)(VkDevice device, VkQueryPool queryPool, VkAllocationCallbacks* pAllocator);
 typedef VkResult (VKAPI_PTR *PFN_vkGetQueryPoolResults)(VkDevice device, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount, size_t dataSize, void* pData, VkDeviceSize stride, VkQueryResultFlags flags);
-typedef VkResult (VKAPI_PTR *PFN_vkCreateBuffer)(VkDevice device, const VkBufferCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer);
-typedef void (VKAPI_PTR *PFN_vkDestroyBuffer)(VkDevice device, VkBuffer buffer, const VkAllocationCallbacks* pAllocator);
-typedef VkResult (VKAPI_PTR *PFN_vkCreateBufferView)(VkDevice device, const VkBufferViewCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkBufferView* pView);
-typedef void (VKAPI_PTR *PFN_vkDestroyBufferView)(VkDevice device, VkBufferView bufferView, const VkAllocationCallbacks* pAllocator);
-typedef VkResult (VKAPI_PTR *PFN_vkCreateImage)(VkDevice device, const VkImageCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkImage* pImage);
-typedef void (VKAPI_PTR *PFN_vkDestroyImage)(VkDevice device, VkImage image, const VkAllocationCallbacks* pAllocator);
-typedef void (VKAPI_PTR *PFN_vkGetImageSubresourceLayout)(VkDevice device, VkImage image, const VkImageSubresource* pSubresource, VkSubresourceLayout* pLayout);
-typedef VkResult (VKAPI_PTR *PFN_vkCreateImageView)(VkDevice device, const VkImageViewCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkImageView* pView);
-typedef void (VKAPI_PTR *PFN_vkDestroyImageView)(VkDevice device, VkImageView imageView, const VkAllocationCallbacks* pAllocator);
-typedef VkResult (VKAPI_PTR *PFN_vkCreateShaderModule)(VkDevice device, const VkShaderModuleCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkShaderModule* pShaderModule);
-typedef void (VKAPI_PTR *PFN_vkDestroyShaderModule)(VkDevice device, VkShaderModule shaderModule, const VkAllocationCallbacks* pAllocator);
-typedef VkResult (VKAPI_PTR *PFN_vkCreatePipelineCache)(VkDevice device, const VkPipelineCacheCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPipelineCache* pPipelineCache);
-typedef void (VKAPI_PTR *PFN_vkDestroyPipelineCache)(VkDevice device, VkPipelineCache pipelineCache, const VkAllocationCallbacks* pAllocator);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateBuffer)(VkDevice device, VkBufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer);
+typedef void (VKAPI_PTR *PFN_vkDestroyBuffer)(VkDevice device, VkBuffer buffer, VkAllocationCallbacks* pAllocator);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateBufferView)(VkDevice device, VkBufferViewCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBufferView* pView);
+typedef void (VKAPI_PTR *PFN_vkDestroyBufferView)(VkDevice device, VkBufferView bufferView, VkAllocationCallbacks* pAllocator);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateImage)(VkDevice device, VkImageCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImage* pImage);
+typedef void (VKAPI_PTR *PFN_vkDestroyImage)(VkDevice device, VkImage image, VkAllocationCallbacks* pAllocator);
+typedef void (VKAPI_PTR *PFN_vkGetImageSubresourceLayout)(VkDevice device, VkImage image, VkImageSubresource* pSubresource, VkSubresourceLayout* pLayout);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateImageView)(VkDevice device, VkImageViewCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImageView* pView);
+typedef void (VKAPI_PTR *PFN_vkDestroyImageView)(VkDevice device, VkImageView imageView, VkAllocationCallbacks* pAllocator);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateShaderModule)(VkDevice device, VkShaderModuleCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkShaderModule* pShaderModule);
+typedef void (VKAPI_PTR *PFN_vkDestroyShaderModule)(VkDevice device, VkShaderModule shaderModule, VkAllocationCallbacks* pAllocator);
+typedef VkResult (VKAPI_PTR *PFN_vkCreatePipelineCache)(VkDevice device, VkPipelineCacheCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkPipelineCache* pPipelineCache);
+typedef void (VKAPI_PTR *PFN_vkDestroyPipelineCache)(VkDevice device, VkPipelineCache pipelineCache, VkAllocationCallbacks* pAllocator);
 typedef VkResult (VKAPI_PTR *PFN_vkGetPipelineCacheData)(VkDevice device, VkPipelineCache pipelineCache, size_t* pDataSize, void* pData);
-typedef VkResult (VKAPI_PTR *PFN_vkMergePipelineCaches)(VkDevice device, VkPipelineCache dstCache, uint32_t srcCacheCount, const VkPipelineCache* pSrcCaches);
-typedef VkResult (VKAPI_PTR *PFN_vkCreateGraphicsPipelines)(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkGraphicsPipelineCreateInfo* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines);
-typedef VkResult (VKAPI_PTR *PFN_vkCreateComputePipelines)(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, const VkComputePipelineCreateInfo* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines);
-typedef void (VKAPI_PTR *PFN_vkDestroyPipeline)(VkDevice device, VkPipeline pipeline, const VkAllocationCallbacks* pAllocator);
-typedef VkResult (VKAPI_PTR *PFN_vkCreatePipelineLayout)(VkDevice device, const VkPipelineLayoutCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPipelineLayout* pPipelineLayout);
-typedef void (VKAPI_PTR *PFN_vkDestroyPipelineLayout)(VkDevice device, VkPipelineLayout pipelineLayout, const VkAllocationCallbacks* pAllocator);
-typedef VkResult (VKAPI_PTR *PFN_vkCreateSampler)(VkDevice device, const VkSamplerCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSampler* pSampler);
-typedef void (VKAPI_PTR *PFN_vkDestroySampler)(VkDevice device, VkSampler sampler, const VkAllocationCallbacks* pAllocator);
-typedef VkResult (VKAPI_PTR *PFN_vkCreateDescriptorSetLayout)(VkDevice device, const VkDescriptorSetLayoutCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorSetLayout* pSetLayout);
-typedef void (VKAPI_PTR *PFN_vkDestroyDescriptorSetLayout)(VkDevice device, VkDescriptorSetLayout descriptorSetLayout, const VkAllocationCallbacks* pAllocator);
-typedef VkResult (VKAPI_PTR *PFN_vkCreateDescriptorPool)(VkDevice device, const VkDescriptorPoolCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDescriptorPool* pDescriptorPool);
-typedef void (VKAPI_PTR *PFN_vkDestroyDescriptorPool)(VkDevice device, VkDescriptorPool descriptorPool, const VkAllocationCallbacks* pAllocator);
+typedef VkResult (VKAPI_PTR *PFN_vkMergePipelineCaches)(VkDevice device, VkPipelineCache dstCache, uint32_t srcCacheCount, VkPipelineCache* pSrcCaches);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateGraphicsPipelines)(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, VkGraphicsPipelineCreateInfo* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateComputePipelines)(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, VkComputePipelineCreateInfo* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines);
+typedef void (VKAPI_PTR *PFN_vkDestroyPipeline)(VkDevice device, VkPipeline pipeline, VkAllocationCallbacks* pAllocator);
+typedef VkResult (VKAPI_PTR *PFN_vkCreatePipelineLayout)(VkDevice device, VkPipelineLayoutCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkPipelineLayout* pPipelineLayout);
+typedef void (VKAPI_PTR *PFN_vkDestroyPipelineLayout)(VkDevice device, VkPipelineLayout pipelineLayout, VkAllocationCallbacks* pAllocator);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateSampler)(VkDevice device, VkSamplerCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSampler* pSampler);
+typedef void (VKAPI_PTR *PFN_vkDestroySampler)(VkDevice device, VkSampler sampler, VkAllocationCallbacks* pAllocator);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateDescriptorSetLayout)(VkDevice device, VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDescriptorSetLayout* pSetLayout);
+typedef void (VKAPI_PTR *PFN_vkDestroyDescriptorSetLayout)(VkDevice device, VkDescriptorSetLayout descriptorSetLayout, VkAllocationCallbacks* pAllocator);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateDescriptorPool)(VkDevice device, VkDescriptorPoolCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDescriptorPool* pDescriptorPool);
+typedef void (VKAPI_PTR *PFN_vkDestroyDescriptorPool)(VkDevice device, VkDescriptorPool descriptorPool, VkAllocationCallbacks* pAllocator);
 typedef VkResult (VKAPI_PTR *PFN_vkResetDescriptorPool)(VkDevice device, VkDescriptorPool descriptorPool, VkDescriptorPoolResetFlags flags);
-typedef VkResult (VKAPI_PTR *PFN_vkAllocateDescriptorSets)(VkDevice device, const VkDescriptorSetAllocateInfo* pAllocateInfo, VkDescriptorSet* pDescriptorSets);
-typedef VkResult (VKAPI_PTR *PFN_vkFreeDescriptorSets)(VkDevice device, VkDescriptorPool descriptorPool, uint32_t descriptorSetCount, const VkDescriptorSet* pDescriptorSets);
-typedef void (VKAPI_PTR *PFN_vkUpdateDescriptorSets)(VkDevice device, uint32_t descriptorWriteCount, const VkWriteDescriptorSet* pDescriptorWrites, uint32_t descriptorCopyCount, const VkCopyDescriptorSet* pDescriptorCopies);
-typedef VkResult (VKAPI_PTR *PFN_vkCreateFramebuffer)(VkDevice device, const VkFramebufferCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkFramebuffer* pFramebuffer);
-typedef void (VKAPI_PTR *PFN_vkDestroyFramebuffer)(VkDevice device, VkFramebuffer framebuffer, const VkAllocationCallbacks* pAllocator);
-typedef VkResult (VKAPI_PTR *PFN_vkCreateRenderPass)(VkDevice device, const VkRenderPassCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass);
-typedef void (VKAPI_PTR *PFN_vkDestroyRenderPass)(VkDevice device, VkRenderPass renderPass, const VkAllocationCallbacks* pAllocator);
+typedef VkResult (VKAPI_PTR *PFN_vkAllocateDescriptorSets)(VkDevice device, VkDescriptorSetAllocateInfo* pAllocateInfo, VkDescriptorSet* pDescriptorSets);
+typedef VkResult (VKAPI_PTR *PFN_vkFreeDescriptorSets)(VkDevice device, VkDescriptorPool descriptorPool, uint32_t descriptorSetCount, VkDescriptorSet* pDescriptorSets);
+typedef void (VKAPI_PTR *PFN_vkUpdateDescriptorSets)(VkDevice device, uint32_t descriptorWriteCount, VkWriteDescriptorSet* pDescriptorWrites, uint32_t descriptorCopyCount, VkCopyDescriptorSet* pDescriptorCopies);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateFramebuffer)(VkDevice device, VkFramebufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkFramebuffer* pFramebuffer);
+typedef void (VKAPI_PTR *PFN_vkDestroyFramebuffer)(VkDevice device, VkFramebuffer framebuffer, VkAllocationCallbacks* pAllocator);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateRenderPass)(VkDevice device, VkRenderPassCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass);
+typedef void (VKAPI_PTR *PFN_vkDestroyRenderPass)(VkDevice device, VkRenderPass renderPass, VkAllocationCallbacks* pAllocator);
 typedef void (VKAPI_PTR *PFN_vkGetRenderAreaGranularity)(VkDevice device, VkRenderPass renderPass, VkExtent2D* pGranularity);
-typedef VkResult (VKAPI_PTR *PFN_vkCreateCommandPool)(VkDevice device, const VkCommandPoolCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkCommandPool* pCommandPool);
-typedef void (VKAPI_PTR *PFN_vkDestroyCommandPool)(VkDevice device, VkCommandPool commandPool, const VkAllocationCallbacks* pAllocator);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateCommandPool)(VkDevice device, VkCommandPoolCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkCommandPool* pCommandPool);
+typedef void (VKAPI_PTR *PFN_vkDestroyCommandPool)(VkDevice device, VkCommandPool commandPool, VkAllocationCallbacks* pAllocator);
 typedef VkResult (VKAPI_PTR *PFN_vkResetCommandPool)(VkDevice device, VkCommandPool commandPool, VkCommandPoolResetFlags flags);
-typedef VkResult (VKAPI_PTR *PFN_vkAllocateCommandBuffers)(VkDevice device, const VkCommandBufferAllocateInfo* pAllocateInfo, VkCommandBuffer* pCommandBuffers);
-typedef void (VKAPI_PTR *PFN_vkFreeCommandBuffers)(VkDevice device, VkCommandPool commandPool, uint32_t commandBufferCount, const VkCommandBuffer* pCommandBuffers);
-typedef VkResult (VKAPI_PTR *PFN_vkBeginCommandBuffer)(VkCommandBuffer commandBuffer, const VkCommandBufferBeginInfo* pBeginInfo);
+typedef VkResult (VKAPI_PTR *PFN_vkAllocateCommandBuffers)(VkDevice device, VkCommandBufferAllocateInfo* pAllocateInfo, VkCommandBuffer* pCommandBuffers);
+typedef void (VKAPI_PTR *PFN_vkFreeCommandBuffers)(VkDevice device, VkCommandPool commandPool, uint32_t commandBufferCount, VkCommandBuffer* pCommandBuffers);
+typedef VkResult (VKAPI_PTR *PFN_vkBeginCommandBuffer)(VkCommandBuffer commandBuffer, VkCommandBufferBeginInfo* pBeginInfo);
 typedef VkResult (VKAPI_PTR *PFN_vkEndCommandBuffer)(VkCommandBuffer commandBuffer);
 typedef VkResult (VKAPI_PTR *PFN_vkResetCommandBuffer)(VkCommandBuffer commandBuffer, VkCommandBufferResetFlags flags);
 typedef void (VKAPI_PTR *PFN_vkCmdBindPipeline)(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline);
-typedef void (VKAPI_PTR *PFN_vkCmdSetViewport)(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, const VkViewport* pViewports);
-typedef void (VKAPI_PTR *PFN_vkCmdSetScissor)(VkCommandBuffer commandBuffer, uint32_t firstScissor, uint32_t scissorCount, const VkRect2D* pScissors);
+typedef void (VKAPI_PTR *PFN_vkCmdSetViewport)(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, VkViewport* pViewports);
+typedef void (VKAPI_PTR *PFN_vkCmdSetScissor)(VkCommandBuffer commandBuffer, uint32_t firstScissor, uint32_t scissorCount, VkRect2D* pScissors);
 typedef void (VKAPI_PTR *PFN_vkCmdSetLineWidth)(VkCommandBuffer commandBuffer, float lineWidth);
 typedef void (VKAPI_PTR *PFN_vkCmdSetDepthBias)(VkCommandBuffer commandBuffer, float depthBiasConstantFactor, float depthBiasClamp, float depthBiasSlopeFactor);
-typedef void (VKAPI_PTR *PFN_vkCmdSetBlendConstants)(VkCommandBuffer commandBuffer, const float blendConstants[4]);
+typedef void (VKAPI_PTR *PFN_vkCmdSetBlendConstants)(VkCommandBuffer commandBuffer, float blendConstants[4]);
 typedef void (VKAPI_PTR *PFN_vkCmdSetDepthBounds)(VkCommandBuffer commandBuffer, float minDepthBounds, float maxDepthBounds);
 typedef void (VKAPI_PTR *PFN_vkCmdSetStencilCompareMask)(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t compareMask);
 typedef void (VKAPI_PTR *PFN_vkCmdSetStencilWriteMask)(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t writeMask);
 typedef void (VKAPI_PTR *PFN_vkCmdSetStencilReference)(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t reference);
-typedef void (VKAPI_PTR *PFN_vkCmdBindDescriptorSets)(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t firstSet, uint32_t descriptorSetCount, const VkDescriptorSet* pDescriptorSets, uint32_t dynamicOffsetCount, const uint32_t* pDynamicOffsets);
+typedef void (VKAPI_PTR *PFN_vkCmdBindDescriptorSets)(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t firstSet, uint32_t descriptorSetCount, VkDescriptorSet* pDescriptorSets, uint32_t dynamicOffsetCount, uint32_t* pDynamicOffsets);
 typedef void (VKAPI_PTR *PFN_vkCmdBindIndexBuffer)(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkIndexType indexType);
-typedef void (VKAPI_PTR *PFN_vkCmdBindVertexBuffers)(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, const VkBuffer* pBuffers, const VkDeviceSize* pOffsets);
+typedef void (VKAPI_PTR *PFN_vkCmdBindVertexBuffers)(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, VkBuffer* pBuffers, VkDeviceSize* pOffsets);
 typedef void (VKAPI_PTR *PFN_vkCmdDraw)(VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance);
 typedef void (VKAPI_PTR *PFN_vkCmdDrawIndexed)(VkCommandBuffer commandBuffer, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance);
 typedef void (VKAPI_PTR *PFN_vkCmdDrawIndirect)(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride);
 typedef void (VKAPI_PTR *PFN_vkCmdDrawIndexedIndirect)(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride);
 typedef void (VKAPI_PTR *PFN_vkCmdDispatch)(VkCommandBuffer commandBuffer, uint32_t x, uint32_t y, uint32_t z);
 typedef void (VKAPI_PTR *PFN_vkCmdDispatchIndirect)(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset);
-typedef void (VKAPI_PTR *PFN_vkCmdCopyBuffer)(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkBuffer dstBuffer, uint32_t regionCount, const VkBufferCopy* pRegions);
-typedef void (VKAPI_PTR *PFN_vkCmdCopyImage)(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkImageCopy* pRegions);
-typedef void (VKAPI_PTR *PFN_vkCmdBlitImage)(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkImageBlit* pRegions, VkFilter filter);
-typedef void (VKAPI_PTR *PFN_vkCmdCopyBufferToImage)(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkBufferImageCopy* pRegions);
-typedef void (VKAPI_PTR *PFN_vkCmdCopyImageToBuffer)(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkBuffer dstBuffer, uint32_t regionCount, const VkBufferImageCopy* pRegions);
-typedef void (VKAPI_PTR *PFN_vkCmdUpdateBuffer)(VkCommandBuffer commandBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize dataSize, const void* pData);
+typedef void (VKAPI_PTR *PFN_vkCmdCopyBuffer)(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkBuffer dstBuffer, uint32_t regionCount, VkBufferCopy* pRegions);
+typedef void (VKAPI_PTR *PFN_vkCmdCopyImage)(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkImageCopy* pRegions);
+typedef void (VKAPI_PTR *PFN_vkCmdBlitImage)(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkImageBlit* pRegions, VkFilter filter);
+typedef void (VKAPI_PTR *PFN_vkCmdCopyBufferToImage)(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkBufferImageCopy* pRegions);
+typedef void (VKAPI_PTR *PFN_vkCmdCopyImageToBuffer)(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkBuffer dstBuffer, uint32_t regionCount, VkBufferImageCopy* pRegions);
+typedef void (VKAPI_PTR *PFN_vkCmdUpdateBuffer)(VkCommandBuffer commandBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize dataSize, void* pData);
 typedef void (VKAPI_PTR *PFN_vkCmdFillBuffer)(VkCommandBuffer commandBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize size, uint32_t data);
-typedef void (VKAPI_PTR *PFN_vkCmdClearColorImage)(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout, const VkClearColorValue* pColor, uint32_t rangeCount, const VkImageSubresourceRange* pRanges);
-typedef void (VKAPI_PTR *PFN_vkCmdClearDepthStencilImage)(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout, const VkClearDepthStencilValue* pDepthStencil, uint32_t rangeCount, const VkImageSubresourceRange* pRanges);
-typedef void (VKAPI_PTR *PFN_vkCmdClearAttachments)(VkCommandBuffer commandBuffer, uint32_t attachmentCount, const VkClearAttachment* pAttachments, uint32_t rectCount, const VkClearRect* pRects);
-typedef void (VKAPI_PTR *PFN_vkCmdResolveImage)(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, const VkImageResolve* pRegions);
+typedef void (VKAPI_PTR *PFN_vkCmdClearColorImage)(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout, VkClearColorValue* pColor, uint32_t rangeCount, VkImageSubresourceRange* pRanges);
+typedef void (VKAPI_PTR *PFN_vkCmdClearDepthStencilImage)(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout, VkClearDepthStencilValue* pDepthStencil, uint32_t rangeCount, VkImageSubresourceRange* pRanges);
+typedef void (VKAPI_PTR *PFN_vkCmdClearAttachments)(VkCommandBuffer commandBuffer, uint32_t attachmentCount, VkClearAttachment* pAttachments, uint32_t rectCount, VkClearRect* pRects);
+typedef void (VKAPI_PTR *PFN_vkCmdResolveImage)(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkImageResolve* pRegions);
 typedef void (VKAPI_PTR *PFN_vkCmdSetEvent)(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags stageMask);
 typedef void (VKAPI_PTR *PFN_vkCmdResetEvent)(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags stageMask);
-typedef void (VKAPI_PTR *PFN_vkCmdWaitEvents)(VkCommandBuffer commandBuffer, uint32_t eventCount, const VkEvent* pEvents, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, uint32_t memoryBarrierCount, const VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount, const VkBufferMemoryBarrier* pBufferMemoryBarriers, uint32_t imageMemoryBarrierCount, const VkImageMemoryBarrier* pImageMemoryBarriers);
-typedef void (VKAPI_PTR *PFN_vkCmdPipelineBarrier)(VkCommandBuffer commandBuffer, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, VkDependencyFlags dependencyFlags, uint32_t memoryBarrierCount, const VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount, const VkBufferMemoryBarrier* pBufferMemoryBarriers, uint32_t imageMemoryBarrierCount, const VkImageMemoryBarrier* pImageMemoryBarriers);
+typedef void (VKAPI_PTR *PFN_vkCmdWaitEvents)(VkCommandBuffer commandBuffer, uint32_t eventCount, VkEvent* pEvents, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, uint32_t memoryBarrierCount, VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount, VkBufferMemoryBarrier* pBufferMemoryBarriers, uint32_t imageMemoryBarrierCount, VkImageMemoryBarrier* pImageMemoryBarriers);
+typedef void (VKAPI_PTR *PFN_vkCmdPipelineBarrier)(VkCommandBuffer commandBuffer, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, VkDependencyFlags dependencyFlags, uint32_t memoryBarrierCount, VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount, VkBufferMemoryBarrier* pBufferMemoryBarriers, uint32_t imageMemoryBarrierCount, VkImageMemoryBarrier* pImageMemoryBarriers);
 typedef void (VKAPI_PTR *PFN_vkCmdBeginQuery)(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags);
 typedef void (VKAPI_PTR *PFN_vkCmdEndQuery)(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query);
 typedef void (VKAPI_PTR *PFN_vkCmdResetQueryPool)(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount);
 typedef void (VKAPI_PTR *PFN_vkCmdWriteTimestamp)(VkCommandBuffer commandBuffer, VkPipelineStageFlagBits pipelineStage, VkQueryPool queryPool, uint32_t query);
 typedef void (VKAPI_PTR *PFN_vkCmdCopyQueryPoolResults)(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize stride, VkQueryResultFlags flags);
-typedef void (VKAPI_PTR *PFN_vkCmdPushConstants)(VkCommandBuffer commandBuffer, VkPipelineLayout layout, VkShaderStageFlags stageFlags, uint32_t offset, uint32_t size, const void* pValues);
-typedef void (VKAPI_PTR *PFN_vkCmdBeginRenderPass)(VkCommandBuffer commandBuffer, const VkRenderPassBeginInfo* pRenderPassBegin, VkSubpassContents contents);
+typedef void (VKAPI_PTR *PFN_vkCmdPushConstants)(VkCommandBuffer commandBuffer, VkPipelineLayout layout, VkShaderStageFlags stageFlags, uint32_t offset, uint32_t size, void* pValues);
+typedef void (VKAPI_PTR *PFN_vkCmdBeginRenderPass)(VkCommandBuffer commandBuffer, VkRenderPassBeginInfo* pRenderPassBegin, VkSubpassContents contents);
 typedef void (VKAPI_PTR *PFN_vkCmdNextSubpass)(VkCommandBuffer commandBuffer, VkSubpassContents contents);
 typedef void (VKAPI_PTR *PFN_vkCmdEndRenderPass)(VkCommandBuffer commandBuffer);
-typedef void (VKAPI_PTR *PFN_vkCmdExecuteCommands)(VkCommandBuffer commandBuffer, uint32_t commandBufferCount, const VkCommandBuffer* pCommandBuffers);
+typedef void (VKAPI_PTR *PFN_vkCmdExecuteCommands)(VkCommandBuffer commandBuffer, uint32_t commandBufferCount, VkCommandBuffer* pCommandBuffers);
 
 #ifndef VK_NO_PROTOTYPES
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateInstance(
-    const VkInstanceCreateInfo*                 pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkInstanceCreateInfo*                 pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkInstance*                                 pInstance);
 
 VKAPI_ATTR void VKAPI_CALL vkDestroyInstance(
     VkInstance                                  instance,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkEnumeratePhysicalDevices(
     VkInstance                                  instance,
@@ -2575,30 +2575,30 @@ VKAPI_ATTR void VKAPI_CALL vkGetPhysicalDeviceMemoryProperties(
 
 VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL vkGetInstanceProcAddr(
     VkInstance                                  instance,
-    const char*                                 pName);
+    char*                                 pName);
 
 VKAPI_ATTR PFN_vkVoidFunction VKAPI_CALL vkGetDeviceProcAddr(
     VkDevice                                    device,
-    const char*                                 pName);
+    char*                                 pName);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateDevice(
     VkPhysicalDevice                            physicalDevice,
-    const VkDeviceCreateInfo*                   pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkDeviceCreateInfo*                   pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkDevice*                                   pDevice);
 
 VKAPI_ATTR void VKAPI_CALL vkDestroyDevice(
     VkDevice                                    device,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkEnumerateInstanceExtensionProperties(
-    const char*                                 pLayerName,
+    char*                                 pLayerName,
     uint32_t*                                   pPropertyCount,
     VkExtensionProperties*                      pProperties);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkEnumerateDeviceExtensionProperties(
     VkPhysicalDevice                            physicalDevice,
-    const char*                                 pLayerName,
+    char*                                 pLayerName,
     uint32_t*                                   pPropertyCount,
     VkExtensionProperties*                      pProperties);
 
@@ -2620,7 +2620,7 @@ VKAPI_ATTR void VKAPI_CALL vkGetDeviceQueue(
 VKAPI_ATTR VkResult VKAPI_CALL vkQueueSubmit(
     VkQueue                                     queue,
     uint32_t                                    submitCount,
-    const VkSubmitInfo*                         pSubmits,
+    VkSubmitInfo*                         pSubmits,
     VkFence                                     fence);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkQueueWaitIdle(
@@ -2631,14 +2631,14 @@ VKAPI_ATTR VkResult VKAPI_CALL vkDeviceWaitIdle(
 
 VKAPI_ATTR VkResult VKAPI_CALL vkAllocateMemory(
     VkDevice                                    device,
-    const VkMemoryAllocateInfo*                 pAllocateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkMemoryAllocateInfo*                 pAllocateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkDeviceMemory*                             pMemory);
 
 VKAPI_ATTR void VKAPI_CALL vkFreeMemory(
     VkDevice                                    device,
     VkDeviceMemory                              memory,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkMapMemory(
     VkDevice                                    device,
@@ -2655,12 +2655,12 @@ VKAPI_ATTR void VKAPI_CALL vkUnmapMemory(
 VKAPI_ATTR VkResult VKAPI_CALL vkFlushMappedMemoryRanges(
     VkDevice                                    device,
     uint32_t                                    memoryRangeCount,
-    const VkMappedMemoryRange*                  pMemoryRanges);
+    VkMappedMemoryRange*                  pMemoryRanges);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkInvalidateMappedMemoryRanges(
     VkDevice                                    device,
     uint32_t                                    memoryRangeCount,
-    const VkMappedMemoryRange*                  pMemoryRanges);
+    VkMappedMemoryRange*                  pMemoryRanges);
 
 VKAPI_ATTR void VKAPI_CALL vkGetDeviceMemoryCommitment(
     VkDevice                                    device,
@@ -2708,24 +2708,24 @@ VKAPI_ATTR void VKAPI_CALL vkGetPhysicalDeviceSparseImageFormatProperties(
 VKAPI_ATTR VkResult VKAPI_CALL vkQueueBindSparse(
     VkQueue                                     queue,
     uint32_t                                    bindInfoCount,
-    const VkBindSparseInfo*                     pBindInfo,
+    VkBindSparseInfo*                     pBindInfo,
     VkFence                                     fence);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateFence(
     VkDevice                                    device,
-    const VkFenceCreateInfo*                    pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkFenceCreateInfo*                    pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkFence*                                    pFence);
 
 VKAPI_ATTR void VKAPI_CALL vkDestroyFence(
     VkDevice                                    device,
     VkFence                                     fence,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkResetFences(
     VkDevice                                    device,
     uint32_t                                    fenceCount,
-    const VkFence*                              pFences);
+    VkFence*                              pFences);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkGetFenceStatus(
     VkDevice                                    device,
@@ -2734,31 +2734,31 @@ VKAPI_ATTR VkResult VKAPI_CALL vkGetFenceStatus(
 VKAPI_ATTR VkResult VKAPI_CALL vkWaitForFences(
     VkDevice                                    device,
     uint32_t                                    fenceCount,
-    const VkFence*                              pFences,
+    VkFence*                              pFences,
     VkBool32                                    waitAll,
     uint64_t                                    timeout);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateSemaphore(
     VkDevice                                    device,
-    const VkSemaphoreCreateInfo*                pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkSemaphoreCreateInfo*                pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkSemaphore*                                pSemaphore);
 
 VKAPI_ATTR void VKAPI_CALL vkDestroySemaphore(
     VkDevice                                    device,
     VkSemaphore                                 semaphore,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateEvent(
     VkDevice                                    device,
-    const VkEventCreateInfo*                    pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkEventCreateInfo*                    pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkEvent*                                    pEvent);
 
 VKAPI_ATTR void VKAPI_CALL vkDestroyEvent(
     VkDevice                                    device,
     VkEvent                                     event,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkGetEventStatus(
     VkDevice                                    device,
@@ -2774,14 +2774,14 @@ VKAPI_ATTR VkResult VKAPI_CALL vkResetEvent(
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateQueryPool(
     VkDevice                                    device,
-    const VkQueryPoolCreateInfo*                pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkQueryPoolCreateInfo*                pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkQueryPool*                                pQueryPool);
 
 VKAPI_ATTR void VKAPI_CALL vkDestroyQueryPool(
     VkDevice                                    device,
     VkQueryPool                                 queryPool,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkGetQueryPoolResults(
     VkDevice                                    device,
@@ -2795,75 +2795,75 @@ VKAPI_ATTR VkResult VKAPI_CALL vkGetQueryPoolResults(
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateBuffer(
     VkDevice                                    device,
-    const VkBufferCreateInfo*                   pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkBufferCreateInfo*                   pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkBuffer*                                   pBuffer);
 
 VKAPI_ATTR void VKAPI_CALL vkDestroyBuffer(
     VkDevice                                    device,
     VkBuffer                                    buffer,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateBufferView(
     VkDevice                                    device,
-    const VkBufferViewCreateInfo*               pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkBufferViewCreateInfo*               pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkBufferView*                               pView);
 
 VKAPI_ATTR void VKAPI_CALL vkDestroyBufferView(
     VkDevice                                    device,
     VkBufferView                                bufferView,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateImage(
     VkDevice                                    device,
-    const VkImageCreateInfo*                    pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkImageCreateInfo*                    pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkImage*                                    pImage);
 
 VKAPI_ATTR void VKAPI_CALL vkDestroyImage(
     VkDevice                                    device,
     VkImage                                     image,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR void VKAPI_CALL vkGetImageSubresourceLayout(
     VkDevice                                    device,
     VkImage                                     image,
-    const VkImageSubresource*                   pSubresource,
+    VkImageSubresource*                   pSubresource,
     VkSubresourceLayout*                        pLayout);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateImageView(
     VkDevice                                    device,
-    const VkImageViewCreateInfo*                pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkImageViewCreateInfo*                pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkImageView*                                pView);
 
 VKAPI_ATTR void VKAPI_CALL vkDestroyImageView(
     VkDevice                                    device,
     VkImageView                                 imageView,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateShaderModule(
     VkDevice                                    device,
-    const VkShaderModuleCreateInfo*             pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkShaderModuleCreateInfo*             pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkShaderModule*                             pShaderModule);
 
 VKAPI_ATTR void VKAPI_CALL vkDestroyShaderModule(
     VkDevice                                    device,
     VkShaderModule                              shaderModule,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreatePipelineCache(
     VkDevice                                    device,
-    const VkPipelineCacheCreateInfo*            pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkPipelineCacheCreateInfo*            pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkPipelineCache*                            pPipelineCache);
 
 VKAPI_ATTR void VKAPI_CALL vkDestroyPipelineCache(
     VkDevice                                    device,
     VkPipelineCache                             pipelineCache,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkGetPipelineCacheData(
     VkDevice                                    device,
@@ -2875,72 +2875,72 @@ VKAPI_ATTR VkResult VKAPI_CALL vkMergePipelineCaches(
     VkDevice                                    device,
     VkPipelineCache                             dstCache,
     uint32_t                                    srcCacheCount,
-    const VkPipelineCache*                      pSrcCaches);
+    VkPipelineCache*                      pSrcCaches);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateGraphicsPipelines(
     VkDevice                                    device,
     VkPipelineCache                             pipelineCache,
     uint32_t                                    createInfoCount,
-    const VkGraphicsPipelineCreateInfo*         pCreateInfos,
-    const VkAllocationCallbacks*                pAllocator,
+    VkGraphicsPipelineCreateInfo*         pCreateInfos,
+    VkAllocationCallbacks*                pAllocator,
     VkPipeline*                                 pPipelines);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateComputePipelines(
     VkDevice                                    device,
     VkPipelineCache                             pipelineCache,
     uint32_t                                    createInfoCount,
-    const VkComputePipelineCreateInfo*          pCreateInfos,
-    const VkAllocationCallbacks*                pAllocator,
+    VkComputePipelineCreateInfo*          pCreateInfos,
+    VkAllocationCallbacks*                pAllocator,
     VkPipeline*                                 pPipelines);
 
 VKAPI_ATTR void VKAPI_CALL vkDestroyPipeline(
     VkDevice                                    device,
     VkPipeline                                  pipeline,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreatePipelineLayout(
     VkDevice                                    device,
-    const VkPipelineLayoutCreateInfo*           pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkPipelineLayoutCreateInfo*           pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkPipelineLayout*                           pPipelineLayout);
 
 VKAPI_ATTR void VKAPI_CALL vkDestroyPipelineLayout(
     VkDevice                                    device,
     VkPipelineLayout                            pipelineLayout,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateSampler(
     VkDevice                                    device,
-    const VkSamplerCreateInfo*                  pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkSamplerCreateInfo*                  pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkSampler*                                  pSampler);
 
 VKAPI_ATTR void VKAPI_CALL vkDestroySampler(
     VkDevice                                    device,
     VkSampler                                   sampler,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateDescriptorSetLayout(
     VkDevice                                    device,
-    const VkDescriptorSetLayoutCreateInfo*      pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkDescriptorSetLayoutCreateInfo*      pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkDescriptorSetLayout*                      pSetLayout);
 
 VKAPI_ATTR void VKAPI_CALL vkDestroyDescriptorSetLayout(
     VkDevice                                    device,
     VkDescriptorSetLayout                       descriptorSetLayout,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateDescriptorPool(
     VkDevice                                    device,
-    const VkDescriptorPoolCreateInfo*           pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkDescriptorPoolCreateInfo*           pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkDescriptorPool*                           pDescriptorPool);
 
 VKAPI_ATTR void VKAPI_CALL vkDestroyDescriptorPool(
     VkDevice                                    device,
     VkDescriptorPool                            descriptorPool,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkResetDescriptorPool(
     VkDevice                                    device,
@@ -2949,43 +2949,43 @@ VKAPI_ATTR VkResult VKAPI_CALL vkResetDescriptorPool(
 
 VKAPI_ATTR VkResult VKAPI_CALL vkAllocateDescriptorSets(
     VkDevice                                    device,
-    const VkDescriptorSetAllocateInfo*          pAllocateInfo,
+    VkDescriptorSetAllocateInfo*          pAllocateInfo,
     VkDescriptorSet*                            pDescriptorSets);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkFreeDescriptorSets(
     VkDevice                                    device,
     VkDescriptorPool                            descriptorPool,
     uint32_t                                    descriptorSetCount,
-    const VkDescriptorSet*                      pDescriptorSets);
+    VkDescriptorSet*                      pDescriptorSets);
 
 VKAPI_ATTR void VKAPI_CALL vkUpdateDescriptorSets(
     VkDevice                                    device,
     uint32_t                                    descriptorWriteCount,
-    const VkWriteDescriptorSet*                 pDescriptorWrites,
+    VkWriteDescriptorSet*                 pDescriptorWrites,
     uint32_t                                    descriptorCopyCount,
-    const VkCopyDescriptorSet*                  pDescriptorCopies);
+    VkCopyDescriptorSet*                  pDescriptorCopies);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateFramebuffer(
     VkDevice                                    device,
-    const VkFramebufferCreateInfo*              pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkFramebufferCreateInfo*              pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkFramebuffer*                              pFramebuffer);
 
 VKAPI_ATTR void VKAPI_CALL vkDestroyFramebuffer(
     VkDevice                                    device,
     VkFramebuffer                               framebuffer,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateRenderPass(
     VkDevice                                    device,
-    const VkRenderPassCreateInfo*               pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkRenderPassCreateInfo*               pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkRenderPass*                               pRenderPass);
 
 VKAPI_ATTR void VKAPI_CALL vkDestroyRenderPass(
     VkDevice                                    device,
     VkRenderPass                                renderPass,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR void VKAPI_CALL vkGetRenderAreaGranularity(
     VkDevice                                    device,
@@ -2994,14 +2994,14 @@ VKAPI_ATTR void VKAPI_CALL vkGetRenderAreaGranularity(
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateCommandPool(
     VkDevice                                    device,
-    const VkCommandPoolCreateInfo*              pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkCommandPoolCreateInfo*              pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkCommandPool*                              pCommandPool);
 
 VKAPI_ATTR void VKAPI_CALL vkDestroyCommandPool(
     VkDevice                                    device,
     VkCommandPool                               commandPool,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkResetCommandPool(
     VkDevice                                    device,
@@ -3010,18 +3010,18 @@ VKAPI_ATTR VkResult VKAPI_CALL vkResetCommandPool(
 
 VKAPI_ATTR VkResult VKAPI_CALL vkAllocateCommandBuffers(
     VkDevice                                    device,
-    const VkCommandBufferAllocateInfo*          pAllocateInfo,
+    VkCommandBufferAllocateInfo*          pAllocateInfo,
     VkCommandBuffer*                            pCommandBuffers);
 
 VKAPI_ATTR void VKAPI_CALL vkFreeCommandBuffers(
     VkDevice                                    device,
     VkCommandPool                               commandPool,
     uint32_t                                    commandBufferCount,
-    const VkCommandBuffer*                      pCommandBuffers);
+    VkCommandBuffer*                      pCommandBuffers);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkBeginCommandBuffer(
     VkCommandBuffer                             commandBuffer,
-    const VkCommandBufferBeginInfo*             pBeginInfo);
+    VkCommandBufferBeginInfo*             pBeginInfo);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkEndCommandBuffer(
     VkCommandBuffer                             commandBuffer);
@@ -3039,13 +3039,13 @@ VKAPI_ATTR void VKAPI_CALL vkCmdSetViewport(
     VkCommandBuffer                             commandBuffer,
     uint32_t                                    firstViewport,
     uint32_t                                    viewportCount,
-    const VkViewport*                           pViewports);
+    VkViewport*                           pViewports);
 
 VKAPI_ATTR void VKAPI_CALL vkCmdSetScissor(
     VkCommandBuffer                             commandBuffer,
     uint32_t                                    firstScissor,
     uint32_t                                    scissorCount,
-    const VkRect2D*                             pScissors);
+    VkRect2D*                             pScissors);
 
 VKAPI_ATTR void VKAPI_CALL vkCmdSetLineWidth(
     VkCommandBuffer                             commandBuffer,
@@ -3059,7 +3059,7 @@ VKAPI_ATTR void VKAPI_CALL vkCmdSetDepthBias(
 
 VKAPI_ATTR void VKAPI_CALL vkCmdSetBlendConstants(
     VkCommandBuffer                             commandBuffer,
-    const float                                 blendConstants[4]);
+    float                                 blendConstants[4]);
 
 VKAPI_ATTR void VKAPI_CALL vkCmdSetDepthBounds(
     VkCommandBuffer                             commandBuffer,
@@ -3087,9 +3087,9 @@ VKAPI_ATTR void VKAPI_CALL vkCmdBindDescriptorSets(
     VkPipelineLayout                            layout,
     uint32_t                                    firstSet,
     uint32_t                                    descriptorSetCount,
-    const VkDescriptorSet*                      pDescriptorSets,
+    VkDescriptorSet*                      pDescriptorSets,
     uint32_t                                    dynamicOffsetCount,
-    const uint32_t*                             pDynamicOffsets);
+    uint32_t*                             pDynamicOffsets);
 
 VKAPI_ATTR void VKAPI_CALL vkCmdBindIndexBuffer(
     VkCommandBuffer                             commandBuffer,
@@ -3101,8 +3101,8 @@ VKAPI_ATTR void VKAPI_CALL vkCmdBindVertexBuffers(
     VkCommandBuffer                             commandBuffer,
     uint32_t                                    firstBinding,
     uint32_t                                    bindingCount,
-    const VkBuffer*                             pBuffers,
-    const VkDeviceSize*                         pOffsets);
+    VkBuffer*                             pBuffers,
+    VkDeviceSize*                         pOffsets);
 
 VKAPI_ATTR void VKAPI_CALL vkCmdDraw(
     VkCommandBuffer                             commandBuffer,
@@ -3149,7 +3149,7 @@ VKAPI_ATTR void VKAPI_CALL vkCmdCopyBuffer(
     VkBuffer                                    srcBuffer,
     VkBuffer                                    dstBuffer,
     uint32_t                                    regionCount,
-    const VkBufferCopy*                         pRegions);
+    VkBufferCopy*                         pRegions);
 
 VKAPI_ATTR void VKAPI_CALL vkCmdCopyImage(
     VkCommandBuffer                             commandBuffer,
@@ -3158,7 +3158,7 @@ VKAPI_ATTR void VKAPI_CALL vkCmdCopyImage(
     VkImage                                     dstImage,
     VkImageLayout                               dstImageLayout,
     uint32_t                                    regionCount,
-    const VkImageCopy*                          pRegions);
+    VkImageCopy*                          pRegions);
 
 VKAPI_ATTR void VKAPI_CALL vkCmdBlitImage(
     VkCommandBuffer                             commandBuffer,
@@ -3167,7 +3167,7 @@ VKAPI_ATTR void VKAPI_CALL vkCmdBlitImage(
     VkImage                                     dstImage,
     VkImageLayout                               dstImageLayout,
     uint32_t                                    regionCount,
-    const VkImageBlit*                          pRegions,
+    VkImageBlit*                          pRegions,
     VkFilter                                    filter);
 
 VKAPI_ATTR void VKAPI_CALL vkCmdCopyBufferToImage(
@@ -3176,7 +3176,7 @@ VKAPI_ATTR void VKAPI_CALL vkCmdCopyBufferToImage(
     VkImage                                     dstImage,
     VkImageLayout                               dstImageLayout,
     uint32_t                                    regionCount,
-    const VkBufferImageCopy*                    pRegions);
+    VkBufferImageCopy*                    pRegions);
 
 VKAPI_ATTR void VKAPI_CALL vkCmdCopyImageToBuffer(
     VkCommandBuffer                             commandBuffer,
@@ -3184,14 +3184,14 @@ VKAPI_ATTR void VKAPI_CALL vkCmdCopyImageToBuffer(
     VkImageLayout                               srcImageLayout,
     VkBuffer                                    dstBuffer,
     uint32_t                                    regionCount,
-    const VkBufferImageCopy*                    pRegions);
+    VkBufferImageCopy*                    pRegions);
 
 VKAPI_ATTR void VKAPI_CALL vkCmdUpdateBuffer(
     VkCommandBuffer                             commandBuffer,
     VkBuffer                                    dstBuffer,
     VkDeviceSize                                dstOffset,
     VkDeviceSize                                dataSize,
-    const void*                                 pData);
+    void*                                 pData);
 
 VKAPI_ATTR void VKAPI_CALL vkCmdFillBuffer(
     VkCommandBuffer                             commandBuffer,
@@ -3204,24 +3204,24 @@ VKAPI_ATTR void VKAPI_CALL vkCmdClearColorImage(
     VkCommandBuffer                             commandBuffer,
     VkImage                                     image,
     VkImageLayout                               imageLayout,
-    const VkClearColorValue*                    pColor,
+    VkClearColorValue*                    pColor,
     uint32_t                                    rangeCount,
-    const VkImageSubresourceRange*              pRanges);
+    VkImageSubresourceRange*              pRanges);
 
 VKAPI_ATTR void VKAPI_CALL vkCmdClearDepthStencilImage(
     VkCommandBuffer                             commandBuffer,
     VkImage                                     image,
     VkImageLayout                               imageLayout,
-    const VkClearDepthStencilValue*             pDepthStencil,
+    VkClearDepthStencilValue*             pDepthStencil,
     uint32_t                                    rangeCount,
-    const VkImageSubresourceRange*              pRanges);
+    VkImageSubresourceRange*              pRanges);
 
 VKAPI_ATTR void VKAPI_CALL vkCmdClearAttachments(
     VkCommandBuffer                             commandBuffer,
     uint32_t                                    attachmentCount,
-    const VkClearAttachment*                    pAttachments,
+    VkClearAttachment*                    pAttachments,
     uint32_t                                    rectCount,
-    const VkClearRect*                          pRects);
+    VkClearRect*                          pRects);
 
 VKAPI_ATTR void VKAPI_CALL vkCmdResolveImage(
     VkCommandBuffer                             commandBuffer,
@@ -3230,7 +3230,7 @@ VKAPI_ATTR void VKAPI_CALL vkCmdResolveImage(
     VkImage                                     dstImage,
     VkImageLayout                               dstImageLayout,
     uint32_t                                    regionCount,
-    const VkImageResolve*                       pRegions);
+    VkImageResolve*                       pRegions);
 
 VKAPI_ATTR void VKAPI_CALL vkCmdSetEvent(
     VkCommandBuffer                             commandBuffer,
@@ -3245,15 +3245,15 @@ VKAPI_ATTR void VKAPI_CALL vkCmdResetEvent(
 VKAPI_ATTR void VKAPI_CALL vkCmdWaitEvents(
     VkCommandBuffer                             commandBuffer,
     uint32_t                                    eventCount,
-    const VkEvent*                              pEvents,
+    VkEvent*                              pEvents,
     VkPipelineStageFlags                        srcStageMask,
     VkPipelineStageFlags                        dstStageMask,
     uint32_t                                    memoryBarrierCount,
-    const VkMemoryBarrier*                      pMemoryBarriers,
+    VkMemoryBarrier*                      pMemoryBarriers,
     uint32_t                                    bufferMemoryBarrierCount,
-    const VkBufferMemoryBarrier*                pBufferMemoryBarriers,
+    VkBufferMemoryBarrier*                pBufferMemoryBarriers,
     uint32_t                                    imageMemoryBarrierCount,
-    const VkImageMemoryBarrier*                 pImageMemoryBarriers);
+    VkImageMemoryBarrier*                 pImageMemoryBarriers);
 
 VKAPI_ATTR void VKAPI_CALL vkCmdPipelineBarrier(
     VkCommandBuffer                             commandBuffer,
@@ -3261,11 +3261,11 @@ VKAPI_ATTR void VKAPI_CALL vkCmdPipelineBarrier(
     VkPipelineStageFlags                        dstStageMask,
     VkDependencyFlags                           dependencyFlags,
     uint32_t                                    memoryBarrierCount,
-    const VkMemoryBarrier*                      pMemoryBarriers,
+    VkMemoryBarrier*                      pMemoryBarriers,
     uint32_t                                    bufferMemoryBarrierCount,
-    const VkBufferMemoryBarrier*                pBufferMemoryBarriers,
+    VkBufferMemoryBarrier*                pBufferMemoryBarriers,
     uint32_t                                    imageMemoryBarrierCount,
-    const VkImageMemoryBarrier*                 pImageMemoryBarriers);
+    VkImageMemoryBarrier*                 pImageMemoryBarriers);
 
 VKAPI_ATTR void VKAPI_CALL vkCmdBeginQuery(
     VkCommandBuffer                             commandBuffer,
@@ -3306,11 +3306,11 @@ VKAPI_ATTR void VKAPI_CALL vkCmdPushConstants(
     VkShaderStageFlags                          stageFlags,
     uint32_t                                    offset,
     uint32_t                                    size,
-    const void*                                 pValues);
+    void*                                 pValues);
 
 VKAPI_ATTR void VKAPI_CALL vkCmdBeginRenderPass(
     VkCommandBuffer                             commandBuffer,
-    const VkRenderPassBeginInfo*                pRenderPassBegin,
+    VkRenderPassBeginInfo*                pRenderPassBegin,
     VkSubpassContents                           contents);
 
 VKAPI_ATTR void VKAPI_CALL vkCmdNextSubpass(
@@ -3323,7 +3323,7 @@ VKAPI_ATTR void VKAPI_CALL vkCmdEndRenderPass(
 VKAPI_ATTR void VKAPI_CALL vkCmdExecuteCommands(
     VkCommandBuffer                             commandBuffer,
     uint32_t                                    commandBufferCount,
-    const VkCommandBuffer*                      pCommandBuffers);
+    VkCommandBuffer*                      pCommandBuffers);
 #endif
 
 #define VK_KHR_surface 1
@@ -3396,7 +3396,7 @@ typedef struct VkSurfaceFormatKHR {
 } VkSurfaceFormatKHR;
 
 
-typedef void (VKAPI_PTR *PFN_vkDestroySurfaceKHR)(VkInstance instance, VkSurfaceKHR surface, const VkAllocationCallbacks* pAllocator);
+typedef void (VKAPI_PTR *PFN_vkDestroySurfaceKHR)(VkInstance instance, VkSurfaceKHR surface, VkAllocationCallbacks* pAllocator);
 typedef VkResult (VKAPI_PTR *PFN_vkGetPhysicalDeviceSurfaceSupportKHR)(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, VkSurfaceKHR surface, VkBool32* pSupported);
 typedef VkResult (VKAPI_PTR *PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR)(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkSurfaceCapabilitiesKHR* pSurfaceCapabilities);
 typedef VkResult (VKAPI_PTR *PFN_vkGetPhysicalDeviceSurfaceFormatsKHR)(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t* pSurfaceFormatCount, VkSurfaceFormatKHR* pSurfaceFormats);
@@ -3406,7 +3406,7 @@ typedef VkResult (VKAPI_PTR *PFN_vkGetPhysicalDeviceSurfacePresentModesKHR)(VkPh
 VKAPI_ATTR void VKAPI_CALL vkDestroySurfaceKHR(
     VkInstance                                  instance,
     VkSurfaceKHR                                surface,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkGetPhysicalDeviceSurfaceSupportKHR(
     VkPhysicalDevice                            physicalDevice,
@@ -3442,7 +3442,7 @@ typedef VkFlags VkSwapchainCreateFlagsKHR;
 
 typedef struct VkSwapchainCreateInfoKHR {
     VkStructureType                  sType;
-    const void*                      pNext;
+    void*                      pNext;
     VkSwapchainCreateFlagsKHR        flags;
     VkSurfaceKHR                     surface;
     uint32_t                         minImageCount;
@@ -3453,7 +3453,7 @@ typedef struct VkSwapchainCreateInfoKHR {
     VkImageUsageFlags                imageUsage;
     VkSharingMode                    imageSharingMode;
     uint32_t                         queueFamilyIndexCount;
-    const uint32_t*                  pQueueFamilyIndices;
+    uint32_t*                  pQueueFamilyIndices;
     VkSurfaceTransformFlagBitsKHR    preTransform;
     VkCompositeAlphaFlagBitsKHR      compositeAlpha;
     VkPresentModeKHR                 presentMode;
@@ -3463,33 +3463,33 @@ typedef struct VkSwapchainCreateInfoKHR {
 
 typedef struct VkPresentInfoKHR {
     VkStructureType          sType;
-    const void*              pNext;
+    void*              pNext;
     uint32_t                 waitSemaphoreCount;
-    const VkSemaphore*       pWaitSemaphores;
+    VkSemaphore*       pWaitSemaphores;
     uint32_t                 swapchainCount;
-    const VkSwapchainKHR*    pSwapchains;
-    const uint32_t*          pImageIndices;
+    VkSwapchainKHR*    pSwapchains;
+    uint32_t*          pImageIndices;
     VkResult*                pResults;
 } VkPresentInfoKHR;
 
 
-typedef VkResult (VKAPI_PTR *PFN_vkCreateSwapchainKHR)(VkDevice device, const VkSwapchainCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchain);
-typedef void (VKAPI_PTR *PFN_vkDestroySwapchainKHR)(VkDevice device, VkSwapchainKHR swapchain, const VkAllocationCallbacks* pAllocator);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateSwapchainKHR)(VkDevice device, VkSwapchainCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchain);
+typedef void (VKAPI_PTR *PFN_vkDestroySwapchainKHR)(VkDevice device, VkSwapchainKHR swapchain, VkAllocationCallbacks* pAllocator);
 typedef VkResult (VKAPI_PTR *PFN_vkGetSwapchainImagesKHR)(VkDevice device, VkSwapchainKHR swapchain, uint32_t* pSwapchainImageCount, VkImage* pSwapchainImages);
 typedef VkResult (VKAPI_PTR *PFN_vkAcquireNextImageKHR)(VkDevice device, VkSwapchainKHR swapchain, uint64_t timeout, VkSemaphore semaphore, VkFence fence, uint32_t* pImageIndex);
-typedef VkResult (VKAPI_PTR *PFN_vkQueuePresentKHR)(VkQueue queue, const VkPresentInfoKHR* pPresentInfo);
+typedef VkResult (VKAPI_PTR *PFN_vkQueuePresentKHR)(VkQueue queue, VkPresentInfoKHR* pPresentInfo);
 
 #ifndef VK_NO_PROTOTYPES
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateSwapchainKHR(
     VkDevice                                    device,
-    const VkSwapchainCreateInfoKHR*             pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkSwapchainCreateInfoKHR*             pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkSwapchainKHR*                             pSwapchain);
 
 VKAPI_ATTR void VKAPI_CALL vkDestroySwapchainKHR(
     VkDevice                                    device,
     VkSwapchainKHR                              swapchain,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkGetSwapchainImagesKHR(
     VkDevice                                    device,
@@ -3507,7 +3507,7 @@ VKAPI_ATTR VkResult VKAPI_CALL vkAcquireNextImageKHR(
 
 VKAPI_ATTR VkResult VKAPI_CALL vkQueuePresentKHR(
     VkQueue                                     queue,
-    const VkPresentInfoKHR*                     pPresentInfo);
+    VkPresentInfoKHR*                     pPresentInfo);
 #endif
 
 #define VK_KHR_display 1
@@ -3531,7 +3531,7 @@ typedef VkFlags VkDisplaySurfaceCreateFlagsKHR;
 
 typedef struct VkDisplayPropertiesKHR {
     VkDisplayKHR                  display;
-    const char*                   displayName;
+    char*                   displayName;
     VkExtent2D                    physicalDimensions;
     VkExtent2D                    physicalResolution;
     VkSurfaceTransformFlagsKHR    supportedTransforms;
@@ -3551,7 +3551,7 @@ typedef struct VkDisplayModePropertiesKHR {
 
 typedef struct VkDisplayModeCreateInfoKHR {
     VkStructureType                sType;
-    const void*                    pNext;
+    void*                    pNext;
     VkDisplayModeCreateFlagsKHR    flags;
     VkDisplayModeParametersKHR     parameters;
 } VkDisplayModeCreateInfoKHR;
@@ -3575,7 +3575,7 @@ typedef struct VkDisplayPlanePropertiesKHR {
 
 typedef struct VkDisplaySurfaceCreateInfoKHR {
     VkStructureType                   sType;
-    const void*                       pNext;
+    void*                       pNext;
     VkDisplaySurfaceCreateFlagsKHR    flags;
     VkDisplayModeKHR                  displayMode;
     uint32_t                          planeIndex;
@@ -3591,9 +3591,9 @@ typedef VkResult (VKAPI_PTR *PFN_vkGetPhysicalDeviceDisplayPropertiesKHR)(VkPhys
 typedef VkResult (VKAPI_PTR *PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR)(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkDisplayPlanePropertiesKHR* pProperties);
 typedef VkResult (VKAPI_PTR *PFN_vkGetDisplayPlaneSupportedDisplaysKHR)(VkPhysicalDevice physicalDevice, uint32_t planeIndex, uint32_t* pDisplayCount, VkDisplayKHR* pDisplays);
 typedef VkResult (VKAPI_PTR *PFN_vkGetDisplayModePropertiesKHR)(VkPhysicalDevice physicalDevice, VkDisplayKHR display, uint32_t* pPropertyCount, VkDisplayModePropertiesKHR* pProperties);
-typedef VkResult (VKAPI_PTR *PFN_vkCreateDisplayModeKHR)(VkPhysicalDevice physicalDevice, VkDisplayKHR display, const VkDisplayModeCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDisplayModeKHR* pMode);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateDisplayModeKHR)(VkPhysicalDevice physicalDevice, VkDisplayKHR display, VkDisplayModeCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDisplayModeKHR* pMode);
 typedef VkResult (VKAPI_PTR *PFN_vkGetDisplayPlaneCapabilitiesKHR)(VkPhysicalDevice physicalDevice, VkDisplayModeKHR mode, uint32_t planeIndex, VkDisplayPlaneCapabilitiesKHR* pCapabilities);
-typedef VkResult (VKAPI_PTR *PFN_vkCreateDisplayPlaneSurfaceKHR)(VkInstance instance, const VkDisplaySurfaceCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateDisplayPlaneSurfaceKHR)(VkInstance instance, VkDisplaySurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface);
 
 #ifndef VK_NO_PROTOTYPES
 VKAPI_ATTR VkResult VKAPI_CALL vkGetPhysicalDeviceDisplayPropertiesKHR(
@@ -3621,8 +3621,8 @@ VKAPI_ATTR VkResult VKAPI_CALL vkGetDisplayModePropertiesKHR(
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateDisplayModeKHR(
     VkPhysicalDevice                            physicalDevice,
     VkDisplayKHR                                display,
-    const VkDisplayModeCreateInfoKHR*           pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkDisplayModeCreateInfoKHR*           pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkDisplayModeKHR*                           pMode);
 
 VKAPI_ATTR VkResult VKAPI_CALL vkGetDisplayPlaneCapabilitiesKHR(
@@ -3633,8 +3633,8 @@ VKAPI_ATTR VkResult VKAPI_CALL vkGetDisplayPlaneCapabilitiesKHR(
 
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateDisplayPlaneSurfaceKHR(
     VkInstance                                  instance,
-    const VkDisplaySurfaceCreateInfoKHR*        pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkDisplaySurfaceCreateInfoKHR*        pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkSurfaceKHR*                               pSurface);
 #endif
 
@@ -3644,21 +3644,21 @@ VKAPI_ATTR VkResult VKAPI_CALL vkCreateDisplayPlaneSurfaceKHR(
 
 typedef struct VkDisplayPresentInfoKHR {
     VkStructureType    sType;
-    const void*        pNext;
+    void*        pNext;
     VkRect2D           srcRect;
     VkRect2D           dstRect;
     VkBool32           persistent;
 } VkDisplayPresentInfoKHR;
 
 
-typedef VkResult (VKAPI_PTR *PFN_vkCreateSharedSwapchainsKHR)(VkDevice device, uint32_t swapchainCount, const VkSwapchainCreateInfoKHR* pCreateInfos, const VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchains);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateSharedSwapchainsKHR)(VkDevice device, uint32_t swapchainCount, VkSwapchainCreateInfoKHR* pCreateInfos, VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchains);
 
 #ifndef VK_NO_PROTOTYPES
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateSharedSwapchainsKHR(
     VkDevice                                    device,
     uint32_t                                    swapchainCount,
-    const VkSwapchainCreateInfoKHR*             pCreateInfos,
-    const VkAllocationCallbacks*                pAllocator,
+    VkSwapchainCreateInfoKHR*             pCreateInfos,
+    VkAllocationCallbacks*                pAllocator,
     VkSwapchainKHR*                             pSwapchains);
 #endif
 
@@ -3673,21 +3673,21 @@ typedef VkFlags VkXlibSurfaceCreateFlagsKHR;
 
 typedef struct VkXlibSurfaceCreateInfoKHR {
     VkStructureType                sType;
-    const void*                    pNext;
+    void*                    pNext;
     VkXlibSurfaceCreateFlagsKHR    flags;
     Display*                       dpy;
     Window                         window;
 } VkXlibSurfaceCreateInfoKHR;
 
 
-typedef VkResult (VKAPI_PTR *PFN_vkCreateXlibSurfaceKHR)(VkInstance instance, const VkXlibSurfaceCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateXlibSurfaceKHR)(VkInstance instance, VkXlibSurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface);
 typedef VkBool32 (VKAPI_PTR *PFN_vkGetPhysicalDeviceXlibPresentationSupportKHR)(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, Display* dpy, VisualID visualID);
 
 #ifndef VK_NO_PROTOTYPES
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateXlibSurfaceKHR(
     VkInstance                                  instance,
-    const VkXlibSurfaceCreateInfoKHR*           pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkXlibSurfaceCreateInfoKHR*           pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkSurfaceKHR*                               pSurface);
 
 VKAPI_ATTR VkBool32 VKAPI_CALL vkGetPhysicalDeviceXlibPresentationSupportKHR(
@@ -3709,21 +3709,21 @@ typedef VkFlags VkXcbSurfaceCreateFlagsKHR;
 
 typedef struct VkXcbSurfaceCreateInfoKHR {
     VkStructureType               sType;
-    const void*                   pNext;
+    void*                   pNext;
     VkXcbSurfaceCreateFlagsKHR    flags;
     xcb_connection_t*             connection;
     xcb_window_t                  window;
 } VkXcbSurfaceCreateInfoKHR;
 
 
-typedef VkResult (VKAPI_PTR *PFN_vkCreateXcbSurfaceKHR)(VkInstance instance, const VkXcbSurfaceCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateXcbSurfaceKHR)(VkInstance instance, VkXcbSurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface);
 typedef VkBool32 (VKAPI_PTR *PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR)(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, xcb_connection_t* connection, xcb_visualid_t visual_id);
 
 #ifndef VK_NO_PROTOTYPES
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateXcbSurfaceKHR(
     VkInstance                                  instance,
-    const VkXcbSurfaceCreateInfoKHR*            pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkXcbSurfaceCreateInfoKHR*            pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkSurfaceKHR*                               pSurface);
 
 VKAPI_ATTR VkBool32 VKAPI_CALL vkGetPhysicalDeviceXcbPresentationSupportKHR(
@@ -3745,21 +3745,21 @@ typedef VkFlags VkWaylandSurfaceCreateFlagsKHR;
 
 typedef struct VkWaylandSurfaceCreateInfoKHR {
     VkStructureType                   sType;
-    const void*                       pNext;
+    void*                       pNext;
     VkWaylandSurfaceCreateFlagsKHR    flags;
     struct wl_display*                display;
     struct wl_surface*                surface;
 } VkWaylandSurfaceCreateInfoKHR;
 
 
-typedef VkResult (VKAPI_PTR *PFN_vkCreateWaylandSurfaceKHR)(VkInstance instance, const VkWaylandSurfaceCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateWaylandSurfaceKHR)(VkInstance instance, VkWaylandSurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface);
 typedef VkBool32 (VKAPI_PTR *PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR)(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, struct wl_display* display);
 
 #ifndef VK_NO_PROTOTYPES
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateWaylandSurfaceKHR(
     VkInstance                                  instance,
-    const VkWaylandSurfaceCreateInfoKHR*        pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkWaylandSurfaceCreateInfoKHR*        pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkSurfaceKHR*                               pSurface);
 
 VKAPI_ATTR VkBool32 VKAPI_CALL vkGetPhysicalDeviceWaylandPresentationSupportKHR(
@@ -3780,21 +3780,21 @@ typedef VkFlags VkMirSurfaceCreateFlagsKHR;
 
 typedef struct VkMirSurfaceCreateInfoKHR {
     VkStructureType               sType;
-    const void*                   pNext;
+    void*                   pNext;
     VkMirSurfaceCreateFlagsKHR    flags;
     MirConnection*                connection;
     MirSurface*                   mirSurface;
 } VkMirSurfaceCreateInfoKHR;
 
 
-typedef VkResult (VKAPI_PTR *PFN_vkCreateMirSurfaceKHR)(VkInstance instance, const VkMirSurfaceCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateMirSurfaceKHR)(VkInstance instance, VkMirSurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface);
 typedef VkBool32 (VKAPI_PTR *PFN_vkGetPhysicalDeviceMirPresentationSupportKHR)(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, MirConnection* connection);
 
 #ifndef VK_NO_PROTOTYPES
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateMirSurfaceKHR(
     VkInstance                                  instance,
-    const VkMirSurfaceCreateInfoKHR*            pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkMirSurfaceCreateInfoKHR*            pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkSurfaceKHR*                               pSurface);
 
 VKAPI_ATTR VkBool32 VKAPI_CALL vkGetPhysicalDeviceMirPresentationSupportKHR(
@@ -3815,19 +3815,19 @@ typedef VkFlags VkAndroidSurfaceCreateFlagsKHR;
 
 typedef struct VkAndroidSurfaceCreateInfoKHR {
     VkStructureType                   sType;
-    const void*                       pNext;
+    void*                       pNext;
     VkAndroidSurfaceCreateFlagsKHR    flags;
     ANativeWindow*                    window;
 } VkAndroidSurfaceCreateInfoKHR;
 
 
-typedef VkResult (VKAPI_PTR *PFN_vkCreateAndroidSurfaceKHR)(VkInstance instance, const VkAndroidSurfaceCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateAndroidSurfaceKHR)(VkInstance instance, VkAndroidSurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface);
 
 #ifndef VK_NO_PROTOTYPES
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateAndroidSurfaceKHR(
     VkInstance                                  instance,
-    const VkAndroidSurfaceCreateInfoKHR*        pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkAndroidSurfaceCreateInfoKHR*        pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkSurfaceKHR*                               pSurface);
 #endif
 #endif /* VK_USE_PLATFORM_ANDROID_KHR */
@@ -3843,21 +3843,21 @@ typedef VkFlags VkWin32SurfaceCreateFlagsKHR;
 
 typedef struct VkWin32SurfaceCreateInfoKHR {
     VkStructureType                 sType;
-    const void*                     pNext;
+    void*                     pNext;
     VkWin32SurfaceCreateFlagsKHR    flags;
     HINSTANCE                       hinstance;
     HWND                            hwnd;
 } VkWin32SurfaceCreateInfoKHR;
 
 
-typedef VkResult (VKAPI_PTR *PFN_vkCreateWin32SurfaceKHR)(VkInstance instance, const VkWin32SurfaceCreateInfoKHR* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateWin32SurfaceKHR)(VkInstance instance, VkWin32SurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface);
 typedef VkBool32 (VKAPI_PTR *PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR)(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex);
 
 #ifndef VK_NO_PROTOTYPES
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateWin32SurfaceKHR(
     VkInstance                                  instance,
-    const VkWin32SurfaceCreateInfoKHR*          pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkWin32SurfaceCreateInfoKHR*          pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkSurfaceKHR*                               pSurface);
 
 VKAPI_ATTR VkBool32 VKAPI_CALL vkGetPhysicalDeviceWin32PresentationSupportKHR(
@@ -3941,35 +3941,35 @@ typedef VkBool32 (VKAPI_PTR *PFN_vkDebugReportCallbackEXT)(
     uint64_t                                    object,
     size_t                                      location,
     int32_t                                     messageCode,
-    const char*                                 pLayerPrefix,
-    const char*                                 pMessage,
+    char*                                 pLayerPrefix,
+    char*                                 pMessage,
     void*                                       pUserData);
 
 
 typedef struct VkDebugReportCallbackCreateInfoEXT {
     VkStructureType                 sType;
-    const void*                     pNext;
+    void*                     pNext;
     VkDebugReportFlagsEXT           flags;
     PFN_vkDebugReportCallbackEXT    pfnCallback;
     void*                           pUserData;
 } VkDebugReportCallbackCreateInfoEXT;
 
 
-typedef VkResult (VKAPI_PTR *PFN_vkCreateDebugReportCallbackEXT)(VkInstance instance, const VkDebugReportCallbackCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugReportCallbackEXT* pCallback);
-typedef void (VKAPI_PTR *PFN_vkDestroyDebugReportCallbackEXT)(VkInstance instance, VkDebugReportCallbackEXT callback, const VkAllocationCallbacks* pAllocator);
-typedef void (VKAPI_PTR *PFN_vkDebugReportMessageEXT)(VkInstance instance, VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objectType, uint64_t object, size_t location, int32_t messageCode, const char* pLayerPrefix, const char* pMessage);
+typedef VkResult (VKAPI_PTR *PFN_vkCreateDebugReportCallbackEXT)(VkInstance instance, VkDebugReportCallbackCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDebugReportCallbackEXT* pCallback);
+typedef void (VKAPI_PTR *PFN_vkDestroyDebugReportCallbackEXT)(VkInstance instance, VkDebugReportCallbackEXT callback, VkAllocationCallbacks* pAllocator);
+typedef void (VKAPI_PTR *PFN_vkDebugReportMessageEXT)(VkInstance instance, VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objectType, uint64_t object, size_t location, int32_t messageCode, char* pLayerPrefix, char* pMessage);
 
 #ifndef VK_NO_PROTOTYPES
 VKAPI_ATTR VkResult VKAPI_CALL vkCreateDebugReportCallbackEXT(
     VkInstance                                  instance,
-    const VkDebugReportCallbackCreateInfoEXT*   pCreateInfo,
-    const VkAllocationCallbacks*                pAllocator,
+    VkDebugReportCallbackCreateInfoEXT*   pCreateInfo,
+    VkAllocationCallbacks*                pAllocator,
     VkDebugReportCallbackEXT*                   pCallback);
 
 VKAPI_ATTR void VKAPI_CALL vkDestroyDebugReportCallbackEXT(
     VkInstance                                  instance,
     VkDebugReportCallbackEXT                    callback,
-    const VkAllocationCallbacks*                pAllocator);
+    VkAllocationCallbacks*                pAllocator);
 
 VKAPI_ATTR void VKAPI_CALL vkDebugReportMessageEXT(
     VkInstance                                  instance,
@@ -3978,8 +3978,8 @@ VKAPI_ATTR void VKAPI_CALL vkDebugReportMessageEXT(
     uint64_t                                    object,
     size_t                                      location,
     int32_t                                     messageCode,
-    const char*                                 pLayerPrefix,
-    const char*                                 pMessage);
+    char*                                 pLayerPrefix,
+    char*                                 pMessage);
 #endif
 
 #define VK_NV_glsl_shader 1
@@ -4008,7 +4008,7 @@ typedef enum VkRasterizationOrderAMD {
 
 typedef struct VkPipelineRasterizationStateRasterizationOrderAMD {
     VkStructureType            sType;
-    const void*                pNext;
+    void*                pNext;
     VkRasterizationOrderAMD    rasterizationOrder;
 } VkPipelineRasterizationStateRasterizationOrderAMD;
 
@@ -4030,26 +4030,26 @@ typedef struct VkPipelineRasterizationStateRasterizationOrderAMD {
 
 typedef struct VkDebugMarkerObjectNameInfoEXT {
     VkStructureType               sType;
-    const void*                   pNext;
+    void*                   pNext;
     VkDebugReportObjectTypeEXT    objectType;
     uint64_t                      object;
-    const char*                   pObjectName;
+    char*                   pObjectName;
 } VkDebugMarkerObjectNameInfoEXT;
 
 typedef struct VkDebugMarkerObjectTagInfoEXT {
     VkStructureType               sType;
-    const void*                   pNext;
+    void*                   pNext;
     VkDebugReportObjectTypeEXT    objectType;
     uint64_t                      object;
     uint64_t                      tagName;
     size_t                        tagSize;
-    const void*                   pTag;
+    void*                   pTag;
 } VkDebugMarkerObjectTagInfoEXT;
 
 typedef struct VkDebugMarkerMarkerInfoEXT {
     VkStructureType    sType;
-    const void*        pNext;
-    const char*        pMarkerName;
+    void*        pNext;
+    char*        pMarkerName;
     float              color[4];
 } VkDebugMarkerMarkerInfoEXT;
 
@@ -4092,19 +4092,19 @@ VKAPI_ATTR void VKAPI_CALL vkCmdDebugMarkerInsertEXT(
 
 typedef struct VkDedicatedAllocationImageCreateInfoNV {
     VkStructureType    sType;
-    const void*        pNext;
+    void*        pNext;
     VkBool32           dedicatedAllocation;
 } VkDedicatedAllocationImageCreateInfoNV;
 
 typedef struct VkDedicatedAllocationBufferCreateInfoNV {
     VkStructureType    sType;
-    const void*        pNext;
+    void*        pNext;
     VkBool32           dedicatedAllocation;
 } VkDedicatedAllocationBufferCreateInfoNV;
 
 typedef struct VkDedicatedAllocationMemoryAllocateInfoNV {
     VkStructureType    sType;
-    const void*        pNext;
+    void*        pNext;
     VkImage            image;
     VkBuffer           buffer;
 } VkDedicatedAllocationMemoryAllocateInfoNV;
@@ -5393,7 +5393,43 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkOffset2D_getsetters[] = {
+                static int PyVkOffset2D_setx(PyVkOffset2D *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with x");
+                        return -1;
+                    }
+                (self->base)->x = (int32_t) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkOffset2D_getx(PyVkOffset2D *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->x);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkOffset2D_sety(PyVkOffset2D *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with y");
+                        return -1;
+                    }
+                (self->base)->y = (int32_t) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkOffset2D_gety(PyVkOffset2D *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->y);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkOffset2D_getsetters[] = {
+                    
+                        { "x", (getter)PyVkOffset2D_getx, (setter)PyVkOffset2D_setx, "", NULL},
+                    
+                        { "y", (getter)PyVkOffset2D_gety, (setter)PyVkOffset2D_sety, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkOffset2DType = {
@@ -5402,7 +5438,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkOffset2D_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkOffset2D object",0,0,0,0,0,0,0,0,
-                    VkOffset2D_getsetters,0,0,0,0,0,0,0,PyVkOffset2D_new,};
+                    PyVkOffset2D_getsetters,0,0,0,0,0,0,0,PyVkOffset2D_new,};
             
                 typedef struct { PyObject_HEAD VkOffset3D *base; }
                 PyVkOffset3D;
@@ -5427,7 +5463,61 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkOffset3D_getsetters[] = {
+                static int PyVkOffset3D_setx(PyVkOffset3D *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with x");
+                        return -1;
+                    }
+                (self->base)->x = (int32_t) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkOffset3D_getx(PyVkOffset3D *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->x);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkOffset3D_sety(PyVkOffset3D *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with y");
+                        return -1;
+                    }
+                (self->base)->y = (int32_t) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkOffset3D_gety(PyVkOffset3D *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->y);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkOffset3D_setz(PyVkOffset3D *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with z");
+                        return -1;
+                    }
+                (self->base)->z = (int32_t) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkOffset3D_getz(PyVkOffset3D *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->z);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkOffset3D_getsetters[] = {
+                    
+                        { "x", (getter)PyVkOffset3D_getx, (setter)PyVkOffset3D_setx, "", NULL},
+                    
+                        { "y", (getter)PyVkOffset3D_gety, (setter)PyVkOffset3D_sety, "", NULL},
+                    
+                        { "z", (getter)PyVkOffset3D_getz, (setter)PyVkOffset3D_setz, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkOffset3DType = {
@@ -5436,7 +5526,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkOffset3D_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkOffset3D object",0,0,0,0,0,0,0,0,
-                    VkOffset3D_getsetters,0,0,0,0,0,0,0,PyVkOffset3D_new,};
+                    PyVkOffset3D_getsetters,0,0,0,0,0,0,0,PyVkOffset3D_new,};
             
                 typedef struct { PyObject_HEAD VkExtent2D *base; }
                 PyVkExtent2D;
@@ -5467,18 +5557,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with width");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->width = val;
+                (self->base)->width = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkExtent2D_getwidth(PyVkExtent2D *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->width);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->width);
                     Py_INCREF(value);
                     return value;
                 }
@@ -5489,29 +5573,21 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with height");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->height = val;
+                (self->base)->height = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkExtent2D_getheight(PyVkExtent2D *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->height);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->height);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkExtent2D_getsetters[] = {
+                    static PyGetSetDef PyVkExtent2D_getsetters[] = {
                     
-                        { "width", (getter)PyVkExtent2D_getwidth,
-                           (setter)PyVkExtent2D_setwidth, "", NULL},
+                        { "width", (getter)PyVkExtent2D_getwidth, (setter)PyVkExtent2D_setwidth, "", NULL},
                     
-                        { "height", (getter)PyVkExtent2D_getheight,
-                           (setter)PyVkExtent2D_setheight, "", NULL},
+                        { "height", (getter)PyVkExtent2D_getheight, (setter)PyVkExtent2D_setheight, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkExtent2DType = {
@@ -5520,7 +5596,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkExtent2D_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkExtent2D object",0,0,0,0,0,0,0,0,
-                    VkExtent2D_getsetters,0,0,0,0,0,0,0,PyVkExtent2D_new,};
+                    PyVkExtent2D_getsetters,0,0,0,0,0,0,0,PyVkExtent2D_new,};
             
                 typedef struct { PyObject_HEAD VkExtent3D *base; }
                 PyVkExtent3D;
@@ -5551,18 +5627,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with width");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->width = val;
+                (self->base)->width = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkExtent3D_getwidth(PyVkExtent3D *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->width);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->width);
                     Py_INCREF(value);
                     return value;
                 }
@@ -5573,18 +5643,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with height");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->height = val;
+                (self->base)->height = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkExtent3D_getheight(PyVkExtent3D *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->height);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->height);
                     Py_INCREF(value);
                     return value;
                 }
@@ -5595,32 +5659,23 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with depth");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->depth = val;
+                (self->base)->depth = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkExtent3D_getdepth(PyVkExtent3D *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->depth);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->depth);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkExtent3D_getsetters[] = {
+                    static PyGetSetDef PyVkExtent3D_getsetters[] = {
                     
-                        { "width", (getter)PyVkExtent3D_getwidth,
-                           (setter)PyVkExtent3D_setwidth, "", NULL},
+                        { "width", (getter)PyVkExtent3D_getwidth, (setter)PyVkExtent3D_setwidth, "", NULL},
                     
-                        { "height", (getter)PyVkExtent3D_getheight,
-                           (setter)PyVkExtent3D_setheight, "", NULL},
+                        { "height", (getter)PyVkExtent3D_getheight, (setter)PyVkExtent3D_setheight, "", NULL},
                     
-                        { "depth", (getter)PyVkExtent3D_getdepth,
-                           (setter)PyVkExtent3D_setdepth, "", NULL},
+                        { "depth", (getter)PyVkExtent3D_getdepth, (setter)PyVkExtent3D_setdepth, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkExtent3DType = {
@@ -5629,7 +5684,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkExtent3D_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkExtent3D object",0,0,0,0,0,0,0,0,
-                    VkExtent3D_getsetters,0,0,0,0,0,0,0,PyVkExtent3D_new,};
+                    PyVkExtent3D_getsetters,0,0,0,0,0,0,0,PyVkExtent3D_new,};
             
                 typedef struct { PyObject_HEAD VkViewport *base; }
                 PyVkViewport;
@@ -5654,7 +5709,115 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkViewport_getsetters[] = {
+                static int PyVkViewport_setx(PyVkViewport *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with x");
+                        return -1;
+                    }
+                (self->base)->x = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkViewport_getx(PyVkViewport *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->x);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkViewport_sety(PyVkViewport *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with y");
+                        return -1;
+                    }
+                (self->base)->y = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkViewport_gety(PyVkViewport *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->y);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkViewport_setwidth(PyVkViewport *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with width");
+                        return -1;
+                    }
+                (self->base)->width = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkViewport_getwidth(PyVkViewport *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->width);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkViewport_setheight(PyVkViewport *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with height");
+                        return -1;
+                    }
+                (self->base)->height = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkViewport_getheight(PyVkViewport *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->height);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkViewport_setminDepth(PyVkViewport *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with minDepth");
+                        return -1;
+                    }
+                (self->base)->minDepth = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkViewport_getminDepth(PyVkViewport *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->minDepth);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkViewport_setmaxDepth(PyVkViewport *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with maxDepth");
+                        return -1;
+                    }
+                (self->base)->maxDepth = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkViewport_getmaxDepth(PyVkViewport *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->maxDepth);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkViewport_getsetters[] = {
+                    
+                        { "x", (getter)PyVkViewport_getx, (setter)PyVkViewport_setx, "", NULL},
+                    
+                        { "y", (getter)PyVkViewport_gety, (setter)PyVkViewport_sety, "", NULL},
+                    
+                        { "width", (getter)PyVkViewport_getwidth, (setter)PyVkViewport_setwidth, "", NULL},
+                    
+                        { "height", (getter)PyVkViewport_getheight, (setter)PyVkViewport_setheight, "", NULL},
+                    
+                        { "minDepth", (getter)PyVkViewport_getminDepth, (setter)PyVkViewport_setminDepth, "", NULL},
+                    
+                        { "maxDepth", (getter)PyVkViewport_getmaxDepth, (setter)PyVkViewport_setmaxDepth, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkViewportType = {
@@ -5663,7 +5826,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkViewport_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkViewport object",0,0,0,0,0,0,0,0,
-                    VkViewport_getsetters,0,0,0,0,0,0,0,PyVkViewport_new,};
+                    PyVkViewport_getsetters,0,0,0,0,0,0,0,PyVkViewport_new,};
             
                 typedef struct { PyObject_HEAD VkRect2D *base; }
                 PyVkRect2D;
@@ -5688,7 +5851,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkRect2D_getsetters[] = {
+                    static PyGetSetDef PyVkRect2D_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkRect2DType = {
@@ -5697,7 +5860,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkRect2D_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkRect2D object",0,0,0,0,0,0,0,0,
-                    VkRect2D_getsetters,0,0,0,0,0,0,0,PyVkRect2D_new,};
+                    PyVkRect2D_getsetters,0,0,0,0,0,0,0,PyVkRect2D_new,};
             
 #ifdef hackdefine
 
@@ -5724,7 +5887,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkRect3D_getsetters[] = {
+                    static PyGetSetDef PyVkRect3D_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkRect3DType = {
@@ -5733,7 +5896,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkRect3D_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkRect3D object",0,0,0,0,0,0,0,0,
-                    VkRect3D_getsetters,0,0,0,0,0,0,0,PyVkRect3D_new,};
+                    PyVkRect3D_getsetters,0,0,0,0,0,0,0,PyVkRect3D_new,};
             
 #endif
 
@@ -5766,18 +5929,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with baseArrayLayer");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->baseArrayLayer = val;
+                (self->base)->baseArrayLayer = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkClearRect_getbaseArrayLayer(PyVkClearRect *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->baseArrayLayer);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->baseArrayLayer);
                     Py_INCREF(value);
                     return value;
                 }
@@ -5788,29 +5945,21 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with layerCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->layerCount = val;
+                (self->base)->layerCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkClearRect_getlayerCount(PyVkClearRect *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->layerCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->layerCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkClearRect_getsetters[] = {
+                    static PyGetSetDef PyVkClearRect_getsetters[] = {
                     
-                        { "baseArrayLayer", (getter)PyVkClearRect_getbaseArrayLayer,
-                           (setter)PyVkClearRect_setbaseArrayLayer, "", NULL},
+                        { "baseArrayLayer", (getter)PyVkClearRect_getbaseArrayLayer, (setter)PyVkClearRect_setbaseArrayLayer, "", NULL},
                     
-                        { "layerCount", (getter)PyVkClearRect_getlayerCount,
-                           (setter)PyVkClearRect_setlayerCount, "", NULL},
+                        { "layerCount", (getter)PyVkClearRect_getlayerCount, (setter)PyVkClearRect_setlayerCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkClearRectType = {
@@ -5819,7 +5968,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkClearRect_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkClearRect object",0,0,0,0,0,0,0,0,
-                    VkClearRect_getsetters,0,0,0,0,0,0,0,PyVkClearRect_new,};
+                    PyVkClearRect_getsetters,0,0,0,0,0,0,0,PyVkClearRect_new,};
             
                 typedef struct { PyObject_HEAD VkComponentMapping *base; }
                 PyVkComponentMapping;
@@ -5844,7 +5993,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkComponentMapping_getsetters[] = {
+                    static PyGetSetDef PyVkComponentMapping_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkComponentMappingType = {
@@ -5853,7 +6002,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkComponentMapping_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkComponentMapping object",0,0,0,0,0,0,0,0,
-                    VkComponentMapping_getsetters,0,0,0,0,0,0,0,PyVkComponentMapping_new,};
+                    PyVkComponentMapping_getsetters,0,0,0,0,0,0,0,PyVkComponentMapping_new,};
             
                 typedef struct { PyObject_HEAD VkPhysicalDeviceProperties *base; }
                 PyVkPhysicalDeviceProperties;
@@ -5884,18 +6033,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with apiVersion");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->apiVersion = val;
+                (self->base)->apiVersion = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceProperties_getapiVersion(PyVkPhysicalDeviceProperties *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->apiVersion);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->apiVersion);
                     Py_INCREF(value);
                     return value;
                 }
@@ -5906,18 +6049,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with driverVersion");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->driverVersion = val;
+                (self->base)->driverVersion = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceProperties_getdriverVersion(PyVkPhysicalDeviceProperties *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->driverVersion);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->driverVersion);
                     Py_INCREF(value);
                     return value;
                 }
@@ -5928,18 +6065,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with vendorID");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->vendorID = val;
+                (self->base)->vendorID = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceProperties_getvendorID(PyVkPhysicalDeviceProperties *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->vendorID);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->vendorID);
                     Py_INCREF(value);
                     return value;
                 }
@@ -5950,35 +6081,82 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with deviceID");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->deviceID = val;
+                (self->base)->deviceID = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceProperties_getdeviceID(PyVkPhysicalDeviceProperties *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->deviceID);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->deviceID);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkPhysicalDeviceProperties_getsetters[] = {
+                static int PyVkPhysicalDeviceProperties_setdeviceName(PyVkPhysicalDeviceProperties *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with deviceName");
+                        return -1;
+                    }
+                
+            PyObject * ascii_str = PyUnicode_AsASCIIString(value);
+            char* tmp = PyBytes_AsString(ascii_str);
+            strcpy((self->base)->deviceName, tmp);
+            Py_DECREF(ascii_str);
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkPhysicalDeviceProperties_getdeviceName(PyVkPhysicalDeviceProperties *self, void *closure){
+                PyObject* value = PyUnicode_FromString((const char *) (self->base)->deviceName);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkPhysicalDeviceProperties_setpipelineCacheUUID(PyVkPhysicalDeviceProperties *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pipelineCacheUUID");
+                        return -1;
+                    }
+                
+            int nb = PyList_Size(value);
+            int i;
+            for (i = 0; i < nb; i++) {
+                uint8_t tmp = (uint8_t) PyLong_AsLong(
+                PyList_GetItem(value, i));
+                ((self->base)->pipelineCacheUUID)[i] = tmp;
+            }
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkPhysicalDeviceProperties_getpipelineCacheUUID(PyVkPhysicalDeviceProperties *self, void *closure){
+                
+            PyObject* value = PyList_New(0);
+            int nb = sizeof((self->base)->pipelineCacheUUID) / sizeof((self->base)->pipelineCacheUUID[0]);
+            int i = 0;
+            for (i = 0; i < nb; i++) {
+                PyObject* py_tmp = PyLong_FromLong((long) (self->base)->pipelineCacheUUID[i]);
+                PyList_Append(value, py_tmp);
+            }
+            
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkPhysicalDeviceProperties_getsetters[] = {
                     
-                        { "apiVersion", (getter)PyVkPhysicalDeviceProperties_getapiVersion,
-                           (setter)PyVkPhysicalDeviceProperties_setapiVersion, "", NULL},
+                        { "apiVersion", (getter)PyVkPhysicalDeviceProperties_getapiVersion, (setter)PyVkPhysicalDeviceProperties_setapiVersion, "", NULL},
                     
-                        { "driverVersion", (getter)PyVkPhysicalDeviceProperties_getdriverVersion,
-                           (setter)PyVkPhysicalDeviceProperties_setdriverVersion, "", NULL},
+                        { "driverVersion", (getter)PyVkPhysicalDeviceProperties_getdriverVersion, (setter)PyVkPhysicalDeviceProperties_setdriverVersion, "", NULL},
                     
-                        { "vendorID", (getter)PyVkPhysicalDeviceProperties_getvendorID,
-                           (setter)PyVkPhysicalDeviceProperties_setvendorID, "", NULL},
+                        { "vendorID", (getter)PyVkPhysicalDeviceProperties_getvendorID, (setter)PyVkPhysicalDeviceProperties_setvendorID, "", NULL},
                     
-                        { "deviceID", (getter)PyVkPhysicalDeviceProperties_getdeviceID,
-                           (setter)PyVkPhysicalDeviceProperties_setdeviceID, "", NULL},
+                        { "deviceID", (getter)PyVkPhysicalDeviceProperties_getdeviceID, (setter)PyVkPhysicalDeviceProperties_setdeviceID, "", NULL},
+                    
+                        { "deviceName", (getter)PyVkPhysicalDeviceProperties_getdeviceName, (setter)PyVkPhysicalDeviceProperties_setdeviceName, "", NULL},
+                    
+                        { "pipelineCacheUUID", (getter)PyVkPhysicalDeviceProperties_getpipelineCacheUUID, (setter)PyVkPhysicalDeviceProperties_setpipelineCacheUUID, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkPhysicalDevicePropertiesType = {
@@ -5987,7 +6165,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkPhysicalDeviceProperties_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkPhysicalDeviceProperties object",0,0,0,0,0,0,0,0,
-                    VkPhysicalDeviceProperties_getsetters,0,0,0,0,0,0,0,PyVkPhysicalDeviceProperties_new,};
+                    PyVkPhysicalDeviceProperties_getsetters,0,0,0,0,0,0,0,PyVkPhysicalDeviceProperties_new,};
             
                 typedef struct { PyObject_HEAD VkExtensionProperties *base; }
                 PyVkExtensionProperties;
@@ -6012,32 +6190,48 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkExtensionProperties_setextensionName(PyVkExtensionProperties *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with extensionName");
+                        return -1;
+                    }
+                
+            PyObject * ascii_str = PyUnicode_AsASCIIString(value);
+            char* tmp = PyBytes_AsString(ascii_str);
+            strcpy((self->base)->extensionName, tmp);
+            Py_DECREF(ascii_str);
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkExtensionProperties_getextensionName(PyVkExtensionProperties *self, void *closure){
+                PyObject* value = PyUnicode_FromString((const char *) (self->base)->extensionName);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkExtensionProperties_setspecVersion(PyVkExtensionProperties *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with specVersion");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->specVersion = val;
+                (self->base)->specVersion = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkExtensionProperties_getspecVersion(PyVkExtensionProperties *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->specVersion);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->specVersion);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkExtensionProperties_getsetters[] = {
+                    static PyGetSetDef PyVkExtensionProperties_getsetters[] = {
                     
-                        { "specVersion", (getter)PyVkExtensionProperties_getspecVersion,
-                           (setter)PyVkExtensionProperties_setspecVersion, "", NULL},
+                        { "extensionName", (getter)PyVkExtensionProperties_getextensionName, (setter)PyVkExtensionProperties_setextensionName, "", NULL},
+                    
+                        { "specVersion", (getter)PyVkExtensionProperties_getspecVersion, (setter)PyVkExtensionProperties_setspecVersion, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkExtensionPropertiesType = {
@@ -6046,7 +6240,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkExtensionProperties_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkExtensionProperties object",0,0,0,0,0,0,0,0,
-                    VkExtensionProperties_getsetters,0,0,0,0,0,0,0,PyVkExtensionProperties_new,};
+                    PyVkExtensionProperties_getsetters,0,0,0,0,0,0,0,PyVkExtensionProperties_new,};
             
                 typedef struct { PyObject_HEAD VkLayerProperties *base; }
                 PyVkLayerProperties;
@@ -6071,24 +6265,39 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkLayerProperties_setlayerName(PyVkLayerProperties *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with layerName");
+                        return -1;
+                    }
+                
+            PyObject * ascii_str = PyUnicode_AsASCIIString(value);
+            char* tmp = PyBytes_AsString(ascii_str);
+            strcpy((self->base)->layerName, tmp);
+            Py_DECREF(ascii_str);
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkLayerProperties_getlayerName(PyVkLayerProperties *self, void *closure){
+                PyObject* value = PyUnicode_FromString((const char *) (self->base)->layerName);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkLayerProperties_setspecVersion(PyVkLayerProperties *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with specVersion");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->specVersion = val;
+                (self->base)->specVersion = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkLayerProperties_getspecVersion(PyVkLayerProperties *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->specVersion);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->specVersion);
                     Py_INCREF(value);
                     return value;
                 }
@@ -6099,29 +6308,46 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with implementationVersion");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->implementationVersion = val;
+                (self->base)->implementationVersion = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkLayerProperties_getimplementationVersion(PyVkLayerProperties *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->implementationVersion);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->implementationVersion);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkLayerProperties_getsetters[] = {
+                static int PyVkLayerProperties_setdescription(PyVkLayerProperties *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with description");
+                        return -1;
+                    }
+                
+            PyObject * ascii_str = PyUnicode_AsASCIIString(value);
+            char* tmp = PyBytes_AsString(ascii_str);
+            strcpy((self->base)->description, tmp);
+            Py_DECREF(ascii_str);
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkLayerProperties_getdescription(PyVkLayerProperties *self, void *closure){
+                PyObject* value = PyUnicode_FromString((const char *) (self->base)->description);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkLayerProperties_getsetters[] = {
                     
-                        { "specVersion", (getter)PyVkLayerProperties_getspecVersion,
-                           (setter)PyVkLayerProperties_setspecVersion, "", NULL},
+                        { "layerName", (getter)PyVkLayerProperties_getlayerName, (setter)PyVkLayerProperties_setlayerName, "", NULL},
                     
-                        { "implementationVersion", (getter)PyVkLayerProperties_getimplementationVersion,
-                           (setter)PyVkLayerProperties_setimplementationVersion, "", NULL},
+                        { "specVersion", (getter)PyVkLayerProperties_getspecVersion, (setter)PyVkLayerProperties_setspecVersion, "", NULL},
+                    
+                        { "implementationVersion", (getter)PyVkLayerProperties_getimplementationVersion, (setter)PyVkLayerProperties_setimplementationVersion, "", NULL},
+                    
+                        { "description", (getter)PyVkLayerProperties_getdescription, (setter)PyVkLayerProperties_setdescription, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkLayerPropertiesType = {
@@ -6130,7 +6356,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkLayerProperties_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkLayerProperties object",0,0,0,0,0,0,0,0,
-                    VkLayerProperties_getsetters,0,0,0,0,0,0,0,PyVkLayerProperties_new,};
+                    PyVkLayerProperties_getsetters,0,0,0,0,0,0,0,PyVkLayerProperties_new,};
             
                 typedef struct { PyObject_HEAD VkApplicationInfo *base; }
                 PyVkApplicationInfo;
@@ -6155,24 +6381,76 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkApplicationInfo_setpNext(PyVkApplicationInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkApplicationInfo_getpNext(PyVkApplicationInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkApplicationInfo_setpApplicationName(PyVkApplicationInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pApplicationName");
+                        return -1;
+                    }
+                
+            PyObject * ascii_str = PyUnicode_AsASCIIString(value);
+            char* tmp = PyBytes_AsString(ascii_str);
+            (self->base)->pApplicationName = strdup(tmp);
+            Py_DECREF(ascii_str);
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkApplicationInfo_getpApplicationName(PyVkApplicationInfo *self, void *closure){
+                PyObject* value = PyUnicode_FromString((const char *) (self->base)->pApplicationName);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkApplicationInfo_setapplicationVersion(PyVkApplicationInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with applicationVersion");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->applicationVersion = val;
+                (self->base)->applicationVersion = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkApplicationInfo_getapplicationVersion(PyVkApplicationInfo *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->applicationVersion);
+                    Py_INCREF(value);
+                    return value;
+                }
                 
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->applicationVersion);
-                    
+                static int PyVkApplicationInfo_setpEngineName(PyVkApplicationInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pEngineName");
+                        return -1;
+                    }
+                
+            PyObject * ascii_str = PyUnicode_AsASCIIString(value);
+            char* tmp = PyBytes_AsString(ascii_str);
+            (self->base)->pEngineName = strdup(tmp);
+            Py_DECREF(ascii_str);
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkApplicationInfo_getpEngineName(PyVkApplicationInfo *self, void *closure){
+                PyObject* value = PyUnicode_FromString((const char *) (self->base)->pEngineName);
                     Py_INCREF(value);
                     return value;
                 }
@@ -6183,18 +6461,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with engineVersion");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->engineVersion = val;
+                (self->base)->engineVersion = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkApplicationInfo_getengineVersion(PyVkApplicationInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->engineVersion);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->engineVersion);
                     Py_INCREF(value);
                     return value;
                 }
@@ -6205,32 +6477,29 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with apiVersion");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->apiVersion = val;
+                (self->base)->apiVersion = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkApplicationInfo_getapiVersion(PyVkApplicationInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->apiVersion);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->apiVersion);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkApplicationInfo_getsetters[] = {
+                    static PyGetSetDef PyVkApplicationInfo_getsetters[] = {
                     
-                        { "applicationVersion", (getter)PyVkApplicationInfo_getapplicationVersion,
-                           (setter)PyVkApplicationInfo_setapplicationVersion, "", NULL},
+                        { "pNext", (getter)PyVkApplicationInfo_getpNext, (setter)PyVkApplicationInfo_setpNext, "", NULL},
                     
-                        { "engineVersion", (getter)PyVkApplicationInfo_getengineVersion,
-                           (setter)PyVkApplicationInfo_setengineVersion, "", NULL},
+                        { "pApplicationName", (getter)PyVkApplicationInfo_getpApplicationName, (setter)PyVkApplicationInfo_setpApplicationName, "", NULL},
                     
-                        { "apiVersion", (getter)PyVkApplicationInfo_getapiVersion,
-                           (setter)PyVkApplicationInfo_setapiVersion, "", NULL},
+                        { "applicationVersion", (getter)PyVkApplicationInfo_getapplicationVersion, (setter)PyVkApplicationInfo_setapplicationVersion, "", NULL},
+                    
+                        { "pEngineName", (getter)PyVkApplicationInfo_getpEngineName, (setter)PyVkApplicationInfo_setpEngineName, "", NULL},
+                    
+                        { "engineVersion", (getter)PyVkApplicationInfo_getengineVersion, (setter)PyVkApplicationInfo_setengineVersion, "", NULL},
+                    
+                        { "apiVersion", (getter)PyVkApplicationInfo_getapiVersion, (setter)PyVkApplicationInfo_setapiVersion, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkApplicationInfoType = {
@@ -6239,7 +6508,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkApplicationInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkApplicationInfo object",0,0,0,0,0,0,0,0,
-                    VkApplicationInfo_getsetters,0,0,0,0,0,0,0,PyVkApplicationInfo_new,};
+                    PyVkApplicationInfo_getsetters,0,0,0,0,0,0,0,PyVkApplicationInfo_new,};
             
                 typedef struct { PyObject_HEAD VkAllocationCallbacks *base; }
                 PyVkAllocationCallbacks;
@@ -6264,7 +6533,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkAllocationCallbacks_getsetters[] = {
+                    static PyGetSetDef PyVkAllocationCallbacks_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkAllocationCallbacksType = {
@@ -6273,7 +6542,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkAllocationCallbacks_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkAllocationCallbacks object",0,0,0,0,0,0,0,0,
-                    VkAllocationCallbacks_getsetters,0,0,0,0,0,0,0,PyVkAllocationCallbacks_new,};
+                    PyVkAllocationCallbacks_getsetters,0,0,0,0,0,0,0,PyVkAllocationCallbacks_new,};
             
                 typedef struct { PyObject_HEAD VkDeviceQueueCreateInfo *base; }
                 PyVkDeviceQueueCreateInfo;
@@ -6298,24 +6567,34 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkDeviceQueueCreateInfo_setpNext(PyVkDeviceQueueCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkDeviceQueueCreateInfo_getpNext(PyVkDeviceQueueCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkDeviceQueueCreateInfo_setqueueFamilyIndex(PyVkDeviceQueueCreateInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with queueFamilyIndex");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->queueFamilyIndex = val;
+                (self->base)->queueFamilyIndex = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDeviceQueueCreateInfo_getqueueFamilyIndex(PyVkDeviceQueueCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->queueFamilyIndex);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->queueFamilyIndex);
                     Py_INCREF(value);
                     return value;
                 }
@@ -6326,29 +6605,46 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with queueCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->queueCount = val;
+                (self->base)->queueCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDeviceQueueCreateInfo_getqueueCount(PyVkDeviceQueueCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->queueCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->queueCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkDeviceQueueCreateInfo_getsetters[] = {
+                static int PyVkDeviceQueueCreateInfo_setpQueuePriorities(PyVkDeviceQueueCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pQueuePriorities");
+                        return -1;
+                    }
+                
+            float tmp = (float) PyFloat_AsDouble(value);
+            float *t = malloc(sizeof(float));
+            memcpy(t, &tmp, sizeof(float));
+            (self->base)->pQueuePriorities = t;
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkDeviceQueueCreateInfo_getpQueuePriorities(PyVkDeviceQueueCreateInfo *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (*((self->base)->pQueuePriorities)));
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkDeviceQueueCreateInfo_getsetters[] = {
                     
-                        { "queueFamilyIndex", (getter)PyVkDeviceQueueCreateInfo_getqueueFamilyIndex,
-                           (setter)PyVkDeviceQueueCreateInfo_setqueueFamilyIndex, "", NULL},
+                        { "pNext", (getter)PyVkDeviceQueueCreateInfo_getpNext, (setter)PyVkDeviceQueueCreateInfo_setpNext, "", NULL},
                     
-                        { "queueCount", (getter)PyVkDeviceQueueCreateInfo_getqueueCount,
-                           (setter)PyVkDeviceQueueCreateInfo_setqueueCount, "", NULL},
+                        { "queueFamilyIndex", (getter)PyVkDeviceQueueCreateInfo_getqueueFamilyIndex, (setter)PyVkDeviceQueueCreateInfo_setqueueFamilyIndex, "", NULL},
+                    
+                        { "queueCount", (getter)PyVkDeviceQueueCreateInfo_getqueueCount, (setter)PyVkDeviceQueueCreateInfo_setqueueCount, "", NULL},
+                    
+                        { "pQueuePriorities", (getter)PyVkDeviceQueueCreateInfo_getpQueuePriorities, (setter)PyVkDeviceQueueCreateInfo_setpQueuePriorities, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDeviceQueueCreateInfoType = {
@@ -6357,7 +6653,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDeviceQueueCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDeviceQueueCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkDeviceQueueCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkDeviceQueueCreateInfo_new,};
+                    PyVkDeviceQueueCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkDeviceQueueCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkDeviceCreateInfo *base; }
                 PyVkDeviceCreateInfo;
@@ -6382,24 +6678,34 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkDeviceCreateInfo_setpNext(PyVkDeviceCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkDeviceCreateInfo_getpNext(PyVkDeviceCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkDeviceCreateInfo_setqueueCreateInfoCount(PyVkDeviceCreateInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with queueCreateInfoCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->queueCreateInfoCount = val;
+                (self->base)->queueCreateInfoCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDeviceCreateInfo_getqueueCreateInfoCount(PyVkDeviceCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->queueCreateInfoCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->queueCreateInfoCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -6410,18 +6716,50 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with enabledLayerCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->enabledLayerCount = val;
+                (self->base)->enabledLayerCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDeviceCreateInfo_getenabledLayerCount(PyVkDeviceCreateInfo *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->enabledLayerCount);
+                    Py_INCREF(value);
+                    return value;
+                }
                 
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->enabledLayerCount);
-                    
+                static int PyVkDeviceCreateInfo_setppEnabledLayerNames(PyVkDeviceCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with ppEnabledLayerNames");
+                        return -1;
+                    }
+                
+            int nb = PyList_Size(value);
+            char** tmp = malloc(sizeof(char*)*nb + 1);
+            int i;
+            for (i = 0; i < nb; i++) {
+                PyObject* ascii_str = PyUnicode_AsASCIIString(
+                PyList_GetItem(value, i));
+                char* tmp2 = PyBytes_AsString(ascii_str);
+                tmp[i] = strdup(tmp2);
+                Py_DECREF(ascii_str);
+            }
+            tmp[i] = NULL; // sentinel
+            (self->base)->ppEnabledLayerNames = tmp;
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkDeviceCreateInfo_getppEnabledLayerNames(PyVkDeviceCreateInfo *self, void *closure){
+                
+            if ((self->base)->ppEnabledLayerNames[0] == NULL) return PyList_New(0);;
+            PyObject* value = PyList_New(0);
+            int i = 0;
+            while ((self->base)->ppEnabledLayerNames[i] != NULL) {
+                PyObject* py_tmp = PyUnicode_FromString((const char *) (self->base)->ppEnabledLayerNames[i]);
+                PyList_Append(value, py_tmp);
+                i++;
+            }
+            
                     Py_INCREF(value);
                     return value;
                 }
@@ -6432,32 +6770,67 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with enabledExtensionCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->enabledExtensionCount = val;
+                (self->base)->enabledExtensionCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDeviceCreateInfo_getenabledExtensionCount(PyVkDeviceCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->enabledExtensionCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->enabledExtensionCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkDeviceCreateInfo_getsetters[] = {
+                static int PyVkDeviceCreateInfo_setppEnabledExtensionNames(PyVkDeviceCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with ppEnabledExtensionNames");
+                        return -1;
+                    }
+                
+            int nb = PyList_Size(value);
+            char** tmp = malloc(sizeof(char*)*nb + 1);
+            int i;
+            for (i = 0; i < nb; i++) {
+                PyObject* ascii_str = PyUnicode_AsASCIIString(
+                PyList_GetItem(value, i));
+                char* tmp2 = PyBytes_AsString(ascii_str);
+                tmp[i] = strdup(tmp2);
+                Py_DECREF(ascii_str);
+            }
+            tmp[i] = NULL; // sentinel
+            (self->base)->ppEnabledExtensionNames = tmp;
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkDeviceCreateInfo_getppEnabledExtensionNames(PyVkDeviceCreateInfo *self, void *closure){
+                
+            if ((self->base)->ppEnabledExtensionNames[0] == NULL) return PyList_New(0);;
+            PyObject* value = PyList_New(0);
+            int i = 0;
+            while ((self->base)->ppEnabledExtensionNames[i] != NULL) {
+                PyObject* py_tmp = PyUnicode_FromString((const char *) (self->base)->ppEnabledExtensionNames[i]);
+                PyList_Append(value, py_tmp);
+                i++;
+            }
+            
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkDeviceCreateInfo_getsetters[] = {
                     
-                        { "queueCreateInfoCount", (getter)PyVkDeviceCreateInfo_getqueueCreateInfoCount,
-                           (setter)PyVkDeviceCreateInfo_setqueueCreateInfoCount, "", NULL},
+                        { "pNext", (getter)PyVkDeviceCreateInfo_getpNext, (setter)PyVkDeviceCreateInfo_setpNext, "", NULL},
                     
-                        { "enabledLayerCount", (getter)PyVkDeviceCreateInfo_getenabledLayerCount,
-                           (setter)PyVkDeviceCreateInfo_setenabledLayerCount, "", NULL},
+                        { "queueCreateInfoCount", (getter)PyVkDeviceCreateInfo_getqueueCreateInfoCount, (setter)PyVkDeviceCreateInfo_setqueueCreateInfoCount, "", NULL},
                     
-                        { "enabledExtensionCount", (getter)PyVkDeviceCreateInfo_getenabledExtensionCount,
-                           (setter)PyVkDeviceCreateInfo_setenabledExtensionCount, "", NULL},
+                        { "enabledLayerCount", (getter)PyVkDeviceCreateInfo_getenabledLayerCount, (setter)PyVkDeviceCreateInfo_setenabledLayerCount, "", NULL},
+                    
+                        { "ppEnabledLayerNames", (getter)PyVkDeviceCreateInfo_getppEnabledLayerNames, (setter)PyVkDeviceCreateInfo_setppEnabledLayerNames, "", NULL},
+                    
+                        { "enabledExtensionCount", (getter)PyVkDeviceCreateInfo_getenabledExtensionCount, (setter)PyVkDeviceCreateInfo_setenabledExtensionCount, "", NULL},
+                    
+                        { "ppEnabledExtensionNames", (getter)PyVkDeviceCreateInfo_getppEnabledExtensionNames, (setter)PyVkDeviceCreateInfo_setppEnabledExtensionNames, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDeviceCreateInfoType = {
@@ -6466,7 +6839,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDeviceCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDeviceCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkDeviceCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkDeviceCreateInfo_new,};
+                    PyVkDeviceCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkDeviceCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkInstanceCreateInfo *base; }
                 PyVkInstanceCreateInfo;
@@ -6491,24 +6864,72 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkInstanceCreateInfo_setpNext(PyVkInstanceCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkInstanceCreateInfo_getpNext(PyVkInstanceCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkInstanceCreateInfo_setenabledLayerCount(PyVkInstanceCreateInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with enabledLayerCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->enabledLayerCount = val;
+                (self->base)->enabledLayerCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkInstanceCreateInfo_getenabledLayerCount(PyVkInstanceCreateInfo *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->enabledLayerCount);
+                    Py_INCREF(value);
+                    return value;
+                }
                 
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->enabledLayerCount);
-                    
+                static int PyVkInstanceCreateInfo_setppEnabledLayerNames(PyVkInstanceCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with ppEnabledLayerNames");
+                        return -1;
+                    }
+                
+            int nb = PyList_Size(value);
+            char** tmp = malloc(sizeof(char*)*nb + 1);
+            int i;
+            for (i = 0; i < nb; i++) {
+                PyObject* ascii_str = PyUnicode_AsASCIIString(
+                PyList_GetItem(value, i));
+                char* tmp2 = PyBytes_AsString(ascii_str);
+                tmp[i] = strdup(tmp2);
+                Py_DECREF(ascii_str);
+            }
+            tmp[i] = NULL; // sentinel
+            (self->base)->ppEnabledLayerNames = tmp;
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkInstanceCreateInfo_getppEnabledLayerNames(PyVkInstanceCreateInfo *self, void *closure){
+                
+            if ((self->base)->ppEnabledLayerNames[0] == NULL) return PyList_New(0);;
+            PyObject* value = PyList_New(0);
+            int i = 0;
+            while ((self->base)->ppEnabledLayerNames[i] != NULL) {
+                PyObject* py_tmp = PyUnicode_FromString((const char *) (self->base)->ppEnabledLayerNames[i]);
+                PyList_Append(value, py_tmp);
+                i++;
+            }
+            
                     Py_INCREF(value);
                     return value;
                 }
@@ -6519,29 +6940,65 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with enabledExtensionCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->enabledExtensionCount = val;
+                (self->base)->enabledExtensionCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkInstanceCreateInfo_getenabledExtensionCount(PyVkInstanceCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->enabledExtensionCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->enabledExtensionCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkInstanceCreateInfo_getsetters[] = {
+                static int PyVkInstanceCreateInfo_setppEnabledExtensionNames(PyVkInstanceCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with ppEnabledExtensionNames");
+                        return -1;
+                    }
+                
+            int nb = PyList_Size(value);
+            char** tmp = malloc(sizeof(char*)*nb + 1);
+            int i;
+            for (i = 0; i < nb; i++) {
+                PyObject* ascii_str = PyUnicode_AsASCIIString(
+                PyList_GetItem(value, i));
+                char* tmp2 = PyBytes_AsString(ascii_str);
+                tmp[i] = strdup(tmp2);
+                Py_DECREF(ascii_str);
+            }
+            tmp[i] = NULL; // sentinel
+            (self->base)->ppEnabledExtensionNames = tmp;
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkInstanceCreateInfo_getppEnabledExtensionNames(PyVkInstanceCreateInfo *self, void *closure){
+                
+            if ((self->base)->ppEnabledExtensionNames[0] == NULL) return PyList_New(0);;
+            PyObject* value = PyList_New(0);
+            int i = 0;
+            while ((self->base)->ppEnabledExtensionNames[i] != NULL) {
+                PyObject* py_tmp = PyUnicode_FromString((const char *) (self->base)->ppEnabledExtensionNames[i]);
+                PyList_Append(value, py_tmp);
+                i++;
+            }
+            
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkInstanceCreateInfo_getsetters[] = {
                     
-                        { "enabledLayerCount", (getter)PyVkInstanceCreateInfo_getenabledLayerCount,
-                           (setter)PyVkInstanceCreateInfo_setenabledLayerCount, "", NULL},
+                        { "pNext", (getter)PyVkInstanceCreateInfo_getpNext, (setter)PyVkInstanceCreateInfo_setpNext, "", NULL},
                     
-                        { "enabledExtensionCount", (getter)PyVkInstanceCreateInfo_getenabledExtensionCount,
-                           (setter)PyVkInstanceCreateInfo_setenabledExtensionCount, "", NULL},
+                        { "enabledLayerCount", (getter)PyVkInstanceCreateInfo_getenabledLayerCount, (setter)PyVkInstanceCreateInfo_setenabledLayerCount, "", NULL},
+                    
+                        { "ppEnabledLayerNames", (getter)PyVkInstanceCreateInfo_getppEnabledLayerNames, (setter)PyVkInstanceCreateInfo_setppEnabledLayerNames, "", NULL},
+                    
+                        { "enabledExtensionCount", (getter)PyVkInstanceCreateInfo_getenabledExtensionCount, (setter)PyVkInstanceCreateInfo_setenabledExtensionCount, "", NULL},
+                    
+                        { "ppEnabledExtensionNames", (getter)PyVkInstanceCreateInfo_getppEnabledExtensionNames, (setter)PyVkInstanceCreateInfo_setppEnabledExtensionNames, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkInstanceCreateInfoType = {
@@ -6550,7 +7007,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkInstanceCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkInstanceCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkInstanceCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkInstanceCreateInfo_new,};
+                    PyVkInstanceCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkInstanceCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkQueueFamilyProperties *base; }
                 PyVkQueueFamilyProperties;
@@ -6581,18 +7038,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with queueCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->queueCount = val;
+                (self->base)->queueCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkQueueFamilyProperties_getqueueCount(PyVkQueueFamilyProperties *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->queueCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->queueCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -6603,29 +7054,21 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with timestampValidBits");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->timestampValidBits = val;
+                (self->base)->timestampValidBits = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkQueueFamilyProperties_gettimestampValidBits(PyVkQueueFamilyProperties *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->timestampValidBits);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->timestampValidBits);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkQueueFamilyProperties_getsetters[] = {
+                    static PyGetSetDef PyVkQueueFamilyProperties_getsetters[] = {
                     
-                        { "queueCount", (getter)PyVkQueueFamilyProperties_getqueueCount,
-                           (setter)PyVkQueueFamilyProperties_setqueueCount, "", NULL},
+                        { "queueCount", (getter)PyVkQueueFamilyProperties_getqueueCount, (setter)PyVkQueueFamilyProperties_setqueueCount, "", NULL},
                     
-                        { "timestampValidBits", (getter)PyVkQueueFamilyProperties_gettimestampValidBits,
-                           (setter)PyVkQueueFamilyProperties_settimestampValidBits, "", NULL},
+                        { "timestampValidBits", (getter)PyVkQueueFamilyProperties_gettimestampValidBits, (setter)PyVkQueueFamilyProperties_settimestampValidBits, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkQueueFamilyPropertiesType = {
@@ -6634,7 +7077,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkQueueFamilyProperties_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkQueueFamilyProperties object",0,0,0,0,0,0,0,0,
-                    VkQueueFamilyProperties_getsetters,0,0,0,0,0,0,0,PyVkQueueFamilyProperties_new,};
+                    PyVkQueueFamilyProperties_getsetters,0,0,0,0,0,0,0,PyVkQueueFamilyProperties_new,};
             
                 typedef struct { PyObject_HEAD VkPhysicalDeviceMemoryProperties *base; }
                 PyVkPhysicalDeviceMemoryProperties;
@@ -6665,18 +7108,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with memoryTypeCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->memoryTypeCount = val;
+                (self->base)->memoryTypeCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceMemoryProperties_getmemoryTypeCount(PyVkPhysicalDeviceMemoryProperties *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->memoryTypeCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->memoryTypeCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -6687,29 +7124,21 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with memoryHeapCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->memoryHeapCount = val;
+                (self->base)->memoryHeapCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceMemoryProperties_getmemoryHeapCount(PyVkPhysicalDeviceMemoryProperties *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->memoryHeapCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->memoryHeapCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkPhysicalDeviceMemoryProperties_getsetters[] = {
+                    static PyGetSetDef PyVkPhysicalDeviceMemoryProperties_getsetters[] = {
                     
-                        { "memoryTypeCount", (getter)PyVkPhysicalDeviceMemoryProperties_getmemoryTypeCount,
-                           (setter)PyVkPhysicalDeviceMemoryProperties_setmemoryTypeCount, "", NULL},
+                        { "memoryTypeCount", (getter)PyVkPhysicalDeviceMemoryProperties_getmemoryTypeCount, (setter)PyVkPhysicalDeviceMemoryProperties_setmemoryTypeCount, "", NULL},
                     
-                        { "memoryHeapCount", (getter)PyVkPhysicalDeviceMemoryProperties_getmemoryHeapCount,
-                           (setter)PyVkPhysicalDeviceMemoryProperties_setmemoryHeapCount, "", NULL},
+                        { "memoryHeapCount", (getter)PyVkPhysicalDeviceMemoryProperties_getmemoryHeapCount, (setter)PyVkPhysicalDeviceMemoryProperties_setmemoryHeapCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkPhysicalDeviceMemoryPropertiesType = {
@@ -6718,7 +7147,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkPhysicalDeviceMemoryProperties_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkPhysicalDeviceMemoryProperties object",0,0,0,0,0,0,0,0,
-                    VkPhysicalDeviceMemoryProperties_getsetters,0,0,0,0,0,0,0,PyVkPhysicalDeviceMemoryProperties_new,};
+                    PyVkPhysicalDeviceMemoryProperties_getsetters,0,0,0,0,0,0,0,PyVkPhysicalDeviceMemoryProperties_new,};
             
                 typedef struct { PyObject_HEAD VkMemoryAllocateInfo *base; }
                 PyVkMemoryAllocateInfo;
@@ -6743,32 +7172,43 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkMemoryAllocateInfo_setpNext(PyVkMemoryAllocateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkMemoryAllocateInfo_getpNext(PyVkMemoryAllocateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkMemoryAllocateInfo_setmemoryTypeIndex(PyVkMemoryAllocateInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with memoryTypeIndex");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->memoryTypeIndex = val;
+                (self->base)->memoryTypeIndex = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkMemoryAllocateInfo_getmemoryTypeIndex(PyVkMemoryAllocateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->memoryTypeIndex);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->memoryTypeIndex);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkMemoryAllocateInfo_getsetters[] = {
+                    static PyGetSetDef PyVkMemoryAllocateInfo_getsetters[] = {
                     
-                        { "memoryTypeIndex", (getter)PyVkMemoryAllocateInfo_getmemoryTypeIndex,
-                           (setter)PyVkMemoryAllocateInfo_setmemoryTypeIndex, "", NULL},
+                        { "pNext", (getter)PyVkMemoryAllocateInfo_getpNext, (setter)PyVkMemoryAllocateInfo_setpNext, "", NULL},
+                    
+                        { "memoryTypeIndex", (getter)PyVkMemoryAllocateInfo_getmemoryTypeIndex, (setter)PyVkMemoryAllocateInfo_setmemoryTypeIndex, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkMemoryAllocateInfoType = {
@@ -6777,7 +7217,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkMemoryAllocateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkMemoryAllocateInfo object",0,0,0,0,0,0,0,0,
-                    VkMemoryAllocateInfo_getsetters,0,0,0,0,0,0,0,PyVkMemoryAllocateInfo_new,};
+                    PyVkMemoryAllocateInfo_getsetters,0,0,0,0,0,0,0,PyVkMemoryAllocateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkMemoryRequirements *base; }
                 PyVkMemoryRequirements;
@@ -6808,26 +7248,19 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with memoryTypeBits");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->memoryTypeBits = val;
+                (self->base)->memoryTypeBits = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkMemoryRequirements_getmemoryTypeBits(PyVkMemoryRequirements *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->memoryTypeBits);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->memoryTypeBits);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkMemoryRequirements_getsetters[] = {
+                    static PyGetSetDef PyVkMemoryRequirements_getsetters[] = {
                     
-                        { "memoryTypeBits", (getter)PyVkMemoryRequirements_getmemoryTypeBits,
-                           (setter)PyVkMemoryRequirements_setmemoryTypeBits, "", NULL},
+                        { "memoryTypeBits", (getter)PyVkMemoryRequirements_getmemoryTypeBits, (setter)PyVkMemoryRequirements_setmemoryTypeBits, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkMemoryRequirementsType = {
@@ -6836,7 +7269,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkMemoryRequirements_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkMemoryRequirements object",0,0,0,0,0,0,0,0,
-                    VkMemoryRequirements_getsetters,0,0,0,0,0,0,0,PyVkMemoryRequirements_new,};
+                    PyVkMemoryRequirements_getsetters,0,0,0,0,0,0,0,PyVkMemoryRequirements_new,};
             
                 typedef struct { PyObject_HEAD VkSparseImageFormatProperties *base; }
                 PyVkSparseImageFormatProperties;
@@ -6861,7 +7294,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkSparseImageFormatProperties_getsetters[] = {
+                    static PyGetSetDef PyVkSparseImageFormatProperties_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkSparseImageFormatPropertiesType = {
@@ -6870,7 +7303,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkSparseImageFormatProperties_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkSparseImageFormatProperties object",0,0,0,0,0,0,0,0,
-                    VkSparseImageFormatProperties_getsetters,0,0,0,0,0,0,0,PyVkSparseImageFormatProperties_new,};
+                    PyVkSparseImageFormatProperties_getsetters,0,0,0,0,0,0,0,PyVkSparseImageFormatProperties_new,};
             
                 typedef struct { PyObject_HEAD VkSparseImageMemoryRequirements *base; }
                 PyVkSparseImageMemoryRequirements;
@@ -6901,26 +7334,19 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with imageMipTailFirstLod");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->imageMipTailFirstLod = val;
+                (self->base)->imageMipTailFirstLod = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkSparseImageMemoryRequirements_getimageMipTailFirstLod(PyVkSparseImageMemoryRequirements *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->imageMipTailFirstLod);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->imageMipTailFirstLod);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkSparseImageMemoryRequirements_getsetters[] = {
+                    static PyGetSetDef PyVkSparseImageMemoryRequirements_getsetters[] = {
                     
-                        { "imageMipTailFirstLod", (getter)PyVkSparseImageMemoryRequirements_getimageMipTailFirstLod,
-                           (setter)PyVkSparseImageMemoryRequirements_setimageMipTailFirstLod, "", NULL},
+                        { "imageMipTailFirstLod", (getter)PyVkSparseImageMemoryRequirements_getimageMipTailFirstLod, (setter)PyVkSparseImageMemoryRequirements_setimageMipTailFirstLod, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkSparseImageMemoryRequirementsType = {
@@ -6929,7 +7355,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkSparseImageMemoryRequirements_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkSparseImageMemoryRequirements object",0,0,0,0,0,0,0,0,
-                    VkSparseImageMemoryRequirements_getsetters,0,0,0,0,0,0,0,PyVkSparseImageMemoryRequirements_new,};
+                    PyVkSparseImageMemoryRequirements_getsetters,0,0,0,0,0,0,0,PyVkSparseImageMemoryRequirements_new,};
             
                 typedef struct { PyObject_HEAD VkMemoryType *base; }
                 PyVkMemoryType;
@@ -6960,26 +7386,19 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with heapIndex");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->heapIndex = val;
+                (self->base)->heapIndex = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkMemoryType_getheapIndex(PyVkMemoryType *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->heapIndex);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->heapIndex);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkMemoryType_getsetters[] = {
+                    static PyGetSetDef PyVkMemoryType_getsetters[] = {
                     
-                        { "heapIndex", (getter)PyVkMemoryType_getheapIndex,
-                           (setter)PyVkMemoryType_setheapIndex, "", NULL},
+                        { "heapIndex", (getter)PyVkMemoryType_getheapIndex, (setter)PyVkMemoryType_setheapIndex, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkMemoryTypeType = {
@@ -6988,7 +7407,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkMemoryType_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkMemoryType object",0,0,0,0,0,0,0,0,
-                    VkMemoryType_getsetters,0,0,0,0,0,0,0,PyVkMemoryType_new,};
+                    PyVkMemoryType_getsetters,0,0,0,0,0,0,0,PyVkMemoryType_new,};
             
                 typedef struct { PyObject_HEAD VkMemoryHeap *base; }
                 PyVkMemoryHeap;
@@ -7013,7 +7432,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkMemoryHeap_getsetters[] = {
+                    static PyGetSetDef PyVkMemoryHeap_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkMemoryHeapType = {
@@ -7022,7 +7441,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkMemoryHeap_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkMemoryHeap object",0,0,0,0,0,0,0,0,
-                    VkMemoryHeap_getsetters,0,0,0,0,0,0,0,PyVkMemoryHeap_new,};
+                    PyVkMemoryHeap_getsetters,0,0,0,0,0,0,0,PyVkMemoryHeap_new,};
             
                 typedef struct { PyObject_HEAD VkMappedMemoryRange *base; }
                 PyVkMappedMemoryRange;
@@ -7047,7 +7466,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkMappedMemoryRange_getsetters[] = {
+                static int PyVkMappedMemoryRange_setpNext(PyVkMappedMemoryRange *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkMappedMemoryRange_getpNext(PyVkMappedMemoryRange *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkMappedMemoryRange_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkMappedMemoryRange_getpNext, (setter)PyVkMappedMemoryRange_setpNext, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkMappedMemoryRangeType = {
@@ -7056,7 +7493,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkMappedMemoryRange_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkMappedMemoryRange object",0,0,0,0,0,0,0,0,
-                    VkMappedMemoryRange_getsetters,0,0,0,0,0,0,0,PyVkMappedMemoryRange_new,};
+                    PyVkMappedMemoryRange_getsetters,0,0,0,0,0,0,0,PyVkMappedMemoryRange_new,};
             
                 typedef struct { PyObject_HEAD VkFormatProperties *base; }
                 PyVkFormatProperties;
@@ -7081,7 +7518,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkFormatProperties_getsetters[] = {
+                    static PyGetSetDef PyVkFormatProperties_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkFormatPropertiesType = {
@@ -7090,7 +7527,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkFormatProperties_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkFormatProperties object",0,0,0,0,0,0,0,0,
-                    VkFormatProperties_getsetters,0,0,0,0,0,0,0,PyVkFormatProperties_new,};
+                    PyVkFormatProperties_getsetters,0,0,0,0,0,0,0,PyVkFormatProperties_new,};
             
                 typedef struct { PyObject_HEAD VkImageFormatProperties *base; }
                 PyVkImageFormatProperties;
@@ -7121,18 +7558,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxMipLevels");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxMipLevels = val;
+                (self->base)->maxMipLevels = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkImageFormatProperties_getmaxMipLevels(PyVkImageFormatProperties *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxMipLevels);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxMipLevels);
                     Py_INCREF(value);
                     return value;
                 }
@@ -7143,29 +7574,21 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxArrayLayers");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxArrayLayers = val;
+                (self->base)->maxArrayLayers = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkImageFormatProperties_getmaxArrayLayers(PyVkImageFormatProperties *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxArrayLayers);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxArrayLayers);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkImageFormatProperties_getsetters[] = {
+                    static PyGetSetDef PyVkImageFormatProperties_getsetters[] = {
                     
-                        { "maxMipLevels", (getter)PyVkImageFormatProperties_getmaxMipLevels,
-                           (setter)PyVkImageFormatProperties_setmaxMipLevels, "", NULL},
+                        { "maxMipLevels", (getter)PyVkImageFormatProperties_getmaxMipLevels, (setter)PyVkImageFormatProperties_setmaxMipLevels, "", NULL},
                     
-                        { "maxArrayLayers", (getter)PyVkImageFormatProperties_getmaxArrayLayers,
-                           (setter)PyVkImageFormatProperties_setmaxArrayLayers, "", NULL},
+                        { "maxArrayLayers", (getter)PyVkImageFormatProperties_getmaxArrayLayers, (setter)PyVkImageFormatProperties_setmaxArrayLayers, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkImageFormatPropertiesType = {
@@ -7174,7 +7597,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkImageFormatProperties_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkImageFormatProperties object",0,0,0,0,0,0,0,0,
-                    VkImageFormatProperties_getsetters,0,0,0,0,0,0,0,PyVkImageFormatProperties_new,};
+                    PyVkImageFormatProperties_getsetters,0,0,0,0,0,0,0,PyVkImageFormatProperties_new,};
             
                 typedef struct { PyObject_HEAD VkDescriptorBufferInfo *base; }
                 PyVkDescriptorBufferInfo;
@@ -7199,7 +7622,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkDescriptorBufferInfo_getsetters[] = {
+                    static PyGetSetDef PyVkDescriptorBufferInfo_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkDescriptorBufferInfoType = {
@@ -7208,7 +7631,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDescriptorBufferInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDescriptorBufferInfo object",0,0,0,0,0,0,0,0,
-                    VkDescriptorBufferInfo_getsetters,0,0,0,0,0,0,0,PyVkDescriptorBufferInfo_new,};
+                    PyVkDescriptorBufferInfo_getsetters,0,0,0,0,0,0,0,PyVkDescriptorBufferInfo_new,};
             
                 typedef struct { PyObject_HEAD VkDescriptorImageInfo *base; }
                 PyVkDescriptorImageInfo;
@@ -7233,7 +7656,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkDescriptorImageInfo_getsetters[] = {
+                    static PyGetSetDef PyVkDescriptorImageInfo_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkDescriptorImageInfoType = {
@@ -7242,7 +7665,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDescriptorImageInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDescriptorImageInfo object",0,0,0,0,0,0,0,0,
-                    VkDescriptorImageInfo_getsetters,0,0,0,0,0,0,0,PyVkDescriptorImageInfo_new,};
+                    PyVkDescriptorImageInfo_getsetters,0,0,0,0,0,0,0,PyVkDescriptorImageInfo_new,};
             
                 typedef struct { PyObject_HEAD VkWriteDescriptorSet *base; }
                 PyVkWriteDescriptorSet;
@@ -7267,24 +7690,34 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkWriteDescriptorSet_setpNext(PyVkWriteDescriptorSet *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkWriteDescriptorSet_getpNext(PyVkWriteDescriptorSet *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkWriteDescriptorSet_setdstBinding(PyVkWriteDescriptorSet *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with dstBinding");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->dstBinding = val;
+                (self->base)->dstBinding = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkWriteDescriptorSet_getdstBinding(PyVkWriteDescriptorSet *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->dstBinding);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->dstBinding);
                     Py_INCREF(value);
                     return value;
                 }
@@ -7295,18 +7728,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with dstArrayElement");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->dstArrayElement = val;
+                (self->base)->dstArrayElement = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkWriteDescriptorSet_getdstArrayElement(PyVkWriteDescriptorSet *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->dstArrayElement);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->dstArrayElement);
                     Py_INCREF(value);
                     return value;
                 }
@@ -7317,32 +7744,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with descriptorCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->descriptorCount = val;
+                (self->base)->descriptorCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkWriteDescriptorSet_getdescriptorCount(PyVkWriteDescriptorSet *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->descriptorCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->descriptorCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkWriteDescriptorSet_getsetters[] = {
+                    static PyGetSetDef PyVkWriteDescriptorSet_getsetters[] = {
                     
-                        { "dstBinding", (getter)PyVkWriteDescriptorSet_getdstBinding,
-                           (setter)PyVkWriteDescriptorSet_setdstBinding, "", NULL},
+                        { "pNext", (getter)PyVkWriteDescriptorSet_getpNext, (setter)PyVkWriteDescriptorSet_setpNext, "", NULL},
                     
-                        { "dstArrayElement", (getter)PyVkWriteDescriptorSet_getdstArrayElement,
-                           (setter)PyVkWriteDescriptorSet_setdstArrayElement, "", NULL},
+                        { "dstBinding", (getter)PyVkWriteDescriptorSet_getdstBinding, (setter)PyVkWriteDescriptorSet_setdstBinding, "", NULL},
                     
-                        { "descriptorCount", (getter)PyVkWriteDescriptorSet_getdescriptorCount,
-                           (setter)PyVkWriteDescriptorSet_setdescriptorCount, "", NULL},
+                        { "dstArrayElement", (getter)PyVkWriteDescriptorSet_getdstArrayElement, (setter)PyVkWriteDescriptorSet_setdstArrayElement, "", NULL},
+                    
+                        { "descriptorCount", (getter)PyVkWriteDescriptorSet_getdescriptorCount, (setter)PyVkWriteDescriptorSet_setdescriptorCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkWriteDescriptorSetType = {
@@ -7351,7 +7771,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkWriteDescriptorSet_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkWriteDescriptorSet object",0,0,0,0,0,0,0,0,
-                    VkWriteDescriptorSet_getsetters,0,0,0,0,0,0,0,PyVkWriteDescriptorSet_new,};
+                    PyVkWriteDescriptorSet_getsetters,0,0,0,0,0,0,0,PyVkWriteDescriptorSet_new,};
             
                 typedef struct { PyObject_HEAD VkCopyDescriptorSet *base; }
                 PyVkCopyDescriptorSet;
@@ -7376,24 +7796,34 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkCopyDescriptorSet_setpNext(PyVkCopyDescriptorSet *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkCopyDescriptorSet_getpNext(PyVkCopyDescriptorSet *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkCopyDescriptorSet_setsrcBinding(PyVkCopyDescriptorSet *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with srcBinding");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->srcBinding = val;
+                (self->base)->srcBinding = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkCopyDescriptorSet_getsrcBinding(PyVkCopyDescriptorSet *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->srcBinding);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->srcBinding);
                     Py_INCREF(value);
                     return value;
                 }
@@ -7404,18 +7834,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with srcArrayElement");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->srcArrayElement = val;
+                (self->base)->srcArrayElement = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkCopyDescriptorSet_getsrcArrayElement(PyVkCopyDescriptorSet *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->srcArrayElement);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->srcArrayElement);
                     Py_INCREF(value);
                     return value;
                 }
@@ -7426,18 +7850,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with dstBinding");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->dstBinding = val;
+                (self->base)->dstBinding = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkCopyDescriptorSet_getdstBinding(PyVkCopyDescriptorSet *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->dstBinding);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->dstBinding);
                     Py_INCREF(value);
                     return value;
                 }
@@ -7448,18 +7866,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with dstArrayElement");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->dstArrayElement = val;
+                (self->base)->dstArrayElement = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkCopyDescriptorSet_getdstArrayElement(PyVkCopyDescriptorSet *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->dstArrayElement);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->dstArrayElement);
                     Py_INCREF(value);
                     return value;
                 }
@@ -7470,38 +7882,29 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with descriptorCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->descriptorCount = val;
+                (self->base)->descriptorCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkCopyDescriptorSet_getdescriptorCount(PyVkCopyDescriptorSet *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->descriptorCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->descriptorCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkCopyDescriptorSet_getsetters[] = {
+                    static PyGetSetDef PyVkCopyDescriptorSet_getsetters[] = {
                     
-                        { "srcBinding", (getter)PyVkCopyDescriptorSet_getsrcBinding,
-                           (setter)PyVkCopyDescriptorSet_setsrcBinding, "", NULL},
+                        { "pNext", (getter)PyVkCopyDescriptorSet_getpNext, (setter)PyVkCopyDescriptorSet_setpNext, "", NULL},
                     
-                        { "srcArrayElement", (getter)PyVkCopyDescriptorSet_getsrcArrayElement,
-                           (setter)PyVkCopyDescriptorSet_setsrcArrayElement, "", NULL},
+                        { "srcBinding", (getter)PyVkCopyDescriptorSet_getsrcBinding, (setter)PyVkCopyDescriptorSet_setsrcBinding, "", NULL},
                     
-                        { "dstBinding", (getter)PyVkCopyDescriptorSet_getdstBinding,
-                           (setter)PyVkCopyDescriptorSet_setdstBinding, "", NULL},
+                        { "srcArrayElement", (getter)PyVkCopyDescriptorSet_getsrcArrayElement, (setter)PyVkCopyDescriptorSet_setsrcArrayElement, "", NULL},
                     
-                        { "dstArrayElement", (getter)PyVkCopyDescriptorSet_getdstArrayElement,
-                           (setter)PyVkCopyDescriptorSet_setdstArrayElement, "", NULL},
+                        { "dstBinding", (getter)PyVkCopyDescriptorSet_getdstBinding, (setter)PyVkCopyDescriptorSet_setdstBinding, "", NULL},
                     
-                        { "descriptorCount", (getter)PyVkCopyDescriptorSet_getdescriptorCount,
-                           (setter)PyVkCopyDescriptorSet_setdescriptorCount, "", NULL},
+                        { "dstArrayElement", (getter)PyVkCopyDescriptorSet_getdstArrayElement, (setter)PyVkCopyDescriptorSet_setdstArrayElement, "", NULL},
+                    
+                        { "descriptorCount", (getter)PyVkCopyDescriptorSet_getdescriptorCount, (setter)PyVkCopyDescriptorSet_setdescriptorCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkCopyDescriptorSetType = {
@@ -7510,7 +7913,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkCopyDescriptorSet_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkCopyDescriptorSet object",0,0,0,0,0,0,0,0,
-                    VkCopyDescriptorSet_getsetters,0,0,0,0,0,0,0,PyVkCopyDescriptorSet_new,};
+                    PyVkCopyDescriptorSet_getsetters,0,0,0,0,0,0,0,PyVkCopyDescriptorSet_new,};
             
                 typedef struct { PyObject_HEAD VkBufferCreateInfo *base; }
                 PyVkBufferCreateInfo;
@@ -7535,32 +7938,66 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkBufferCreateInfo_setpNext(PyVkBufferCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkBufferCreateInfo_getpNext(PyVkBufferCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkBufferCreateInfo_setqueueFamilyIndexCount(PyVkBufferCreateInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with queueFamilyIndexCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->queueFamilyIndexCount = val;
+                (self->base)->queueFamilyIndexCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkBufferCreateInfo_getqueueFamilyIndexCount(PyVkBufferCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->queueFamilyIndexCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->queueFamilyIndexCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkBufferCreateInfo_getsetters[] = {
+                static int PyVkBufferCreateInfo_setpQueueFamilyIndices(PyVkBufferCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pQueueFamilyIndices");
+                        return -1;
+                    }
+                
+            uint32_t tmp = (uint32_t) PyLong_AsLong(value);
+            uint32_t *t = malloc(sizeof(uint32_t));
+            memcpy(t, &tmp, sizeof(uint32_t));
+            (self->base)->pQueueFamilyIndices = t;
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkBufferCreateInfo_getpQueueFamilyIndices(PyVkBufferCreateInfo *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (*((self->base)->pQueueFamilyIndices)));
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkBufferCreateInfo_getsetters[] = {
                     
-                        { "queueFamilyIndexCount", (getter)PyVkBufferCreateInfo_getqueueFamilyIndexCount,
-                           (setter)PyVkBufferCreateInfo_setqueueFamilyIndexCount, "", NULL},
+                        { "pNext", (getter)PyVkBufferCreateInfo_getpNext, (setter)PyVkBufferCreateInfo_setpNext, "", NULL},
+                    
+                        { "queueFamilyIndexCount", (getter)PyVkBufferCreateInfo_getqueueFamilyIndexCount, (setter)PyVkBufferCreateInfo_setqueueFamilyIndexCount, "", NULL},
+                    
+                        { "pQueueFamilyIndices", (getter)PyVkBufferCreateInfo_getpQueueFamilyIndices, (setter)PyVkBufferCreateInfo_setpQueueFamilyIndices, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkBufferCreateInfoType = {
@@ -7569,7 +8006,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkBufferCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkBufferCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkBufferCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkBufferCreateInfo_new,};
+                    PyVkBufferCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkBufferCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkBufferViewCreateInfo *base; }
                 PyVkBufferViewCreateInfo;
@@ -7594,7 +8031,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkBufferViewCreateInfo_getsetters[] = {
+                static int PyVkBufferViewCreateInfo_setpNext(PyVkBufferViewCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkBufferViewCreateInfo_getpNext(PyVkBufferViewCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkBufferViewCreateInfo_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkBufferViewCreateInfo_getpNext, (setter)PyVkBufferViewCreateInfo_setpNext, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkBufferViewCreateInfoType = {
@@ -7603,7 +8058,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkBufferViewCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkBufferViewCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkBufferViewCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkBufferViewCreateInfo_new,};
+                    PyVkBufferViewCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkBufferViewCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkImageSubresource *base; }
                 PyVkImageSubresource;
@@ -7634,18 +8089,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with mipLevel");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->mipLevel = val;
+                (self->base)->mipLevel = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkImageSubresource_getmipLevel(PyVkImageSubresource *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->mipLevel);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->mipLevel);
                     Py_INCREF(value);
                     return value;
                 }
@@ -7656,29 +8105,21 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with arrayLayer");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->arrayLayer = val;
+                (self->base)->arrayLayer = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkImageSubresource_getarrayLayer(PyVkImageSubresource *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->arrayLayer);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->arrayLayer);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkImageSubresource_getsetters[] = {
+                    static PyGetSetDef PyVkImageSubresource_getsetters[] = {
                     
-                        { "mipLevel", (getter)PyVkImageSubresource_getmipLevel,
-                           (setter)PyVkImageSubresource_setmipLevel, "", NULL},
+                        { "mipLevel", (getter)PyVkImageSubresource_getmipLevel, (setter)PyVkImageSubresource_setmipLevel, "", NULL},
                     
-                        { "arrayLayer", (getter)PyVkImageSubresource_getarrayLayer,
-                           (setter)PyVkImageSubresource_setarrayLayer, "", NULL},
+                        { "arrayLayer", (getter)PyVkImageSubresource_getarrayLayer, (setter)PyVkImageSubresource_setarrayLayer, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkImageSubresourceType = {
@@ -7687,7 +8128,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkImageSubresource_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkImageSubresource object",0,0,0,0,0,0,0,0,
-                    VkImageSubresource_getsetters,0,0,0,0,0,0,0,PyVkImageSubresource_new,};
+                    PyVkImageSubresource_getsetters,0,0,0,0,0,0,0,PyVkImageSubresource_new,};
             
                 typedef struct { PyObject_HEAD VkImageSubresourceLayers *base; }
                 PyVkImageSubresourceLayers;
@@ -7718,18 +8159,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with mipLevel");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->mipLevel = val;
+                (self->base)->mipLevel = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkImageSubresourceLayers_getmipLevel(PyVkImageSubresourceLayers *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->mipLevel);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->mipLevel);
                     Py_INCREF(value);
                     return value;
                 }
@@ -7740,18 +8175,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with baseArrayLayer");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->baseArrayLayer = val;
+                (self->base)->baseArrayLayer = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkImageSubresourceLayers_getbaseArrayLayer(PyVkImageSubresourceLayers *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->baseArrayLayer);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->baseArrayLayer);
                     Py_INCREF(value);
                     return value;
                 }
@@ -7762,32 +8191,23 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with layerCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->layerCount = val;
+                (self->base)->layerCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkImageSubresourceLayers_getlayerCount(PyVkImageSubresourceLayers *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->layerCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->layerCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkImageSubresourceLayers_getsetters[] = {
+                    static PyGetSetDef PyVkImageSubresourceLayers_getsetters[] = {
                     
-                        { "mipLevel", (getter)PyVkImageSubresourceLayers_getmipLevel,
-                           (setter)PyVkImageSubresourceLayers_setmipLevel, "", NULL},
+                        { "mipLevel", (getter)PyVkImageSubresourceLayers_getmipLevel, (setter)PyVkImageSubresourceLayers_setmipLevel, "", NULL},
                     
-                        { "baseArrayLayer", (getter)PyVkImageSubresourceLayers_getbaseArrayLayer,
-                           (setter)PyVkImageSubresourceLayers_setbaseArrayLayer, "", NULL},
+                        { "baseArrayLayer", (getter)PyVkImageSubresourceLayers_getbaseArrayLayer, (setter)PyVkImageSubresourceLayers_setbaseArrayLayer, "", NULL},
                     
-                        { "layerCount", (getter)PyVkImageSubresourceLayers_getlayerCount,
-                           (setter)PyVkImageSubresourceLayers_setlayerCount, "", NULL},
+                        { "layerCount", (getter)PyVkImageSubresourceLayers_getlayerCount, (setter)PyVkImageSubresourceLayers_setlayerCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkImageSubresourceLayersType = {
@@ -7796,7 +8216,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkImageSubresourceLayers_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkImageSubresourceLayers object",0,0,0,0,0,0,0,0,
-                    VkImageSubresourceLayers_getsetters,0,0,0,0,0,0,0,PyVkImageSubresourceLayers_new,};
+                    PyVkImageSubresourceLayers_getsetters,0,0,0,0,0,0,0,PyVkImageSubresourceLayers_new,};
             
                 typedef struct { PyObject_HEAD VkImageSubresourceRange *base; }
                 PyVkImageSubresourceRange;
@@ -7827,18 +8247,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with baseMipLevel");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->baseMipLevel = val;
+                (self->base)->baseMipLevel = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkImageSubresourceRange_getbaseMipLevel(PyVkImageSubresourceRange *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->baseMipLevel);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->baseMipLevel);
                     Py_INCREF(value);
                     return value;
                 }
@@ -7849,18 +8263,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with levelCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->levelCount = val;
+                (self->base)->levelCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkImageSubresourceRange_getlevelCount(PyVkImageSubresourceRange *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->levelCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->levelCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -7871,18 +8279,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with baseArrayLayer");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->baseArrayLayer = val;
+                (self->base)->baseArrayLayer = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkImageSubresourceRange_getbaseArrayLayer(PyVkImageSubresourceRange *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->baseArrayLayer);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->baseArrayLayer);
                     Py_INCREF(value);
                     return value;
                 }
@@ -7893,35 +8295,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with layerCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->layerCount = val;
+                (self->base)->layerCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkImageSubresourceRange_getlayerCount(PyVkImageSubresourceRange *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->layerCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->layerCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkImageSubresourceRange_getsetters[] = {
+                    static PyGetSetDef PyVkImageSubresourceRange_getsetters[] = {
                     
-                        { "baseMipLevel", (getter)PyVkImageSubresourceRange_getbaseMipLevel,
-                           (setter)PyVkImageSubresourceRange_setbaseMipLevel, "", NULL},
+                        { "baseMipLevel", (getter)PyVkImageSubresourceRange_getbaseMipLevel, (setter)PyVkImageSubresourceRange_setbaseMipLevel, "", NULL},
                     
-                        { "levelCount", (getter)PyVkImageSubresourceRange_getlevelCount,
-                           (setter)PyVkImageSubresourceRange_setlevelCount, "", NULL},
+                        { "levelCount", (getter)PyVkImageSubresourceRange_getlevelCount, (setter)PyVkImageSubresourceRange_setlevelCount, "", NULL},
                     
-                        { "baseArrayLayer", (getter)PyVkImageSubresourceRange_getbaseArrayLayer,
-                           (setter)PyVkImageSubresourceRange_setbaseArrayLayer, "", NULL},
+                        { "baseArrayLayer", (getter)PyVkImageSubresourceRange_getbaseArrayLayer, (setter)PyVkImageSubresourceRange_setbaseArrayLayer, "", NULL},
                     
-                        { "layerCount", (getter)PyVkImageSubresourceRange_getlayerCount,
-                           (setter)PyVkImageSubresourceRange_setlayerCount, "", NULL},
+                        { "layerCount", (getter)PyVkImageSubresourceRange_getlayerCount, (setter)PyVkImageSubresourceRange_setlayerCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkImageSubresourceRangeType = {
@@ -7930,7 +8322,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkImageSubresourceRange_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkImageSubresourceRange object",0,0,0,0,0,0,0,0,
-                    VkImageSubresourceRange_getsetters,0,0,0,0,0,0,0,PyVkImageSubresourceRange_new,};
+                    PyVkImageSubresourceRange_getsetters,0,0,0,0,0,0,0,PyVkImageSubresourceRange_new,};
             
                 typedef struct { PyObject_HEAD VkMemoryBarrier *base; }
                 PyVkMemoryBarrier;
@@ -7955,7 +8347,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkMemoryBarrier_getsetters[] = {
+                static int PyVkMemoryBarrier_setpNext(PyVkMemoryBarrier *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkMemoryBarrier_getpNext(PyVkMemoryBarrier *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkMemoryBarrier_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkMemoryBarrier_getpNext, (setter)PyVkMemoryBarrier_setpNext, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkMemoryBarrierType = {
@@ -7964,7 +8374,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkMemoryBarrier_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkMemoryBarrier object",0,0,0,0,0,0,0,0,
-                    VkMemoryBarrier_getsetters,0,0,0,0,0,0,0,PyVkMemoryBarrier_new,};
+                    PyVkMemoryBarrier_getsetters,0,0,0,0,0,0,0,PyVkMemoryBarrier_new,};
             
                 typedef struct { PyObject_HEAD VkBufferMemoryBarrier *base; }
                 PyVkBufferMemoryBarrier;
@@ -7989,24 +8399,34 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkBufferMemoryBarrier_setpNext(PyVkBufferMemoryBarrier *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkBufferMemoryBarrier_getpNext(PyVkBufferMemoryBarrier *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkBufferMemoryBarrier_setsrcQueueFamilyIndex(PyVkBufferMemoryBarrier *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with srcQueueFamilyIndex");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->srcQueueFamilyIndex = val;
+                (self->base)->srcQueueFamilyIndex = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkBufferMemoryBarrier_getsrcQueueFamilyIndex(PyVkBufferMemoryBarrier *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->srcQueueFamilyIndex);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->srcQueueFamilyIndex);
                     Py_INCREF(value);
                     return value;
                 }
@@ -8017,29 +8437,23 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with dstQueueFamilyIndex");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->dstQueueFamilyIndex = val;
+                (self->base)->dstQueueFamilyIndex = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkBufferMemoryBarrier_getdstQueueFamilyIndex(PyVkBufferMemoryBarrier *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->dstQueueFamilyIndex);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->dstQueueFamilyIndex);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkBufferMemoryBarrier_getsetters[] = {
+                    static PyGetSetDef PyVkBufferMemoryBarrier_getsetters[] = {
                     
-                        { "srcQueueFamilyIndex", (getter)PyVkBufferMemoryBarrier_getsrcQueueFamilyIndex,
-                           (setter)PyVkBufferMemoryBarrier_setsrcQueueFamilyIndex, "", NULL},
+                        { "pNext", (getter)PyVkBufferMemoryBarrier_getpNext, (setter)PyVkBufferMemoryBarrier_setpNext, "", NULL},
                     
-                        { "dstQueueFamilyIndex", (getter)PyVkBufferMemoryBarrier_getdstQueueFamilyIndex,
-                           (setter)PyVkBufferMemoryBarrier_setdstQueueFamilyIndex, "", NULL},
+                        { "srcQueueFamilyIndex", (getter)PyVkBufferMemoryBarrier_getsrcQueueFamilyIndex, (setter)PyVkBufferMemoryBarrier_setsrcQueueFamilyIndex, "", NULL},
+                    
+                        { "dstQueueFamilyIndex", (getter)PyVkBufferMemoryBarrier_getdstQueueFamilyIndex, (setter)PyVkBufferMemoryBarrier_setdstQueueFamilyIndex, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkBufferMemoryBarrierType = {
@@ -8048,7 +8462,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkBufferMemoryBarrier_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkBufferMemoryBarrier object",0,0,0,0,0,0,0,0,
-                    VkBufferMemoryBarrier_getsetters,0,0,0,0,0,0,0,PyVkBufferMemoryBarrier_new,};
+                    PyVkBufferMemoryBarrier_getsetters,0,0,0,0,0,0,0,PyVkBufferMemoryBarrier_new,};
             
                 typedef struct { PyObject_HEAD VkImageMemoryBarrier *base; }
                 PyVkImageMemoryBarrier;
@@ -8073,24 +8487,34 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkImageMemoryBarrier_setpNext(PyVkImageMemoryBarrier *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkImageMemoryBarrier_getpNext(PyVkImageMemoryBarrier *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkImageMemoryBarrier_setsrcQueueFamilyIndex(PyVkImageMemoryBarrier *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with srcQueueFamilyIndex");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->srcQueueFamilyIndex = val;
+                (self->base)->srcQueueFamilyIndex = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkImageMemoryBarrier_getsrcQueueFamilyIndex(PyVkImageMemoryBarrier *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->srcQueueFamilyIndex);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->srcQueueFamilyIndex);
                     Py_INCREF(value);
                     return value;
                 }
@@ -8101,29 +8525,23 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with dstQueueFamilyIndex");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->dstQueueFamilyIndex = val;
+                (self->base)->dstQueueFamilyIndex = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkImageMemoryBarrier_getdstQueueFamilyIndex(PyVkImageMemoryBarrier *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->dstQueueFamilyIndex);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->dstQueueFamilyIndex);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkImageMemoryBarrier_getsetters[] = {
+                    static PyGetSetDef PyVkImageMemoryBarrier_getsetters[] = {
                     
-                        { "srcQueueFamilyIndex", (getter)PyVkImageMemoryBarrier_getsrcQueueFamilyIndex,
-                           (setter)PyVkImageMemoryBarrier_setsrcQueueFamilyIndex, "", NULL},
+                        { "pNext", (getter)PyVkImageMemoryBarrier_getpNext, (setter)PyVkImageMemoryBarrier_setpNext, "", NULL},
                     
-                        { "dstQueueFamilyIndex", (getter)PyVkImageMemoryBarrier_getdstQueueFamilyIndex,
-                           (setter)PyVkImageMemoryBarrier_setdstQueueFamilyIndex, "", NULL},
+                        { "srcQueueFamilyIndex", (getter)PyVkImageMemoryBarrier_getsrcQueueFamilyIndex, (setter)PyVkImageMemoryBarrier_setsrcQueueFamilyIndex, "", NULL},
+                    
+                        { "dstQueueFamilyIndex", (getter)PyVkImageMemoryBarrier_getdstQueueFamilyIndex, (setter)PyVkImageMemoryBarrier_setdstQueueFamilyIndex, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkImageMemoryBarrierType = {
@@ -8132,7 +8550,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkImageMemoryBarrier_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkImageMemoryBarrier object",0,0,0,0,0,0,0,0,
-                    VkImageMemoryBarrier_getsetters,0,0,0,0,0,0,0,PyVkImageMemoryBarrier_new,};
+                    PyVkImageMemoryBarrier_getsetters,0,0,0,0,0,0,0,PyVkImageMemoryBarrier_new,};
             
                 typedef struct { PyObject_HEAD VkImageCreateInfo *base; }
                 PyVkImageCreateInfo;
@@ -8157,24 +8575,34 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkImageCreateInfo_setpNext(PyVkImageCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkImageCreateInfo_getpNext(PyVkImageCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkImageCreateInfo_setmipLevels(PyVkImageCreateInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with mipLevels");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->mipLevels = val;
+                (self->base)->mipLevels = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkImageCreateInfo_getmipLevels(PyVkImageCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->mipLevels);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->mipLevels);
                     Py_INCREF(value);
                     return value;
                 }
@@ -8185,18 +8613,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with arrayLayers");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->arrayLayers = val;
+                (self->base)->arrayLayers = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkImageCreateInfo_getarrayLayers(PyVkImageCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->arrayLayers);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->arrayLayers);
                     Py_INCREF(value);
                     return value;
                 }
@@ -8207,32 +8629,48 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with queueFamilyIndexCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->queueFamilyIndexCount = val;
+                (self->base)->queueFamilyIndexCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkImageCreateInfo_getqueueFamilyIndexCount(PyVkImageCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->queueFamilyIndexCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->queueFamilyIndexCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkImageCreateInfo_getsetters[] = {
+                static int PyVkImageCreateInfo_setpQueueFamilyIndices(PyVkImageCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pQueueFamilyIndices");
+                        return -1;
+                    }
+                
+            uint32_t tmp = (uint32_t) PyLong_AsLong(value);
+            uint32_t *t = malloc(sizeof(uint32_t));
+            memcpy(t, &tmp, sizeof(uint32_t));
+            (self->base)->pQueueFamilyIndices = t;
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkImageCreateInfo_getpQueueFamilyIndices(PyVkImageCreateInfo *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (*((self->base)->pQueueFamilyIndices)));
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkImageCreateInfo_getsetters[] = {
                     
-                        { "mipLevels", (getter)PyVkImageCreateInfo_getmipLevels,
-                           (setter)PyVkImageCreateInfo_setmipLevels, "", NULL},
+                        { "pNext", (getter)PyVkImageCreateInfo_getpNext, (setter)PyVkImageCreateInfo_setpNext, "", NULL},
                     
-                        { "arrayLayers", (getter)PyVkImageCreateInfo_getarrayLayers,
-                           (setter)PyVkImageCreateInfo_setarrayLayers, "", NULL},
+                        { "mipLevels", (getter)PyVkImageCreateInfo_getmipLevels, (setter)PyVkImageCreateInfo_setmipLevels, "", NULL},
                     
-                        { "queueFamilyIndexCount", (getter)PyVkImageCreateInfo_getqueueFamilyIndexCount,
-                           (setter)PyVkImageCreateInfo_setqueueFamilyIndexCount, "", NULL},
+                        { "arrayLayers", (getter)PyVkImageCreateInfo_getarrayLayers, (setter)PyVkImageCreateInfo_setarrayLayers, "", NULL},
+                    
+                        { "queueFamilyIndexCount", (getter)PyVkImageCreateInfo_getqueueFamilyIndexCount, (setter)PyVkImageCreateInfo_setqueueFamilyIndexCount, "", NULL},
+                    
+                        { "pQueueFamilyIndices", (getter)PyVkImageCreateInfo_getpQueueFamilyIndices, (setter)PyVkImageCreateInfo_setpQueueFamilyIndices, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkImageCreateInfoType = {
@@ -8241,7 +8679,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkImageCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkImageCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkImageCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkImageCreateInfo_new,};
+                    PyVkImageCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkImageCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkSubresourceLayout *base; }
                 PyVkSubresourceLayout;
@@ -8266,7 +8704,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkSubresourceLayout_getsetters[] = {
+                    static PyGetSetDef PyVkSubresourceLayout_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkSubresourceLayoutType = {
@@ -8275,7 +8713,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkSubresourceLayout_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkSubresourceLayout object",0,0,0,0,0,0,0,0,
-                    VkSubresourceLayout_getsetters,0,0,0,0,0,0,0,PyVkSubresourceLayout_new,};
+                    PyVkSubresourceLayout_getsetters,0,0,0,0,0,0,0,PyVkSubresourceLayout_new,};
             
                 typedef struct { PyObject_HEAD VkImageViewCreateInfo *base; }
                 PyVkImageViewCreateInfo;
@@ -8300,7 +8738,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkImageViewCreateInfo_getsetters[] = {
+                static int PyVkImageViewCreateInfo_setpNext(PyVkImageViewCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkImageViewCreateInfo_getpNext(PyVkImageViewCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkImageViewCreateInfo_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkImageViewCreateInfo_getpNext, (setter)PyVkImageViewCreateInfo_setpNext, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkImageViewCreateInfoType = {
@@ -8309,7 +8765,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkImageViewCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkImageViewCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkImageViewCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkImageViewCreateInfo_new,};
+                    PyVkImageViewCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkImageViewCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkBufferCopy *base; }
                 PyVkBufferCopy;
@@ -8334,7 +8790,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkBufferCopy_getsetters[] = {
+                    static PyGetSetDef PyVkBufferCopy_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkBufferCopyType = {
@@ -8343,7 +8799,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkBufferCopy_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkBufferCopy object",0,0,0,0,0,0,0,0,
-                    VkBufferCopy_getsetters,0,0,0,0,0,0,0,PyVkBufferCopy_new,};
+                    PyVkBufferCopy_getsetters,0,0,0,0,0,0,0,PyVkBufferCopy_new,};
             
                 typedef struct { PyObject_HEAD VkSparseMemoryBind *base; }
                 PyVkSparseMemoryBind;
@@ -8368,7 +8824,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkSparseMemoryBind_getsetters[] = {
+                    static PyGetSetDef PyVkSparseMemoryBind_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkSparseMemoryBindType = {
@@ -8377,7 +8833,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkSparseMemoryBind_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkSparseMemoryBind object",0,0,0,0,0,0,0,0,
-                    VkSparseMemoryBind_getsetters,0,0,0,0,0,0,0,PyVkSparseMemoryBind_new,};
+                    PyVkSparseMemoryBind_getsetters,0,0,0,0,0,0,0,PyVkSparseMemoryBind_new,};
             
                 typedef struct { PyObject_HEAD VkSparseImageMemoryBind *base; }
                 PyVkSparseImageMemoryBind;
@@ -8402,7 +8858,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkSparseImageMemoryBind_getsetters[] = {
+                    static PyGetSetDef PyVkSparseImageMemoryBind_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkSparseImageMemoryBindType = {
@@ -8411,7 +8867,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkSparseImageMemoryBind_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkSparseImageMemoryBind object",0,0,0,0,0,0,0,0,
-                    VkSparseImageMemoryBind_getsetters,0,0,0,0,0,0,0,PyVkSparseImageMemoryBind_new,};
+                    PyVkSparseImageMemoryBind_getsetters,0,0,0,0,0,0,0,PyVkSparseImageMemoryBind_new,};
             
                 typedef struct { PyObject_HEAD VkSparseBufferMemoryBindInfo *base; }
                 PyVkSparseBufferMemoryBindInfo;
@@ -8442,26 +8898,19 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with bindCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->bindCount = val;
+                (self->base)->bindCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkSparseBufferMemoryBindInfo_getbindCount(PyVkSparseBufferMemoryBindInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->bindCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->bindCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkSparseBufferMemoryBindInfo_getsetters[] = {
+                    static PyGetSetDef PyVkSparseBufferMemoryBindInfo_getsetters[] = {
                     
-                        { "bindCount", (getter)PyVkSparseBufferMemoryBindInfo_getbindCount,
-                           (setter)PyVkSparseBufferMemoryBindInfo_setbindCount, "", NULL},
+                        { "bindCount", (getter)PyVkSparseBufferMemoryBindInfo_getbindCount, (setter)PyVkSparseBufferMemoryBindInfo_setbindCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkSparseBufferMemoryBindInfoType = {
@@ -8470,7 +8919,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkSparseBufferMemoryBindInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkSparseBufferMemoryBindInfo object",0,0,0,0,0,0,0,0,
-                    VkSparseBufferMemoryBindInfo_getsetters,0,0,0,0,0,0,0,PyVkSparseBufferMemoryBindInfo_new,};
+                    PyVkSparseBufferMemoryBindInfo_getsetters,0,0,0,0,0,0,0,PyVkSparseBufferMemoryBindInfo_new,};
             
                 typedef struct { PyObject_HEAD VkSparseImageOpaqueMemoryBindInfo *base; }
                 PyVkSparseImageOpaqueMemoryBindInfo;
@@ -8501,26 +8950,19 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with bindCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->bindCount = val;
+                (self->base)->bindCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkSparseImageOpaqueMemoryBindInfo_getbindCount(PyVkSparseImageOpaqueMemoryBindInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->bindCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->bindCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkSparseImageOpaqueMemoryBindInfo_getsetters[] = {
+                    static PyGetSetDef PyVkSparseImageOpaqueMemoryBindInfo_getsetters[] = {
                     
-                        { "bindCount", (getter)PyVkSparseImageOpaqueMemoryBindInfo_getbindCount,
-                           (setter)PyVkSparseImageOpaqueMemoryBindInfo_setbindCount, "", NULL},
+                        { "bindCount", (getter)PyVkSparseImageOpaqueMemoryBindInfo_getbindCount, (setter)PyVkSparseImageOpaqueMemoryBindInfo_setbindCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkSparseImageOpaqueMemoryBindInfoType = {
@@ -8529,7 +8971,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkSparseImageOpaqueMemoryBindInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkSparseImageOpaqueMemoryBindInfo object",0,0,0,0,0,0,0,0,
-                    VkSparseImageOpaqueMemoryBindInfo_getsetters,0,0,0,0,0,0,0,PyVkSparseImageOpaqueMemoryBindInfo_new,};
+                    PyVkSparseImageOpaqueMemoryBindInfo_getsetters,0,0,0,0,0,0,0,PyVkSparseImageOpaqueMemoryBindInfo_new,};
             
                 typedef struct { PyObject_HEAD VkSparseImageMemoryBindInfo *base; }
                 PyVkSparseImageMemoryBindInfo;
@@ -8560,26 +9002,19 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with bindCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->bindCount = val;
+                (self->base)->bindCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkSparseImageMemoryBindInfo_getbindCount(PyVkSparseImageMemoryBindInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->bindCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->bindCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkSparseImageMemoryBindInfo_getsetters[] = {
+                    static PyGetSetDef PyVkSparseImageMemoryBindInfo_getsetters[] = {
                     
-                        { "bindCount", (getter)PyVkSparseImageMemoryBindInfo_getbindCount,
-                           (setter)PyVkSparseImageMemoryBindInfo_setbindCount, "", NULL},
+                        { "bindCount", (getter)PyVkSparseImageMemoryBindInfo_getbindCount, (setter)PyVkSparseImageMemoryBindInfo_setbindCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkSparseImageMemoryBindInfoType = {
@@ -8588,7 +9023,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkSparseImageMemoryBindInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkSparseImageMemoryBindInfo object",0,0,0,0,0,0,0,0,
-                    VkSparseImageMemoryBindInfo_getsetters,0,0,0,0,0,0,0,PyVkSparseImageMemoryBindInfo_new,};
+                    PyVkSparseImageMemoryBindInfo_getsetters,0,0,0,0,0,0,0,PyVkSparseImageMemoryBindInfo_new,};
             
                 typedef struct { PyObject_HEAD VkBindSparseInfo *base; }
                 PyVkBindSparseInfo;
@@ -8613,24 +9048,34 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkBindSparseInfo_setpNext(PyVkBindSparseInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkBindSparseInfo_getpNext(PyVkBindSparseInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkBindSparseInfo_setwaitSemaphoreCount(PyVkBindSparseInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with waitSemaphoreCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->waitSemaphoreCount = val;
+                (self->base)->waitSemaphoreCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkBindSparseInfo_getwaitSemaphoreCount(PyVkBindSparseInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->waitSemaphoreCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->waitSemaphoreCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -8641,18 +9086,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with bufferBindCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->bufferBindCount = val;
+                (self->base)->bufferBindCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkBindSparseInfo_getbufferBindCount(PyVkBindSparseInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->bufferBindCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->bufferBindCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -8663,18 +9102,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with imageOpaqueBindCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->imageOpaqueBindCount = val;
+                (self->base)->imageOpaqueBindCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkBindSparseInfo_getimageOpaqueBindCount(PyVkBindSparseInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->imageOpaqueBindCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->imageOpaqueBindCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -8685,18 +9118,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with imageBindCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->imageBindCount = val;
+                (self->base)->imageBindCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkBindSparseInfo_getimageBindCount(PyVkBindSparseInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->imageBindCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->imageBindCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -8707,38 +9134,29 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with signalSemaphoreCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->signalSemaphoreCount = val;
+                (self->base)->signalSemaphoreCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkBindSparseInfo_getsignalSemaphoreCount(PyVkBindSparseInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->signalSemaphoreCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->signalSemaphoreCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkBindSparseInfo_getsetters[] = {
+                    static PyGetSetDef PyVkBindSparseInfo_getsetters[] = {
                     
-                        { "waitSemaphoreCount", (getter)PyVkBindSparseInfo_getwaitSemaphoreCount,
-                           (setter)PyVkBindSparseInfo_setwaitSemaphoreCount, "", NULL},
+                        { "pNext", (getter)PyVkBindSparseInfo_getpNext, (setter)PyVkBindSparseInfo_setpNext, "", NULL},
                     
-                        { "bufferBindCount", (getter)PyVkBindSparseInfo_getbufferBindCount,
-                           (setter)PyVkBindSparseInfo_setbufferBindCount, "", NULL},
+                        { "waitSemaphoreCount", (getter)PyVkBindSparseInfo_getwaitSemaphoreCount, (setter)PyVkBindSparseInfo_setwaitSemaphoreCount, "", NULL},
                     
-                        { "imageOpaqueBindCount", (getter)PyVkBindSparseInfo_getimageOpaqueBindCount,
-                           (setter)PyVkBindSparseInfo_setimageOpaqueBindCount, "", NULL},
+                        { "bufferBindCount", (getter)PyVkBindSparseInfo_getbufferBindCount, (setter)PyVkBindSparseInfo_setbufferBindCount, "", NULL},
                     
-                        { "imageBindCount", (getter)PyVkBindSparseInfo_getimageBindCount,
-                           (setter)PyVkBindSparseInfo_setimageBindCount, "", NULL},
+                        { "imageOpaqueBindCount", (getter)PyVkBindSparseInfo_getimageOpaqueBindCount, (setter)PyVkBindSparseInfo_setimageOpaqueBindCount, "", NULL},
                     
-                        { "signalSemaphoreCount", (getter)PyVkBindSparseInfo_getsignalSemaphoreCount,
-                           (setter)PyVkBindSparseInfo_setsignalSemaphoreCount, "", NULL},
+                        { "imageBindCount", (getter)PyVkBindSparseInfo_getimageBindCount, (setter)PyVkBindSparseInfo_setimageBindCount, "", NULL},
+                    
+                        { "signalSemaphoreCount", (getter)PyVkBindSparseInfo_getsignalSemaphoreCount, (setter)PyVkBindSparseInfo_setsignalSemaphoreCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkBindSparseInfoType = {
@@ -8747,7 +9165,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkBindSparseInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkBindSparseInfo object",0,0,0,0,0,0,0,0,
-                    VkBindSparseInfo_getsetters,0,0,0,0,0,0,0,PyVkBindSparseInfo_new,};
+                    PyVkBindSparseInfo_getsetters,0,0,0,0,0,0,0,PyVkBindSparseInfo_new,};
             
                 typedef struct { PyObject_HEAD VkImageCopy *base; }
                 PyVkImageCopy;
@@ -8772,7 +9190,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkImageCopy_getsetters[] = {
+                    static PyGetSetDef PyVkImageCopy_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkImageCopyType = {
@@ -8781,7 +9199,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkImageCopy_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkImageCopy object",0,0,0,0,0,0,0,0,
-                    VkImageCopy_getsetters,0,0,0,0,0,0,0,PyVkImageCopy_new,};
+                    PyVkImageCopy_getsetters,0,0,0,0,0,0,0,PyVkImageCopy_new,};
             
                 typedef struct { PyObject_HEAD VkImageBlit *base; }
                 PyVkImageBlit;
@@ -8806,7 +9224,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkImageBlit_getsetters[] = {
+                    static PyGetSetDef PyVkImageBlit_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkImageBlitType = {
@@ -8815,7 +9233,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkImageBlit_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkImageBlit object",0,0,0,0,0,0,0,0,
-                    VkImageBlit_getsetters,0,0,0,0,0,0,0,PyVkImageBlit_new,};
+                    PyVkImageBlit_getsetters,0,0,0,0,0,0,0,PyVkImageBlit_new,};
             
                 typedef struct { PyObject_HEAD VkBufferImageCopy *base; }
                 PyVkBufferImageCopy;
@@ -8846,18 +9264,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with bufferRowLength");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->bufferRowLength = val;
+                (self->base)->bufferRowLength = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkBufferImageCopy_getbufferRowLength(PyVkBufferImageCopy *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->bufferRowLength);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->bufferRowLength);
                     Py_INCREF(value);
                     return value;
                 }
@@ -8868,29 +9280,21 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with bufferImageHeight");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->bufferImageHeight = val;
+                (self->base)->bufferImageHeight = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkBufferImageCopy_getbufferImageHeight(PyVkBufferImageCopy *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->bufferImageHeight);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->bufferImageHeight);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkBufferImageCopy_getsetters[] = {
+                    static PyGetSetDef PyVkBufferImageCopy_getsetters[] = {
                     
-                        { "bufferRowLength", (getter)PyVkBufferImageCopy_getbufferRowLength,
-                           (setter)PyVkBufferImageCopy_setbufferRowLength, "", NULL},
+                        { "bufferRowLength", (getter)PyVkBufferImageCopy_getbufferRowLength, (setter)PyVkBufferImageCopy_setbufferRowLength, "", NULL},
                     
-                        { "bufferImageHeight", (getter)PyVkBufferImageCopy_getbufferImageHeight,
-                           (setter)PyVkBufferImageCopy_setbufferImageHeight, "", NULL},
+                        { "bufferImageHeight", (getter)PyVkBufferImageCopy_getbufferImageHeight, (setter)PyVkBufferImageCopy_setbufferImageHeight, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkBufferImageCopyType = {
@@ -8899,7 +9303,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkBufferImageCopy_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkBufferImageCopy object",0,0,0,0,0,0,0,0,
-                    VkBufferImageCopy_getsetters,0,0,0,0,0,0,0,PyVkBufferImageCopy_new,};
+                    PyVkBufferImageCopy_getsetters,0,0,0,0,0,0,0,PyVkBufferImageCopy_new,};
             
                 typedef struct { PyObject_HEAD VkImageResolve *base; }
                 PyVkImageResolve;
@@ -8924,7 +9328,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkImageResolve_getsetters[] = {
+                    static PyGetSetDef PyVkImageResolve_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkImageResolveType = {
@@ -8933,7 +9337,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkImageResolve_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkImageResolve object",0,0,0,0,0,0,0,0,
-                    VkImageResolve_getsetters,0,0,0,0,0,0,0,PyVkImageResolve_new,};
+                    PyVkImageResolve_getsetters,0,0,0,0,0,0,0,PyVkImageResolve_new,};
             
                 typedef struct { PyObject_HEAD VkShaderModuleCreateInfo *base; }
                 PyVkShaderModuleCreateInfo;
@@ -8958,7 +9362,66 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkShaderModuleCreateInfo_getsetters[] = {
+                static int PyVkShaderModuleCreateInfo_setpNext(PyVkShaderModuleCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkShaderModuleCreateInfo_getpNext(PyVkShaderModuleCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkShaderModuleCreateInfo_setcodeSize(PyVkShaderModuleCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with codeSize");
+                        return -1;
+                    }
+                (self->base)->codeSize = (size_t) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkShaderModuleCreateInfo_getcodeSize(PyVkShaderModuleCreateInfo *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->codeSize);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkShaderModuleCreateInfo_setpCode(PyVkShaderModuleCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pCode");
+                        return -1;
+                    }
+                
+            uint32_t tmp = (uint32_t) PyLong_AsLong(value);
+            uint32_t *t = malloc(sizeof(uint32_t));
+            memcpy(t, &tmp, sizeof(uint32_t));
+            (self->base)->pCode = t;
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkShaderModuleCreateInfo_getpCode(PyVkShaderModuleCreateInfo *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (*((self->base)->pCode)));
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkShaderModuleCreateInfo_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkShaderModuleCreateInfo_getpNext, (setter)PyVkShaderModuleCreateInfo_setpNext, "", NULL},
+                    
+                        { "codeSize", (getter)PyVkShaderModuleCreateInfo_getcodeSize, (setter)PyVkShaderModuleCreateInfo_setcodeSize, "", NULL},
+                    
+                        { "pCode", (getter)PyVkShaderModuleCreateInfo_getpCode, (setter)PyVkShaderModuleCreateInfo_setpCode, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkShaderModuleCreateInfoType = {
@@ -8967,7 +9430,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkShaderModuleCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkShaderModuleCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkShaderModuleCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkShaderModuleCreateInfo_new,};
+                    PyVkShaderModuleCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkShaderModuleCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkDescriptorSetLayoutBinding *base; }
                 PyVkDescriptorSetLayoutBinding;
@@ -8998,18 +9461,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with binding");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->binding = val;
+                (self->base)->binding = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDescriptorSetLayoutBinding_getbinding(PyVkDescriptorSetLayoutBinding *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->binding);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->binding);
                     Py_INCREF(value);
                     return value;
                 }
@@ -9020,29 +9477,21 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with descriptorCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->descriptorCount = val;
+                (self->base)->descriptorCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDescriptorSetLayoutBinding_getdescriptorCount(PyVkDescriptorSetLayoutBinding *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->descriptorCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->descriptorCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkDescriptorSetLayoutBinding_getsetters[] = {
+                    static PyGetSetDef PyVkDescriptorSetLayoutBinding_getsetters[] = {
                     
-                        { "binding", (getter)PyVkDescriptorSetLayoutBinding_getbinding,
-                           (setter)PyVkDescriptorSetLayoutBinding_setbinding, "", NULL},
+                        { "binding", (getter)PyVkDescriptorSetLayoutBinding_getbinding, (setter)PyVkDescriptorSetLayoutBinding_setbinding, "", NULL},
                     
-                        { "descriptorCount", (getter)PyVkDescriptorSetLayoutBinding_getdescriptorCount,
-                           (setter)PyVkDescriptorSetLayoutBinding_setdescriptorCount, "", NULL},
+                        { "descriptorCount", (getter)PyVkDescriptorSetLayoutBinding_getdescriptorCount, (setter)PyVkDescriptorSetLayoutBinding_setdescriptorCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDescriptorSetLayoutBindingType = {
@@ -9051,7 +9500,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDescriptorSetLayoutBinding_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDescriptorSetLayoutBinding object",0,0,0,0,0,0,0,0,
-                    VkDescriptorSetLayoutBinding_getsetters,0,0,0,0,0,0,0,PyVkDescriptorSetLayoutBinding_new,};
+                    PyVkDescriptorSetLayoutBinding_getsetters,0,0,0,0,0,0,0,PyVkDescriptorSetLayoutBinding_new,};
             
                 typedef struct { PyObject_HEAD VkDescriptorSetLayoutCreateInfo *base; }
                 PyVkDescriptorSetLayoutCreateInfo;
@@ -9076,32 +9525,43 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkDescriptorSetLayoutCreateInfo_setpNext(PyVkDescriptorSetLayoutCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkDescriptorSetLayoutCreateInfo_getpNext(PyVkDescriptorSetLayoutCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkDescriptorSetLayoutCreateInfo_setbindingCount(PyVkDescriptorSetLayoutCreateInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with bindingCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->bindingCount = val;
+                (self->base)->bindingCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDescriptorSetLayoutCreateInfo_getbindingCount(PyVkDescriptorSetLayoutCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->bindingCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->bindingCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkDescriptorSetLayoutCreateInfo_getsetters[] = {
+                    static PyGetSetDef PyVkDescriptorSetLayoutCreateInfo_getsetters[] = {
                     
-                        { "bindingCount", (getter)PyVkDescriptorSetLayoutCreateInfo_getbindingCount,
-                           (setter)PyVkDescriptorSetLayoutCreateInfo_setbindingCount, "", NULL},
+                        { "pNext", (getter)PyVkDescriptorSetLayoutCreateInfo_getpNext, (setter)PyVkDescriptorSetLayoutCreateInfo_setpNext, "", NULL},
+                    
+                        { "bindingCount", (getter)PyVkDescriptorSetLayoutCreateInfo_getbindingCount, (setter)PyVkDescriptorSetLayoutCreateInfo_setbindingCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDescriptorSetLayoutCreateInfoType = {
@@ -9110,7 +9570,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDescriptorSetLayoutCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDescriptorSetLayoutCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkDescriptorSetLayoutCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkDescriptorSetLayoutCreateInfo_new,};
+                    PyVkDescriptorSetLayoutCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkDescriptorSetLayoutCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkDescriptorPoolSize *base; }
                 PyVkDescriptorPoolSize;
@@ -9141,26 +9601,19 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with descriptorCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->descriptorCount = val;
+                (self->base)->descriptorCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDescriptorPoolSize_getdescriptorCount(PyVkDescriptorPoolSize *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->descriptorCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->descriptorCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkDescriptorPoolSize_getsetters[] = {
+                    static PyGetSetDef PyVkDescriptorPoolSize_getsetters[] = {
                     
-                        { "descriptorCount", (getter)PyVkDescriptorPoolSize_getdescriptorCount,
-                           (setter)PyVkDescriptorPoolSize_setdescriptorCount, "", NULL},
+                        { "descriptorCount", (getter)PyVkDescriptorPoolSize_getdescriptorCount, (setter)PyVkDescriptorPoolSize_setdescriptorCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDescriptorPoolSizeType = {
@@ -9169,7 +9622,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDescriptorPoolSize_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDescriptorPoolSize object",0,0,0,0,0,0,0,0,
-                    VkDescriptorPoolSize_getsetters,0,0,0,0,0,0,0,PyVkDescriptorPoolSize_new,};
+                    PyVkDescriptorPoolSize_getsetters,0,0,0,0,0,0,0,PyVkDescriptorPoolSize_new,};
             
                 typedef struct { PyObject_HEAD VkDescriptorPoolCreateInfo *base; }
                 PyVkDescriptorPoolCreateInfo;
@@ -9194,24 +9647,34 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkDescriptorPoolCreateInfo_setpNext(PyVkDescriptorPoolCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkDescriptorPoolCreateInfo_getpNext(PyVkDescriptorPoolCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkDescriptorPoolCreateInfo_setmaxSets(PyVkDescriptorPoolCreateInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with maxSets");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxSets = val;
+                (self->base)->maxSets = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDescriptorPoolCreateInfo_getmaxSets(PyVkDescriptorPoolCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxSets);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxSets);
                     Py_INCREF(value);
                     return value;
                 }
@@ -9222,29 +9685,23 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with poolSizeCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->poolSizeCount = val;
+                (self->base)->poolSizeCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDescriptorPoolCreateInfo_getpoolSizeCount(PyVkDescriptorPoolCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->poolSizeCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->poolSizeCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkDescriptorPoolCreateInfo_getsetters[] = {
+                    static PyGetSetDef PyVkDescriptorPoolCreateInfo_getsetters[] = {
                     
-                        { "maxSets", (getter)PyVkDescriptorPoolCreateInfo_getmaxSets,
-                           (setter)PyVkDescriptorPoolCreateInfo_setmaxSets, "", NULL},
+                        { "pNext", (getter)PyVkDescriptorPoolCreateInfo_getpNext, (setter)PyVkDescriptorPoolCreateInfo_setpNext, "", NULL},
                     
-                        { "poolSizeCount", (getter)PyVkDescriptorPoolCreateInfo_getpoolSizeCount,
-                           (setter)PyVkDescriptorPoolCreateInfo_setpoolSizeCount, "", NULL},
+                        { "maxSets", (getter)PyVkDescriptorPoolCreateInfo_getmaxSets, (setter)PyVkDescriptorPoolCreateInfo_setmaxSets, "", NULL},
+                    
+                        { "poolSizeCount", (getter)PyVkDescriptorPoolCreateInfo_getpoolSizeCount, (setter)PyVkDescriptorPoolCreateInfo_setpoolSizeCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDescriptorPoolCreateInfoType = {
@@ -9253,7 +9710,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDescriptorPoolCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDescriptorPoolCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkDescriptorPoolCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkDescriptorPoolCreateInfo_new,};
+                    PyVkDescriptorPoolCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkDescriptorPoolCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkDescriptorSetAllocateInfo *base; }
                 PyVkDescriptorSetAllocateInfo;
@@ -9278,32 +9735,43 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkDescriptorSetAllocateInfo_setpNext(PyVkDescriptorSetAllocateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkDescriptorSetAllocateInfo_getpNext(PyVkDescriptorSetAllocateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkDescriptorSetAllocateInfo_setdescriptorSetCount(PyVkDescriptorSetAllocateInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with descriptorSetCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->descriptorSetCount = val;
+                (self->base)->descriptorSetCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDescriptorSetAllocateInfo_getdescriptorSetCount(PyVkDescriptorSetAllocateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->descriptorSetCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->descriptorSetCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkDescriptorSetAllocateInfo_getsetters[] = {
+                    static PyGetSetDef PyVkDescriptorSetAllocateInfo_getsetters[] = {
                     
-                        { "descriptorSetCount", (getter)PyVkDescriptorSetAllocateInfo_getdescriptorSetCount,
-                           (setter)PyVkDescriptorSetAllocateInfo_setdescriptorSetCount, "", NULL},
+                        { "pNext", (getter)PyVkDescriptorSetAllocateInfo_getpNext, (setter)PyVkDescriptorSetAllocateInfo_setpNext, "", NULL},
+                    
+                        { "descriptorSetCount", (getter)PyVkDescriptorSetAllocateInfo_getdescriptorSetCount, (setter)PyVkDescriptorSetAllocateInfo_setdescriptorSetCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDescriptorSetAllocateInfoType = {
@@ -9312,7 +9780,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDescriptorSetAllocateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDescriptorSetAllocateInfo object",0,0,0,0,0,0,0,0,
-                    VkDescriptorSetAllocateInfo_getsetters,0,0,0,0,0,0,0,PyVkDescriptorSetAllocateInfo_new,};
+                    PyVkDescriptorSetAllocateInfo_getsetters,0,0,0,0,0,0,0,PyVkDescriptorSetAllocateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkSpecializationMapEntry *base; }
                 PyVkSpecializationMapEntry;
@@ -9343,18 +9811,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with constantID");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->constantID = val;
+                (self->base)->constantID = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkSpecializationMapEntry_getconstantID(PyVkSpecializationMapEntry *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->constantID);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->constantID);
                     Py_INCREF(value);
                     return value;
                 }
@@ -9365,29 +9827,39 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with offset");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->offset = val;
+                (self->base)->offset = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkSpecializationMapEntry_getoffset(PyVkSpecializationMapEntry *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->offset);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->offset);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkSpecializationMapEntry_getsetters[] = {
+                static int PyVkSpecializationMapEntry_setsize(PyVkSpecializationMapEntry *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with size");
+                        return -1;
+                    }
+                (self->base)->size = (size_t) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkSpecializationMapEntry_getsize(PyVkSpecializationMapEntry *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->size);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkSpecializationMapEntry_getsetters[] = {
                     
-                        { "constantID", (getter)PyVkSpecializationMapEntry_getconstantID,
-                           (setter)PyVkSpecializationMapEntry_setconstantID, "", NULL},
+                        { "constantID", (getter)PyVkSpecializationMapEntry_getconstantID, (setter)PyVkSpecializationMapEntry_setconstantID, "", NULL},
                     
-                        { "offset", (getter)PyVkSpecializationMapEntry_getoffset,
-                           (setter)PyVkSpecializationMapEntry_setoffset, "", NULL},
+                        { "offset", (getter)PyVkSpecializationMapEntry_getoffset, (setter)PyVkSpecializationMapEntry_setoffset, "", NULL},
+                    
+                        { "size", (getter)PyVkSpecializationMapEntry_getsize, (setter)PyVkSpecializationMapEntry_setsize, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkSpecializationMapEntryType = {
@@ -9396,7 +9868,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkSpecializationMapEntry_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkSpecializationMapEntry object",0,0,0,0,0,0,0,0,
-                    VkSpecializationMapEntry_getsetters,0,0,0,0,0,0,0,PyVkSpecializationMapEntry_new,};
+                    PyVkSpecializationMapEntry_getsetters,0,0,0,0,0,0,0,PyVkSpecializationMapEntry_new,};
             
                 typedef struct { PyObject_HEAD VkSpecializationInfo *base; }
                 PyVkSpecializationInfo;
@@ -9427,26 +9899,55 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with mapEntryCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->mapEntryCount = val;
+                (self->base)->mapEntryCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkSpecializationInfo_getmapEntryCount(PyVkSpecializationInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->mapEntryCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->mapEntryCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkSpecializationInfo_getsetters[] = {
+                static int PyVkSpecializationInfo_setdataSize(PyVkSpecializationInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with dataSize");
+                        return -1;
+                    }
+                (self->base)->dataSize = (size_t) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkSpecializationInfo_getdataSize(PyVkSpecializationInfo *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->dataSize);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkSpecializationInfo_setpData(PyVkSpecializationInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pData");
+                        return -1;
+                    }
+                (self->base)->pData = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkSpecializationInfo_getpData(PyVkSpecializationInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkSpecializationInfo_getsetters[] = {
                     
-                        { "mapEntryCount", (getter)PyVkSpecializationInfo_getmapEntryCount,
-                           (setter)PyVkSpecializationInfo_setmapEntryCount, "", NULL},
+                        { "mapEntryCount", (getter)PyVkSpecializationInfo_getmapEntryCount, (setter)PyVkSpecializationInfo_setmapEntryCount, "", NULL},
+                    
+                        { "dataSize", (getter)PyVkSpecializationInfo_getdataSize, (setter)PyVkSpecializationInfo_setdataSize, "", NULL},
+                    
+                        { "pData", (getter)PyVkSpecializationInfo_getpData, (setter)PyVkSpecializationInfo_setpData, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkSpecializationInfoType = {
@@ -9455,7 +9956,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkSpecializationInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkSpecializationInfo object",0,0,0,0,0,0,0,0,
-                    VkSpecializationInfo_getsetters,0,0,0,0,0,0,0,PyVkSpecializationInfo_new,};
+                    PyVkSpecializationInfo_getsetters,0,0,0,0,0,0,0,PyVkSpecializationInfo_new,};
             
                 typedef struct { PyObject_HEAD VkPipelineShaderStageCreateInfo *base; }
                 PyVkPipelineShaderStageCreateInfo;
@@ -9480,7 +9981,48 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkPipelineShaderStageCreateInfo_getsetters[] = {
+                static int PyVkPipelineShaderStageCreateInfo_setpNext(PyVkPipelineShaderStageCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineShaderStageCreateInfo_getpNext(PyVkPipelineShaderStageCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkPipelineShaderStageCreateInfo_setpName(PyVkPipelineShaderStageCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pName");
+                        return -1;
+                    }
+                
+            PyObject * ascii_str = PyUnicode_AsASCIIString(value);
+            char* tmp = PyBytes_AsString(ascii_str);
+            (self->base)->pName = strdup(tmp);
+            Py_DECREF(ascii_str);
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineShaderStageCreateInfo_getpName(PyVkPipelineShaderStageCreateInfo *self, void *closure){
+                PyObject* value = PyUnicode_FromString((const char *) (self->base)->pName);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkPipelineShaderStageCreateInfo_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkPipelineShaderStageCreateInfo_getpNext, (setter)PyVkPipelineShaderStageCreateInfo_setpNext, "", NULL},
+                    
+                        { "pName", (getter)PyVkPipelineShaderStageCreateInfo_getpName, (setter)PyVkPipelineShaderStageCreateInfo_setpName, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkPipelineShaderStageCreateInfoType = {
@@ -9489,7 +10031,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkPipelineShaderStageCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkPipelineShaderStageCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkPipelineShaderStageCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineShaderStageCreateInfo_new,};
+                    PyVkPipelineShaderStageCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineShaderStageCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkComputePipelineCreateInfo *base; }
                 PyVkComputePipelineCreateInfo;
@@ -9514,7 +10056,43 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkComputePipelineCreateInfo_getsetters[] = {
+                static int PyVkComputePipelineCreateInfo_setpNext(PyVkComputePipelineCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkComputePipelineCreateInfo_getpNext(PyVkComputePipelineCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkComputePipelineCreateInfo_setbasePipelineIndex(PyVkComputePipelineCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with basePipelineIndex");
+                        return -1;
+                    }
+                (self->base)->basePipelineIndex = (int32_t) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkComputePipelineCreateInfo_getbasePipelineIndex(PyVkComputePipelineCreateInfo *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->basePipelineIndex);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkComputePipelineCreateInfo_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkComputePipelineCreateInfo_getpNext, (setter)PyVkComputePipelineCreateInfo_setpNext, "", NULL},
+                    
+                        { "basePipelineIndex", (getter)PyVkComputePipelineCreateInfo_getbasePipelineIndex, (setter)PyVkComputePipelineCreateInfo_setbasePipelineIndex, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkComputePipelineCreateInfoType = {
@@ -9523,7 +10101,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkComputePipelineCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkComputePipelineCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkComputePipelineCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkComputePipelineCreateInfo_new,};
+                    PyVkComputePipelineCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkComputePipelineCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkVertexInputBindingDescription *base; }
                 PyVkVertexInputBindingDescription;
@@ -9554,18 +10132,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with binding");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->binding = val;
+                (self->base)->binding = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkVertexInputBindingDescription_getbinding(PyVkVertexInputBindingDescription *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->binding);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->binding);
                     Py_INCREF(value);
                     return value;
                 }
@@ -9576,29 +10148,21 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with stride");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->stride = val;
+                (self->base)->stride = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkVertexInputBindingDescription_getstride(PyVkVertexInputBindingDescription *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->stride);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->stride);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkVertexInputBindingDescription_getsetters[] = {
+                    static PyGetSetDef PyVkVertexInputBindingDescription_getsetters[] = {
                     
-                        { "binding", (getter)PyVkVertexInputBindingDescription_getbinding,
-                           (setter)PyVkVertexInputBindingDescription_setbinding, "", NULL},
+                        { "binding", (getter)PyVkVertexInputBindingDescription_getbinding, (setter)PyVkVertexInputBindingDescription_setbinding, "", NULL},
                     
-                        { "stride", (getter)PyVkVertexInputBindingDescription_getstride,
-                           (setter)PyVkVertexInputBindingDescription_setstride, "", NULL},
+                        { "stride", (getter)PyVkVertexInputBindingDescription_getstride, (setter)PyVkVertexInputBindingDescription_setstride, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkVertexInputBindingDescriptionType = {
@@ -9607,7 +10171,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkVertexInputBindingDescription_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkVertexInputBindingDescription object",0,0,0,0,0,0,0,0,
-                    VkVertexInputBindingDescription_getsetters,0,0,0,0,0,0,0,PyVkVertexInputBindingDescription_new,};
+                    PyVkVertexInputBindingDescription_getsetters,0,0,0,0,0,0,0,PyVkVertexInputBindingDescription_new,};
             
                 typedef struct { PyObject_HEAD VkVertexInputAttributeDescription *base; }
                 PyVkVertexInputAttributeDescription;
@@ -9638,18 +10202,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with location");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->location = val;
+                (self->base)->location = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkVertexInputAttributeDescription_getlocation(PyVkVertexInputAttributeDescription *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->location);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->location);
                     Py_INCREF(value);
                     return value;
                 }
@@ -9660,18 +10218,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with binding");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->binding = val;
+                (self->base)->binding = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkVertexInputAttributeDescription_getbinding(PyVkVertexInputAttributeDescription *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->binding);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->binding);
                     Py_INCREF(value);
                     return value;
                 }
@@ -9682,32 +10234,23 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with offset");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->offset = val;
+                (self->base)->offset = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkVertexInputAttributeDescription_getoffset(PyVkVertexInputAttributeDescription *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->offset);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->offset);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkVertexInputAttributeDescription_getsetters[] = {
+                    static PyGetSetDef PyVkVertexInputAttributeDescription_getsetters[] = {
                     
-                        { "location", (getter)PyVkVertexInputAttributeDescription_getlocation,
-                           (setter)PyVkVertexInputAttributeDescription_setlocation, "", NULL},
+                        { "location", (getter)PyVkVertexInputAttributeDescription_getlocation, (setter)PyVkVertexInputAttributeDescription_setlocation, "", NULL},
                     
-                        { "binding", (getter)PyVkVertexInputAttributeDescription_getbinding,
-                           (setter)PyVkVertexInputAttributeDescription_setbinding, "", NULL},
+                        { "binding", (getter)PyVkVertexInputAttributeDescription_getbinding, (setter)PyVkVertexInputAttributeDescription_setbinding, "", NULL},
                     
-                        { "offset", (getter)PyVkVertexInputAttributeDescription_getoffset,
-                           (setter)PyVkVertexInputAttributeDescription_setoffset, "", NULL},
+                        { "offset", (getter)PyVkVertexInputAttributeDescription_getoffset, (setter)PyVkVertexInputAttributeDescription_setoffset, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkVertexInputAttributeDescriptionType = {
@@ -9716,7 +10259,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkVertexInputAttributeDescription_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkVertexInputAttributeDescription object",0,0,0,0,0,0,0,0,
-                    VkVertexInputAttributeDescription_getsetters,0,0,0,0,0,0,0,PyVkVertexInputAttributeDescription_new,};
+                    PyVkVertexInputAttributeDescription_getsetters,0,0,0,0,0,0,0,PyVkVertexInputAttributeDescription_new,};
             
                 typedef struct { PyObject_HEAD VkPipelineVertexInputStateCreateInfo *base; }
                 PyVkPipelineVertexInputStateCreateInfo;
@@ -9741,24 +10284,34 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkPipelineVertexInputStateCreateInfo_setpNext(PyVkPipelineVertexInputStateCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineVertexInputStateCreateInfo_getpNext(PyVkPipelineVertexInputStateCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkPipelineVertexInputStateCreateInfo_setvertexBindingDescriptionCount(PyVkPipelineVertexInputStateCreateInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with vertexBindingDescriptionCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->vertexBindingDescriptionCount = val;
+                (self->base)->vertexBindingDescriptionCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPipelineVertexInputStateCreateInfo_getvertexBindingDescriptionCount(PyVkPipelineVertexInputStateCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->vertexBindingDescriptionCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->vertexBindingDescriptionCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -9769,29 +10322,23 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with vertexAttributeDescriptionCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->vertexAttributeDescriptionCount = val;
+                (self->base)->vertexAttributeDescriptionCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPipelineVertexInputStateCreateInfo_getvertexAttributeDescriptionCount(PyVkPipelineVertexInputStateCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->vertexAttributeDescriptionCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->vertexAttributeDescriptionCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkPipelineVertexInputStateCreateInfo_getsetters[] = {
+                    static PyGetSetDef PyVkPipelineVertexInputStateCreateInfo_getsetters[] = {
                     
-                        { "vertexBindingDescriptionCount", (getter)PyVkPipelineVertexInputStateCreateInfo_getvertexBindingDescriptionCount,
-                           (setter)PyVkPipelineVertexInputStateCreateInfo_setvertexBindingDescriptionCount, "", NULL},
+                        { "pNext", (getter)PyVkPipelineVertexInputStateCreateInfo_getpNext, (setter)PyVkPipelineVertexInputStateCreateInfo_setpNext, "", NULL},
                     
-                        { "vertexAttributeDescriptionCount", (getter)PyVkPipelineVertexInputStateCreateInfo_getvertexAttributeDescriptionCount,
-                           (setter)PyVkPipelineVertexInputStateCreateInfo_setvertexAttributeDescriptionCount, "", NULL},
+                        { "vertexBindingDescriptionCount", (getter)PyVkPipelineVertexInputStateCreateInfo_getvertexBindingDescriptionCount, (setter)PyVkPipelineVertexInputStateCreateInfo_setvertexBindingDescriptionCount, "", NULL},
+                    
+                        { "vertexAttributeDescriptionCount", (getter)PyVkPipelineVertexInputStateCreateInfo_getvertexAttributeDescriptionCount, (setter)PyVkPipelineVertexInputStateCreateInfo_setvertexAttributeDescriptionCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkPipelineVertexInputStateCreateInfoType = {
@@ -9800,7 +10347,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkPipelineVertexInputStateCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkPipelineVertexInputStateCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkPipelineVertexInputStateCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineVertexInputStateCreateInfo_new,};
+                    PyVkPipelineVertexInputStateCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineVertexInputStateCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkPipelineInputAssemblyStateCreateInfo *base; }
                 PyVkPipelineInputAssemblyStateCreateInfo;
@@ -9825,7 +10372,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkPipelineInputAssemblyStateCreateInfo_getsetters[] = {
+                static int PyVkPipelineInputAssemblyStateCreateInfo_setpNext(PyVkPipelineInputAssemblyStateCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineInputAssemblyStateCreateInfo_getpNext(PyVkPipelineInputAssemblyStateCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkPipelineInputAssemblyStateCreateInfo_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkPipelineInputAssemblyStateCreateInfo_getpNext, (setter)PyVkPipelineInputAssemblyStateCreateInfo_setpNext, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkPipelineInputAssemblyStateCreateInfoType = {
@@ -9834,7 +10399,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkPipelineInputAssemblyStateCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkPipelineInputAssemblyStateCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkPipelineInputAssemblyStateCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineInputAssemblyStateCreateInfo_new,};
+                    PyVkPipelineInputAssemblyStateCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineInputAssemblyStateCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkPipelineTessellationStateCreateInfo *base; }
                 PyVkPipelineTessellationStateCreateInfo;
@@ -9859,32 +10424,43 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkPipelineTessellationStateCreateInfo_setpNext(PyVkPipelineTessellationStateCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineTessellationStateCreateInfo_getpNext(PyVkPipelineTessellationStateCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkPipelineTessellationStateCreateInfo_setpatchControlPoints(PyVkPipelineTessellationStateCreateInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with patchControlPoints");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->patchControlPoints = val;
+                (self->base)->patchControlPoints = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPipelineTessellationStateCreateInfo_getpatchControlPoints(PyVkPipelineTessellationStateCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->patchControlPoints);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->patchControlPoints);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkPipelineTessellationStateCreateInfo_getsetters[] = {
+                    static PyGetSetDef PyVkPipelineTessellationStateCreateInfo_getsetters[] = {
                     
-                        { "patchControlPoints", (getter)PyVkPipelineTessellationStateCreateInfo_getpatchControlPoints,
-                           (setter)PyVkPipelineTessellationStateCreateInfo_setpatchControlPoints, "", NULL},
+                        { "pNext", (getter)PyVkPipelineTessellationStateCreateInfo_getpNext, (setter)PyVkPipelineTessellationStateCreateInfo_setpNext, "", NULL},
+                    
+                        { "patchControlPoints", (getter)PyVkPipelineTessellationStateCreateInfo_getpatchControlPoints, (setter)PyVkPipelineTessellationStateCreateInfo_setpatchControlPoints, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkPipelineTessellationStateCreateInfoType = {
@@ -9893,7 +10469,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkPipelineTessellationStateCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkPipelineTessellationStateCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkPipelineTessellationStateCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineTessellationStateCreateInfo_new,};
+                    PyVkPipelineTessellationStateCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineTessellationStateCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkPipelineViewportStateCreateInfo *base; }
                 PyVkPipelineViewportStateCreateInfo;
@@ -9918,24 +10494,34 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkPipelineViewportStateCreateInfo_setpNext(PyVkPipelineViewportStateCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineViewportStateCreateInfo_getpNext(PyVkPipelineViewportStateCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkPipelineViewportStateCreateInfo_setviewportCount(PyVkPipelineViewportStateCreateInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with viewportCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->viewportCount = val;
+                (self->base)->viewportCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPipelineViewportStateCreateInfo_getviewportCount(PyVkPipelineViewportStateCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->viewportCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->viewportCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -9946,29 +10532,23 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with scissorCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->scissorCount = val;
+                (self->base)->scissorCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPipelineViewportStateCreateInfo_getscissorCount(PyVkPipelineViewportStateCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->scissorCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->scissorCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkPipelineViewportStateCreateInfo_getsetters[] = {
+                    static PyGetSetDef PyVkPipelineViewportStateCreateInfo_getsetters[] = {
                     
-                        { "viewportCount", (getter)PyVkPipelineViewportStateCreateInfo_getviewportCount,
-                           (setter)PyVkPipelineViewportStateCreateInfo_setviewportCount, "", NULL},
+                        { "pNext", (getter)PyVkPipelineViewportStateCreateInfo_getpNext, (setter)PyVkPipelineViewportStateCreateInfo_setpNext, "", NULL},
                     
-                        { "scissorCount", (getter)PyVkPipelineViewportStateCreateInfo_getscissorCount,
-                           (setter)PyVkPipelineViewportStateCreateInfo_setscissorCount, "", NULL},
+                        { "viewportCount", (getter)PyVkPipelineViewportStateCreateInfo_getviewportCount, (setter)PyVkPipelineViewportStateCreateInfo_setviewportCount, "", NULL},
+                    
+                        { "scissorCount", (getter)PyVkPipelineViewportStateCreateInfo_getscissorCount, (setter)PyVkPipelineViewportStateCreateInfo_setscissorCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkPipelineViewportStateCreateInfoType = {
@@ -9977,7 +10557,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkPipelineViewportStateCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkPipelineViewportStateCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkPipelineViewportStateCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineViewportStateCreateInfo_new,};
+                    PyVkPipelineViewportStateCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineViewportStateCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkPipelineRasterizationStateCreateInfo *base; }
                 PyVkPipelineRasterizationStateCreateInfo;
@@ -10002,7 +10582,97 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkPipelineRasterizationStateCreateInfo_getsetters[] = {
+                static int PyVkPipelineRasterizationStateCreateInfo_setpNext(PyVkPipelineRasterizationStateCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineRasterizationStateCreateInfo_getpNext(PyVkPipelineRasterizationStateCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkPipelineRasterizationStateCreateInfo_setdepthBiasConstantFactor(PyVkPipelineRasterizationStateCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with depthBiasConstantFactor");
+                        return -1;
+                    }
+                (self->base)->depthBiasConstantFactor = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineRasterizationStateCreateInfo_getdepthBiasConstantFactor(PyVkPipelineRasterizationStateCreateInfo *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->depthBiasConstantFactor);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkPipelineRasterizationStateCreateInfo_setdepthBiasClamp(PyVkPipelineRasterizationStateCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with depthBiasClamp");
+                        return -1;
+                    }
+                (self->base)->depthBiasClamp = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineRasterizationStateCreateInfo_getdepthBiasClamp(PyVkPipelineRasterizationStateCreateInfo *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->depthBiasClamp);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkPipelineRasterizationStateCreateInfo_setdepthBiasSlopeFactor(PyVkPipelineRasterizationStateCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with depthBiasSlopeFactor");
+                        return -1;
+                    }
+                (self->base)->depthBiasSlopeFactor = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineRasterizationStateCreateInfo_getdepthBiasSlopeFactor(PyVkPipelineRasterizationStateCreateInfo *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->depthBiasSlopeFactor);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkPipelineRasterizationStateCreateInfo_setlineWidth(PyVkPipelineRasterizationStateCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with lineWidth");
+                        return -1;
+                    }
+                (self->base)->lineWidth = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineRasterizationStateCreateInfo_getlineWidth(PyVkPipelineRasterizationStateCreateInfo *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->lineWidth);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkPipelineRasterizationStateCreateInfo_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkPipelineRasterizationStateCreateInfo_getpNext, (setter)PyVkPipelineRasterizationStateCreateInfo_setpNext, "", NULL},
+                    
+                        { "depthBiasConstantFactor", (getter)PyVkPipelineRasterizationStateCreateInfo_getdepthBiasConstantFactor, (setter)PyVkPipelineRasterizationStateCreateInfo_setdepthBiasConstantFactor, "", NULL},
+                    
+                        { "depthBiasClamp", (getter)PyVkPipelineRasterizationStateCreateInfo_getdepthBiasClamp, (setter)PyVkPipelineRasterizationStateCreateInfo_setdepthBiasClamp, "", NULL},
+                    
+                        { "depthBiasSlopeFactor", (getter)PyVkPipelineRasterizationStateCreateInfo_getdepthBiasSlopeFactor, (setter)PyVkPipelineRasterizationStateCreateInfo_setdepthBiasSlopeFactor, "", NULL},
+                    
+                        { "lineWidth", (getter)PyVkPipelineRasterizationStateCreateInfo_getlineWidth, (setter)PyVkPipelineRasterizationStateCreateInfo_setlineWidth, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkPipelineRasterizationStateCreateInfoType = {
@@ -10011,7 +10681,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkPipelineRasterizationStateCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkPipelineRasterizationStateCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkPipelineRasterizationStateCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineRasterizationStateCreateInfo_new,};
+                    PyVkPipelineRasterizationStateCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineRasterizationStateCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkPipelineMultisampleStateCreateInfo *base; }
                 PyVkPipelineMultisampleStateCreateInfo;
@@ -10036,7 +10706,43 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkPipelineMultisampleStateCreateInfo_getsetters[] = {
+                static int PyVkPipelineMultisampleStateCreateInfo_setpNext(PyVkPipelineMultisampleStateCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineMultisampleStateCreateInfo_getpNext(PyVkPipelineMultisampleStateCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkPipelineMultisampleStateCreateInfo_setminSampleShading(PyVkPipelineMultisampleStateCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with minSampleShading");
+                        return -1;
+                    }
+                (self->base)->minSampleShading = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineMultisampleStateCreateInfo_getminSampleShading(PyVkPipelineMultisampleStateCreateInfo *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->minSampleShading);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkPipelineMultisampleStateCreateInfo_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkPipelineMultisampleStateCreateInfo_getpNext, (setter)PyVkPipelineMultisampleStateCreateInfo_setpNext, "", NULL},
+                    
+                        { "minSampleShading", (getter)PyVkPipelineMultisampleStateCreateInfo_getminSampleShading, (setter)PyVkPipelineMultisampleStateCreateInfo_setminSampleShading, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkPipelineMultisampleStateCreateInfoType = {
@@ -10045,7 +10751,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkPipelineMultisampleStateCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkPipelineMultisampleStateCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkPipelineMultisampleStateCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineMultisampleStateCreateInfo_new,};
+                    PyVkPipelineMultisampleStateCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineMultisampleStateCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkPipelineColorBlendAttachmentState *base; }
                 PyVkPipelineColorBlendAttachmentState;
@@ -10070,7 +10776,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkPipelineColorBlendAttachmentState_getsetters[] = {
+                    static PyGetSetDef PyVkPipelineColorBlendAttachmentState_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkPipelineColorBlendAttachmentStateType = {
@@ -10079,7 +10785,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkPipelineColorBlendAttachmentState_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkPipelineColorBlendAttachmentState object",0,0,0,0,0,0,0,0,
-                    VkPipelineColorBlendAttachmentState_getsetters,0,0,0,0,0,0,0,PyVkPipelineColorBlendAttachmentState_new,};
+                    PyVkPipelineColorBlendAttachmentState_getsetters,0,0,0,0,0,0,0,PyVkPipelineColorBlendAttachmentState_new,};
             
                 typedef struct { PyObject_HEAD VkPipelineColorBlendStateCreateInfo *base; }
                 PyVkPipelineColorBlendStateCreateInfo;
@@ -10104,32 +10810,76 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkPipelineColorBlendStateCreateInfo_setpNext(PyVkPipelineColorBlendStateCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineColorBlendStateCreateInfo_getpNext(PyVkPipelineColorBlendStateCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkPipelineColorBlendStateCreateInfo_setattachmentCount(PyVkPipelineColorBlendStateCreateInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with attachmentCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->attachmentCount = val;
+                (self->base)->attachmentCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPipelineColorBlendStateCreateInfo_getattachmentCount(PyVkPipelineColorBlendStateCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->attachmentCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->attachmentCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkPipelineColorBlendStateCreateInfo_getsetters[] = {
+                static int PyVkPipelineColorBlendStateCreateInfo_setblendConstants(PyVkPipelineColorBlendStateCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with blendConstants");
+                        return -1;
+                    }
+                
+            int nb = PyList_Size(value);
+            int i;
+            for (i = 0; i < nb; i++) {
+                float tmp = (float) PyFloat_AsDouble(PyList_GetItem(value, i));
+                ((self->base)->blendConstants)[i] = tmp;
+            }
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineColorBlendStateCreateInfo_getblendConstants(PyVkPipelineColorBlendStateCreateInfo *self, void *closure){
+                
+            PyObject* value = PyList_New(0);
+            int nb = sizeof((self->base)->blendConstants) / sizeof((self->base)->blendConstants[0]);
+            int i = 0;
+            for (i = 0; i < nb; i++) {
+                PyObject* py_tmp = PyFloat_FromDouble((double) (self->base)->blendConstants[i]);
+                PyList_Append(value, py_tmp);
+            }
+            
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkPipelineColorBlendStateCreateInfo_getsetters[] = {
                     
-                        { "attachmentCount", (getter)PyVkPipelineColorBlendStateCreateInfo_getattachmentCount,
-                           (setter)PyVkPipelineColorBlendStateCreateInfo_setattachmentCount, "", NULL},
+                        { "pNext", (getter)PyVkPipelineColorBlendStateCreateInfo_getpNext, (setter)PyVkPipelineColorBlendStateCreateInfo_setpNext, "", NULL},
+                    
+                        { "attachmentCount", (getter)PyVkPipelineColorBlendStateCreateInfo_getattachmentCount, (setter)PyVkPipelineColorBlendStateCreateInfo_setattachmentCount, "", NULL},
+                    
+                        { "blendConstants", (getter)PyVkPipelineColorBlendStateCreateInfo_getblendConstants, (setter)PyVkPipelineColorBlendStateCreateInfo_setblendConstants, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkPipelineColorBlendStateCreateInfoType = {
@@ -10138,7 +10888,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkPipelineColorBlendStateCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkPipelineColorBlendStateCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkPipelineColorBlendStateCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineColorBlendStateCreateInfo_new,};
+                    PyVkPipelineColorBlendStateCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineColorBlendStateCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkPipelineDynamicStateCreateInfo *base; }
                 PyVkPipelineDynamicStateCreateInfo;
@@ -10163,32 +10913,43 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkPipelineDynamicStateCreateInfo_setpNext(PyVkPipelineDynamicStateCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineDynamicStateCreateInfo_getpNext(PyVkPipelineDynamicStateCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkPipelineDynamicStateCreateInfo_setdynamicStateCount(PyVkPipelineDynamicStateCreateInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with dynamicStateCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->dynamicStateCount = val;
+                (self->base)->dynamicStateCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPipelineDynamicStateCreateInfo_getdynamicStateCount(PyVkPipelineDynamicStateCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->dynamicStateCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->dynamicStateCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkPipelineDynamicStateCreateInfo_getsetters[] = {
+                    static PyGetSetDef PyVkPipelineDynamicStateCreateInfo_getsetters[] = {
                     
-                        { "dynamicStateCount", (getter)PyVkPipelineDynamicStateCreateInfo_getdynamicStateCount,
-                           (setter)PyVkPipelineDynamicStateCreateInfo_setdynamicStateCount, "", NULL},
+                        { "pNext", (getter)PyVkPipelineDynamicStateCreateInfo_getpNext, (setter)PyVkPipelineDynamicStateCreateInfo_setpNext, "", NULL},
+                    
+                        { "dynamicStateCount", (getter)PyVkPipelineDynamicStateCreateInfo_getdynamicStateCount, (setter)PyVkPipelineDynamicStateCreateInfo_setdynamicStateCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkPipelineDynamicStateCreateInfoType = {
@@ -10197,7 +10958,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkPipelineDynamicStateCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkPipelineDynamicStateCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkPipelineDynamicStateCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineDynamicStateCreateInfo_new,};
+                    PyVkPipelineDynamicStateCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineDynamicStateCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkStencilOpState *base; }
                 PyVkStencilOpState;
@@ -10228,18 +10989,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with compareMask");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->compareMask = val;
+                (self->base)->compareMask = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkStencilOpState_getcompareMask(PyVkStencilOpState *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->compareMask);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->compareMask);
                     Py_INCREF(value);
                     return value;
                 }
@@ -10250,18 +11005,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with writeMask");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->writeMask = val;
+                (self->base)->writeMask = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkStencilOpState_getwriteMask(PyVkStencilOpState *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->writeMask);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->writeMask);
                     Py_INCREF(value);
                     return value;
                 }
@@ -10272,32 +11021,23 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with reference");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->reference = val;
+                (self->base)->reference = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkStencilOpState_getreference(PyVkStencilOpState *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->reference);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->reference);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkStencilOpState_getsetters[] = {
+                    static PyGetSetDef PyVkStencilOpState_getsetters[] = {
                     
-                        { "compareMask", (getter)PyVkStencilOpState_getcompareMask,
-                           (setter)PyVkStencilOpState_setcompareMask, "", NULL},
+                        { "compareMask", (getter)PyVkStencilOpState_getcompareMask, (setter)PyVkStencilOpState_setcompareMask, "", NULL},
                     
-                        { "writeMask", (getter)PyVkStencilOpState_getwriteMask,
-                           (setter)PyVkStencilOpState_setwriteMask, "", NULL},
+                        { "writeMask", (getter)PyVkStencilOpState_getwriteMask, (setter)PyVkStencilOpState_setwriteMask, "", NULL},
                     
-                        { "reference", (getter)PyVkStencilOpState_getreference,
-                           (setter)PyVkStencilOpState_setreference, "", NULL},
+                        { "reference", (getter)PyVkStencilOpState_getreference, (setter)PyVkStencilOpState_setreference, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkStencilOpStateType = {
@@ -10306,7 +11046,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkStencilOpState_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkStencilOpState object",0,0,0,0,0,0,0,0,
-                    VkStencilOpState_getsetters,0,0,0,0,0,0,0,PyVkStencilOpState_new,};
+                    PyVkStencilOpState_getsetters,0,0,0,0,0,0,0,PyVkStencilOpState_new,};
             
                 typedef struct { PyObject_HEAD VkPipelineDepthStencilStateCreateInfo *base; }
                 PyVkPipelineDepthStencilStateCreateInfo;
@@ -10331,7 +11071,61 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkPipelineDepthStencilStateCreateInfo_getsetters[] = {
+                static int PyVkPipelineDepthStencilStateCreateInfo_setpNext(PyVkPipelineDepthStencilStateCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineDepthStencilStateCreateInfo_getpNext(PyVkPipelineDepthStencilStateCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkPipelineDepthStencilStateCreateInfo_setminDepthBounds(PyVkPipelineDepthStencilStateCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with minDepthBounds");
+                        return -1;
+                    }
+                (self->base)->minDepthBounds = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineDepthStencilStateCreateInfo_getminDepthBounds(PyVkPipelineDepthStencilStateCreateInfo *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->minDepthBounds);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkPipelineDepthStencilStateCreateInfo_setmaxDepthBounds(PyVkPipelineDepthStencilStateCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with maxDepthBounds");
+                        return -1;
+                    }
+                (self->base)->maxDepthBounds = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineDepthStencilStateCreateInfo_getmaxDepthBounds(PyVkPipelineDepthStencilStateCreateInfo *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->maxDepthBounds);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkPipelineDepthStencilStateCreateInfo_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkPipelineDepthStencilStateCreateInfo_getpNext, (setter)PyVkPipelineDepthStencilStateCreateInfo_setpNext, "", NULL},
+                    
+                        { "minDepthBounds", (getter)PyVkPipelineDepthStencilStateCreateInfo_getminDepthBounds, (setter)PyVkPipelineDepthStencilStateCreateInfo_setminDepthBounds, "", NULL},
+                    
+                        { "maxDepthBounds", (getter)PyVkPipelineDepthStencilStateCreateInfo_getmaxDepthBounds, (setter)PyVkPipelineDepthStencilStateCreateInfo_setmaxDepthBounds, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkPipelineDepthStencilStateCreateInfoType = {
@@ -10340,7 +11134,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkPipelineDepthStencilStateCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkPipelineDepthStencilStateCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkPipelineDepthStencilStateCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineDepthStencilStateCreateInfo_new,};
+                    PyVkPipelineDepthStencilStateCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineDepthStencilStateCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkGraphicsPipelineCreateInfo *base; }
                 PyVkGraphicsPipelineCreateInfo;
@@ -10365,24 +11159,34 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkGraphicsPipelineCreateInfo_setpNext(PyVkGraphicsPipelineCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkGraphicsPipelineCreateInfo_getpNext(PyVkGraphicsPipelineCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkGraphicsPipelineCreateInfo_setstageCount(PyVkGraphicsPipelineCreateInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with stageCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->stageCount = val;
+                (self->base)->stageCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkGraphicsPipelineCreateInfo_getstageCount(PyVkGraphicsPipelineCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->stageCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->stageCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -10393,29 +11197,41 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with subpass");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->subpass = val;
+                (self->base)->subpass = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkGraphicsPipelineCreateInfo_getsubpass(PyVkGraphicsPipelineCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->subpass);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->subpass);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkGraphicsPipelineCreateInfo_getsetters[] = {
+                static int PyVkGraphicsPipelineCreateInfo_setbasePipelineIndex(PyVkGraphicsPipelineCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with basePipelineIndex");
+                        return -1;
+                    }
+                (self->base)->basePipelineIndex = (int32_t) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkGraphicsPipelineCreateInfo_getbasePipelineIndex(PyVkGraphicsPipelineCreateInfo *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->basePipelineIndex);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkGraphicsPipelineCreateInfo_getsetters[] = {
                     
-                        { "stageCount", (getter)PyVkGraphicsPipelineCreateInfo_getstageCount,
-                           (setter)PyVkGraphicsPipelineCreateInfo_setstageCount, "", NULL},
+                        { "pNext", (getter)PyVkGraphicsPipelineCreateInfo_getpNext, (setter)PyVkGraphicsPipelineCreateInfo_setpNext, "", NULL},
                     
-                        { "subpass", (getter)PyVkGraphicsPipelineCreateInfo_getsubpass,
-                           (setter)PyVkGraphicsPipelineCreateInfo_setsubpass, "", NULL},
+                        { "stageCount", (getter)PyVkGraphicsPipelineCreateInfo_getstageCount, (setter)PyVkGraphicsPipelineCreateInfo_setstageCount, "", NULL},
+                    
+                        { "subpass", (getter)PyVkGraphicsPipelineCreateInfo_getsubpass, (setter)PyVkGraphicsPipelineCreateInfo_setsubpass, "", NULL},
+                    
+                        { "basePipelineIndex", (getter)PyVkGraphicsPipelineCreateInfo_getbasePipelineIndex, (setter)PyVkGraphicsPipelineCreateInfo_setbasePipelineIndex, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkGraphicsPipelineCreateInfoType = {
@@ -10424,7 +11240,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkGraphicsPipelineCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkGraphicsPipelineCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkGraphicsPipelineCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkGraphicsPipelineCreateInfo_new,};
+                    PyVkGraphicsPipelineCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkGraphicsPipelineCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkPipelineCacheCreateInfo *base; }
                 PyVkPipelineCacheCreateInfo;
@@ -10449,7 +11265,61 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkPipelineCacheCreateInfo_getsetters[] = {
+                static int PyVkPipelineCacheCreateInfo_setpNext(PyVkPipelineCacheCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineCacheCreateInfo_getpNext(PyVkPipelineCacheCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkPipelineCacheCreateInfo_setinitialDataSize(PyVkPipelineCacheCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with initialDataSize");
+                        return -1;
+                    }
+                (self->base)->initialDataSize = (size_t) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineCacheCreateInfo_getinitialDataSize(PyVkPipelineCacheCreateInfo *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->initialDataSize);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkPipelineCacheCreateInfo_setpInitialData(PyVkPipelineCacheCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pInitialData");
+                        return -1;
+                    }
+                (self->base)->pInitialData = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineCacheCreateInfo_getpInitialData(PyVkPipelineCacheCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkPipelineCacheCreateInfo_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkPipelineCacheCreateInfo_getpNext, (setter)PyVkPipelineCacheCreateInfo_setpNext, "", NULL},
+                    
+                        { "initialDataSize", (getter)PyVkPipelineCacheCreateInfo_getinitialDataSize, (setter)PyVkPipelineCacheCreateInfo_setinitialDataSize, "", NULL},
+                    
+                        { "pInitialData", (getter)PyVkPipelineCacheCreateInfo_getpInitialData, (setter)PyVkPipelineCacheCreateInfo_setpInitialData, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkPipelineCacheCreateInfoType = {
@@ -10458,7 +11328,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkPipelineCacheCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkPipelineCacheCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkPipelineCacheCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineCacheCreateInfo_new,};
+                    PyVkPipelineCacheCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineCacheCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkPushConstantRange *base; }
                 PyVkPushConstantRange;
@@ -10489,18 +11359,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with offset");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->offset = val;
+                (self->base)->offset = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPushConstantRange_getoffset(PyVkPushConstantRange *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->offset);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->offset);
                     Py_INCREF(value);
                     return value;
                 }
@@ -10511,29 +11375,21 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with size");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->size = val;
+                (self->base)->size = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPushConstantRange_getsize(PyVkPushConstantRange *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->size);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->size);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkPushConstantRange_getsetters[] = {
+                    static PyGetSetDef PyVkPushConstantRange_getsetters[] = {
                     
-                        { "offset", (getter)PyVkPushConstantRange_getoffset,
-                           (setter)PyVkPushConstantRange_setoffset, "", NULL},
+                        { "offset", (getter)PyVkPushConstantRange_getoffset, (setter)PyVkPushConstantRange_setoffset, "", NULL},
                     
-                        { "size", (getter)PyVkPushConstantRange_getsize,
-                           (setter)PyVkPushConstantRange_setsize, "", NULL},
+                        { "size", (getter)PyVkPushConstantRange_getsize, (setter)PyVkPushConstantRange_setsize, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkPushConstantRangeType = {
@@ -10542,7 +11398,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkPushConstantRange_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkPushConstantRange object",0,0,0,0,0,0,0,0,
-                    VkPushConstantRange_getsetters,0,0,0,0,0,0,0,PyVkPushConstantRange_new,};
+                    PyVkPushConstantRange_getsetters,0,0,0,0,0,0,0,PyVkPushConstantRange_new,};
             
                 typedef struct { PyObject_HEAD VkPipelineLayoutCreateInfo *base; }
                 PyVkPipelineLayoutCreateInfo;
@@ -10567,24 +11423,34 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkPipelineLayoutCreateInfo_setpNext(PyVkPipelineLayoutCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineLayoutCreateInfo_getpNext(PyVkPipelineLayoutCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkPipelineLayoutCreateInfo_setsetLayoutCount(PyVkPipelineLayoutCreateInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with setLayoutCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->setLayoutCount = val;
+                (self->base)->setLayoutCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPipelineLayoutCreateInfo_getsetLayoutCount(PyVkPipelineLayoutCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->setLayoutCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->setLayoutCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -10595,29 +11461,23 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with pushConstantRangeCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->pushConstantRangeCount = val;
+                (self->base)->pushConstantRangeCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPipelineLayoutCreateInfo_getpushConstantRangeCount(PyVkPipelineLayoutCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->pushConstantRangeCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->pushConstantRangeCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkPipelineLayoutCreateInfo_getsetters[] = {
+                    static PyGetSetDef PyVkPipelineLayoutCreateInfo_getsetters[] = {
                     
-                        { "setLayoutCount", (getter)PyVkPipelineLayoutCreateInfo_getsetLayoutCount,
-                           (setter)PyVkPipelineLayoutCreateInfo_setsetLayoutCount, "", NULL},
+                        { "pNext", (getter)PyVkPipelineLayoutCreateInfo_getpNext, (setter)PyVkPipelineLayoutCreateInfo_setpNext, "", NULL},
                     
-                        { "pushConstantRangeCount", (getter)PyVkPipelineLayoutCreateInfo_getpushConstantRangeCount,
-                           (setter)PyVkPipelineLayoutCreateInfo_setpushConstantRangeCount, "", NULL},
+                        { "setLayoutCount", (getter)PyVkPipelineLayoutCreateInfo_getsetLayoutCount, (setter)PyVkPipelineLayoutCreateInfo_setsetLayoutCount, "", NULL},
+                    
+                        { "pushConstantRangeCount", (getter)PyVkPipelineLayoutCreateInfo_getpushConstantRangeCount, (setter)PyVkPipelineLayoutCreateInfo_setpushConstantRangeCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkPipelineLayoutCreateInfoType = {
@@ -10626,7 +11486,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkPipelineLayoutCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkPipelineLayoutCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkPipelineLayoutCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineLayoutCreateInfo_new,};
+                    PyVkPipelineLayoutCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkPipelineLayoutCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkSamplerCreateInfo *base; }
                 PyVkSamplerCreateInfo;
@@ -10651,7 +11511,97 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkSamplerCreateInfo_getsetters[] = {
+                static int PyVkSamplerCreateInfo_setpNext(PyVkSamplerCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkSamplerCreateInfo_getpNext(PyVkSamplerCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkSamplerCreateInfo_setmipLodBias(PyVkSamplerCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with mipLodBias");
+                        return -1;
+                    }
+                (self->base)->mipLodBias = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkSamplerCreateInfo_getmipLodBias(PyVkSamplerCreateInfo *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->mipLodBias);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkSamplerCreateInfo_setmaxAnisotropy(PyVkSamplerCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with maxAnisotropy");
+                        return -1;
+                    }
+                (self->base)->maxAnisotropy = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkSamplerCreateInfo_getmaxAnisotropy(PyVkSamplerCreateInfo *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->maxAnisotropy);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkSamplerCreateInfo_setminLod(PyVkSamplerCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with minLod");
+                        return -1;
+                    }
+                (self->base)->minLod = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkSamplerCreateInfo_getminLod(PyVkSamplerCreateInfo *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->minLod);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkSamplerCreateInfo_setmaxLod(PyVkSamplerCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with maxLod");
+                        return -1;
+                    }
+                (self->base)->maxLod = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkSamplerCreateInfo_getmaxLod(PyVkSamplerCreateInfo *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->maxLod);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkSamplerCreateInfo_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkSamplerCreateInfo_getpNext, (setter)PyVkSamplerCreateInfo_setpNext, "", NULL},
+                    
+                        { "mipLodBias", (getter)PyVkSamplerCreateInfo_getmipLodBias, (setter)PyVkSamplerCreateInfo_setmipLodBias, "", NULL},
+                    
+                        { "maxAnisotropy", (getter)PyVkSamplerCreateInfo_getmaxAnisotropy, (setter)PyVkSamplerCreateInfo_setmaxAnisotropy, "", NULL},
+                    
+                        { "minLod", (getter)PyVkSamplerCreateInfo_getminLod, (setter)PyVkSamplerCreateInfo_setminLod, "", NULL},
+                    
+                        { "maxLod", (getter)PyVkSamplerCreateInfo_getmaxLod, (setter)PyVkSamplerCreateInfo_setmaxLod, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkSamplerCreateInfoType = {
@@ -10660,7 +11610,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkSamplerCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkSamplerCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkSamplerCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkSamplerCreateInfo_new,};
+                    PyVkSamplerCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkSamplerCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkCommandPoolCreateInfo *base; }
                 PyVkCommandPoolCreateInfo;
@@ -10685,32 +11635,43 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkCommandPoolCreateInfo_setpNext(PyVkCommandPoolCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkCommandPoolCreateInfo_getpNext(PyVkCommandPoolCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkCommandPoolCreateInfo_setqueueFamilyIndex(PyVkCommandPoolCreateInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with queueFamilyIndex");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->queueFamilyIndex = val;
+                (self->base)->queueFamilyIndex = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkCommandPoolCreateInfo_getqueueFamilyIndex(PyVkCommandPoolCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->queueFamilyIndex);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->queueFamilyIndex);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkCommandPoolCreateInfo_getsetters[] = {
+                    static PyGetSetDef PyVkCommandPoolCreateInfo_getsetters[] = {
                     
-                        { "queueFamilyIndex", (getter)PyVkCommandPoolCreateInfo_getqueueFamilyIndex,
-                           (setter)PyVkCommandPoolCreateInfo_setqueueFamilyIndex, "", NULL},
+                        { "pNext", (getter)PyVkCommandPoolCreateInfo_getpNext, (setter)PyVkCommandPoolCreateInfo_setpNext, "", NULL},
+                    
+                        { "queueFamilyIndex", (getter)PyVkCommandPoolCreateInfo_getqueueFamilyIndex, (setter)PyVkCommandPoolCreateInfo_setqueueFamilyIndex, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkCommandPoolCreateInfoType = {
@@ -10719,7 +11680,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkCommandPoolCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkCommandPoolCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkCommandPoolCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkCommandPoolCreateInfo_new,};
+                    PyVkCommandPoolCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkCommandPoolCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkCommandBufferAllocateInfo *base; }
                 PyVkCommandBufferAllocateInfo;
@@ -10744,32 +11705,43 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkCommandBufferAllocateInfo_setpNext(PyVkCommandBufferAllocateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkCommandBufferAllocateInfo_getpNext(PyVkCommandBufferAllocateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkCommandBufferAllocateInfo_setcommandBufferCount(PyVkCommandBufferAllocateInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with commandBufferCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->commandBufferCount = val;
+                (self->base)->commandBufferCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkCommandBufferAllocateInfo_getcommandBufferCount(PyVkCommandBufferAllocateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->commandBufferCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->commandBufferCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkCommandBufferAllocateInfo_getsetters[] = {
+                    static PyGetSetDef PyVkCommandBufferAllocateInfo_getsetters[] = {
                     
-                        { "commandBufferCount", (getter)PyVkCommandBufferAllocateInfo_getcommandBufferCount,
-                           (setter)PyVkCommandBufferAllocateInfo_setcommandBufferCount, "", NULL},
+                        { "pNext", (getter)PyVkCommandBufferAllocateInfo_getpNext, (setter)PyVkCommandBufferAllocateInfo_setpNext, "", NULL},
+                    
+                        { "commandBufferCount", (getter)PyVkCommandBufferAllocateInfo_getcommandBufferCount, (setter)PyVkCommandBufferAllocateInfo_setcommandBufferCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkCommandBufferAllocateInfoType = {
@@ -10778,7 +11750,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkCommandBufferAllocateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkCommandBufferAllocateInfo object",0,0,0,0,0,0,0,0,
-                    VkCommandBufferAllocateInfo_getsetters,0,0,0,0,0,0,0,PyVkCommandBufferAllocateInfo_new,};
+                    PyVkCommandBufferAllocateInfo_getsetters,0,0,0,0,0,0,0,PyVkCommandBufferAllocateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkCommandBufferInheritanceInfo *base; }
                 PyVkCommandBufferInheritanceInfo;
@@ -10803,32 +11775,43 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkCommandBufferInheritanceInfo_setpNext(PyVkCommandBufferInheritanceInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkCommandBufferInheritanceInfo_getpNext(PyVkCommandBufferInheritanceInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkCommandBufferInheritanceInfo_setsubpass(PyVkCommandBufferInheritanceInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with subpass");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->subpass = val;
+                (self->base)->subpass = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkCommandBufferInheritanceInfo_getsubpass(PyVkCommandBufferInheritanceInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->subpass);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->subpass);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkCommandBufferInheritanceInfo_getsetters[] = {
+                    static PyGetSetDef PyVkCommandBufferInheritanceInfo_getsetters[] = {
                     
-                        { "subpass", (getter)PyVkCommandBufferInheritanceInfo_getsubpass,
-                           (setter)PyVkCommandBufferInheritanceInfo_setsubpass, "", NULL},
+                        { "pNext", (getter)PyVkCommandBufferInheritanceInfo_getpNext, (setter)PyVkCommandBufferInheritanceInfo_setpNext, "", NULL},
+                    
+                        { "subpass", (getter)PyVkCommandBufferInheritanceInfo_getsubpass, (setter)PyVkCommandBufferInheritanceInfo_setsubpass, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkCommandBufferInheritanceInfoType = {
@@ -10837,7 +11820,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkCommandBufferInheritanceInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkCommandBufferInheritanceInfo object",0,0,0,0,0,0,0,0,
-                    VkCommandBufferInheritanceInfo_getsetters,0,0,0,0,0,0,0,PyVkCommandBufferInheritanceInfo_new,};
+                    PyVkCommandBufferInheritanceInfo_getsetters,0,0,0,0,0,0,0,PyVkCommandBufferInheritanceInfo_new,};
             
                 typedef struct { PyObject_HEAD VkCommandBufferBeginInfo *base; }
                 PyVkCommandBufferBeginInfo;
@@ -10862,7 +11845,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkCommandBufferBeginInfo_getsetters[] = {
+                static int PyVkCommandBufferBeginInfo_setpNext(PyVkCommandBufferBeginInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkCommandBufferBeginInfo_getpNext(PyVkCommandBufferBeginInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkCommandBufferBeginInfo_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkCommandBufferBeginInfo_getpNext, (setter)PyVkCommandBufferBeginInfo_setpNext, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkCommandBufferBeginInfoType = {
@@ -10871,7 +11872,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkCommandBufferBeginInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkCommandBufferBeginInfo object",0,0,0,0,0,0,0,0,
-                    VkCommandBufferBeginInfo_getsetters,0,0,0,0,0,0,0,PyVkCommandBufferBeginInfo_new,};
+                    PyVkCommandBufferBeginInfo_getsetters,0,0,0,0,0,0,0,PyVkCommandBufferBeginInfo_new,};
             
                 typedef struct { PyObject_HEAD VkRenderPassBeginInfo *base; }
                 PyVkRenderPassBeginInfo;
@@ -10896,32 +11897,43 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkRenderPassBeginInfo_setpNext(PyVkRenderPassBeginInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkRenderPassBeginInfo_getpNext(PyVkRenderPassBeginInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkRenderPassBeginInfo_setclearValueCount(PyVkRenderPassBeginInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with clearValueCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->clearValueCount = val;
+                (self->base)->clearValueCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkRenderPassBeginInfo_getclearValueCount(PyVkRenderPassBeginInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->clearValueCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->clearValueCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkRenderPassBeginInfo_getsetters[] = {
+                    static PyGetSetDef PyVkRenderPassBeginInfo_getsetters[] = {
                     
-                        { "clearValueCount", (getter)PyVkRenderPassBeginInfo_getclearValueCount,
-                           (setter)PyVkRenderPassBeginInfo_setclearValueCount, "", NULL},
+                        { "pNext", (getter)PyVkRenderPassBeginInfo_getpNext, (setter)PyVkRenderPassBeginInfo_setpNext, "", NULL},
+                    
+                        { "clearValueCount", (getter)PyVkRenderPassBeginInfo_getclearValueCount, (setter)PyVkRenderPassBeginInfo_setclearValueCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkRenderPassBeginInfoType = {
@@ -10930,7 +11942,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkRenderPassBeginInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkRenderPassBeginInfo object",0,0,0,0,0,0,0,0,
-                    VkRenderPassBeginInfo_getsetters,0,0,0,0,0,0,0,PyVkRenderPassBeginInfo_new,};
+                    PyVkRenderPassBeginInfo_getsetters,0,0,0,0,0,0,0,PyVkRenderPassBeginInfo_new,};
             
                 typedef struct { PyObject_HEAD VkClearDepthStencilValue *base; }
                 PyVkClearDepthStencilValue;
@@ -10955,32 +11967,43 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkClearDepthStencilValue_setdepth(PyVkClearDepthStencilValue *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with depth");
+                        return -1;
+                    }
+                (self->base)->depth = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkClearDepthStencilValue_getdepth(PyVkClearDepthStencilValue *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->depth);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkClearDepthStencilValue_setstencil(PyVkClearDepthStencilValue *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with stencil");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->stencil = val;
+                (self->base)->stencil = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkClearDepthStencilValue_getstencil(PyVkClearDepthStencilValue *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->stencil);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->stencil);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkClearDepthStencilValue_getsetters[] = {
+                    static PyGetSetDef PyVkClearDepthStencilValue_getsetters[] = {
                     
-                        { "stencil", (getter)PyVkClearDepthStencilValue_getstencil,
-                           (setter)PyVkClearDepthStencilValue_setstencil, "", NULL},
+                        { "depth", (getter)PyVkClearDepthStencilValue_getdepth, (setter)PyVkClearDepthStencilValue_setdepth, "", NULL},
+                    
+                        { "stencil", (getter)PyVkClearDepthStencilValue_getstencil, (setter)PyVkClearDepthStencilValue_setstencil, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkClearDepthStencilValueType = {
@@ -10989,7 +12012,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkClearDepthStencilValue_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkClearDepthStencilValue object",0,0,0,0,0,0,0,0,
-                    VkClearDepthStencilValue_getsetters,0,0,0,0,0,0,0,PyVkClearDepthStencilValue_new,};
+                    PyVkClearDepthStencilValue_getsetters,0,0,0,0,0,0,0,PyVkClearDepthStencilValue_new,};
             
                 typedef struct { PyObject_HEAD VkClearAttachment *base; }
                 PyVkClearAttachment;
@@ -11020,26 +12043,19 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with colorAttachment");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->colorAttachment = val;
+                (self->base)->colorAttachment = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkClearAttachment_getcolorAttachment(PyVkClearAttachment *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->colorAttachment);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->colorAttachment);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkClearAttachment_getsetters[] = {
+                    static PyGetSetDef PyVkClearAttachment_getsetters[] = {
                     
-                        { "colorAttachment", (getter)PyVkClearAttachment_getcolorAttachment,
-                           (setter)PyVkClearAttachment_setcolorAttachment, "", NULL},
+                        { "colorAttachment", (getter)PyVkClearAttachment_getcolorAttachment, (setter)PyVkClearAttachment_setcolorAttachment, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkClearAttachmentType = {
@@ -11048,7 +12064,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkClearAttachment_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkClearAttachment object",0,0,0,0,0,0,0,0,
-                    VkClearAttachment_getsetters,0,0,0,0,0,0,0,PyVkClearAttachment_new,};
+                    PyVkClearAttachment_getsetters,0,0,0,0,0,0,0,PyVkClearAttachment_new,};
             
                 typedef struct { PyObject_HEAD VkAttachmentDescription *base; }
                 PyVkAttachmentDescription;
@@ -11073,7 +12089,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkAttachmentDescription_getsetters[] = {
+                    static PyGetSetDef PyVkAttachmentDescription_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkAttachmentDescriptionType = {
@@ -11082,7 +12098,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkAttachmentDescription_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkAttachmentDescription object",0,0,0,0,0,0,0,0,
-                    VkAttachmentDescription_getsetters,0,0,0,0,0,0,0,PyVkAttachmentDescription_new,};
+                    PyVkAttachmentDescription_getsetters,0,0,0,0,0,0,0,PyVkAttachmentDescription_new,};
             
                 typedef struct { PyObject_HEAD VkAttachmentReference *base; }
                 PyVkAttachmentReference;
@@ -11113,26 +12129,19 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with attachment");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->attachment = val;
+                (self->base)->attachment = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkAttachmentReference_getattachment(PyVkAttachmentReference *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->attachment);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->attachment);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkAttachmentReference_getsetters[] = {
+                    static PyGetSetDef PyVkAttachmentReference_getsetters[] = {
                     
-                        { "attachment", (getter)PyVkAttachmentReference_getattachment,
-                           (setter)PyVkAttachmentReference_setattachment, "", NULL},
+                        { "attachment", (getter)PyVkAttachmentReference_getattachment, (setter)PyVkAttachmentReference_setattachment, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkAttachmentReferenceType = {
@@ -11141,7 +12150,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkAttachmentReference_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkAttachmentReference object",0,0,0,0,0,0,0,0,
-                    VkAttachmentReference_getsetters,0,0,0,0,0,0,0,PyVkAttachmentReference_new,};
+                    PyVkAttachmentReference_getsetters,0,0,0,0,0,0,0,PyVkAttachmentReference_new,};
             
                 typedef struct { PyObject_HEAD VkSubpassDescription *base; }
                 PyVkSubpassDescription;
@@ -11172,18 +12181,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with inputAttachmentCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->inputAttachmentCount = val;
+                (self->base)->inputAttachmentCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkSubpassDescription_getinputAttachmentCount(PyVkSubpassDescription *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->inputAttachmentCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->inputAttachmentCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -11194,18 +12197,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with colorAttachmentCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->colorAttachmentCount = val;
+                (self->base)->colorAttachmentCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkSubpassDescription_getcolorAttachmentCount(PyVkSubpassDescription *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->colorAttachmentCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->colorAttachmentCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -11216,32 +12213,46 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with preserveAttachmentCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->preserveAttachmentCount = val;
+                (self->base)->preserveAttachmentCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkSubpassDescription_getpreserveAttachmentCount(PyVkSubpassDescription *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->preserveAttachmentCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->preserveAttachmentCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkSubpassDescription_getsetters[] = {
+                static int PyVkSubpassDescription_setpPreserveAttachments(PyVkSubpassDescription *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pPreserveAttachments");
+                        return -1;
+                    }
+                
+            uint32_t tmp = (uint32_t) PyLong_AsLong(value);
+            uint32_t *t = malloc(sizeof(uint32_t));
+            memcpy(t, &tmp, sizeof(uint32_t));
+            (self->base)->pPreserveAttachments = t;
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkSubpassDescription_getpPreserveAttachments(PyVkSubpassDescription *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (*((self->base)->pPreserveAttachments)));
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkSubpassDescription_getsetters[] = {
                     
-                        { "inputAttachmentCount", (getter)PyVkSubpassDescription_getinputAttachmentCount,
-                           (setter)PyVkSubpassDescription_setinputAttachmentCount, "", NULL},
+                        { "inputAttachmentCount", (getter)PyVkSubpassDescription_getinputAttachmentCount, (setter)PyVkSubpassDescription_setinputAttachmentCount, "", NULL},
                     
-                        { "colorAttachmentCount", (getter)PyVkSubpassDescription_getcolorAttachmentCount,
-                           (setter)PyVkSubpassDescription_setcolorAttachmentCount, "", NULL},
+                        { "colorAttachmentCount", (getter)PyVkSubpassDescription_getcolorAttachmentCount, (setter)PyVkSubpassDescription_setcolorAttachmentCount, "", NULL},
                     
-                        { "preserveAttachmentCount", (getter)PyVkSubpassDescription_getpreserveAttachmentCount,
-                           (setter)PyVkSubpassDescription_setpreserveAttachmentCount, "", NULL},
+                        { "preserveAttachmentCount", (getter)PyVkSubpassDescription_getpreserveAttachmentCount, (setter)PyVkSubpassDescription_setpreserveAttachmentCount, "", NULL},
+                    
+                        { "pPreserveAttachments", (getter)PyVkSubpassDescription_getpPreserveAttachments, (setter)PyVkSubpassDescription_setpPreserveAttachments, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkSubpassDescriptionType = {
@@ -11250,7 +12261,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkSubpassDescription_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkSubpassDescription object",0,0,0,0,0,0,0,0,
-                    VkSubpassDescription_getsetters,0,0,0,0,0,0,0,PyVkSubpassDescription_new,};
+                    PyVkSubpassDescription_getsetters,0,0,0,0,0,0,0,PyVkSubpassDescription_new,};
             
                 typedef struct { PyObject_HEAD VkSubpassDependency *base; }
                 PyVkSubpassDependency;
@@ -11281,18 +12292,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with srcSubpass");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->srcSubpass = val;
+                (self->base)->srcSubpass = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkSubpassDependency_getsrcSubpass(PyVkSubpassDependency *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->srcSubpass);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->srcSubpass);
                     Py_INCREF(value);
                     return value;
                 }
@@ -11303,29 +12308,21 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with dstSubpass");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->dstSubpass = val;
+                (self->base)->dstSubpass = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkSubpassDependency_getdstSubpass(PyVkSubpassDependency *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->dstSubpass);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->dstSubpass);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkSubpassDependency_getsetters[] = {
+                    static PyGetSetDef PyVkSubpassDependency_getsetters[] = {
                     
-                        { "srcSubpass", (getter)PyVkSubpassDependency_getsrcSubpass,
-                           (setter)PyVkSubpassDependency_setsrcSubpass, "", NULL},
+                        { "srcSubpass", (getter)PyVkSubpassDependency_getsrcSubpass, (setter)PyVkSubpassDependency_setsrcSubpass, "", NULL},
                     
-                        { "dstSubpass", (getter)PyVkSubpassDependency_getdstSubpass,
-                           (setter)PyVkSubpassDependency_setdstSubpass, "", NULL},
+                        { "dstSubpass", (getter)PyVkSubpassDependency_getdstSubpass, (setter)PyVkSubpassDependency_setdstSubpass, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkSubpassDependencyType = {
@@ -11334,7 +12331,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkSubpassDependency_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkSubpassDependency object",0,0,0,0,0,0,0,0,
-                    VkSubpassDependency_getsetters,0,0,0,0,0,0,0,PyVkSubpassDependency_new,};
+                    PyVkSubpassDependency_getsetters,0,0,0,0,0,0,0,PyVkSubpassDependency_new,};
             
                 typedef struct { PyObject_HEAD VkRenderPassCreateInfo *base; }
                 PyVkRenderPassCreateInfo;
@@ -11359,24 +12356,34 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkRenderPassCreateInfo_setpNext(PyVkRenderPassCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkRenderPassCreateInfo_getpNext(PyVkRenderPassCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkRenderPassCreateInfo_setattachmentCount(PyVkRenderPassCreateInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with attachmentCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->attachmentCount = val;
+                (self->base)->attachmentCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkRenderPassCreateInfo_getattachmentCount(PyVkRenderPassCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->attachmentCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->attachmentCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -11387,18 +12394,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with subpassCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->subpassCount = val;
+                (self->base)->subpassCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkRenderPassCreateInfo_getsubpassCount(PyVkRenderPassCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->subpassCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->subpassCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -11409,32 +12410,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with dependencyCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->dependencyCount = val;
+                (self->base)->dependencyCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkRenderPassCreateInfo_getdependencyCount(PyVkRenderPassCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->dependencyCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->dependencyCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkRenderPassCreateInfo_getsetters[] = {
+                    static PyGetSetDef PyVkRenderPassCreateInfo_getsetters[] = {
                     
-                        { "attachmentCount", (getter)PyVkRenderPassCreateInfo_getattachmentCount,
-                           (setter)PyVkRenderPassCreateInfo_setattachmentCount, "", NULL},
+                        { "pNext", (getter)PyVkRenderPassCreateInfo_getpNext, (setter)PyVkRenderPassCreateInfo_setpNext, "", NULL},
                     
-                        { "subpassCount", (getter)PyVkRenderPassCreateInfo_getsubpassCount,
-                           (setter)PyVkRenderPassCreateInfo_setsubpassCount, "", NULL},
+                        { "attachmentCount", (getter)PyVkRenderPassCreateInfo_getattachmentCount, (setter)PyVkRenderPassCreateInfo_setattachmentCount, "", NULL},
                     
-                        { "dependencyCount", (getter)PyVkRenderPassCreateInfo_getdependencyCount,
-                           (setter)PyVkRenderPassCreateInfo_setdependencyCount, "", NULL},
+                        { "subpassCount", (getter)PyVkRenderPassCreateInfo_getsubpassCount, (setter)PyVkRenderPassCreateInfo_setsubpassCount, "", NULL},
+                    
+                        { "dependencyCount", (getter)PyVkRenderPassCreateInfo_getdependencyCount, (setter)PyVkRenderPassCreateInfo_setdependencyCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkRenderPassCreateInfoType = {
@@ -11443,7 +12437,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkRenderPassCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkRenderPassCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkRenderPassCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkRenderPassCreateInfo_new,};
+                    PyVkRenderPassCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkRenderPassCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkEventCreateInfo *base; }
                 PyVkEventCreateInfo;
@@ -11468,7 +12462,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkEventCreateInfo_getsetters[] = {
+                static int PyVkEventCreateInfo_setpNext(PyVkEventCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkEventCreateInfo_getpNext(PyVkEventCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkEventCreateInfo_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkEventCreateInfo_getpNext, (setter)PyVkEventCreateInfo_setpNext, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkEventCreateInfoType = {
@@ -11477,7 +12489,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkEventCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkEventCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkEventCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkEventCreateInfo_new,};
+                    PyVkEventCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkEventCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkFenceCreateInfo *base; }
                 PyVkFenceCreateInfo;
@@ -11502,7 +12514,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkFenceCreateInfo_getsetters[] = {
+                static int PyVkFenceCreateInfo_setpNext(PyVkFenceCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkFenceCreateInfo_getpNext(PyVkFenceCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkFenceCreateInfo_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkFenceCreateInfo_getpNext, (setter)PyVkFenceCreateInfo_setpNext, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkFenceCreateInfoType = {
@@ -11511,7 +12541,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkFenceCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkFenceCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkFenceCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkFenceCreateInfo_new,};
+                    PyVkFenceCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkFenceCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkPhysicalDeviceFeatures *base; }
                 PyVkPhysicalDeviceFeatures;
@@ -11536,7 +12566,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkPhysicalDeviceFeatures_getsetters[] = {
+                    static PyGetSetDef PyVkPhysicalDeviceFeatures_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkPhysicalDeviceFeaturesType = {
@@ -11545,7 +12575,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkPhysicalDeviceFeatures_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkPhysicalDeviceFeatures object",0,0,0,0,0,0,0,0,
-                    VkPhysicalDeviceFeatures_getsetters,0,0,0,0,0,0,0,PyVkPhysicalDeviceFeatures_new,};
+                    PyVkPhysicalDeviceFeatures_getsetters,0,0,0,0,0,0,0,PyVkPhysicalDeviceFeatures_new,};
             
                 typedef struct { PyObject_HEAD VkPhysicalDeviceSparseProperties *base; }
                 PyVkPhysicalDeviceSparseProperties;
@@ -11570,7 +12600,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkPhysicalDeviceSparseProperties_getsetters[] = {
+                    static PyGetSetDef PyVkPhysicalDeviceSparseProperties_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkPhysicalDeviceSparsePropertiesType = {
@@ -11579,7 +12609,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkPhysicalDeviceSparseProperties_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkPhysicalDeviceSparseProperties object",0,0,0,0,0,0,0,0,
-                    VkPhysicalDeviceSparseProperties_getsetters,0,0,0,0,0,0,0,PyVkPhysicalDeviceSparseProperties_new,};
+                    PyVkPhysicalDeviceSparseProperties_getsetters,0,0,0,0,0,0,0,PyVkPhysicalDeviceSparseProperties_new,};
             
                 typedef struct { PyObject_HEAD VkPhysicalDeviceLimits *base; }
                 PyVkPhysicalDeviceLimits;
@@ -11610,18 +12640,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxImageDimension1D");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxImageDimension1D = val;
+                (self->base)->maxImageDimension1D = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxImageDimension1D(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxImageDimension1D);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxImageDimension1D);
                     Py_INCREF(value);
                     return value;
                 }
@@ -11632,18 +12656,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxImageDimension2D");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxImageDimension2D = val;
+                (self->base)->maxImageDimension2D = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxImageDimension2D(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxImageDimension2D);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxImageDimension2D);
                     Py_INCREF(value);
                     return value;
                 }
@@ -11654,18 +12672,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxImageDimension3D");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxImageDimension3D = val;
+                (self->base)->maxImageDimension3D = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxImageDimension3D(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxImageDimension3D);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxImageDimension3D);
                     Py_INCREF(value);
                     return value;
                 }
@@ -11676,18 +12688,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxImageDimensionCube");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxImageDimensionCube = val;
+                (self->base)->maxImageDimensionCube = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxImageDimensionCube(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxImageDimensionCube);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxImageDimensionCube);
                     Py_INCREF(value);
                     return value;
                 }
@@ -11698,18 +12704,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxImageArrayLayers");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxImageArrayLayers = val;
+                (self->base)->maxImageArrayLayers = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxImageArrayLayers(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxImageArrayLayers);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxImageArrayLayers);
                     Py_INCREF(value);
                     return value;
                 }
@@ -11720,18 +12720,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxTexelBufferElements");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxTexelBufferElements = val;
+                (self->base)->maxTexelBufferElements = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxTexelBufferElements(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxTexelBufferElements);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxTexelBufferElements);
                     Py_INCREF(value);
                     return value;
                 }
@@ -11742,18 +12736,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxUniformBufferRange");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxUniformBufferRange = val;
+                (self->base)->maxUniformBufferRange = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxUniformBufferRange(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxUniformBufferRange);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxUniformBufferRange);
                     Py_INCREF(value);
                     return value;
                 }
@@ -11764,18 +12752,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxStorageBufferRange");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxStorageBufferRange = val;
+                (self->base)->maxStorageBufferRange = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxStorageBufferRange(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxStorageBufferRange);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxStorageBufferRange);
                     Py_INCREF(value);
                     return value;
                 }
@@ -11786,18 +12768,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxPushConstantsSize");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxPushConstantsSize = val;
+                (self->base)->maxPushConstantsSize = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxPushConstantsSize(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxPushConstantsSize);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxPushConstantsSize);
                     Py_INCREF(value);
                     return value;
                 }
@@ -11808,18 +12784,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxMemoryAllocationCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxMemoryAllocationCount = val;
+                (self->base)->maxMemoryAllocationCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxMemoryAllocationCount(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxMemoryAllocationCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxMemoryAllocationCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -11830,18 +12800,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxSamplerAllocationCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxSamplerAllocationCount = val;
+                (self->base)->maxSamplerAllocationCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxSamplerAllocationCount(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxSamplerAllocationCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxSamplerAllocationCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -11852,18 +12816,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxBoundDescriptorSets");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxBoundDescriptorSets = val;
+                (self->base)->maxBoundDescriptorSets = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxBoundDescriptorSets(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxBoundDescriptorSets);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxBoundDescriptorSets);
                     Py_INCREF(value);
                     return value;
                 }
@@ -11874,18 +12832,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxPerStageDescriptorSamplers");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxPerStageDescriptorSamplers = val;
+                (self->base)->maxPerStageDescriptorSamplers = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxPerStageDescriptorSamplers(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxPerStageDescriptorSamplers);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxPerStageDescriptorSamplers);
                     Py_INCREF(value);
                     return value;
                 }
@@ -11896,18 +12848,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxPerStageDescriptorUniformBuffers");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxPerStageDescriptorUniformBuffers = val;
+                (self->base)->maxPerStageDescriptorUniformBuffers = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxPerStageDescriptorUniformBuffers(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxPerStageDescriptorUniformBuffers);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxPerStageDescriptorUniformBuffers);
                     Py_INCREF(value);
                     return value;
                 }
@@ -11918,18 +12864,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxPerStageDescriptorStorageBuffers");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxPerStageDescriptorStorageBuffers = val;
+                (self->base)->maxPerStageDescriptorStorageBuffers = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxPerStageDescriptorStorageBuffers(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxPerStageDescriptorStorageBuffers);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxPerStageDescriptorStorageBuffers);
                     Py_INCREF(value);
                     return value;
                 }
@@ -11940,18 +12880,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxPerStageDescriptorSampledImages");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxPerStageDescriptorSampledImages = val;
+                (self->base)->maxPerStageDescriptorSampledImages = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxPerStageDescriptorSampledImages(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxPerStageDescriptorSampledImages);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxPerStageDescriptorSampledImages);
                     Py_INCREF(value);
                     return value;
                 }
@@ -11962,18 +12896,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxPerStageDescriptorStorageImages");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxPerStageDescriptorStorageImages = val;
+                (self->base)->maxPerStageDescriptorStorageImages = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxPerStageDescriptorStorageImages(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxPerStageDescriptorStorageImages);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxPerStageDescriptorStorageImages);
                     Py_INCREF(value);
                     return value;
                 }
@@ -11984,18 +12912,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxPerStageDescriptorInputAttachments");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxPerStageDescriptorInputAttachments = val;
+                (self->base)->maxPerStageDescriptorInputAttachments = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxPerStageDescriptorInputAttachments(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxPerStageDescriptorInputAttachments);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxPerStageDescriptorInputAttachments);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12006,18 +12928,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxPerStageResources");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxPerStageResources = val;
+                (self->base)->maxPerStageResources = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxPerStageResources(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxPerStageResources);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxPerStageResources);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12028,18 +12944,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxDescriptorSetSamplers");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxDescriptorSetSamplers = val;
+                (self->base)->maxDescriptorSetSamplers = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxDescriptorSetSamplers(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxDescriptorSetSamplers);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxDescriptorSetSamplers);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12050,18 +12960,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxDescriptorSetUniformBuffers");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxDescriptorSetUniformBuffers = val;
+                (self->base)->maxDescriptorSetUniformBuffers = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxDescriptorSetUniformBuffers(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxDescriptorSetUniformBuffers);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxDescriptorSetUniformBuffers);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12072,18 +12976,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxDescriptorSetUniformBuffersDynamic");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxDescriptorSetUniformBuffersDynamic = val;
+                (self->base)->maxDescriptorSetUniformBuffersDynamic = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxDescriptorSetUniformBuffersDynamic(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxDescriptorSetUniformBuffersDynamic);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxDescriptorSetUniformBuffersDynamic);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12094,18 +12992,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxDescriptorSetStorageBuffers");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxDescriptorSetStorageBuffers = val;
+                (self->base)->maxDescriptorSetStorageBuffers = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxDescriptorSetStorageBuffers(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxDescriptorSetStorageBuffers);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxDescriptorSetStorageBuffers);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12116,18 +13008,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxDescriptorSetStorageBuffersDynamic");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxDescriptorSetStorageBuffersDynamic = val;
+                (self->base)->maxDescriptorSetStorageBuffersDynamic = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxDescriptorSetStorageBuffersDynamic(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxDescriptorSetStorageBuffersDynamic);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxDescriptorSetStorageBuffersDynamic);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12138,18 +13024,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxDescriptorSetSampledImages");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxDescriptorSetSampledImages = val;
+                (self->base)->maxDescriptorSetSampledImages = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxDescriptorSetSampledImages(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxDescriptorSetSampledImages);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxDescriptorSetSampledImages);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12160,18 +13040,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxDescriptorSetStorageImages");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxDescriptorSetStorageImages = val;
+                (self->base)->maxDescriptorSetStorageImages = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxDescriptorSetStorageImages(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxDescriptorSetStorageImages);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxDescriptorSetStorageImages);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12182,18 +13056,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxDescriptorSetInputAttachments");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxDescriptorSetInputAttachments = val;
+                (self->base)->maxDescriptorSetInputAttachments = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxDescriptorSetInputAttachments(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxDescriptorSetInputAttachments);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxDescriptorSetInputAttachments);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12204,18 +13072,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxVertexInputAttributes");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxVertexInputAttributes = val;
+                (self->base)->maxVertexInputAttributes = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxVertexInputAttributes(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxVertexInputAttributes);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxVertexInputAttributes);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12226,18 +13088,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxVertexInputBindings");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxVertexInputBindings = val;
+                (self->base)->maxVertexInputBindings = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxVertexInputBindings(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxVertexInputBindings);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxVertexInputBindings);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12248,18 +13104,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxVertexInputAttributeOffset");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxVertexInputAttributeOffset = val;
+                (self->base)->maxVertexInputAttributeOffset = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxVertexInputAttributeOffset(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxVertexInputAttributeOffset);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxVertexInputAttributeOffset);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12270,18 +13120,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxVertexInputBindingStride");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxVertexInputBindingStride = val;
+                (self->base)->maxVertexInputBindingStride = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxVertexInputBindingStride(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxVertexInputBindingStride);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxVertexInputBindingStride);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12292,18 +13136,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxVertexOutputComponents");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxVertexOutputComponents = val;
+                (self->base)->maxVertexOutputComponents = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxVertexOutputComponents(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxVertexOutputComponents);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxVertexOutputComponents);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12314,18 +13152,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxTessellationGenerationLevel");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxTessellationGenerationLevel = val;
+                (self->base)->maxTessellationGenerationLevel = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxTessellationGenerationLevel(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxTessellationGenerationLevel);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxTessellationGenerationLevel);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12336,18 +13168,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxTessellationPatchSize");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxTessellationPatchSize = val;
+                (self->base)->maxTessellationPatchSize = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxTessellationPatchSize(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxTessellationPatchSize);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxTessellationPatchSize);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12358,18 +13184,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxTessellationControlPerVertexInputComponents");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxTessellationControlPerVertexInputComponents = val;
+                (self->base)->maxTessellationControlPerVertexInputComponents = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxTessellationControlPerVertexInputComponents(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxTessellationControlPerVertexInputComponents);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxTessellationControlPerVertexInputComponents);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12380,18 +13200,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxTessellationControlPerVertexOutputComponents");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxTessellationControlPerVertexOutputComponents = val;
+                (self->base)->maxTessellationControlPerVertexOutputComponents = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxTessellationControlPerVertexOutputComponents(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxTessellationControlPerVertexOutputComponents);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxTessellationControlPerVertexOutputComponents);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12402,18 +13216,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxTessellationControlPerPatchOutputComponents");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxTessellationControlPerPatchOutputComponents = val;
+                (self->base)->maxTessellationControlPerPatchOutputComponents = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxTessellationControlPerPatchOutputComponents(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxTessellationControlPerPatchOutputComponents);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxTessellationControlPerPatchOutputComponents);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12424,18 +13232,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxTessellationControlTotalOutputComponents");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxTessellationControlTotalOutputComponents = val;
+                (self->base)->maxTessellationControlTotalOutputComponents = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxTessellationControlTotalOutputComponents(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxTessellationControlTotalOutputComponents);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxTessellationControlTotalOutputComponents);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12446,18 +13248,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxTessellationEvaluationInputComponents");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxTessellationEvaluationInputComponents = val;
+                (self->base)->maxTessellationEvaluationInputComponents = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxTessellationEvaluationInputComponents(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxTessellationEvaluationInputComponents);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxTessellationEvaluationInputComponents);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12468,18 +13264,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxTessellationEvaluationOutputComponents");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxTessellationEvaluationOutputComponents = val;
+                (self->base)->maxTessellationEvaluationOutputComponents = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxTessellationEvaluationOutputComponents(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxTessellationEvaluationOutputComponents);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxTessellationEvaluationOutputComponents);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12490,18 +13280,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxGeometryShaderInvocations");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxGeometryShaderInvocations = val;
+                (self->base)->maxGeometryShaderInvocations = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxGeometryShaderInvocations(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxGeometryShaderInvocations);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxGeometryShaderInvocations);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12512,18 +13296,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxGeometryInputComponents");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxGeometryInputComponents = val;
+                (self->base)->maxGeometryInputComponents = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxGeometryInputComponents(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxGeometryInputComponents);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxGeometryInputComponents);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12534,18 +13312,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxGeometryOutputComponents");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxGeometryOutputComponents = val;
+                (self->base)->maxGeometryOutputComponents = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxGeometryOutputComponents(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxGeometryOutputComponents);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxGeometryOutputComponents);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12556,18 +13328,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxGeometryOutputVertices");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxGeometryOutputVertices = val;
+                (self->base)->maxGeometryOutputVertices = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxGeometryOutputVertices(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxGeometryOutputVertices);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxGeometryOutputVertices);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12578,18 +13344,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxGeometryTotalOutputComponents");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxGeometryTotalOutputComponents = val;
+                (self->base)->maxGeometryTotalOutputComponents = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxGeometryTotalOutputComponents(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxGeometryTotalOutputComponents);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxGeometryTotalOutputComponents);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12600,18 +13360,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxFragmentInputComponents");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxFragmentInputComponents = val;
+                (self->base)->maxFragmentInputComponents = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxFragmentInputComponents(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxFragmentInputComponents);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxFragmentInputComponents);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12622,18 +13376,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxFragmentOutputAttachments");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxFragmentOutputAttachments = val;
+                (self->base)->maxFragmentOutputAttachments = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxFragmentOutputAttachments(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxFragmentOutputAttachments);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxFragmentOutputAttachments);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12644,18 +13392,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxFragmentDualSrcAttachments");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxFragmentDualSrcAttachments = val;
+                (self->base)->maxFragmentDualSrcAttachments = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxFragmentDualSrcAttachments(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxFragmentDualSrcAttachments);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxFragmentDualSrcAttachments);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12666,18 +13408,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxFragmentCombinedOutputResources");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxFragmentCombinedOutputResources = val;
+                (self->base)->maxFragmentCombinedOutputResources = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxFragmentCombinedOutputResources(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxFragmentCombinedOutputResources);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxFragmentCombinedOutputResources);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12688,18 +13424,44 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxComputeSharedMemorySize");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxComputeSharedMemorySize = val;
+                (self->base)->maxComputeSharedMemorySize = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxComputeSharedMemorySize(PyVkPhysicalDeviceLimits *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxComputeSharedMemorySize);
+                    Py_INCREF(value);
+                    return value;
+                }
                 
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxComputeSharedMemorySize);
-                    
+                static int PyVkPhysicalDeviceLimits_setmaxComputeWorkGroupCount(PyVkPhysicalDeviceLimits *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with maxComputeWorkGroupCount");
+                        return -1;
+                    }
+                
+            int nb = PyList_Size(value);
+            int i;
+            for (i = 0; i < nb; i++) {
+                uint32_t tmp = (uint32_t) PyLong_AsLong(
+                PyList_GetItem(value, i));
+                ((self->base)->maxComputeWorkGroupCount)[i] = tmp;
+            }
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkPhysicalDeviceLimits_getmaxComputeWorkGroupCount(PyVkPhysicalDeviceLimits *self, void *closure){
+                
+            PyObject* value = PyList_New(0);
+            int nb = sizeof((self->base)->maxComputeWorkGroupCount) / sizeof((self->base)->maxComputeWorkGroupCount[0]);
+            int i = 0;
+            for (i = 0; i < nb; i++) {
+                PyObject* py_tmp = PyLong_FromLong((long) (self->base)->maxComputeWorkGroupCount[i]);
+                PyList_Append(value, py_tmp);
+            }
+            
                     Py_INCREF(value);
                     return value;
                 }
@@ -12710,18 +13472,44 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxComputeWorkGroupInvocations");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxComputeWorkGroupInvocations = val;
+                (self->base)->maxComputeWorkGroupInvocations = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxComputeWorkGroupInvocations(PyVkPhysicalDeviceLimits *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxComputeWorkGroupInvocations);
+                    Py_INCREF(value);
+                    return value;
+                }
                 
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxComputeWorkGroupInvocations);
-                    
+                static int PyVkPhysicalDeviceLimits_setmaxComputeWorkGroupSize(PyVkPhysicalDeviceLimits *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with maxComputeWorkGroupSize");
+                        return -1;
+                    }
+                
+            int nb = PyList_Size(value);
+            int i;
+            for (i = 0; i < nb; i++) {
+                uint32_t tmp = (uint32_t) PyLong_AsLong(
+                PyList_GetItem(value, i));
+                ((self->base)->maxComputeWorkGroupSize)[i] = tmp;
+            }
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkPhysicalDeviceLimits_getmaxComputeWorkGroupSize(PyVkPhysicalDeviceLimits *self, void *closure){
+                
+            PyObject* value = PyList_New(0);
+            int nb = sizeof((self->base)->maxComputeWorkGroupSize) / sizeof((self->base)->maxComputeWorkGroupSize[0]);
+            int i = 0;
+            for (i = 0; i < nb; i++) {
+                PyObject* py_tmp = PyLong_FromLong((long) (self->base)->maxComputeWorkGroupSize[i]);
+                PyList_Append(value, py_tmp);
+            }
+            
                     Py_INCREF(value);
                     return value;
                 }
@@ -12732,18 +13520,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with subPixelPrecisionBits");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->subPixelPrecisionBits = val;
+                (self->base)->subPixelPrecisionBits = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getsubPixelPrecisionBits(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->subPixelPrecisionBits);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->subPixelPrecisionBits);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12754,18 +13536,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with subTexelPrecisionBits");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->subTexelPrecisionBits = val;
+                (self->base)->subTexelPrecisionBits = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getsubTexelPrecisionBits(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->subTexelPrecisionBits);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->subTexelPrecisionBits);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12776,18 +13552,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with mipmapPrecisionBits");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->mipmapPrecisionBits = val;
+                (self->base)->mipmapPrecisionBits = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmipmapPrecisionBits(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->mipmapPrecisionBits);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->mipmapPrecisionBits);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12798,18 +13568,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxDrawIndexedIndexValue");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxDrawIndexedIndexValue = val;
+                (self->base)->maxDrawIndexedIndexValue = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxDrawIndexedIndexValue(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxDrawIndexedIndexValue);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxDrawIndexedIndexValue);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12820,18 +13584,44 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxDrawIndirectCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxDrawIndirectCount = val;
+                (self->base)->maxDrawIndirectCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxDrawIndirectCount(PyVkPhysicalDeviceLimits *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxDrawIndirectCount);
+                    Py_INCREF(value);
+                    return value;
+                }
                 
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxDrawIndirectCount);
-                    
+                static int PyVkPhysicalDeviceLimits_setmaxSamplerLodBias(PyVkPhysicalDeviceLimits *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with maxSamplerLodBias");
+                        return -1;
+                    }
+                (self->base)->maxSamplerLodBias = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkPhysicalDeviceLimits_getmaxSamplerLodBias(PyVkPhysicalDeviceLimits *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->maxSamplerLodBias);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkPhysicalDeviceLimits_setmaxSamplerAnisotropy(PyVkPhysicalDeviceLimits *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with maxSamplerAnisotropy");
+                        return -1;
+                    }
+                (self->base)->maxSamplerAnisotropy = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkPhysicalDeviceLimits_getmaxSamplerAnisotropy(PyVkPhysicalDeviceLimits *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->maxSamplerAnisotropy);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12842,18 +13632,75 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxViewports");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxViewports = val;
+                (self->base)->maxViewports = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxViewports(PyVkPhysicalDeviceLimits *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxViewports);
+                    Py_INCREF(value);
+                    return value;
+                }
                 
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxViewports);
-                    
+                static int PyVkPhysicalDeviceLimits_setmaxViewportDimensions(PyVkPhysicalDeviceLimits *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with maxViewportDimensions");
+                        return -1;
+                    }
+                
+            int nb = PyList_Size(value);
+            int i;
+            for (i = 0; i < nb; i++) {
+                uint32_t tmp = (uint32_t) PyLong_AsLong(
+                PyList_GetItem(value, i));
+                ((self->base)->maxViewportDimensions)[i] = tmp;
+            }
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkPhysicalDeviceLimits_getmaxViewportDimensions(PyVkPhysicalDeviceLimits *self, void *closure){
+                
+            PyObject* value = PyList_New(0);
+            int nb = sizeof((self->base)->maxViewportDimensions) / sizeof((self->base)->maxViewportDimensions[0]);
+            int i = 0;
+            for (i = 0; i < nb; i++) {
+                PyObject* py_tmp = PyLong_FromLong((long) (self->base)->maxViewportDimensions[i]);
+                PyList_Append(value, py_tmp);
+            }
+            
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkPhysicalDeviceLimits_setviewportBoundsRange(PyVkPhysicalDeviceLimits *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with viewportBoundsRange");
+                        return -1;
+                    }
+                
+            int nb = PyList_Size(value);
+            int i;
+            for (i = 0; i < nb; i++) {
+                float tmp = (float) PyFloat_AsDouble(PyList_GetItem(value, i));
+                ((self->base)->viewportBoundsRange)[i] = tmp;
+            }
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkPhysicalDeviceLimits_getviewportBoundsRange(PyVkPhysicalDeviceLimits *self, void *closure){
+                
+            PyObject* value = PyList_New(0);
+            int nb = sizeof((self->base)->viewportBoundsRange) / sizeof((self->base)->viewportBoundsRange[0]);
+            int i = 0;
+            for (i = 0; i < nb; i++) {
+                PyObject* py_tmp = PyFloat_FromDouble((double) (self->base)->viewportBoundsRange[i]);
+                PyList_Append(value, py_tmp);
+            }
+            
                     Py_INCREF(value);
                     return value;
                 }
@@ -12864,18 +13711,44 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with viewportSubPixelBits");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->viewportSubPixelBits = val;
+                (self->base)->viewportSubPixelBits = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getviewportSubPixelBits(PyVkPhysicalDeviceLimits *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->viewportSubPixelBits);
+                    Py_INCREF(value);
+                    return value;
+                }
                 
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->viewportSubPixelBits);
-                    
+                static int PyVkPhysicalDeviceLimits_setminMemoryMapAlignment(PyVkPhysicalDeviceLimits *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with minMemoryMapAlignment");
+                        return -1;
+                    }
+                (self->base)->minMemoryMapAlignment = (size_t) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkPhysicalDeviceLimits_getminMemoryMapAlignment(PyVkPhysicalDeviceLimits *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->minMemoryMapAlignment);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkPhysicalDeviceLimits_setminTexelOffset(PyVkPhysicalDeviceLimits *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with minTexelOffset");
+                        return -1;
+                    }
+                (self->base)->minTexelOffset = (int32_t) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkPhysicalDeviceLimits_getminTexelOffset(PyVkPhysicalDeviceLimits *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->minTexelOffset);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12886,18 +13759,28 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxTexelOffset");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxTexelOffset = val;
+                (self->base)->maxTexelOffset = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxTexelOffset(PyVkPhysicalDeviceLimits *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxTexelOffset);
+                    Py_INCREF(value);
+                    return value;
+                }
                 
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxTexelOffset);
-                    
+                static int PyVkPhysicalDeviceLimits_setminTexelGatherOffset(PyVkPhysicalDeviceLimits *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with minTexelGatherOffset");
+                        return -1;
+                    }
+                (self->base)->minTexelGatherOffset = (int32_t) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkPhysicalDeviceLimits_getminTexelGatherOffset(PyVkPhysicalDeviceLimits *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->minTexelGatherOffset);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12908,18 +13791,44 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxTexelGatherOffset");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxTexelGatherOffset = val;
+                (self->base)->maxTexelGatherOffset = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxTexelGatherOffset(PyVkPhysicalDeviceLimits *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxTexelGatherOffset);
+                    Py_INCREF(value);
+                    return value;
+                }
                 
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxTexelGatherOffset);
-                    
+                static int PyVkPhysicalDeviceLimits_setminInterpolationOffset(PyVkPhysicalDeviceLimits *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with minInterpolationOffset");
+                        return -1;
+                    }
+                (self->base)->minInterpolationOffset = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkPhysicalDeviceLimits_getminInterpolationOffset(PyVkPhysicalDeviceLimits *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->minInterpolationOffset);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkPhysicalDeviceLimits_setmaxInterpolationOffset(PyVkPhysicalDeviceLimits *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with maxInterpolationOffset");
+                        return -1;
+                    }
+                (self->base)->maxInterpolationOffset = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkPhysicalDeviceLimits_getmaxInterpolationOffset(PyVkPhysicalDeviceLimits *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->maxInterpolationOffset);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12930,18 +13839,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with subPixelInterpolationOffsetBits");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->subPixelInterpolationOffsetBits = val;
+                (self->base)->subPixelInterpolationOffsetBits = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getsubPixelInterpolationOffsetBits(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->subPixelInterpolationOffsetBits);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->subPixelInterpolationOffsetBits);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12952,18 +13855,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxFramebufferWidth");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxFramebufferWidth = val;
+                (self->base)->maxFramebufferWidth = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxFramebufferWidth(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxFramebufferWidth);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxFramebufferWidth);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12974,18 +13871,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxFramebufferHeight");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxFramebufferHeight = val;
+                (self->base)->maxFramebufferHeight = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxFramebufferHeight(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxFramebufferHeight);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxFramebufferHeight);
                     Py_INCREF(value);
                     return value;
                 }
@@ -12996,18 +13887,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxFramebufferLayers");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxFramebufferLayers = val;
+                (self->base)->maxFramebufferLayers = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxFramebufferLayers(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxFramebufferLayers);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxFramebufferLayers);
                     Py_INCREF(value);
                     return value;
                 }
@@ -13018,18 +13903,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxColorAttachments");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxColorAttachments = val;
+                (self->base)->maxColorAttachments = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxColorAttachments(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxColorAttachments);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxColorAttachments);
                     Py_INCREF(value);
                     return value;
                 }
@@ -13040,18 +13919,28 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxSampleMaskWords");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxSampleMaskWords = val;
+                (self->base)->maxSampleMaskWords = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxSampleMaskWords(PyVkPhysicalDeviceLimits *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxSampleMaskWords);
+                    Py_INCREF(value);
+                    return value;
+                }
                 
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxSampleMaskWords);
-                    
+                static int PyVkPhysicalDeviceLimits_settimestampPeriod(PyVkPhysicalDeviceLimits *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with timestampPeriod");
+                        return -1;
+                    }
+                (self->base)->timestampPeriod = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkPhysicalDeviceLimits_gettimestampPeriod(PyVkPhysicalDeviceLimits *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->timestampPeriod);
                     Py_INCREF(value);
                     return value;
                 }
@@ -13062,18 +13951,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxClipDistances");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxClipDistances = val;
+                (self->base)->maxClipDistances = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxClipDistances(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxClipDistances);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxClipDistances);
                     Py_INCREF(value);
                     return value;
                 }
@@ -13084,18 +13967,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxCullDistances");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxCullDistances = val;
+                (self->base)->maxCullDistances = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxCullDistances(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxCullDistances);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxCullDistances);
                     Py_INCREF(value);
                     return value;
                 }
@@ -13106,18 +13983,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxCombinedClipAndCullDistances");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxCombinedClipAndCullDistances = val;
+                (self->base)->maxCombinedClipAndCullDistances = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getmaxCombinedClipAndCullDistances(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxCombinedClipAndCullDistances);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxCombinedClipAndCullDistances);
                     Py_INCREF(value);
                     return value;
                 }
@@ -13128,233 +13999,283 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with discreteQueuePriorities");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->discreteQueuePriorities = val;
+                (self->base)->discreteQueuePriorities = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPhysicalDeviceLimits_getdiscreteQueuePriorities(PyVkPhysicalDeviceLimits *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->discreteQueuePriorities);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->discreteQueuePriorities);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkPhysicalDeviceLimits_getsetters[] = {
+                static int PyVkPhysicalDeviceLimits_setpointSizeRange(PyVkPhysicalDeviceLimits *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pointSizeRange");
+                        return -1;
+                    }
+                
+            int nb = PyList_Size(value);
+            int i;
+            for (i = 0; i < nb; i++) {
+                float tmp = (float) PyFloat_AsDouble(PyList_GetItem(value, i));
+                ((self->base)->pointSizeRange)[i] = tmp;
+            }
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkPhysicalDeviceLimits_getpointSizeRange(PyVkPhysicalDeviceLimits *self, void *closure){
+                
+            PyObject* value = PyList_New(0);
+            int nb = sizeof((self->base)->pointSizeRange) / sizeof((self->base)->pointSizeRange[0]);
+            int i = 0;
+            for (i = 0; i < nb; i++) {
+                PyObject* py_tmp = PyFloat_FromDouble((double) (self->base)->pointSizeRange[i]);
+                PyList_Append(value, py_tmp);
+            }
+            
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkPhysicalDeviceLimits_setlineWidthRange(PyVkPhysicalDeviceLimits *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with lineWidthRange");
+                        return -1;
+                    }
+                
+            int nb = PyList_Size(value);
+            int i;
+            for (i = 0; i < nb; i++) {
+                float tmp = (float) PyFloat_AsDouble(PyList_GetItem(value, i));
+                ((self->base)->lineWidthRange)[i] = tmp;
+            }
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkPhysicalDeviceLimits_getlineWidthRange(PyVkPhysicalDeviceLimits *self, void *closure){
+                
+            PyObject* value = PyList_New(0);
+            int nb = sizeof((self->base)->lineWidthRange) / sizeof((self->base)->lineWidthRange[0]);
+            int i = 0;
+            for (i = 0; i < nb; i++) {
+                PyObject* py_tmp = PyFloat_FromDouble((double) (self->base)->lineWidthRange[i]);
+                PyList_Append(value, py_tmp);
+            }
+            
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkPhysicalDeviceLimits_setpointSizeGranularity(PyVkPhysicalDeviceLimits *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pointSizeGranularity");
+                        return -1;
+                    }
+                (self->base)->pointSizeGranularity = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkPhysicalDeviceLimits_getpointSizeGranularity(PyVkPhysicalDeviceLimits *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->pointSizeGranularity);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkPhysicalDeviceLimits_setlineWidthGranularity(PyVkPhysicalDeviceLimits *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with lineWidthGranularity");
+                        return -1;
+                    }
+                (self->base)->lineWidthGranularity = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkPhysicalDeviceLimits_getlineWidthGranularity(PyVkPhysicalDeviceLimits *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->lineWidthGranularity);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkPhysicalDeviceLimits_getsetters[] = {
                     
-                        { "maxImageDimension1D", (getter)PyVkPhysicalDeviceLimits_getmaxImageDimension1D,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxImageDimension1D, "", NULL},
+                        { "maxImageDimension1D", (getter)PyVkPhysicalDeviceLimits_getmaxImageDimension1D, (setter)PyVkPhysicalDeviceLimits_setmaxImageDimension1D, "", NULL},
                     
-                        { "maxImageDimension2D", (getter)PyVkPhysicalDeviceLimits_getmaxImageDimension2D,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxImageDimension2D, "", NULL},
+                        { "maxImageDimension2D", (getter)PyVkPhysicalDeviceLimits_getmaxImageDimension2D, (setter)PyVkPhysicalDeviceLimits_setmaxImageDimension2D, "", NULL},
                     
-                        { "maxImageDimension3D", (getter)PyVkPhysicalDeviceLimits_getmaxImageDimension3D,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxImageDimension3D, "", NULL},
+                        { "maxImageDimension3D", (getter)PyVkPhysicalDeviceLimits_getmaxImageDimension3D, (setter)PyVkPhysicalDeviceLimits_setmaxImageDimension3D, "", NULL},
                     
-                        { "maxImageDimensionCube", (getter)PyVkPhysicalDeviceLimits_getmaxImageDimensionCube,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxImageDimensionCube, "", NULL},
+                        { "maxImageDimensionCube", (getter)PyVkPhysicalDeviceLimits_getmaxImageDimensionCube, (setter)PyVkPhysicalDeviceLimits_setmaxImageDimensionCube, "", NULL},
                     
-                        { "maxImageArrayLayers", (getter)PyVkPhysicalDeviceLimits_getmaxImageArrayLayers,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxImageArrayLayers, "", NULL},
+                        { "maxImageArrayLayers", (getter)PyVkPhysicalDeviceLimits_getmaxImageArrayLayers, (setter)PyVkPhysicalDeviceLimits_setmaxImageArrayLayers, "", NULL},
                     
-                        { "maxTexelBufferElements", (getter)PyVkPhysicalDeviceLimits_getmaxTexelBufferElements,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxTexelBufferElements, "", NULL},
+                        { "maxTexelBufferElements", (getter)PyVkPhysicalDeviceLimits_getmaxTexelBufferElements, (setter)PyVkPhysicalDeviceLimits_setmaxTexelBufferElements, "", NULL},
                     
-                        { "maxUniformBufferRange", (getter)PyVkPhysicalDeviceLimits_getmaxUniformBufferRange,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxUniformBufferRange, "", NULL},
+                        { "maxUniformBufferRange", (getter)PyVkPhysicalDeviceLimits_getmaxUniformBufferRange, (setter)PyVkPhysicalDeviceLimits_setmaxUniformBufferRange, "", NULL},
                     
-                        { "maxStorageBufferRange", (getter)PyVkPhysicalDeviceLimits_getmaxStorageBufferRange,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxStorageBufferRange, "", NULL},
+                        { "maxStorageBufferRange", (getter)PyVkPhysicalDeviceLimits_getmaxStorageBufferRange, (setter)PyVkPhysicalDeviceLimits_setmaxStorageBufferRange, "", NULL},
                     
-                        { "maxPushConstantsSize", (getter)PyVkPhysicalDeviceLimits_getmaxPushConstantsSize,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxPushConstantsSize, "", NULL},
+                        { "maxPushConstantsSize", (getter)PyVkPhysicalDeviceLimits_getmaxPushConstantsSize, (setter)PyVkPhysicalDeviceLimits_setmaxPushConstantsSize, "", NULL},
                     
-                        { "maxMemoryAllocationCount", (getter)PyVkPhysicalDeviceLimits_getmaxMemoryAllocationCount,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxMemoryAllocationCount, "", NULL},
+                        { "maxMemoryAllocationCount", (getter)PyVkPhysicalDeviceLimits_getmaxMemoryAllocationCount, (setter)PyVkPhysicalDeviceLimits_setmaxMemoryAllocationCount, "", NULL},
                     
-                        { "maxSamplerAllocationCount", (getter)PyVkPhysicalDeviceLimits_getmaxSamplerAllocationCount,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxSamplerAllocationCount, "", NULL},
+                        { "maxSamplerAllocationCount", (getter)PyVkPhysicalDeviceLimits_getmaxSamplerAllocationCount, (setter)PyVkPhysicalDeviceLimits_setmaxSamplerAllocationCount, "", NULL},
                     
-                        { "maxBoundDescriptorSets", (getter)PyVkPhysicalDeviceLimits_getmaxBoundDescriptorSets,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxBoundDescriptorSets, "", NULL},
+                        { "maxBoundDescriptorSets", (getter)PyVkPhysicalDeviceLimits_getmaxBoundDescriptorSets, (setter)PyVkPhysicalDeviceLimits_setmaxBoundDescriptorSets, "", NULL},
                     
-                        { "maxPerStageDescriptorSamplers", (getter)PyVkPhysicalDeviceLimits_getmaxPerStageDescriptorSamplers,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxPerStageDescriptorSamplers, "", NULL},
+                        { "maxPerStageDescriptorSamplers", (getter)PyVkPhysicalDeviceLimits_getmaxPerStageDescriptorSamplers, (setter)PyVkPhysicalDeviceLimits_setmaxPerStageDescriptorSamplers, "", NULL},
                     
-                        { "maxPerStageDescriptorUniformBuffers", (getter)PyVkPhysicalDeviceLimits_getmaxPerStageDescriptorUniformBuffers,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxPerStageDescriptorUniformBuffers, "", NULL},
+                        { "maxPerStageDescriptorUniformBuffers", (getter)PyVkPhysicalDeviceLimits_getmaxPerStageDescriptorUniformBuffers, (setter)PyVkPhysicalDeviceLimits_setmaxPerStageDescriptorUniformBuffers, "", NULL},
                     
-                        { "maxPerStageDescriptorStorageBuffers", (getter)PyVkPhysicalDeviceLimits_getmaxPerStageDescriptorStorageBuffers,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxPerStageDescriptorStorageBuffers, "", NULL},
+                        { "maxPerStageDescriptorStorageBuffers", (getter)PyVkPhysicalDeviceLimits_getmaxPerStageDescriptorStorageBuffers, (setter)PyVkPhysicalDeviceLimits_setmaxPerStageDescriptorStorageBuffers, "", NULL},
                     
-                        { "maxPerStageDescriptorSampledImages", (getter)PyVkPhysicalDeviceLimits_getmaxPerStageDescriptorSampledImages,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxPerStageDescriptorSampledImages, "", NULL},
+                        { "maxPerStageDescriptorSampledImages", (getter)PyVkPhysicalDeviceLimits_getmaxPerStageDescriptorSampledImages, (setter)PyVkPhysicalDeviceLimits_setmaxPerStageDescriptorSampledImages, "", NULL},
                     
-                        { "maxPerStageDescriptorStorageImages", (getter)PyVkPhysicalDeviceLimits_getmaxPerStageDescriptorStorageImages,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxPerStageDescriptorStorageImages, "", NULL},
+                        { "maxPerStageDescriptorStorageImages", (getter)PyVkPhysicalDeviceLimits_getmaxPerStageDescriptorStorageImages, (setter)PyVkPhysicalDeviceLimits_setmaxPerStageDescriptorStorageImages, "", NULL},
                     
-                        { "maxPerStageDescriptorInputAttachments", (getter)PyVkPhysicalDeviceLimits_getmaxPerStageDescriptorInputAttachments,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxPerStageDescriptorInputAttachments, "", NULL},
+                        { "maxPerStageDescriptorInputAttachments", (getter)PyVkPhysicalDeviceLimits_getmaxPerStageDescriptorInputAttachments, (setter)PyVkPhysicalDeviceLimits_setmaxPerStageDescriptorInputAttachments, "", NULL},
                     
-                        { "maxPerStageResources", (getter)PyVkPhysicalDeviceLimits_getmaxPerStageResources,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxPerStageResources, "", NULL},
+                        { "maxPerStageResources", (getter)PyVkPhysicalDeviceLimits_getmaxPerStageResources, (setter)PyVkPhysicalDeviceLimits_setmaxPerStageResources, "", NULL},
                     
-                        { "maxDescriptorSetSamplers", (getter)PyVkPhysicalDeviceLimits_getmaxDescriptorSetSamplers,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxDescriptorSetSamplers, "", NULL},
+                        { "maxDescriptorSetSamplers", (getter)PyVkPhysicalDeviceLimits_getmaxDescriptorSetSamplers, (setter)PyVkPhysicalDeviceLimits_setmaxDescriptorSetSamplers, "", NULL},
                     
-                        { "maxDescriptorSetUniformBuffers", (getter)PyVkPhysicalDeviceLimits_getmaxDescriptorSetUniformBuffers,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxDescriptorSetUniformBuffers, "", NULL},
+                        { "maxDescriptorSetUniformBuffers", (getter)PyVkPhysicalDeviceLimits_getmaxDescriptorSetUniformBuffers, (setter)PyVkPhysicalDeviceLimits_setmaxDescriptorSetUniformBuffers, "", NULL},
                     
-                        { "maxDescriptorSetUniformBuffersDynamic", (getter)PyVkPhysicalDeviceLimits_getmaxDescriptorSetUniformBuffersDynamic,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxDescriptorSetUniformBuffersDynamic, "", NULL},
+                        { "maxDescriptorSetUniformBuffersDynamic", (getter)PyVkPhysicalDeviceLimits_getmaxDescriptorSetUniformBuffersDynamic, (setter)PyVkPhysicalDeviceLimits_setmaxDescriptorSetUniformBuffersDynamic, "", NULL},
                     
-                        { "maxDescriptorSetStorageBuffers", (getter)PyVkPhysicalDeviceLimits_getmaxDescriptorSetStorageBuffers,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxDescriptorSetStorageBuffers, "", NULL},
+                        { "maxDescriptorSetStorageBuffers", (getter)PyVkPhysicalDeviceLimits_getmaxDescriptorSetStorageBuffers, (setter)PyVkPhysicalDeviceLimits_setmaxDescriptorSetStorageBuffers, "", NULL},
                     
-                        { "maxDescriptorSetStorageBuffersDynamic", (getter)PyVkPhysicalDeviceLimits_getmaxDescriptorSetStorageBuffersDynamic,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxDescriptorSetStorageBuffersDynamic, "", NULL},
+                        { "maxDescriptorSetStorageBuffersDynamic", (getter)PyVkPhysicalDeviceLimits_getmaxDescriptorSetStorageBuffersDynamic, (setter)PyVkPhysicalDeviceLimits_setmaxDescriptorSetStorageBuffersDynamic, "", NULL},
                     
-                        { "maxDescriptorSetSampledImages", (getter)PyVkPhysicalDeviceLimits_getmaxDescriptorSetSampledImages,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxDescriptorSetSampledImages, "", NULL},
+                        { "maxDescriptorSetSampledImages", (getter)PyVkPhysicalDeviceLimits_getmaxDescriptorSetSampledImages, (setter)PyVkPhysicalDeviceLimits_setmaxDescriptorSetSampledImages, "", NULL},
                     
-                        { "maxDescriptorSetStorageImages", (getter)PyVkPhysicalDeviceLimits_getmaxDescriptorSetStorageImages,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxDescriptorSetStorageImages, "", NULL},
+                        { "maxDescriptorSetStorageImages", (getter)PyVkPhysicalDeviceLimits_getmaxDescriptorSetStorageImages, (setter)PyVkPhysicalDeviceLimits_setmaxDescriptorSetStorageImages, "", NULL},
                     
-                        { "maxDescriptorSetInputAttachments", (getter)PyVkPhysicalDeviceLimits_getmaxDescriptorSetInputAttachments,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxDescriptorSetInputAttachments, "", NULL},
+                        { "maxDescriptorSetInputAttachments", (getter)PyVkPhysicalDeviceLimits_getmaxDescriptorSetInputAttachments, (setter)PyVkPhysicalDeviceLimits_setmaxDescriptorSetInputAttachments, "", NULL},
                     
-                        { "maxVertexInputAttributes", (getter)PyVkPhysicalDeviceLimits_getmaxVertexInputAttributes,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxVertexInputAttributes, "", NULL},
+                        { "maxVertexInputAttributes", (getter)PyVkPhysicalDeviceLimits_getmaxVertexInputAttributes, (setter)PyVkPhysicalDeviceLimits_setmaxVertexInputAttributes, "", NULL},
                     
-                        { "maxVertexInputBindings", (getter)PyVkPhysicalDeviceLimits_getmaxVertexInputBindings,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxVertexInputBindings, "", NULL},
+                        { "maxVertexInputBindings", (getter)PyVkPhysicalDeviceLimits_getmaxVertexInputBindings, (setter)PyVkPhysicalDeviceLimits_setmaxVertexInputBindings, "", NULL},
                     
-                        { "maxVertexInputAttributeOffset", (getter)PyVkPhysicalDeviceLimits_getmaxVertexInputAttributeOffset,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxVertexInputAttributeOffset, "", NULL},
+                        { "maxVertexInputAttributeOffset", (getter)PyVkPhysicalDeviceLimits_getmaxVertexInputAttributeOffset, (setter)PyVkPhysicalDeviceLimits_setmaxVertexInputAttributeOffset, "", NULL},
                     
-                        { "maxVertexInputBindingStride", (getter)PyVkPhysicalDeviceLimits_getmaxVertexInputBindingStride,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxVertexInputBindingStride, "", NULL},
+                        { "maxVertexInputBindingStride", (getter)PyVkPhysicalDeviceLimits_getmaxVertexInputBindingStride, (setter)PyVkPhysicalDeviceLimits_setmaxVertexInputBindingStride, "", NULL},
                     
-                        { "maxVertexOutputComponents", (getter)PyVkPhysicalDeviceLimits_getmaxVertexOutputComponents,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxVertexOutputComponents, "", NULL},
+                        { "maxVertexOutputComponents", (getter)PyVkPhysicalDeviceLimits_getmaxVertexOutputComponents, (setter)PyVkPhysicalDeviceLimits_setmaxVertexOutputComponents, "", NULL},
                     
-                        { "maxTessellationGenerationLevel", (getter)PyVkPhysicalDeviceLimits_getmaxTessellationGenerationLevel,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxTessellationGenerationLevel, "", NULL},
+                        { "maxTessellationGenerationLevel", (getter)PyVkPhysicalDeviceLimits_getmaxTessellationGenerationLevel, (setter)PyVkPhysicalDeviceLimits_setmaxTessellationGenerationLevel, "", NULL},
                     
-                        { "maxTessellationPatchSize", (getter)PyVkPhysicalDeviceLimits_getmaxTessellationPatchSize,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxTessellationPatchSize, "", NULL},
+                        { "maxTessellationPatchSize", (getter)PyVkPhysicalDeviceLimits_getmaxTessellationPatchSize, (setter)PyVkPhysicalDeviceLimits_setmaxTessellationPatchSize, "", NULL},
                     
-                        { "maxTessellationControlPerVertexInputComponents", (getter)PyVkPhysicalDeviceLimits_getmaxTessellationControlPerVertexInputComponents,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxTessellationControlPerVertexInputComponents, "", NULL},
+                        { "maxTessellationControlPerVertexInputComponents", (getter)PyVkPhysicalDeviceLimits_getmaxTessellationControlPerVertexInputComponents, (setter)PyVkPhysicalDeviceLimits_setmaxTessellationControlPerVertexInputComponents, "", NULL},
                     
-                        { "maxTessellationControlPerVertexOutputComponents", (getter)PyVkPhysicalDeviceLimits_getmaxTessellationControlPerVertexOutputComponents,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxTessellationControlPerVertexOutputComponents, "", NULL},
+                        { "maxTessellationControlPerVertexOutputComponents", (getter)PyVkPhysicalDeviceLimits_getmaxTessellationControlPerVertexOutputComponents, (setter)PyVkPhysicalDeviceLimits_setmaxTessellationControlPerVertexOutputComponents, "", NULL},
                     
-                        { "maxTessellationControlPerPatchOutputComponents", (getter)PyVkPhysicalDeviceLimits_getmaxTessellationControlPerPatchOutputComponents,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxTessellationControlPerPatchOutputComponents, "", NULL},
+                        { "maxTessellationControlPerPatchOutputComponents", (getter)PyVkPhysicalDeviceLimits_getmaxTessellationControlPerPatchOutputComponents, (setter)PyVkPhysicalDeviceLimits_setmaxTessellationControlPerPatchOutputComponents, "", NULL},
                     
-                        { "maxTessellationControlTotalOutputComponents", (getter)PyVkPhysicalDeviceLimits_getmaxTessellationControlTotalOutputComponents,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxTessellationControlTotalOutputComponents, "", NULL},
+                        { "maxTessellationControlTotalOutputComponents", (getter)PyVkPhysicalDeviceLimits_getmaxTessellationControlTotalOutputComponents, (setter)PyVkPhysicalDeviceLimits_setmaxTessellationControlTotalOutputComponents, "", NULL},
                     
-                        { "maxTessellationEvaluationInputComponents", (getter)PyVkPhysicalDeviceLimits_getmaxTessellationEvaluationInputComponents,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxTessellationEvaluationInputComponents, "", NULL},
+                        { "maxTessellationEvaluationInputComponents", (getter)PyVkPhysicalDeviceLimits_getmaxTessellationEvaluationInputComponents, (setter)PyVkPhysicalDeviceLimits_setmaxTessellationEvaluationInputComponents, "", NULL},
                     
-                        { "maxTessellationEvaluationOutputComponents", (getter)PyVkPhysicalDeviceLimits_getmaxTessellationEvaluationOutputComponents,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxTessellationEvaluationOutputComponents, "", NULL},
+                        { "maxTessellationEvaluationOutputComponents", (getter)PyVkPhysicalDeviceLimits_getmaxTessellationEvaluationOutputComponents, (setter)PyVkPhysicalDeviceLimits_setmaxTessellationEvaluationOutputComponents, "", NULL},
                     
-                        { "maxGeometryShaderInvocations", (getter)PyVkPhysicalDeviceLimits_getmaxGeometryShaderInvocations,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxGeometryShaderInvocations, "", NULL},
+                        { "maxGeometryShaderInvocations", (getter)PyVkPhysicalDeviceLimits_getmaxGeometryShaderInvocations, (setter)PyVkPhysicalDeviceLimits_setmaxGeometryShaderInvocations, "", NULL},
                     
-                        { "maxGeometryInputComponents", (getter)PyVkPhysicalDeviceLimits_getmaxGeometryInputComponents,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxGeometryInputComponents, "", NULL},
+                        { "maxGeometryInputComponents", (getter)PyVkPhysicalDeviceLimits_getmaxGeometryInputComponents, (setter)PyVkPhysicalDeviceLimits_setmaxGeometryInputComponents, "", NULL},
                     
-                        { "maxGeometryOutputComponents", (getter)PyVkPhysicalDeviceLimits_getmaxGeometryOutputComponents,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxGeometryOutputComponents, "", NULL},
+                        { "maxGeometryOutputComponents", (getter)PyVkPhysicalDeviceLimits_getmaxGeometryOutputComponents, (setter)PyVkPhysicalDeviceLimits_setmaxGeometryOutputComponents, "", NULL},
                     
-                        { "maxGeometryOutputVertices", (getter)PyVkPhysicalDeviceLimits_getmaxGeometryOutputVertices,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxGeometryOutputVertices, "", NULL},
+                        { "maxGeometryOutputVertices", (getter)PyVkPhysicalDeviceLimits_getmaxGeometryOutputVertices, (setter)PyVkPhysicalDeviceLimits_setmaxGeometryOutputVertices, "", NULL},
                     
-                        { "maxGeometryTotalOutputComponents", (getter)PyVkPhysicalDeviceLimits_getmaxGeometryTotalOutputComponents,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxGeometryTotalOutputComponents, "", NULL},
+                        { "maxGeometryTotalOutputComponents", (getter)PyVkPhysicalDeviceLimits_getmaxGeometryTotalOutputComponents, (setter)PyVkPhysicalDeviceLimits_setmaxGeometryTotalOutputComponents, "", NULL},
                     
-                        { "maxFragmentInputComponents", (getter)PyVkPhysicalDeviceLimits_getmaxFragmentInputComponents,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxFragmentInputComponents, "", NULL},
+                        { "maxFragmentInputComponents", (getter)PyVkPhysicalDeviceLimits_getmaxFragmentInputComponents, (setter)PyVkPhysicalDeviceLimits_setmaxFragmentInputComponents, "", NULL},
                     
-                        { "maxFragmentOutputAttachments", (getter)PyVkPhysicalDeviceLimits_getmaxFragmentOutputAttachments,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxFragmentOutputAttachments, "", NULL},
+                        { "maxFragmentOutputAttachments", (getter)PyVkPhysicalDeviceLimits_getmaxFragmentOutputAttachments, (setter)PyVkPhysicalDeviceLimits_setmaxFragmentOutputAttachments, "", NULL},
                     
-                        { "maxFragmentDualSrcAttachments", (getter)PyVkPhysicalDeviceLimits_getmaxFragmentDualSrcAttachments,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxFragmentDualSrcAttachments, "", NULL},
+                        { "maxFragmentDualSrcAttachments", (getter)PyVkPhysicalDeviceLimits_getmaxFragmentDualSrcAttachments, (setter)PyVkPhysicalDeviceLimits_setmaxFragmentDualSrcAttachments, "", NULL},
                     
-                        { "maxFragmentCombinedOutputResources", (getter)PyVkPhysicalDeviceLimits_getmaxFragmentCombinedOutputResources,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxFragmentCombinedOutputResources, "", NULL},
+                        { "maxFragmentCombinedOutputResources", (getter)PyVkPhysicalDeviceLimits_getmaxFragmentCombinedOutputResources, (setter)PyVkPhysicalDeviceLimits_setmaxFragmentCombinedOutputResources, "", NULL},
                     
-                        { "maxComputeSharedMemorySize", (getter)PyVkPhysicalDeviceLimits_getmaxComputeSharedMemorySize,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxComputeSharedMemorySize, "", NULL},
+                        { "maxComputeSharedMemorySize", (getter)PyVkPhysicalDeviceLimits_getmaxComputeSharedMemorySize, (setter)PyVkPhysicalDeviceLimits_setmaxComputeSharedMemorySize, "", NULL},
                     
-                        { "maxComputeWorkGroupInvocations", (getter)PyVkPhysicalDeviceLimits_getmaxComputeWorkGroupInvocations,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxComputeWorkGroupInvocations, "", NULL},
+                        { "maxComputeWorkGroupCount", (getter)PyVkPhysicalDeviceLimits_getmaxComputeWorkGroupCount, (setter)PyVkPhysicalDeviceLimits_setmaxComputeWorkGroupCount, "", NULL},
                     
-                        { "subPixelPrecisionBits", (getter)PyVkPhysicalDeviceLimits_getsubPixelPrecisionBits,
-                           (setter)PyVkPhysicalDeviceLimits_setsubPixelPrecisionBits, "", NULL},
+                        { "maxComputeWorkGroupInvocations", (getter)PyVkPhysicalDeviceLimits_getmaxComputeWorkGroupInvocations, (setter)PyVkPhysicalDeviceLimits_setmaxComputeWorkGroupInvocations, "", NULL},
                     
-                        { "subTexelPrecisionBits", (getter)PyVkPhysicalDeviceLimits_getsubTexelPrecisionBits,
-                           (setter)PyVkPhysicalDeviceLimits_setsubTexelPrecisionBits, "", NULL},
+                        { "maxComputeWorkGroupSize", (getter)PyVkPhysicalDeviceLimits_getmaxComputeWorkGroupSize, (setter)PyVkPhysicalDeviceLimits_setmaxComputeWorkGroupSize, "", NULL},
                     
-                        { "mipmapPrecisionBits", (getter)PyVkPhysicalDeviceLimits_getmipmapPrecisionBits,
-                           (setter)PyVkPhysicalDeviceLimits_setmipmapPrecisionBits, "", NULL},
+                        { "subPixelPrecisionBits", (getter)PyVkPhysicalDeviceLimits_getsubPixelPrecisionBits, (setter)PyVkPhysicalDeviceLimits_setsubPixelPrecisionBits, "", NULL},
                     
-                        { "maxDrawIndexedIndexValue", (getter)PyVkPhysicalDeviceLimits_getmaxDrawIndexedIndexValue,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxDrawIndexedIndexValue, "", NULL},
+                        { "subTexelPrecisionBits", (getter)PyVkPhysicalDeviceLimits_getsubTexelPrecisionBits, (setter)PyVkPhysicalDeviceLimits_setsubTexelPrecisionBits, "", NULL},
                     
-                        { "maxDrawIndirectCount", (getter)PyVkPhysicalDeviceLimits_getmaxDrawIndirectCount,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxDrawIndirectCount, "", NULL},
+                        { "mipmapPrecisionBits", (getter)PyVkPhysicalDeviceLimits_getmipmapPrecisionBits, (setter)PyVkPhysicalDeviceLimits_setmipmapPrecisionBits, "", NULL},
                     
-                        { "maxViewports", (getter)PyVkPhysicalDeviceLimits_getmaxViewports,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxViewports, "", NULL},
+                        { "maxDrawIndexedIndexValue", (getter)PyVkPhysicalDeviceLimits_getmaxDrawIndexedIndexValue, (setter)PyVkPhysicalDeviceLimits_setmaxDrawIndexedIndexValue, "", NULL},
                     
-                        { "viewportSubPixelBits", (getter)PyVkPhysicalDeviceLimits_getviewportSubPixelBits,
-                           (setter)PyVkPhysicalDeviceLimits_setviewportSubPixelBits, "", NULL},
+                        { "maxDrawIndirectCount", (getter)PyVkPhysicalDeviceLimits_getmaxDrawIndirectCount, (setter)PyVkPhysicalDeviceLimits_setmaxDrawIndirectCount, "", NULL},
                     
-                        { "maxTexelOffset", (getter)PyVkPhysicalDeviceLimits_getmaxTexelOffset,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxTexelOffset, "", NULL},
+                        { "maxSamplerLodBias", (getter)PyVkPhysicalDeviceLimits_getmaxSamplerLodBias, (setter)PyVkPhysicalDeviceLimits_setmaxSamplerLodBias, "", NULL},
                     
-                        { "maxTexelGatherOffset", (getter)PyVkPhysicalDeviceLimits_getmaxTexelGatherOffset,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxTexelGatherOffset, "", NULL},
+                        { "maxSamplerAnisotropy", (getter)PyVkPhysicalDeviceLimits_getmaxSamplerAnisotropy, (setter)PyVkPhysicalDeviceLimits_setmaxSamplerAnisotropy, "", NULL},
                     
-                        { "subPixelInterpolationOffsetBits", (getter)PyVkPhysicalDeviceLimits_getsubPixelInterpolationOffsetBits,
-                           (setter)PyVkPhysicalDeviceLimits_setsubPixelInterpolationOffsetBits, "", NULL},
+                        { "maxViewports", (getter)PyVkPhysicalDeviceLimits_getmaxViewports, (setter)PyVkPhysicalDeviceLimits_setmaxViewports, "", NULL},
                     
-                        { "maxFramebufferWidth", (getter)PyVkPhysicalDeviceLimits_getmaxFramebufferWidth,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxFramebufferWidth, "", NULL},
+                        { "maxViewportDimensions", (getter)PyVkPhysicalDeviceLimits_getmaxViewportDimensions, (setter)PyVkPhysicalDeviceLimits_setmaxViewportDimensions, "", NULL},
                     
-                        { "maxFramebufferHeight", (getter)PyVkPhysicalDeviceLimits_getmaxFramebufferHeight,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxFramebufferHeight, "", NULL},
+                        { "viewportBoundsRange", (getter)PyVkPhysicalDeviceLimits_getviewportBoundsRange, (setter)PyVkPhysicalDeviceLimits_setviewportBoundsRange, "", NULL},
                     
-                        { "maxFramebufferLayers", (getter)PyVkPhysicalDeviceLimits_getmaxFramebufferLayers,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxFramebufferLayers, "", NULL},
+                        { "viewportSubPixelBits", (getter)PyVkPhysicalDeviceLimits_getviewportSubPixelBits, (setter)PyVkPhysicalDeviceLimits_setviewportSubPixelBits, "", NULL},
                     
-                        { "maxColorAttachments", (getter)PyVkPhysicalDeviceLimits_getmaxColorAttachments,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxColorAttachments, "", NULL},
+                        { "minMemoryMapAlignment", (getter)PyVkPhysicalDeviceLimits_getminMemoryMapAlignment, (setter)PyVkPhysicalDeviceLimits_setminMemoryMapAlignment, "", NULL},
                     
-                        { "maxSampleMaskWords", (getter)PyVkPhysicalDeviceLimits_getmaxSampleMaskWords,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxSampleMaskWords, "", NULL},
+                        { "minTexelOffset", (getter)PyVkPhysicalDeviceLimits_getminTexelOffset, (setter)PyVkPhysicalDeviceLimits_setminTexelOffset, "", NULL},
                     
-                        { "maxClipDistances", (getter)PyVkPhysicalDeviceLimits_getmaxClipDistances,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxClipDistances, "", NULL},
+                        { "maxTexelOffset", (getter)PyVkPhysicalDeviceLimits_getmaxTexelOffset, (setter)PyVkPhysicalDeviceLimits_setmaxTexelOffset, "", NULL},
                     
-                        { "maxCullDistances", (getter)PyVkPhysicalDeviceLimits_getmaxCullDistances,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxCullDistances, "", NULL},
+                        { "minTexelGatherOffset", (getter)PyVkPhysicalDeviceLimits_getminTexelGatherOffset, (setter)PyVkPhysicalDeviceLimits_setminTexelGatherOffset, "", NULL},
                     
-                        { "maxCombinedClipAndCullDistances", (getter)PyVkPhysicalDeviceLimits_getmaxCombinedClipAndCullDistances,
-                           (setter)PyVkPhysicalDeviceLimits_setmaxCombinedClipAndCullDistances, "", NULL},
+                        { "maxTexelGatherOffset", (getter)PyVkPhysicalDeviceLimits_getmaxTexelGatherOffset, (setter)PyVkPhysicalDeviceLimits_setmaxTexelGatherOffset, "", NULL},
                     
-                        { "discreteQueuePriorities", (getter)PyVkPhysicalDeviceLimits_getdiscreteQueuePriorities,
-                           (setter)PyVkPhysicalDeviceLimits_setdiscreteQueuePriorities, "", NULL},
+                        { "minInterpolationOffset", (getter)PyVkPhysicalDeviceLimits_getminInterpolationOffset, (setter)PyVkPhysicalDeviceLimits_setminInterpolationOffset, "", NULL},
+                    
+                        { "maxInterpolationOffset", (getter)PyVkPhysicalDeviceLimits_getmaxInterpolationOffset, (setter)PyVkPhysicalDeviceLimits_setmaxInterpolationOffset, "", NULL},
+                    
+                        { "subPixelInterpolationOffsetBits", (getter)PyVkPhysicalDeviceLimits_getsubPixelInterpolationOffsetBits, (setter)PyVkPhysicalDeviceLimits_setsubPixelInterpolationOffsetBits, "", NULL},
+                    
+                        { "maxFramebufferWidth", (getter)PyVkPhysicalDeviceLimits_getmaxFramebufferWidth, (setter)PyVkPhysicalDeviceLimits_setmaxFramebufferWidth, "", NULL},
+                    
+                        { "maxFramebufferHeight", (getter)PyVkPhysicalDeviceLimits_getmaxFramebufferHeight, (setter)PyVkPhysicalDeviceLimits_setmaxFramebufferHeight, "", NULL},
+                    
+                        { "maxFramebufferLayers", (getter)PyVkPhysicalDeviceLimits_getmaxFramebufferLayers, (setter)PyVkPhysicalDeviceLimits_setmaxFramebufferLayers, "", NULL},
+                    
+                        { "maxColorAttachments", (getter)PyVkPhysicalDeviceLimits_getmaxColorAttachments, (setter)PyVkPhysicalDeviceLimits_setmaxColorAttachments, "", NULL},
+                    
+                        { "maxSampleMaskWords", (getter)PyVkPhysicalDeviceLimits_getmaxSampleMaskWords, (setter)PyVkPhysicalDeviceLimits_setmaxSampleMaskWords, "", NULL},
+                    
+                        { "timestampPeriod", (getter)PyVkPhysicalDeviceLimits_gettimestampPeriod, (setter)PyVkPhysicalDeviceLimits_settimestampPeriod, "", NULL},
+                    
+                        { "maxClipDistances", (getter)PyVkPhysicalDeviceLimits_getmaxClipDistances, (setter)PyVkPhysicalDeviceLimits_setmaxClipDistances, "", NULL},
+                    
+                        { "maxCullDistances", (getter)PyVkPhysicalDeviceLimits_getmaxCullDistances, (setter)PyVkPhysicalDeviceLimits_setmaxCullDistances, "", NULL},
+                    
+                        { "maxCombinedClipAndCullDistances", (getter)PyVkPhysicalDeviceLimits_getmaxCombinedClipAndCullDistances, (setter)PyVkPhysicalDeviceLimits_setmaxCombinedClipAndCullDistances, "", NULL},
+                    
+                        { "discreteQueuePriorities", (getter)PyVkPhysicalDeviceLimits_getdiscreteQueuePriorities, (setter)PyVkPhysicalDeviceLimits_setdiscreteQueuePriorities, "", NULL},
+                    
+                        { "pointSizeRange", (getter)PyVkPhysicalDeviceLimits_getpointSizeRange, (setter)PyVkPhysicalDeviceLimits_setpointSizeRange, "", NULL},
+                    
+                        { "lineWidthRange", (getter)PyVkPhysicalDeviceLimits_getlineWidthRange, (setter)PyVkPhysicalDeviceLimits_setlineWidthRange, "", NULL},
+                    
+                        { "pointSizeGranularity", (getter)PyVkPhysicalDeviceLimits_getpointSizeGranularity, (setter)PyVkPhysicalDeviceLimits_setpointSizeGranularity, "", NULL},
+                    
+                        { "lineWidthGranularity", (getter)PyVkPhysicalDeviceLimits_getlineWidthGranularity, (setter)PyVkPhysicalDeviceLimits_setlineWidthGranularity, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkPhysicalDeviceLimitsType = {
@@ -13363,7 +14284,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkPhysicalDeviceLimits_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkPhysicalDeviceLimits object",0,0,0,0,0,0,0,0,
-                    VkPhysicalDeviceLimits_getsetters,0,0,0,0,0,0,0,PyVkPhysicalDeviceLimits_new,};
+                    PyVkPhysicalDeviceLimits_getsetters,0,0,0,0,0,0,0,PyVkPhysicalDeviceLimits_new,};
             
                 typedef struct { PyObject_HEAD VkSemaphoreCreateInfo *base; }
                 PyVkSemaphoreCreateInfo;
@@ -13388,7 +14309,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkSemaphoreCreateInfo_getsetters[] = {
+                static int PyVkSemaphoreCreateInfo_setpNext(PyVkSemaphoreCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkSemaphoreCreateInfo_getpNext(PyVkSemaphoreCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkSemaphoreCreateInfo_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkSemaphoreCreateInfo_getpNext, (setter)PyVkSemaphoreCreateInfo_setpNext, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkSemaphoreCreateInfoType = {
@@ -13397,7 +14336,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkSemaphoreCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkSemaphoreCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkSemaphoreCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkSemaphoreCreateInfo_new,};
+                    PyVkSemaphoreCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkSemaphoreCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkQueryPoolCreateInfo *base; }
                 PyVkQueryPoolCreateInfo;
@@ -13422,32 +14361,43 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkQueryPoolCreateInfo_setpNext(PyVkQueryPoolCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkQueryPoolCreateInfo_getpNext(PyVkQueryPoolCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkQueryPoolCreateInfo_setqueryCount(PyVkQueryPoolCreateInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with queryCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->queryCount = val;
+                (self->base)->queryCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkQueryPoolCreateInfo_getqueryCount(PyVkQueryPoolCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->queryCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->queryCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkQueryPoolCreateInfo_getsetters[] = {
+                    static PyGetSetDef PyVkQueryPoolCreateInfo_getsetters[] = {
                     
-                        { "queryCount", (getter)PyVkQueryPoolCreateInfo_getqueryCount,
-                           (setter)PyVkQueryPoolCreateInfo_setqueryCount, "", NULL},
+                        { "pNext", (getter)PyVkQueryPoolCreateInfo_getpNext, (setter)PyVkQueryPoolCreateInfo_setpNext, "", NULL},
+                    
+                        { "queryCount", (getter)PyVkQueryPoolCreateInfo_getqueryCount, (setter)PyVkQueryPoolCreateInfo_setqueryCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkQueryPoolCreateInfoType = {
@@ -13456,7 +14406,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkQueryPoolCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkQueryPoolCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkQueryPoolCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkQueryPoolCreateInfo_new,};
+                    PyVkQueryPoolCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkQueryPoolCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkFramebufferCreateInfo *base; }
                 PyVkFramebufferCreateInfo;
@@ -13481,24 +14431,34 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkFramebufferCreateInfo_setpNext(PyVkFramebufferCreateInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkFramebufferCreateInfo_getpNext(PyVkFramebufferCreateInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkFramebufferCreateInfo_setattachmentCount(PyVkFramebufferCreateInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with attachmentCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->attachmentCount = val;
+                (self->base)->attachmentCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkFramebufferCreateInfo_getattachmentCount(PyVkFramebufferCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->attachmentCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->attachmentCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -13509,18 +14469,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with width");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->width = val;
+                (self->base)->width = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkFramebufferCreateInfo_getwidth(PyVkFramebufferCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->width);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->width);
                     Py_INCREF(value);
                     return value;
                 }
@@ -13531,18 +14485,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with height");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->height = val;
+                (self->base)->height = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkFramebufferCreateInfo_getheight(PyVkFramebufferCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->height);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->height);
                     Py_INCREF(value);
                     return value;
                 }
@@ -13553,35 +14501,27 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with layers");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->layers = val;
+                (self->base)->layers = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkFramebufferCreateInfo_getlayers(PyVkFramebufferCreateInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->layers);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->layers);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkFramebufferCreateInfo_getsetters[] = {
+                    static PyGetSetDef PyVkFramebufferCreateInfo_getsetters[] = {
                     
-                        { "attachmentCount", (getter)PyVkFramebufferCreateInfo_getattachmentCount,
-                           (setter)PyVkFramebufferCreateInfo_setattachmentCount, "", NULL},
+                        { "pNext", (getter)PyVkFramebufferCreateInfo_getpNext, (setter)PyVkFramebufferCreateInfo_setpNext, "", NULL},
                     
-                        { "width", (getter)PyVkFramebufferCreateInfo_getwidth,
-                           (setter)PyVkFramebufferCreateInfo_setwidth, "", NULL},
+                        { "attachmentCount", (getter)PyVkFramebufferCreateInfo_getattachmentCount, (setter)PyVkFramebufferCreateInfo_setattachmentCount, "", NULL},
                     
-                        { "height", (getter)PyVkFramebufferCreateInfo_getheight,
-                           (setter)PyVkFramebufferCreateInfo_setheight, "", NULL},
+                        { "width", (getter)PyVkFramebufferCreateInfo_getwidth, (setter)PyVkFramebufferCreateInfo_setwidth, "", NULL},
                     
-                        { "layers", (getter)PyVkFramebufferCreateInfo_getlayers,
-                           (setter)PyVkFramebufferCreateInfo_setlayers, "", NULL},
+                        { "height", (getter)PyVkFramebufferCreateInfo_getheight, (setter)PyVkFramebufferCreateInfo_setheight, "", NULL},
+                    
+                        { "layers", (getter)PyVkFramebufferCreateInfo_getlayers, (setter)PyVkFramebufferCreateInfo_setlayers, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkFramebufferCreateInfoType = {
@@ -13590,7 +14530,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkFramebufferCreateInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkFramebufferCreateInfo object",0,0,0,0,0,0,0,0,
-                    VkFramebufferCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkFramebufferCreateInfo_new,};
+                    PyVkFramebufferCreateInfo_getsetters,0,0,0,0,0,0,0,PyVkFramebufferCreateInfo_new,};
             
                 typedef struct { PyObject_HEAD VkDrawIndirectCommand *base; }
                 PyVkDrawIndirectCommand;
@@ -13621,18 +14561,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with vertexCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->vertexCount = val;
+                (self->base)->vertexCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDrawIndirectCommand_getvertexCount(PyVkDrawIndirectCommand *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->vertexCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->vertexCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -13643,18 +14577,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with instanceCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->instanceCount = val;
+                (self->base)->instanceCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDrawIndirectCommand_getinstanceCount(PyVkDrawIndirectCommand *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->instanceCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->instanceCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -13665,18 +14593,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with firstVertex");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->firstVertex = val;
+                (self->base)->firstVertex = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDrawIndirectCommand_getfirstVertex(PyVkDrawIndirectCommand *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->firstVertex);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->firstVertex);
                     Py_INCREF(value);
                     return value;
                 }
@@ -13687,35 +14609,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with firstInstance");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->firstInstance = val;
+                (self->base)->firstInstance = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDrawIndirectCommand_getfirstInstance(PyVkDrawIndirectCommand *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->firstInstance);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->firstInstance);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkDrawIndirectCommand_getsetters[] = {
+                    static PyGetSetDef PyVkDrawIndirectCommand_getsetters[] = {
                     
-                        { "vertexCount", (getter)PyVkDrawIndirectCommand_getvertexCount,
-                           (setter)PyVkDrawIndirectCommand_setvertexCount, "", NULL},
+                        { "vertexCount", (getter)PyVkDrawIndirectCommand_getvertexCount, (setter)PyVkDrawIndirectCommand_setvertexCount, "", NULL},
                     
-                        { "instanceCount", (getter)PyVkDrawIndirectCommand_getinstanceCount,
-                           (setter)PyVkDrawIndirectCommand_setinstanceCount, "", NULL},
+                        { "instanceCount", (getter)PyVkDrawIndirectCommand_getinstanceCount, (setter)PyVkDrawIndirectCommand_setinstanceCount, "", NULL},
                     
-                        { "firstVertex", (getter)PyVkDrawIndirectCommand_getfirstVertex,
-                           (setter)PyVkDrawIndirectCommand_setfirstVertex, "", NULL},
+                        { "firstVertex", (getter)PyVkDrawIndirectCommand_getfirstVertex, (setter)PyVkDrawIndirectCommand_setfirstVertex, "", NULL},
                     
-                        { "firstInstance", (getter)PyVkDrawIndirectCommand_getfirstInstance,
-                           (setter)PyVkDrawIndirectCommand_setfirstInstance, "", NULL},
+                        { "firstInstance", (getter)PyVkDrawIndirectCommand_getfirstInstance, (setter)PyVkDrawIndirectCommand_setfirstInstance, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDrawIndirectCommandType = {
@@ -13724,7 +14636,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDrawIndirectCommand_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDrawIndirectCommand object",0,0,0,0,0,0,0,0,
-                    VkDrawIndirectCommand_getsetters,0,0,0,0,0,0,0,PyVkDrawIndirectCommand_new,};
+                    PyVkDrawIndirectCommand_getsetters,0,0,0,0,0,0,0,PyVkDrawIndirectCommand_new,};
             
                 typedef struct { PyObject_HEAD VkDrawIndexedIndirectCommand *base; }
                 PyVkDrawIndexedIndirectCommand;
@@ -13755,18 +14667,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with indexCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->indexCount = val;
+                (self->base)->indexCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDrawIndexedIndirectCommand_getindexCount(PyVkDrawIndexedIndirectCommand *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->indexCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->indexCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -13777,18 +14683,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with instanceCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->instanceCount = val;
+                (self->base)->instanceCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDrawIndexedIndirectCommand_getinstanceCount(PyVkDrawIndexedIndirectCommand *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->instanceCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->instanceCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -13799,18 +14699,28 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with firstIndex");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->firstIndex = val;
+                (self->base)->firstIndex = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDrawIndexedIndirectCommand_getfirstIndex(PyVkDrawIndexedIndirectCommand *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->firstIndex);
+                    Py_INCREF(value);
+                    return value;
+                }
                 
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->firstIndex);
-                    
+                static int PyVkDrawIndexedIndirectCommand_setvertexOffset(PyVkDrawIndexedIndirectCommand *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with vertexOffset");
+                        return -1;
+                    }
+                (self->base)->vertexOffset = (int32_t) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkDrawIndexedIndirectCommand_getvertexOffset(PyVkDrawIndexedIndirectCommand *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->vertexOffset);
                     Py_INCREF(value);
                     return value;
                 }
@@ -13821,35 +14731,27 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with firstInstance");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->firstInstance = val;
+                (self->base)->firstInstance = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDrawIndexedIndirectCommand_getfirstInstance(PyVkDrawIndexedIndirectCommand *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->firstInstance);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->firstInstance);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkDrawIndexedIndirectCommand_getsetters[] = {
+                    static PyGetSetDef PyVkDrawIndexedIndirectCommand_getsetters[] = {
                     
-                        { "indexCount", (getter)PyVkDrawIndexedIndirectCommand_getindexCount,
-                           (setter)PyVkDrawIndexedIndirectCommand_setindexCount, "", NULL},
+                        { "indexCount", (getter)PyVkDrawIndexedIndirectCommand_getindexCount, (setter)PyVkDrawIndexedIndirectCommand_setindexCount, "", NULL},
                     
-                        { "instanceCount", (getter)PyVkDrawIndexedIndirectCommand_getinstanceCount,
-                           (setter)PyVkDrawIndexedIndirectCommand_setinstanceCount, "", NULL},
+                        { "instanceCount", (getter)PyVkDrawIndexedIndirectCommand_getinstanceCount, (setter)PyVkDrawIndexedIndirectCommand_setinstanceCount, "", NULL},
                     
-                        { "firstIndex", (getter)PyVkDrawIndexedIndirectCommand_getfirstIndex,
-                           (setter)PyVkDrawIndexedIndirectCommand_setfirstIndex, "", NULL},
+                        { "firstIndex", (getter)PyVkDrawIndexedIndirectCommand_getfirstIndex, (setter)PyVkDrawIndexedIndirectCommand_setfirstIndex, "", NULL},
                     
-                        { "firstInstance", (getter)PyVkDrawIndexedIndirectCommand_getfirstInstance,
-                           (setter)PyVkDrawIndexedIndirectCommand_setfirstInstance, "", NULL},
+                        { "vertexOffset", (getter)PyVkDrawIndexedIndirectCommand_getvertexOffset, (setter)PyVkDrawIndexedIndirectCommand_setvertexOffset, "", NULL},
+                    
+                        { "firstInstance", (getter)PyVkDrawIndexedIndirectCommand_getfirstInstance, (setter)PyVkDrawIndexedIndirectCommand_setfirstInstance, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDrawIndexedIndirectCommandType = {
@@ -13858,7 +14760,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDrawIndexedIndirectCommand_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDrawIndexedIndirectCommand object",0,0,0,0,0,0,0,0,
-                    VkDrawIndexedIndirectCommand_getsetters,0,0,0,0,0,0,0,PyVkDrawIndexedIndirectCommand_new,};
+                    PyVkDrawIndexedIndirectCommand_getsetters,0,0,0,0,0,0,0,PyVkDrawIndexedIndirectCommand_new,};
             
                 typedef struct { PyObject_HEAD VkDispatchIndirectCommand *base; }
                 PyVkDispatchIndirectCommand;
@@ -13889,18 +14791,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with x");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->x = val;
+                (self->base)->x = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDispatchIndirectCommand_getx(PyVkDispatchIndirectCommand *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->x);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->x);
                     Py_INCREF(value);
                     return value;
                 }
@@ -13911,18 +14807,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with y");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->y = val;
+                (self->base)->y = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDispatchIndirectCommand_gety(PyVkDispatchIndirectCommand *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->y);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->y);
                     Py_INCREF(value);
                     return value;
                 }
@@ -13933,32 +14823,23 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with z");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->z = val;
+                (self->base)->z = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDispatchIndirectCommand_getz(PyVkDispatchIndirectCommand *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->z);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->z);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkDispatchIndirectCommand_getsetters[] = {
+                    static PyGetSetDef PyVkDispatchIndirectCommand_getsetters[] = {
                     
-                        { "x", (getter)PyVkDispatchIndirectCommand_getx,
-                           (setter)PyVkDispatchIndirectCommand_setx, "", NULL},
+                        { "x", (getter)PyVkDispatchIndirectCommand_getx, (setter)PyVkDispatchIndirectCommand_setx, "", NULL},
                     
-                        { "y", (getter)PyVkDispatchIndirectCommand_gety,
-                           (setter)PyVkDispatchIndirectCommand_sety, "", NULL},
+                        { "y", (getter)PyVkDispatchIndirectCommand_gety, (setter)PyVkDispatchIndirectCommand_sety, "", NULL},
                     
-                        { "z", (getter)PyVkDispatchIndirectCommand_getz,
-                           (setter)PyVkDispatchIndirectCommand_setz, "", NULL},
+                        { "z", (getter)PyVkDispatchIndirectCommand_getz, (setter)PyVkDispatchIndirectCommand_setz, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDispatchIndirectCommandType = {
@@ -13967,7 +14848,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDispatchIndirectCommand_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDispatchIndirectCommand object",0,0,0,0,0,0,0,0,
-                    VkDispatchIndirectCommand_getsetters,0,0,0,0,0,0,0,PyVkDispatchIndirectCommand_new,};
+                    PyVkDispatchIndirectCommand_getsetters,0,0,0,0,0,0,0,PyVkDispatchIndirectCommand_new,};
             
                 typedef struct { PyObject_HEAD VkSubmitInfo *base; }
                 PyVkSubmitInfo;
@@ -13992,24 +14873,34 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkSubmitInfo_setpNext(PyVkSubmitInfo *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkSubmitInfo_getpNext(PyVkSubmitInfo *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkSubmitInfo_setwaitSemaphoreCount(PyVkSubmitInfo *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with waitSemaphoreCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->waitSemaphoreCount = val;
+                (self->base)->waitSemaphoreCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkSubmitInfo_getwaitSemaphoreCount(PyVkSubmitInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->waitSemaphoreCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->waitSemaphoreCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -14020,18 +14911,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with commandBufferCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->commandBufferCount = val;
+                (self->base)->commandBufferCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkSubmitInfo_getcommandBufferCount(PyVkSubmitInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->commandBufferCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->commandBufferCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -14042,32 +14927,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with signalSemaphoreCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->signalSemaphoreCount = val;
+                (self->base)->signalSemaphoreCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkSubmitInfo_getsignalSemaphoreCount(PyVkSubmitInfo *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->signalSemaphoreCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->signalSemaphoreCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkSubmitInfo_getsetters[] = {
+                    static PyGetSetDef PyVkSubmitInfo_getsetters[] = {
                     
-                        { "waitSemaphoreCount", (getter)PyVkSubmitInfo_getwaitSemaphoreCount,
-                           (setter)PyVkSubmitInfo_setwaitSemaphoreCount, "", NULL},
+                        { "pNext", (getter)PyVkSubmitInfo_getpNext, (setter)PyVkSubmitInfo_setpNext, "", NULL},
                     
-                        { "commandBufferCount", (getter)PyVkSubmitInfo_getcommandBufferCount,
-                           (setter)PyVkSubmitInfo_setcommandBufferCount, "", NULL},
+                        { "waitSemaphoreCount", (getter)PyVkSubmitInfo_getwaitSemaphoreCount, (setter)PyVkSubmitInfo_setwaitSemaphoreCount, "", NULL},
                     
-                        { "signalSemaphoreCount", (getter)PyVkSubmitInfo_getsignalSemaphoreCount,
-                           (setter)PyVkSubmitInfo_setsignalSemaphoreCount, "", NULL},
+                        { "commandBufferCount", (getter)PyVkSubmitInfo_getcommandBufferCount, (setter)PyVkSubmitInfo_setcommandBufferCount, "", NULL},
+                    
+                        { "signalSemaphoreCount", (getter)PyVkSubmitInfo_getsignalSemaphoreCount, (setter)PyVkSubmitInfo_setsignalSemaphoreCount, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkSubmitInfoType = {
@@ -14076,7 +14954,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkSubmitInfo_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkSubmitInfo object",0,0,0,0,0,0,0,0,
-                    VkSubmitInfo_getsetters,0,0,0,0,0,0,0,PyVkSubmitInfo_new,};
+                    PyVkSubmitInfo_getsetters,0,0,0,0,0,0,0,PyVkSubmitInfo_new,};
             
                 typedef struct { PyObject_HEAD VkDisplayPropertiesKHR *base; }
                 PyVkDisplayPropertiesKHR;
@@ -14101,7 +14979,30 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkDisplayPropertiesKHR_getsetters[] = {
+                static int PyVkDisplayPropertiesKHR_setdisplayName(PyVkDisplayPropertiesKHR *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with displayName");
+                        return -1;
+                    }
+                
+            PyObject * ascii_str = PyUnicode_AsASCIIString(value);
+            char* tmp = PyBytes_AsString(ascii_str);
+            (self->base)->displayName = strdup(tmp);
+            Py_DECREF(ascii_str);
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkDisplayPropertiesKHR_getdisplayName(PyVkDisplayPropertiesKHR *self, void *closure){
+                PyObject* value = PyUnicode_FromString((const char *) (self->base)->displayName);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkDisplayPropertiesKHR_getsetters[] = {
+                    
+                        { "displayName", (getter)PyVkDisplayPropertiesKHR_getdisplayName, (setter)PyVkDisplayPropertiesKHR_setdisplayName, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDisplayPropertiesKHRType = {
@@ -14110,7 +15011,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDisplayPropertiesKHR_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDisplayPropertiesKHR object",0,0,0,0,0,0,0,0,
-                    VkDisplayPropertiesKHR_getsetters,0,0,0,0,0,0,0,PyVkDisplayPropertiesKHR_new,};
+                    PyVkDisplayPropertiesKHR_getsetters,0,0,0,0,0,0,0,PyVkDisplayPropertiesKHR_new,};
             
                 typedef struct { PyObject_HEAD VkDisplayPlanePropertiesKHR *base; }
                 PyVkDisplayPlanePropertiesKHR;
@@ -14141,26 +15042,19 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with currentStackIndex");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->currentStackIndex = val;
+                (self->base)->currentStackIndex = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDisplayPlanePropertiesKHR_getcurrentStackIndex(PyVkDisplayPlanePropertiesKHR *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->currentStackIndex);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->currentStackIndex);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkDisplayPlanePropertiesKHR_getsetters[] = {
+                    static PyGetSetDef PyVkDisplayPlanePropertiesKHR_getsetters[] = {
                     
-                        { "currentStackIndex", (getter)PyVkDisplayPlanePropertiesKHR_getcurrentStackIndex,
-                           (setter)PyVkDisplayPlanePropertiesKHR_setcurrentStackIndex, "", NULL},
+                        { "currentStackIndex", (getter)PyVkDisplayPlanePropertiesKHR_getcurrentStackIndex, (setter)PyVkDisplayPlanePropertiesKHR_setcurrentStackIndex, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDisplayPlanePropertiesKHRType = {
@@ -14169,7 +15063,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDisplayPlanePropertiesKHR_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDisplayPlanePropertiesKHR object",0,0,0,0,0,0,0,0,
-                    VkDisplayPlanePropertiesKHR_getsetters,0,0,0,0,0,0,0,PyVkDisplayPlanePropertiesKHR_new,};
+                    PyVkDisplayPlanePropertiesKHR_getsetters,0,0,0,0,0,0,0,PyVkDisplayPlanePropertiesKHR_new,};
             
                 typedef struct { PyObject_HEAD VkDisplayModeParametersKHR *base; }
                 PyVkDisplayModeParametersKHR;
@@ -14200,26 +15094,19 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with refreshRate");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->refreshRate = val;
+                (self->base)->refreshRate = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDisplayModeParametersKHR_getrefreshRate(PyVkDisplayModeParametersKHR *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->refreshRate);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->refreshRate);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkDisplayModeParametersKHR_getsetters[] = {
+                    static PyGetSetDef PyVkDisplayModeParametersKHR_getsetters[] = {
                     
-                        { "refreshRate", (getter)PyVkDisplayModeParametersKHR_getrefreshRate,
-                           (setter)PyVkDisplayModeParametersKHR_setrefreshRate, "", NULL},
+                        { "refreshRate", (getter)PyVkDisplayModeParametersKHR_getrefreshRate, (setter)PyVkDisplayModeParametersKHR_setrefreshRate, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDisplayModeParametersKHRType = {
@@ -14228,7 +15115,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDisplayModeParametersKHR_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDisplayModeParametersKHR object",0,0,0,0,0,0,0,0,
-                    VkDisplayModeParametersKHR_getsetters,0,0,0,0,0,0,0,PyVkDisplayModeParametersKHR_new,};
+                    PyVkDisplayModeParametersKHR_getsetters,0,0,0,0,0,0,0,PyVkDisplayModeParametersKHR_new,};
             
                 typedef struct { PyObject_HEAD VkDisplayModePropertiesKHR *base; }
                 PyVkDisplayModePropertiesKHR;
@@ -14253,7 +15140,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkDisplayModePropertiesKHR_getsetters[] = {
+                    static PyGetSetDef PyVkDisplayModePropertiesKHR_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkDisplayModePropertiesKHRType = {
@@ -14262,7 +15149,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDisplayModePropertiesKHR_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDisplayModePropertiesKHR object",0,0,0,0,0,0,0,0,
-                    VkDisplayModePropertiesKHR_getsetters,0,0,0,0,0,0,0,PyVkDisplayModePropertiesKHR_new,};
+                    PyVkDisplayModePropertiesKHR_getsetters,0,0,0,0,0,0,0,PyVkDisplayModePropertiesKHR_new,};
             
                 typedef struct { PyObject_HEAD VkDisplayModeCreateInfoKHR *base; }
                 PyVkDisplayModeCreateInfoKHR;
@@ -14287,7 +15174,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkDisplayModeCreateInfoKHR_getsetters[] = {
+                static int PyVkDisplayModeCreateInfoKHR_setpNext(PyVkDisplayModeCreateInfoKHR *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkDisplayModeCreateInfoKHR_getpNext(PyVkDisplayModeCreateInfoKHR *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkDisplayModeCreateInfoKHR_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkDisplayModeCreateInfoKHR_getpNext, (setter)PyVkDisplayModeCreateInfoKHR_setpNext, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDisplayModeCreateInfoKHRType = {
@@ -14296,7 +15201,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDisplayModeCreateInfoKHR_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDisplayModeCreateInfoKHR object",0,0,0,0,0,0,0,0,
-                    VkDisplayModeCreateInfoKHR_getsetters,0,0,0,0,0,0,0,PyVkDisplayModeCreateInfoKHR_new,};
+                    PyVkDisplayModeCreateInfoKHR_getsetters,0,0,0,0,0,0,0,PyVkDisplayModeCreateInfoKHR_new,};
             
                 typedef struct { PyObject_HEAD VkDisplayPlaneCapabilitiesKHR *base; }
                 PyVkDisplayPlaneCapabilitiesKHR;
@@ -14321,7 +15226,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkDisplayPlaneCapabilitiesKHR_getsetters[] = {
+                    static PyGetSetDef PyVkDisplayPlaneCapabilitiesKHR_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkDisplayPlaneCapabilitiesKHRType = {
@@ -14330,7 +15235,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDisplayPlaneCapabilitiesKHR_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDisplayPlaneCapabilitiesKHR object",0,0,0,0,0,0,0,0,
-                    VkDisplayPlaneCapabilitiesKHR_getsetters,0,0,0,0,0,0,0,PyVkDisplayPlaneCapabilitiesKHR_new,};
+                    PyVkDisplayPlaneCapabilitiesKHR_getsetters,0,0,0,0,0,0,0,PyVkDisplayPlaneCapabilitiesKHR_new,};
             
                 typedef struct { PyObject_HEAD VkDisplaySurfaceCreateInfoKHR *base; }
                 PyVkDisplaySurfaceCreateInfoKHR;
@@ -14355,24 +15260,34 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkDisplaySurfaceCreateInfoKHR_setpNext(PyVkDisplaySurfaceCreateInfoKHR *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkDisplaySurfaceCreateInfoKHR_getpNext(PyVkDisplaySurfaceCreateInfoKHR *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkDisplaySurfaceCreateInfoKHR_setplaneIndex(PyVkDisplaySurfaceCreateInfoKHR *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with planeIndex");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->planeIndex = val;
+                (self->base)->planeIndex = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDisplaySurfaceCreateInfoKHR_getplaneIndex(PyVkDisplaySurfaceCreateInfoKHR *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->planeIndex);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->planeIndex);
                     Py_INCREF(value);
                     return value;
                 }
@@ -14383,29 +15298,41 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with planeStackIndex");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->planeStackIndex = val;
+                (self->base)->planeStackIndex = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkDisplaySurfaceCreateInfoKHR_getplaneStackIndex(PyVkDisplaySurfaceCreateInfoKHR *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->planeStackIndex);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->planeStackIndex);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkDisplaySurfaceCreateInfoKHR_getsetters[] = {
+                static int PyVkDisplaySurfaceCreateInfoKHR_setglobalAlpha(PyVkDisplaySurfaceCreateInfoKHR *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with globalAlpha");
+                        return -1;
+                    }
+                (self->base)->globalAlpha = (float) PyFloat_AsDouble(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkDisplaySurfaceCreateInfoKHR_getglobalAlpha(PyVkDisplaySurfaceCreateInfoKHR *self, void *closure){
+                PyObject* value = PyFloat_FromDouble((double) (self->base)->globalAlpha);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkDisplaySurfaceCreateInfoKHR_getsetters[] = {
                     
-                        { "planeIndex", (getter)PyVkDisplaySurfaceCreateInfoKHR_getplaneIndex,
-                           (setter)PyVkDisplaySurfaceCreateInfoKHR_setplaneIndex, "", NULL},
+                        { "pNext", (getter)PyVkDisplaySurfaceCreateInfoKHR_getpNext, (setter)PyVkDisplaySurfaceCreateInfoKHR_setpNext, "", NULL},
                     
-                        { "planeStackIndex", (getter)PyVkDisplaySurfaceCreateInfoKHR_getplaneStackIndex,
-                           (setter)PyVkDisplaySurfaceCreateInfoKHR_setplaneStackIndex, "", NULL},
+                        { "planeIndex", (getter)PyVkDisplaySurfaceCreateInfoKHR_getplaneIndex, (setter)PyVkDisplaySurfaceCreateInfoKHR_setplaneIndex, "", NULL},
+                    
+                        { "planeStackIndex", (getter)PyVkDisplaySurfaceCreateInfoKHR_getplaneStackIndex, (setter)PyVkDisplaySurfaceCreateInfoKHR_setplaneStackIndex, "", NULL},
+                    
+                        { "globalAlpha", (getter)PyVkDisplaySurfaceCreateInfoKHR_getglobalAlpha, (setter)PyVkDisplaySurfaceCreateInfoKHR_setglobalAlpha, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDisplaySurfaceCreateInfoKHRType = {
@@ -14414,7 +15341,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDisplaySurfaceCreateInfoKHR_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDisplaySurfaceCreateInfoKHR object",0,0,0,0,0,0,0,0,
-                    VkDisplaySurfaceCreateInfoKHR_getsetters,0,0,0,0,0,0,0,PyVkDisplaySurfaceCreateInfoKHR_new,};
+                    PyVkDisplaySurfaceCreateInfoKHR_getsetters,0,0,0,0,0,0,0,PyVkDisplaySurfaceCreateInfoKHR_new,};
             
                 typedef struct { PyObject_HEAD VkDisplayPresentInfoKHR *base; }
                 PyVkDisplayPresentInfoKHR;
@@ -14439,7 +15366,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkDisplayPresentInfoKHR_getsetters[] = {
+                static int PyVkDisplayPresentInfoKHR_setpNext(PyVkDisplayPresentInfoKHR *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkDisplayPresentInfoKHR_getpNext(PyVkDisplayPresentInfoKHR *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkDisplayPresentInfoKHR_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkDisplayPresentInfoKHR_getpNext, (setter)PyVkDisplayPresentInfoKHR_setpNext, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDisplayPresentInfoKHRType = {
@@ -14448,7 +15393,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDisplayPresentInfoKHR_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDisplayPresentInfoKHR object",0,0,0,0,0,0,0,0,
-                    VkDisplayPresentInfoKHR_getsetters,0,0,0,0,0,0,0,PyVkDisplayPresentInfoKHR_new,};
+                    PyVkDisplayPresentInfoKHR_getsetters,0,0,0,0,0,0,0,PyVkDisplayPresentInfoKHR_new,};
             
                 typedef struct { PyObject_HEAD VkSurfaceCapabilitiesKHR *base; }
                 PyVkSurfaceCapabilitiesKHR;
@@ -14479,18 +15424,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with minImageCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->minImageCount = val;
+                (self->base)->minImageCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkSurfaceCapabilitiesKHR_getminImageCount(PyVkSurfaceCapabilitiesKHR *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->minImageCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->minImageCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -14501,18 +15440,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxImageCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxImageCount = val;
+                (self->base)->maxImageCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkSurfaceCapabilitiesKHR_getmaxImageCount(PyVkSurfaceCapabilitiesKHR *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxImageCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxImageCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -14523,32 +15456,23 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with maxImageArrayLayers");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->maxImageArrayLayers = val;
+                (self->base)->maxImageArrayLayers = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkSurfaceCapabilitiesKHR_getmaxImageArrayLayers(PyVkSurfaceCapabilitiesKHR *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->maxImageArrayLayers);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->maxImageArrayLayers);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkSurfaceCapabilitiesKHR_getsetters[] = {
+                    static PyGetSetDef PyVkSurfaceCapabilitiesKHR_getsetters[] = {
                     
-                        { "minImageCount", (getter)PyVkSurfaceCapabilitiesKHR_getminImageCount,
-                           (setter)PyVkSurfaceCapabilitiesKHR_setminImageCount, "", NULL},
+                        { "minImageCount", (getter)PyVkSurfaceCapabilitiesKHR_getminImageCount, (setter)PyVkSurfaceCapabilitiesKHR_setminImageCount, "", NULL},
                     
-                        { "maxImageCount", (getter)PyVkSurfaceCapabilitiesKHR_getmaxImageCount,
-                           (setter)PyVkSurfaceCapabilitiesKHR_setmaxImageCount, "", NULL},
+                        { "maxImageCount", (getter)PyVkSurfaceCapabilitiesKHR_getmaxImageCount, (setter)PyVkSurfaceCapabilitiesKHR_setmaxImageCount, "", NULL},
                     
-                        { "maxImageArrayLayers", (getter)PyVkSurfaceCapabilitiesKHR_getmaxImageArrayLayers,
-                           (setter)PyVkSurfaceCapabilitiesKHR_setmaxImageArrayLayers, "", NULL},
+                        { "maxImageArrayLayers", (getter)PyVkSurfaceCapabilitiesKHR_getmaxImageArrayLayers, (setter)PyVkSurfaceCapabilitiesKHR_setmaxImageArrayLayers, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkSurfaceCapabilitiesKHRType = {
@@ -14557,7 +15481,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkSurfaceCapabilitiesKHR_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkSurfaceCapabilitiesKHR object",0,0,0,0,0,0,0,0,
-                    VkSurfaceCapabilitiesKHR_getsetters,0,0,0,0,0,0,0,PyVkSurfaceCapabilitiesKHR_new,};
+                    PyVkSurfaceCapabilitiesKHR_getsetters,0,0,0,0,0,0,0,PyVkSurfaceCapabilitiesKHR_new,};
             
 #ifdef VK_USE_PLATFORM_ANDROID_KHR
 
@@ -14584,7 +15508,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkAndroidSurfaceCreateInfoKHR_getsetters[] = {
+                static int PyVkAndroidSurfaceCreateInfoKHR_setpNext(PyVkAndroidSurfaceCreateInfoKHR *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkAndroidSurfaceCreateInfoKHR_getpNext(PyVkAndroidSurfaceCreateInfoKHR *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkAndroidSurfaceCreateInfoKHR_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkAndroidSurfaceCreateInfoKHR_getpNext, (setter)PyVkAndroidSurfaceCreateInfoKHR_setpNext, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkAndroidSurfaceCreateInfoKHRType = {
@@ -14593,7 +15535,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkAndroidSurfaceCreateInfoKHR_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkAndroidSurfaceCreateInfoKHR object",0,0,0,0,0,0,0,0,
-                    VkAndroidSurfaceCreateInfoKHR_getsetters,0,0,0,0,0,0,0,PyVkAndroidSurfaceCreateInfoKHR_new,};
+                    PyVkAndroidSurfaceCreateInfoKHR_getsetters,0,0,0,0,0,0,0,PyVkAndroidSurfaceCreateInfoKHR_new,};
             
 #endif
 
@@ -14622,7 +15564,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkMirSurfaceCreateInfoKHR_getsetters[] = {
+                static int PyVkMirSurfaceCreateInfoKHR_setpNext(PyVkMirSurfaceCreateInfoKHR *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkMirSurfaceCreateInfoKHR_getpNext(PyVkMirSurfaceCreateInfoKHR *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkMirSurfaceCreateInfoKHR_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkMirSurfaceCreateInfoKHR_getpNext, (setter)PyVkMirSurfaceCreateInfoKHR_setpNext, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkMirSurfaceCreateInfoKHRType = {
@@ -14631,7 +15591,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkMirSurfaceCreateInfoKHR_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkMirSurfaceCreateInfoKHR object",0,0,0,0,0,0,0,0,
-                    VkMirSurfaceCreateInfoKHR_getsetters,0,0,0,0,0,0,0,PyVkMirSurfaceCreateInfoKHR_new,};
+                    PyVkMirSurfaceCreateInfoKHR_getsetters,0,0,0,0,0,0,0,PyVkMirSurfaceCreateInfoKHR_new,};
             
 #endif
 
@@ -14660,7 +15620,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkWaylandSurfaceCreateInfoKHR_getsetters[] = {
+                static int PyVkWaylandSurfaceCreateInfoKHR_setpNext(PyVkWaylandSurfaceCreateInfoKHR *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkWaylandSurfaceCreateInfoKHR_getpNext(PyVkWaylandSurfaceCreateInfoKHR *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkWaylandSurfaceCreateInfoKHR_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkWaylandSurfaceCreateInfoKHR_getpNext, (setter)PyVkWaylandSurfaceCreateInfoKHR_setpNext, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkWaylandSurfaceCreateInfoKHRType = {
@@ -14669,7 +15647,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkWaylandSurfaceCreateInfoKHR_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkWaylandSurfaceCreateInfoKHR object",0,0,0,0,0,0,0,0,
-                    VkWaylandSurfaceCreateInfoKHR_getsetters,0,0,0,0,0,0,0,PyVkWaylandSurfaceCreateInfoKHR_new,};
+                    PyVkWaylandSurfaceCreateInfoKHR_getsetters,0,0,0,0,0,0,0,PyVkWaylandSurfaceCreateInfoKHR_new,};
             
 #endif
 
@@ -14698,7 +15676,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkWin32SurfaceCreateInfoKHR_getsetters[] = {
+                static int PyVkWin32SurfaceCreateInfoKHR_setpNext(PyVkWin32SurfaceCreateInfoKHR *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkWin32SurfaceCreateInfoKHR_getpNext(PyVkWin32SurfaceCreateInfoKHR *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkWin32SurfaceCreateInfoKHR_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkWin32SurfaceCreateInfoKHR_getpNext, (setter)PyVkWin32SurfaceCreateInfoKHR_setpNext, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkWin32SurfaceCreateInfoKHRType = {
@@ -14707,7 +15703,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkWin32SurfaceCreateInfoKHR_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkWin32SurfaceCreateInfoKHR object",0,0,0,0,0,0,0,0,
-                    VkWin32SurfaceCreateInfoKHR_getsetters,0,0,0,0,0,0,0,PyVkWin32SurfaceCreateInfoKHR_new,};
+                    PyVkWin32SurfaceCreateInfoKHR_getsetters,0,0,0,0,0,0,0,PyVkWin32SurfaceCreateInfoKHR_new,};
             
 #endif
 
@@ -14736,7 +15732,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkXlibSurfaceCreateInfoKHR_getsetters[] = {
+                static int PyVkXlibSurfaceCreateInfoKHR_setpNext(PyVkXlibSurfaceCreateInfoKHR *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkXlibSurfaceCreateInfoKHR_getpNext(PyVkXlibSurfaceCreateInfoKHR *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkXlibSurfaceCreateInfoKHR_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkXlibSurfaceCreateInfoKHR_getpNext, (setter)PyVkXlibSurfaceCreateInfoKHR_setpNext, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkXlibSurfaceCreateInfoKHRType = {
@@ -14745,7 +15759,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkXlibSurfaceCreateInfoKHR_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkXlibSurfaceCreateInfoKHR object",0,0,0,0,0,0,0,0,
-                    VkXlibSurfaceCreateInfoKHR_getsetters,0,0,0,0,0,0,0,PyVkXlibSurfaceCreateInfoKHR_new,};
+                    PyVkXlibSurfaceCreateInfoKHR_getsetters,0,0,0,0,0,0,0,PyVkXlibSurfaceCreateInfoKHR_new,};
             
 #endif
 
@@ -14774,7 +15788,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkXcbSurfaceCreateInfoKHR_getsetters[] = {
+                static int PyVkXcbSurfaceCreateInfoKHR_setpNext(PyVkXcbSurfaceCreateInfoKHR *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkXcbSurfaceCreateInfoKHR_getpNext(PyVkXcbSurfaceCreateInfoKHR *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkXcbSurfaceCreateInfoKHR_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkXcbSurfaceCreateInfoKHR_getpNext, (setter)PyVkXcbSurfaceCreateInfoKHR_setpNext, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkXcbSurfaceCreateInfoKHRType = {
@@ -14783,7 +15815,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkXcbSurfaceCreateInfoKHR_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkXcbSurfaceCreateInfoKHR object",0,0,0,0,0,0,0,0,
-                    VkXcbSurfaceCreateInfoKHR_getsetters,0,0,0,0,0,0,0,PyVkXcbSurfaceCreateInfoKHR_new,};
+                    PyVkXcbSurfaceCreateInfoKHR_getsetters,0,0,0,0,0,0,0,PyVkXcbSurfaceCreateInfoKHR_new,};
             
 #endif
 
@@ -14810,7 +15842,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkSurfaceFormatKHR_getsetters[] = {
+                    static PyGetSetDef PyVkSurfaceFormatKHR_getsetters[] = {
                     {NULL}};
 
                 static PyTypeObject PyVkSurfaceFormatKHRType = {
@@ -14819,7 +15851,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkSurfaceFormatKHR_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkSurfaceFormatKHR object",0,0,0,0,0,0,0,0,
-                    VkSurfaceFormatKHR_getsetters,0,0,0,0,0,0,0,PyVkSurfaceFormatKHR_new,};
+                    PyVkSurfaceFormatKHR_getsetters,0,0,0,0,0,0,0,PyVkSurfaceFormatKHR_new,};
             
                 typedef struct { PyObject_HEAD VkSwapchainCreateInfoKHR *base; }
                 PyVkSwapchainCreateInfoKHR;
@@ -14844,24 +15876,34 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkSwapchainCreateInfoKHR_setpNext(PyVkSwapchainCreateInfoKHR *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkSwapchainCreateInfoKHR_getpNext(PyVkSwapchainCreateInfoKHR *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkSwapchainCreateInfoKHR_setminImageCount(PyVkSwapchainCreateInfoKHR *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with minImageCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->minImageCount = val;
+                (self->base)->minImageCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkSwapchainCreateInfoKHR_getminImageCount(PyVkSwapchainCreateInfoKHR *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->minImageCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->minImageCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -14872,18 +15914,12 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with imageArrayLayers");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->imageArrayLayers = val;
+                (self->base)->imageArrayLayers = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkSwapchainCreateInfoKHR_getimageArrayLayers(PyVkSwapchainCreateInfoKHR *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->imageArrayLayers);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->imageArrayLayers);
                     Py_INCREF(value);
                     return value;
                 }
@@ -14894,32 +15930,48 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with queueFamilyIndexCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->queueFamilyIndexCount = val;
+                (self->base)->queueFamilyIndexCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkSwapchainCreateInfoKHR_getqueueFamilyIndexCount(PyVkSwapchainCreateInfoKHR *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->queueFamilyIndexCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->queueFamilyIndexCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkSwapchainCreateInfoKHR_getsetters[] = {
+                static int PyVkSwapchainCreateInfoKHR_setpQueueFamilyIndices(PyVkSwapchainCreateInfoKHR *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pQueueFamilyIndices");
+                        return -1;
+                    }
+                
+            uint32_t tmp = (uint32_t) PyLong_AsLong(value);
+            uint32_t *t = malloc(sizeof(uint32_t));
+            memcpy(t, &tmp, sizeof(uint32_t));
+            (self->base)->pQueueFamilyIndices = t;
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkSwapchainCreateInfoKHR_getpQueueFamilyIndices(PyVkSwapchainCreateInfoKHR *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (*((self->base)->pQueueFamilyIndices)));
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkSwapchainCreateInfoKHR_getsetters[] = {
                     
-                        { "minImageCount", (getter)PyVkSwapchainCreateInfoKHR_getminImageCount,
-                           (setter)PyVkSwapchainCreateInfoKHR_setminImageCount, "", NULL},
+                        { "pNext", (getter)PyVkSwapchainCreateInfoKHR_getpNext, (setter)PyVkSwapchainCreateInfoKHR_setpNext, "", NULL},
                     
-                        { "imageArrayLayers", (getter)PyVkSwapchainCreateInfoKHR_getimageArrayLayers,
-                           (setter)PyVkSwapchainCreateInfoKHR_setimageArrayLayers, "", NULL},
+                        { "minImageCount", (getter)PyVkSwapchainCreateInfoKHR_getminImageCount, (setter)PyVkSwapchainCreateInfoKHR_setminImageCount, "", NULL},
                     
-                        { "queueFamilyIndexCount", (getter)PyVkSwapchainCreateInfoKHR_getqueueFamilyIndexCount,
-                           (setter)PyVkSwapchainCreateInfoKHR_setqueueFamilyIndexCount, "", NULL},
+                        { "imageArrayLayers", (getter)PyVkSwapchainCreateInfoKHR_getimageArrayLayers, (setter)PyVkSwapchainCreateInfoKHR_setimageArrayLayers, "", NULL},
+                    
+                        { "queueFamilyIndexCount", (getter)PyVkSwapchainCreateInfoKHR_getqueueFamilyIndexCount, (setter)PyVkSwapchainCreateInfoKHR_setqueueFamilyIndexCount, "", NULL},
+                    
+                        { "pQueueFamilyIndices", (getter)PyVkSwapchainCreateInfoKHR_getpQueueFamilyIndices, (setter)PyVkSwapchainCreateInfoKHR_setpQueueFamilyIndices, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkSwapchainCreateInfoKHRType = {
@@ -14928,7 +15980,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkSwapchainCreateInfoKHR_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkSwapchainCreateInfoKHR object",0,0,0,0,0,0,0,0,
-                    VkSwapchainCreateInfoKHR_getsetters,0,0,0,0,0,0,0,PyVkSwapchainCreateInfoKHR_new,};
+                    PyVkSwapchainCreateInfoKHR_getsetters,0,0,0,0,0,0,0,PyVkSwapchainCreateInfoKHR_new,};
             
                 typedef struct { PyObject_HEAD VkPresentInfoKHR *base; }
                 PyVkPresentInfoKHR;
@@ -14953,24 +16005,34 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkPresentInfoKHR_setpNext(PyVkPresentInfoKHR *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkPresentInfoKHR_getpNext(PyVkPresentInfoKHR *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                 static int PyVkPresentInfoKHR_setwaitSemaphoreCount(PyVkPresentInfoKHR *self, PyObject *value,
                                         void *closure) {
                     if (value == NULL) {
                         PyErr_SetString(PyExc_TypeError, "Error with waitSemaphoreCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->waitSemaphoreCount = val;
+                (self->base)->waitSemaphoreCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPresentInfoKHR_getwaitSemaphoreCount(PyVkPresentInfoKHR *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->waitSemaphoreCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->waitSemaphoreCount);
                     Py_INCREF(value);
                     return value;
                 }
@@ -14981,29 +16043,46 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                         PyErr_SetString(PyExc_TypeError, "Error with swapchainCount");
                         return -1;
                     }
-                
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        
-                    (self->base)->swapchainCount = val;
+                (self->base)->swapchainCount = (uint32_t) PyLong_AsLong(value);
                     return 0;
                 }
                 
                 static PyObject * PyVkPresentInfoKHR_getswapchainCount(PyVkPresentInfoKHR *self, void *closure){
-                
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->swapchainCount);
-                    
+                PyObject* value = PyLong_FromLong((long) (self->base)->swapchainCount);
                     Py_INCREF(value);
                     return value;
                 }
                 
-                    static PyGetSetDef VkPresentInfoKHR_getsetters[] = {
+                static int PyVkPresentInfoKHR_setpImageIndices(PyVkPresentInfoKHR *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pImageIndices");
+                        return -1;
+                    }
+                
+            uint32_t tmp = (uint32_t) PyLong_AsLong(value);
+            uint32_t *t = malloc(sizeof(uint32_t));
+            memcpy(t, &tmp, sizeof(uint32_t));
+            (self->base)->pImageIndices = t;
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkPresentInfoKHR_getpImageIndices(PyVkPresentInfoKHR *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (*((self->base)->pImageIndices)));
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkPresentInfoKHR_getsetters[] = {
                     
-                        { "waitSemaphoreCount", (getter)PyVkPresentInfoKHR_getwaitSemaphoreCount,
-                           (setter)PyVkPresentInfoKHR_setwaitSemaphoreCount, "", NULL},
+                        { "pNext", (getter)PyVkPresentInfoKHR_getpNext, (setter)PyVkPresentInfoKHR_setpNext, "", NULL},
                     
-                        { "swapchainCount", (getter)PyVkPresentInfoKHR_getswapchainCount,
-                           (setter)PyVkPresentInfoKHR_setswapchainCount, "", NULL},
+                        { "waitSemaphoreCount", (getter)PyVkPresentInfoKHR_getwaitSemaphoreCount, (setter)PyVkPresentInfoKHR_setwaitSemaphoreCount, "", NULL},
+                    
+                        { "swapchainCount", (getter)PyVkPresentInfoKHR_getswapchainCount, (setter)PyVkPresentInfoKHR_setswapchainCount, "", NULL},
+                    
+                        { "pImageIndices", (getter)PyVkPresentInfoKHR_getpImageIndices, (setter)PyVkPresentInfoKHR_setpImageIndices, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkPresentInfoKHRType = {
@@ -15012,7 +16091,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkPresentInfoKHR_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkPresentInfoKHR object",0,0,0,0,0,0,0,0,
-                    VkPresentInfoKHR_getsetters,0,0,0,0,0,0,0,PyVkPresentInfoKHR_new,};
+                    PyVkPresentInfoKHR_getsetters,0,0,0,0,0,0,0,PyVkPresentInfoKHR_new,};
             
                 typedef struct { PyObject_HEAD VkDebugReportCallbackCreateInfoEXT *base; }
                 PyVkDebugReportCallbackCreateInfoEXT;
@@ -15037,7 +16116,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkDebugReportCallbackCreateInfoEXT_getsetters[] = {
+                static int PyVkDebugReportCallbackCreateInfoEXT_setpNext(PyVkDebugReportCallbackCreateInfoEXT *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkDebugReportCallbackCreateInfoEXT_getpNext(PyVkDebugReportCallbackCreateInfoEXT *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkDebugReportCallbackCreateInfoEXT_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkDebugReportCallbackCreateInfoEXT_getpNext, (setter)PyVkDebugReportCallbackCreateInfoEXT_setpNext, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDebugReportCallbackCreateInfoEXTType = {
@@ -15046,7 +16143,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDebugReportCallbackCreateInfoEXT_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDebugReportCallbackCreateInfoEXT object",0,0,0,0,0,0,0,0,
-                    VkDebugReportCallbackCreateInfoEXT_getsetters,0,0,0,0,0,0,0,PyVkDebugReportCallbackCreateInfoEXT_new,};
+                    PyVkDebugReportCallbackCreateInfoEXT_getsetters,0,0,0,0,0,0,0,PyVkDebugReportCallbackCreateInfoEXT_new,};
             
                 typedef struct { PyObject_HEAD VkPipelineRasterizationStateRasterizationOrderAMD *base; }
                 PyVkPipelineRasterizationStateRasterizationOrderAMD;
@@ -15071,7 +16168,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkPipelineRasterizationStateRasterizationOrderAMD_getsetters[] = {
+                static int PyVkPipelineRasterizationStateRasterizationOrderAMD_setpNext(PyVkPipelineRasterizationStateRasterizationOrderAMD *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkPipelineRasterizationStateRasterizationOrderAMD_getpNext(PyVkPipelineRasterizationStateRasterizationOrderAMD *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkPipelineRasterizationStateRasterizationOrderAMD_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkPipelineRasterizationStateRasterizationOrderAMD_getpNext, (setter)PyVkPipelineRasterizationStateRasterizationOrderAMD_setpNext, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkPipelineRasterizationStateRasterizationOrderAMDType = {
@@ -15080,7 +16195,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkPipelineRasterizationStateRasterizationOrderAMD_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkPipelineRasterizationStateRasterizationOrderAMD object",0,0,0,0,0,0,0,0,
-                    VkPipelineRasterizationStateRasterizationOrderAMD_getsetters,0,0,0,0,0,0,0,PyVkPipelineRasterizationStateRasterizationOrderAMD_new,};
+                    PyVkPipelineRasterizationStateRasterizationOrderAMD_getsetters,0,0,0,0,0,0,0,PyVkPipelineRasterizationStateRasterizationOrderAMD_new,};
             
                 typedef struct { PyObject_HEAD VkDebugMarkerObjectNameInfoEXT *base; }
                 PyVkDebugMarkerObjectNameInfoEXT;
@@ -15105,7 +16220,66 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkDebugMarkerObjectNameInfoEXT_getsetters[] = {
+                static int PyVkDebugMarkerObjectNameInfoEXT_setpNext(PyVkDebugMarkerObjectNameInfoEXT *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkDebugMarkerObjectNameInfoEXT_getpNext(PyVkDebugMarkerObjectNameInfoEXT *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkDebugMarkerObjectNameInfoEXT_setobject(PyVkDebugMarkerObjectNameInfoEXT *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with object");
+                        return -1;
+                    }
+                (self->base)->object = (uint64_t) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkDebugMarkerObjectNameInfoEXT_getobject(PyVkDebugMarkerObjectNameInfoEXT *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->object);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkDebugMarkerObjectNameInfoEXT_setpObjectName(PyVkDebugMarkerObjectNameInfoEXT *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pObjectName");
+                        return -1;
+                    }
+                
+            PyObject * ascii_str = PyUnicode_AsASCIIString(value);
+            char* tmp = PyBytes_AsString(ascii_str);
+            (self->base)->pObjectName = strdup(tmp);
+            Py_DECREF(ascii_str);
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkDebugMarkerObjectNameInfoEXT_getpObjectName(PyVkDebugMarkerObjectNameInfoEXT *self, void *closure){
+                PyObject* value = PyUnicode_FromString((const char *) (self->base)->pObjectName);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkDebugMarkerObjectNameInfoEXT_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkDebugMarkerObjectNameInfoEXT_getpNext, (setter)PyVkDebugMarkerObjectNameInfoEXT_setpNext, "", NULL},
+                    
+                        { "object", (getter)PyVkDebugMarkerObjectNameInfoEXT_getobject, (setter)PyVkDebugMarkerObjectNameInfoEXT_setobject, "", NULL},
+                    
+                        { "pObjectName", (getter)PyVkDebugMarkerObjectNameInfoEXT_getpObjectName, (setter)PyVkDebugMarkerObjectNameInfoEXT_setpObjectName, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDebugMarkerObjectNameInfoEXTType = {
@@ -15114,7 +16288,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDebugMarkerObjectNameInfoEXT_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDebugMarkerObjectNameInfoEXT object",0,0,0,0,0,0,0,0,
-                    VkDebugMarkerObjectNameInfoEXT_getsetters,0,0,0,0,0,0,0,PyVkDebugMarkerObjectNameInfoEXT_new,};
+                    PyVkDebugMarkerObjectNameInfoEXT_getsetters,0,0,0,0,0,0,0,PyVkDebugMarkerObjectNameInfoEXT_new,};
             
                 typedef struct { PyObject_HEAD VkDebugMarkerObjectTagInfoEXT *base; }
                 PyVkDebugMarkerObjectTagInfoEXT;
@@ -15139,7 +16313,97 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkDebugMarkerObjectTagInfoEXT_getsetters[] = {
+                static int PyVkDebugMarkerObjectTagInfoEXT_setpNext(PyVkDebugMarkerObjectTagInfoEXT *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkDebugMarkerObjectTagInfoEXT_getpNext(PyVkDebugMarkerObjectTagInfoEXT *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkDebugMarkerObjectTagInfoEXT_setobject(PyVkDebugMarkerObjectTagInfoEXT *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with object");
+                        return -1;
+                    }
+                (self->base)->object = (uint64_t) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkDebugMarkerObjectTagInfoEXT_getobject(PyVkDebugMarkerObjectTagInfoEXT *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->object);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkDebugMarkerObjectTagInfoEXT_settagName(PyVkDebugMarkerObjectTagInfoEXT *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with tagName");
+                        return -1;
+                    }
+                (self->base)->tagName = (uint64_t) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkDebugMarkerObjectTagInfoEXT_gettagName(PyVkDebugMarkerObjectTagInfoEXT *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->tagName);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkDebugMarkerObjectTagInfoEXT_settagSize(PyVkDebugMarkerObjectTagInfoEXT *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with tagSize");
+                        return -1;
+                    }
+                (self->base)->tagSize = (size_t) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkDebugMarkerObjectTagInfoEXT_gettagSize(PyVkDebugMarkerObjectTagInfoEXT *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->tagSize);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkDebugMarkerObjectTagInfoEXT_setpTag(PyVkDebugMarkerObjectTagInfoEXT *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pTag");
+                        return -1;
+                    }
+                (self->base)->pTag = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkDebugMarkerObjectTagInfoEXT_getpTag(PyVkDebugMarkerObjectTagInfoEXT *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkDebugMarkerObjectTagInfoEXT_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkDebugMarkerObjectTagInfoEXT_getpNext, (setter)PyVkDebugMarkerObjectTagInfoEXT_setpNext, "", NULL},
+                    
+                        { "object", (getter)PyVkDebugMarkerObjectTagInfoEXT_getobject, (setter)PyVkDebugMarkerObjectTagInfoEXT_setobject, "", NULL},
+                    
+                        { "tagName", (getter)PyVkDebugMarkerObjectTagInfoEXT_gettagName, (setter)PyVkDebugMarkerObjectTagInfoEXT_settagName, "", NULL},
+                    
+                        { "tagSize", (getter)PyVkDebugMarkerObjectTagInfoEXT_gettagSize, (setter)PyVkDebugMarkerObjectTagInfoEXT_settagSize, "", NULL},
+                    
+                        { "pTag", (getter)PyVkDebugMarkerObjectTagInfoEXT_getpTag, (setter)PyVkDebugMarkerObjectTagInfoEXT_setpTag, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDebugMarkerObjectTagInfoEXTType = {
@@ -15148,7 +16412,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDebugMarkerObjectTagInfoEXT_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDebugMarkerObjectTagInfoEXT object",0,0,0,0,0,0,0,0,
-                    VkDebugMarkerObjectTagInfoEXT_getsetters,0,0,0,0,0,0,0,PyVkDebugMarkerObjectTagInfoEXT_new,};
+                    PyVkDebugMarkerObjectTagInfoEXT_getsetters,0,0,0,0,0,0,0,PyVkDebugMarkerObjectTagInfoEXT_new,};
             
                 typedef struct { PyObject_HEAD VkDebugMarkerMarkerInfoEXT *base; }
                 PyVkDebugMarkerMarkerInfoEXT;
@@ -15173,7 +16437,81 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkDebugMarkerMarkerInfoEXT_getsetters[] = {
+                static int PyVkDebugMarkerMarkerInfoEXT_setpNext(PyVkDebugMarkerMarkerInfoEXT *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkDebugMarkerMarkerInfoEXT_getpNext(PyVkDebugMarkerMarkerInfoEXT *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkDebugMarkerMarkerInfoEXT_setpMarkerName(PyVkDebugMarkerMarkerInfoEXT *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pMarkerName");
+                        return -1;
+                    }
+                
+            PyObject * ascii_str = PyUnicode_AsASCIIString(value);
+            char* tmp = PyBytes_AsString(ascii_str);
+            (self->base)->pMarkerName = strdup(tmp);
+            Py_DECREF(ascii_str);
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkDebugMarkerMarkerInfoEXT_getpMarkerName(PyVkDebugMarkerMarkerInfoEXT *self, void *closure){
+                PyObject* value = PyUnicode_FromString((const char *) (self->base)->pMarkerName);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkDebugMarkerMarkerInfoEXT_setcolor(PyVkDebugMarkerMarkerInfoEXT *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with color");
+                        return -1;
+                    }
+                
+            int nb = PyList_Size(value);
+            int i;
+            for (i = 0; i < nb; i++) {
+                float tmp = (float) PyFloat_AsDouble(PyList_GetItem(value, i));
+                ((self->base)->color)[i] = tmp;
+            }
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkDebugMarkerMarkerInfoEXT_getcolor(PyVkDebugMarkerMarkerInfoEXT *self, void *closure){
+                
+            PyObject* value = PyList_New(0);
+            int nb = sizeof((self->base)->color) / sizeof((self->base)->color[0]);
+            int i = 0;
+            for (i = 0; i < nb; i++) {
+                PyObject* py_tmp = PyFloat_FromDouble((double) (self->base)->color[i]);
+                PyList_Append(value, py_tmp);
+            }
+            
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkDebugMarkerMarkerInfoEXT_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkDebugMarkerMarkerInfoEXT_getpNext, (setter)PyVkDebugMarkerMarkerInfoEXT_setpNext, "", NULL},
+                    
+                        { "pMarkerName", (getter)PyVkDebugMarkerMarkerInfoEXT_getpMarkerName, (setter)PyVkDebugMarkerMarkerInfoEXT_setpMarkerName, "", NULL},
+                    
+                        { "color", (getter)PyVkDebugMarkerMarkerInfoEXT_getcolor, (setter)PyVkDebugMarkerMarkerInfoEXT_setcolor, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDebugMarkerMarkerInfoEXTType = {
@@ -15182,7 +16520,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDebugMarkerMarkerInfoEXT_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDebugMarkerMarkerInfoEXT object",0,0,0,0,0,0,0,0,
-                    VkDebugMarkerMarkerInfoEXT_getsetters,0,0,0,0,0,0,0,PyVkDebugMarkerMarkerInfoEXT_new,};
+                    PyVkDebugMarkerMarkerInfoEXT_getsetters,0,0,0,0,0,0,0,PyVkDebugMarkerMarkerInfoEXT_new,};
             
                 typedef struct { PyObject_HEAD VkDedicatedAllocationImageCreateInfoNV *base; }
                 PyVkDedicatedAllocationImageCreateInfoNV;
@@ -15207,7 +16545,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkDedicatedAllocationImageCreateInfoNV_getsetters[] = {
+                static int PyVkDedicatedAllocationImageCreateInfoNV_setpNext(PyVkDedicatedAllocationImageCreateInfoNV *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkDedicatedAllocationImageCreateInfoNV_getpNext(PyVkDedicatedAllocationImageCreateInfoNV *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkDedicatedAllocationImageCreateInfoNV_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkDedicatedAllocationImageCreateInfoNV_getpNext, (setter)PyVkDedicatedAllocationImageCreateInfoNV_setpNext, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDedicatedAllocationImageCreateInfoNVType = {
@@ -15216,7 +16572,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDedicatedAllocationImageCreateInfoNV_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDedicatedAllocationImageCreateInfoNV object",0,0,0,0,0,0,0,0,
-                    VkDedicatedAllocationImageCreateInfoNV_getsetters,0,0,0,0,0,0,0,PyVkDedicatedAllocationImageCreateInfoNV_new,};
+                    PyVkDedicatedAllocationImageCreateInfoNV_getsetters,0,0,0,0,0,0,0,PyVkDedicatedAllocationImageCreateInfoNV_new,};
             
                 typedef struct { PyObject_HEAD VkDedicatedAllocationBufferCreateInfoNV *base; }
                 PyVkDedicatedAllocationBufferCreateInfoNV;
@@ -15241,7 +16597,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkDedicatedAllocationBufferCreateInfoNV_getsetters[] = {
+                static int PyVkDedicatedAllocationBufferCreateInfoNV_setpNext(PyVkDedicatedAllocationBufferCreateInfoNV *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkDedicatedAllocationBufferCreateInfoNV_getpNext(PyVkDedicatedAllocationBufferCreateInfoNV *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkDedicatedAllocationBufferCreateInfoNV_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkDedicatedAllocationBufferCreateInfoNV_getpNext, (setter)PyVkDedicatedAllocationBufferCreateInfoNV_setpNext, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDedicatedAllocationBufferCreateInfoNVType = {
@@ -15250,7 +16624,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDedicatedAllocationBufferCreateInfoNV_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDedicatedAllocationBufferCreateInfoNV object",0,0,0,0,0,0,0,0,
-                    VkDedicatedAllocationBufferCreateInfoNV_getsetters,0,0,0,0,0,0,0,PyVkDedicatedAllocationBufferCreateInfoNV_new,};
+                    PyVkDedicatedAllocationBufferCreateInfoNV_getsetters,0,0,0,0,0,0,0,PyVkDedicatedAllocationBufferCreateInfoNV_new,};
             
                 typedef struct { PyObject_HEAD VkDedicatedAllocationMemoryAllocateInfoNV *base; }
                 PyVkDedicatedAllocationMemoryAllocateInfoNV;
@@ -15275,7 +16649,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
-                    static PyGetSetDef VkDedicatedAllocationMemoryAllocateInfoNV_getsetters[] = {
+                static int PyVkDedicatedAllocationMemoryAllocateInfoNV_setpNext(PyVkDedicatedAllocationMemoryAllocateInfoNV *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkDedicatedAllocationMemoryAllocateInfoNV_getpNext(PyVkDedicatedAllocationMemoryAllocateInfoNV *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkDedicatedAllocationMemoryAllocateInfoNV_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkDedicatedAllocationMemoryAllocateInfoNV_getpNext, (setter)PyVkDedicatedAllocationMemoryAllocateInfoNV_setpNext, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDedicatedAllocationMemoryAllocateInfoNVType = {
@@ -15284,7 +16676,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     (destructor)PyVkDedicatedAllocationMemoryAllocateInfoNV_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDedicatedAllocationMemoryAllocateInfoNV object",0,0,0,0,0,0,0,0,
-                    VkDedicatedAllocationMemoryAllocateInfoNV_getsetters,0,0,0,0,0,0,0,PyVkDedicatedAllocationMemoryAllocateInfoNV_new,};
+                    PyVkDedicatedAllocationMemoryAllocateInfoNV_getsetters,0,0,0,0,0,0,0,PyVkDedicatedAllocationMemoryAllocateInfoNV_new,};
             
 static PyMethodDef VulkanMethods[] = {
 {"load_sdk", load_sdk, METH_NOARGS, "Load SDK"},

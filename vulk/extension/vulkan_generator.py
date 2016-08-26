@@ -48,8 +48,11 @@ def download_files():
 def clean_vulkan_h(vulkan_h):
     cleaned = ""
     for line in vulkan_h.splitlines(True):
-        if '#include "vk_platform.h"' not in line:
-            cleaned += line
+        if '#include "vk_platform.h"' in line:
+            continue
+        line = line.replace(' const ', ' ')
+        line = line.replace('const* ', '*')
+        cleaned += line
 
     return cleaned
 
@@ -61,7 +64,7 @@ class Generator():
         self.vulkan_h = clean_vulkan_h(f1)
         self.vk_xml = xmltodict.parse(f2)
         self.fextensions = self.get_functions_in_extensions()
-        self.sextensions = self.get_structs_in_extensions()
+        self.sro = self.get_structs_returned_only()
 
     def get_functions_in_extensions(self):
         names = []
@@ -76,18 +79,11 @@ class Generator():
                 names.append(command['@name'])
         return names
 
-    def get_structs_in_extensions(self):
-        names = []
-        for extension in self.vk_xml['registry']['extensions']['extension']:
-            if 'type' not in extension['require']:
-                continue
-            if type(extension['require']['type']) is not list:
-                extension['require']['type'] = [
-                    extension['require']['type']]
-
-            for struct in extension['require']['type']:
-                names.append(struct['@name'])
-        return names
+    def get_structs_returned_only(self):
+        structs = [s for s in self.vk_xml['registry']['types']['type']
+                   if s.get('@category', None) == 'struct']
+        return [s['@name'] for s in structs
+                if '@returnedonly' in s and s['@returnedonly'] == 'true']
 
     def main(self):
         with open(OUT_FILE, 'w') as vulkanmodule_file:
@@ -138,6 +134,174 @@ class Generator():
                     PyModule_AddObject(module, "{0}", (PyObject *)&Py{0}Type);
                 '''.format(struct['@name']))
 
+    def get_member_type_name(self, member):
+        name = member['type']
+        if '#text' in member:
+            name += ' ' + member['#text']
+        return name
+
+    def pyobject_to_val(self, member):
+        constchar_convert = '''
+            PyObject * ascii_str = PyUnicode_AsASCIIString(value);
+            char* tmp = PyBytes_AsString(ascii_str);
+            (self->base)->{1} = strdup(tmp);
+            Py_DECREF(ascii_str);
+            '''
+        arraychar_convert = '''
+            PyObject * ascii_str = PyUnicode_AsASCIIString(value);
+            char* tmp = PyBytes_AsString(ascii_str);
+            strcpy((self->base)->{1}, tmp);
+            Py_DECREF(ascii_str);
+            '''
+
+        listchar_convert = '''
+            int nb = PyList_Size(value);
+            char** tmp = malloc(sizeof(char*)*nb + 1);
+            int i;
+            for (i = 0; i < nb; i++) {{
+                PyObject* ascii_str = PyUnicode_AsASCIIString(
+                PyList_GetItem(value, i));
+                char* tmp2 = PyBytes_AsString(ascii_str);
+                tmp[i] = strdup(tmp2);
+                Py_DECREF(ascii_str);
+            }}
+            tmp[i] = NULL; // sentinel
+            (self->base)->{1} = tmp;
+            '''
+
+        listfloat_convert = '''
+            int nb = PyList_Size(value);
+            int i;
+            for (i = 0; i < nb; i++) {{
+                float tmp = (float) PyFloat_AsDouble(PyList_GetItem(value, i));
+                ((self->base)->{1})[i] = tmp;
+            }}
+            '''
+
+        pointerfloat_convert = '''
+            float tmp = (float) PyFloat_AsDouble(value);
+            float *t = malloc(sizeof(float));
+            memcpy(t, &tmp, sizeof(float));
+            (self->base)->{1} = t;
+            '''
+
+        listuint32_convert = '''
+            int nb = PyList_Size(value);
+            int i;
+            for (i = 0; i < nb; i++) {{
+                uint32_t tmp = (uint32_t) PyLong_AsLong(
+                PyList_GetItem(value, i));
+                ((self->base)->{1})[i] = tmp;
+            }}
+            '''
+
+        listuint8_convert = listuint32_convert.replace('uint32_t', 'uint8_t')
+
+        pointeruint32_convert = '''
+            uint32_t tmp = (uint32_t) PyLong_AsLong(value);
+            uint32_t *t = malloc(sizeof(uint32_t));
+            memcpy(t, &tmp, sizeof(uint32_t));
+            (self->base)->{1} = t;
+            '''
+
+        mapping = {
+            'uint32_t':
+            '(self->base)->{1} = (uint32_t) PyLong_AsLong(value);',
+            'float':
+            '(self->base)->{1} = (float) PyFloat_AsDouble(value);',
+            'int32_t':
+            '(self->base)->{1} = (int32_t) PyLong_AsLong(value);',
+            'char []': arraychar_convert,
+            'char const *': constchar_convert,
+            'char const * const*': listchar_convert,
+            'float [2]': listfloat_convert,
+            'float [4]': listfloat_convert,
+            'float const *': pointerfloat_convert,
+            'size_t':
+            '(self->base)->{1} = (size_t) PyLong_AsLong(value);',
+            'uint32_t [2]': listuint32_convert,
+            'uint32_t [3]': listuint32_convert,
+            'uint32_t const *': pointeruint32_convert,
+            'uint64_t':
+            '(self->base)->{1} = (uint64_t) PyLong_AsLong(value);',
+            'uint8_t []': listuint8_convert,
+            'void const *': '(self->base)->{1} = NULL;',
+            'void *': '(self->base)->{1} = NULL;',
+        }
+
+        name = self.get_member_type_name(member)
+        return mapping.get(name, None)
+
+    def val_to_pyobject(self, member):
+        listchar_convert = '''
+            if ({0}[0] == NULL) return PyList_New(0);;
+            PyObject* value = PyList_New(0);
+            int i = 0;
+            while ({0}[i] != NULL) {{{{
+                PyObject* py_tmp = PyUnicode_FromString((const char *) {0}[i]);
+                PyList_Append(value, py_tmp);
+                i++;
+            }}}}
+            '''
+
+        listfloat_convert = '''
+            PyObject* value = PyList_New(0);
+            int nb = sizeof({0}) / sizeof({0}[0]);
+            int i = 0;
+            for (i = 0; i < nb; i++) {{{{
+                PyObject* py_tmp = PyFloat_FromDouble((double) {0}[i]);
+                PyList_Append(value, py_tmp);
+            }}}}
+            '''
+
+        listuint32_convert = '''
+            PyObject* value = PyList_New(0);
+            int nb = sizeof({0}) / sizeof({0}[0]);
+            int i = 0;
+            for (i = 0; i < nb; i++) {{{{
+                PyObject* py_tmp = PyLong_FromLong((long) {0}[i]);
+                PyList_Append(value, py_tmp);
+            }}}}
+            '''
+
+        listuint8_convert = listuint32_convert.replace('uint32_t', 'uint8_t')
+
+        mapping = {
+            'uint32_t':
+            'PyObject* value = PyLong_FromLong((long) {});',
+            'float':
+            'PyObject* value = PyFloat_FromDouble((double) {});',
+            'int32_t':
+            'PyObject* value = PyLong_FromLong((long) {});',
+            'char []':
+            'PyObject* value = PyUnicode_FromString((const char *) {});',
+            'char const *':
+            'PyObject* value = PyUnicode_FromString((const char *) {});',
+            'char const * const*': listchar_convert,
+            'float [2]': listfloat_convert,
+            'float [4]': listfloat_convert,
+            'float const *':
+            'PyObject* value = PyFloat_FromDouble((double) (*({})));',
+            'size_t':
+            'PyObject* value = PyLong_FromLong((long) {});',
+            'uint32_t [2]': listuint32_convert,
+            'uint32_t [3]': listuint32_convert,
+            'uint32_t const *':
+            'PyObject* value = PyLong_FromLong((long) (*({})));',
+            'uint64_t':
+            'PyObject* value = PyLong_FromLong((long) {});',
+            'uint8_t []': listuint8_convert,
+            'void const *': 'Py_INCREF(Py_None);PyObject* value = Py_None;',
+            'void *': 'Py_INCREF(Py_None);PyObject* value = Py_None;'
+        }
+
+        name = self.get_member_type_name(member)
+
+        value = mapping.get(name, None)
+        if value:
+            return value.format('(self->base)->{1}')
+        return None
+
     def add_pyobject(self):
         def add_struct(s):
             definition = '''
@@ -185,15 +349,14 @@ class Generator():
                     }}
                 '''
 
-                if member['type'] == "uint32_t" and '#text' not in member:
-                    definition += '''
-                        uint32_t val = (uint32_t) PyLong_AsLong(value);
-                        '''
+                convert = self.pyobject_to_val(member)
+
+                if convert:
+                    definition += convert
                 else:
                     return
 
                 definition += '''
-                    (self->base)->{1} = val;
                     return 0;
                 }}
                 '''
@@ -204,11 +367,9 @@ class Generator():
                 static PyObject * Py{0}_get{1}(Py{0} *self, void *closure){{
                 '''
 
-                if member['type'] == "uint32_t" and '#text' not in member:
-                    definition += '''
-                        PyObject* value = PyLong_FromLong(
-                            (long) (self->base)->{1});
-                    '''
+                convert = self.val_to_pyobject(member)
+                if convert:
+                    definition += convert
                 else:
                     return
 
@@ -221,20 +382,30 @@ class Generator():
 
             def add_getter_setter(s):
                 self.out.write('''
-                    static PyGetSetDef {}_getsetters[] = {{
+                    static PyGetSetDef Py{}_getsetters[] = {{
                     '''.format(s['@name']))
 
                 for member in s['member']:
-                    if member['type'] != "uint32_t" or '#text' in member:
+                    if not self.val_to_pyobject(member):
                         continue
+                    sname = s['@name']
+                    mname = member['name']
+                    getter = '(getter)Py{0}_get{1}'.format(sname, mname)
+                    setter = '(setter)Py{0}_set{1}'.format(sname, mname)
+
+                    # if returned only, no needs setters
+                    #if sname in self.sro:
+                    #    setter = 'NULL'
+
                     self.out.write('''
-                        {{ "{1}", (getter)Py{0}_get{1},
-                           (setter)Py{0}_set{1}, "", NULL}},
-                    '''.format(s['@name'], member['name']))
+                        {{ "{}", {}, {}, "", NULL}},
+                    '''.format(mname, getter, setter))
 
                 self.out.write('{NULL}};\n')
 
             for member in s['member']:
+                # if returned only, no needs setters
+                #if s['@name'] not in self.sro:
                 add_setter(member)
                 add_getter(member)
             add_getter_setter(s)
@@ -247,7 +418,7 @@ class Generator():
                     (destructor)Py{0}_del,
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "{0} object",0,0,0,0,0,0,0,0,
-                    {0}_getsetters,0,0,0,0,0,0,0,Py{0}_new,}};
+                    Py{0}_getsetters,0,0,0,0,0,0,0,Py{0}_new,}};
             '''.format(s['@name']))
 
         structs = [s for s in self.vk_xml['registry']['types']['type']
