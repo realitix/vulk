@@ -65,6 +65,7 @@ class Generator():
         self.vk_xml = xmltodict.parse(f2)
         self.fextensions = self.get_functions_in_extensions()
         self.sro = self.get_structs_returned_only()
+        self.create_structs = self.get_create_structs()
 
     def get_functions_in_extensions(self):
         names = []
@@ -84,6 +85,11 @@ class Generator():
                    if s.get('@category', None) == 'struct']
         return [s['@name'] for s in structs
                 if '@returnedonly' in s and s['@returnedonly'] == 'true']
+
+    def get_create_structs(self):
+        structs = [s for s in self.vk_xml['registry']['types']['type']
+                   if s.get('@category', None) == 'struct']
+        return [s for s in structs if 'Create' in s]
 
     def main(self):
         with open(OUT_FILE, 'w') as vulkanmodule_file:
@@ -386,6 +392,23 @@ class Generator():
                     return (PyObject *)self;
                 }}
                 '''
+            self.out.write(definition.format(s['@name']))
+
+        def add_init(s):
+            # init only for create stuct
+            if 'Create' not in s['@name']:
+                return
+
+            definition = '''
+                static int
+                Py{0}_init(Py{0} *self, PyObject *args, PyObject *kwds) {{
+                '''.format(s['@name'])
+
+
+            for member in s['member']:
+
+            definition += 'return 0; }'
+
             self.out.write(definition.format(s['@name']))
 
         def add_setters(s):
