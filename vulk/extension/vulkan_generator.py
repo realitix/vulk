@@ -140,6 +140,18 @@ class Generator():
             name += ' ' + member['#text']
         return name
 
+    def get_signatures(self):
+        structs = [s for s in self.vk_xml['registry']['types']['type']
+                   if s.get('@category', None) == 'struct']
+        names = set()
+        for s in structs:
+            for m in s['member']:
+                name = m['type']
+                if '#text' in m:
+                    name += ' ' + m['#text']
+                names.add(name)
+        return names
+
     def pyobject_to_val(self, member):
         constchar_convert = '''
             PyObject * ascii_str = PyUnicode_AsASCIIString(value);
@@ -185,24 +197,17 @@ class Generator():
             (self->base)->{1} = t;
             '''
 
-        listuint32_convert = '''
-            int nb = PyList_Size(value);
-            int i;
-            for (i = 0; i < nb; i++) {{
-                uint32_t tmp = (uint32_t) PyLong_AsLong(
-                PyList_GetItem(value, i));
-                ((self->base)->{1})[i] = tmp;
-            }}
-            '''
+        listuint32_convert = (
+            listfloat_convert
+            .replace('float', 'uint32_t')
+            .replace('PyFloat_AsDouble', 'PyLong_AsLong'))
 
         listuint8_convert = listuint32_convert.replace('uint32_t', 'uint8_t')
 
-        pointeruint32_convert = '''
-            uint32_t tmp = (uint32_t) PyLong_AsLong(value);
-            uint32_t *t = malloc(sizeof(uint32_t));
-            memcpy(t, &tmp, sizeof(uint32_t));
-            (self->base)->{1} = t;
-            '''
+        pointeruint32_convert = (
+            pointerfloat_convert
+            .replace('float', 'uint32_t')
+            .replace('PyFloat_AsDouble', 'PyLong_AsLong'))
 
         mapping = {
             'uint32_t':
@@ -227,7 +232,31 @@ class Generator():
             'uint8_t []': listuint8_convert,
             'void const *': '(self->base)->{1} = NULL;',
             'void *': '(self->base)->{1} = NULL;',
+            'Window':
+            '(self->base)->{1} = (XID) PyLong_AsLong(value);',
+            'Display *':
+            '(self->base)->{1} = (Display *) PyLong_AsLong(value);'
         }
+
+        signatures = [s for s in self.get_signatures() if s.startswith('VK')]
+
+        for signature in signatures:
+            vkname = signature.split()[0]
+
+            # pointer
+            if signature.endswith('*'):
+                pass
+                mapping[signature] = '''
+                    '(self->base)->{1} = (value->base)
+                '''
+            # array
+            elif signature.endswith(']'):
+                pass
+            # base
+            else:
+                mapping[signature] = '''
+                    '(self->base)->{1} = *(value->base)
+                '''
 
         name = self.get_member_type_name(member)
         return mapping.get(name, None)
@@ -254,17 +283,12 @@ class Generator():
             }}}}
             '''
 
-        listuint32_convert = '''
-            PyObject* value = PyList_New(0);
-            int nb = sizeof({0}) / sizeof({0}[0]);
-            int i = 0;
-            for (i = 0; i < nb; i++) {{{{
-                PyObject* py_tmp = PyLong_FromLong((long) {0}[i]);
-                PyList_Append(value, py_tmp);
-            }}}}
-            '''
+        listuint32_convert = (
+            listfloat_convert
+            .replace('double', 'long')
+            .replace('PyFloat_FromDouble', 'PyLong_FromLong'))
 
-        listuint8_convert = listuint32_convert.replace('uint32_t', 'uint8_t')
+        listuint8_convert = listuint32_convert
 
         mapping = {
             'uint32_t':
@@ -292,11 +316,37 @@ class Generator():
             'PyObject* value = PyLong_FromLong((long) {});',
             'uint8_t []': listuint8_convert,
             'void const *': 'Py_INCREF(Py_None);PyObject* value = Py_None;',
-            'void *': 'Py_INCREF(Py_None);PyObject* value = Py_None;'
+            'void *': 'Py_INCREF(Py_None);PyObject* value = Py_None;',
+            'Window':
+            'PyObject* value = PyLong_FromLong((long) {});',
+            'Display *': 'Py_INCREF(Py_None);PyObject* value = Py_None;',
         }
 
-        name = self.get_member_type_name(member)
+        signatures = [s for s in self.get_signatures() if s.startswith('VK')]
 
+        for signature in signatures:
+            vkname = signature.split()[0]
+
+            # pointer
+            if signature.endswith('*'):
+                pass
+                mapping[signature] = '''
+                    PyObject* value = PyObject_CallObject(
+                        (PyObject *) &Py{}, NULL);
+                    value->base = {{}}->base;
+                '''.format(vkname)
+            # array
+            elif signature.endswith(']'):
+                pass
+            # base
+            else:
+                mapping[signature] = '''
+                    PyObject* value = PyObject_CallObject(
+                        (PyObject *) &Py{}, NULL);
+                    value->base = {{}}->base;
+                '''.format(vkname)
+
+        name = self.get_member_type_name(member)
         value = mapping.get(name, None)
         if value:
             return value.format('(self->base)->{1}')
@@ -393,10 +443,6 @@ class Generator():
                     getter = '(getter)Py{0}_get{1}'.format(sname, mname)
                     setter = '(setter)Py{0}_set{1}'.format(sname, mname)
 
-                    # if returned only, no needs setters
-                    #if sname in self.sro:
-                    #    setter = 'NULL'
-
                     self.out.write('''
                         {{ "{}", {}, {}, "", NULL}},
                     '''.format(mname, getter, setter))
@@ -404,8 +450,6 @@ class Generator():
                 self.out.write('{NULL}};\n')
 
             for member in s['member']:
-                # if returned only, no needs setters
-                #if s['@name'] not in self.sro:
                 add_setter(member)
                 add_getter(member)
             add_getter_setter(s)
@@ -439,6 +483,12 @@ class Generator():
                    'VkWaylandSurfaceCreateInfoKHR':
                    'VK_USE_PLATFORM_WAYLAND_KHR',
                    'VkWin32SurfaceCreateInfoKHR':
+                   'VK_USE_PLATFORM_WIN32_KHR',
+                   'VkImportMemoryWin32HandleInfoNV':
+                   'VK_USE_PLATFORM_WIN32_KHR',
+                   'VkExportMemoryWin32HandleInfoNV':
+                   'VK_USE_PLATFORM_WIN32_KHR',
+                   'VkWin32KeyedMutexAcquireReleaseInfoNV':
                    'VK_USE_PLATFORM_WIN32_KHR',
                    'VkXcbSurfaceCreateInfoKHR':
                    'VK_USE_PLATFORM_XCB_KHR',

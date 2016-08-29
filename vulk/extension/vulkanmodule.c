@@ -79,7 +79,7 @@ extern "C"
     #define VKAPI_PTR  VKAPI_CALL
 #elif defined(__ANDROID__) && defined(__ARM_ARCH) && __ARM_ARCH < 7
     #error "Vulkan isn't supported for the 'armeabi' NDK ABI"
-#elif defined(__ANDROID__) && __ARM_ARCH >= 7 && __ARM_32BIT_STATE
+#elif defined(__ANDROID__) && defined(__ARM_ARCH) && __ARM_ARCH >= 7 && __ARM_32BIT_STATE
     // On Android 32-bit ARM targets, Vulkan functions use the "hardfloat"
     // calling convention, i.e. float parameters are passed in registers. This
     // is true even if the rest of the application passes floats on the stack,
@@ -190,7 +190,7 @@ extern "C" {
 #define VK_VERSION_MINOR(version) (((uint32_t)(version) >> 12) & 0x3ff)
 #define VK_VERSION_PATCH(version) ((uint32_t)(version) & 0xfff)
 // Version of this file
-#define VK_HEADER_VERSION 24
+#define VK_HEADER_VERSION 25
 
 
 #define VK_NULL_HANDLE 0
@@ -200,10 +200,12 @@ extern "C" {
 #define VK_DEFINE_HANDLE(object) typedef struct object##_T* object;
 
 
+#if !defined(VK_DEFINE_NON_DISPATCHABLE_HANDLE)
 #if defined(__LP64__) || defined(_WIN64) || (defined(__x86_64__) && !defined(__ILP32__) ) || defined(_M_X64) || defined(__ia64) || defined (_M_IA64) || defined(__aarch64__) || defined(__powerpc64__)
         #define VK_DEFINE_NON_DISPATCHABLE_HANDLE(object) typedef struct object##_T *object;
 #else
         #define VK_DEFINE_NON_DISPATCHABLE_HANDLE(object) typedef uint64_t object;
+#endif
 #endif
         
 
@@ -358,6 +360,7 @@ typedef enum VkStructureType {
     VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR = 1000008000,
     VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR = 1000009000,
     VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT = 1000011000,
+    VK_STRUCTURE_TYPE_DEBUG_REPORT_VALIDATION_FLAGS_EXT = 1000011002,
     VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD = 1000018000,
     VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT = 1000022000,
     VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT = 1000022001,
@@ -365,6 +368,11 @@ typedef enum VkStructureType {
     VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV = 1000026000,
     VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV = 1000026001,
     VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV = 1000026002,
+    VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV = 1000056000,
+    VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV = 1000056001,
+    VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV = 1000057000,
+    VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV = 1000057001,
+    VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV = 1000058000,
     VK_STRUCTURE_TYPE_BEGIN_RANGE = VK_STRUCTURE_TYPE_APPLICATION_INFO,
     VK_STRUCTURE_TYPE_END_RANGE = VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO,
     VK_STRUCTURE_TYPE_RANGE_SIZE = (VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO - VK_STRUCTURE_TYPE_APPLICATION_INFO + 1),
@@ -3874,7 +3882,7 @@ VKAPI_ATTR VkBool32 VKAPI_CALL vkGetPhysicalDeviceWin32PresentationSupportKHR(
 #define VK_EXT_debug_report 1
 VK_DEFINE_NON_DISPATCHABLE_HANDLE(VkDebugReportCallbackEXT)
 
-#define VK_EXT_DEBUG_REPORT_SPEC_VERSION  3
+#define VK_EXT_DEBUG_REPORT_SPEC_VERSION  4
 #define VK_EXT_DEBUG_REPORT_EXTENSION_NAME "VK_EXT_debug_report"
 #define VK_STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT
 
@@ -3945,6 +3953,12 @@ typedef VkBool32 (VKAPI_PTR *PFN_vkDebugReportCallbackEXT)(
     char*                                 pMessage,
     void*                                       pUserData);
 
+
+typedef struct VkDebugReportLayerFlagsEXT {
+    VkStructureType    sType;
+    void*        pNext;
+    uint64_t           enabledValidationFlags;
+} VkDebugReportLayerFlagsEXT;
 
 typedef struct VkDebugReportCallbackCreateInfoEXT {
     VkStructureType                 sType;
@@ -4111,10 +4125,151 @@ typedef struct VkDedicatedAllocationMemoryAllocateInfoNV {
 
 
 
+#define VK_AMD_draw_indirect_count 1
+#define VK_AMD_EXTENSION_DRAW_INDIRECT_COUNT_SPEC_VERSION 1
+#define VK_AMD_EXTENSION_DRAW_INDIRECT_COUNT_EXTENSION_NAME "VK_AMD_draw_indirect_count"
+
+typedef void (VKAPI_PTR *PFN_vkCmdDrawIndirectCountAMD)(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride);
+typedef void (VKAPI_PTR *PFN_vkCmdDrawIndexedIndirectCountAMD)(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride);
+
+#ifndef VK_NO_PROTOTYPES
+VKAPI_ATTR void VKAPI_CALL vkCmdDrawIndirectCountAMD(
+    VkCommandBuffer                             commandBuffer,
+    VkBuffer                                    buffer,
+    VkDeviceSize                                offset,
+    VkBuffer                                    countBuffer,
+    VkDeviceSize                                countBufferOffset,
+    uint32_t                                    maxDrawCount,
+    uint32_t                                    stride);
+
+VKAPI_ATTR void VKAPI_CALL vkCmdDrawIndexedIndirectCountAMD(
+    VkCommandBuffer                             commandBuffer,
+    VkBuffer                                    buffer,
+    VkDeviceSize                                offset,
+    VkBuffer                                    countBuffer,
+    VkDeviceSize                                countBufferOffset,
+    uint32_t                                    maxDrawCount,
+    uint32_t                                    stride);
+#endif
+
 #define VK_IMG_format_pvrtc 1
 #define VK_IMG_FORMAT_PVRTC_SPEC_VERSION  1
 #define VK_IMG_FORMAT_PVRTC_EXTENSION_NAME "VK_IMG_format_pvrtc"
 
+
+#define VK_NV_external_memory_capabilities 1
+#define VK_NV_EXTERNAL_MEMORY_CAPABILITIES_SPEC_VERSION 1
+#define VK_NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME "VK_NV_external_memory_capabilities"
+
+
+typedef enum VkExternalMemoryHandleTypeFlagBitsNV {
+    VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV = 0x00000001,
+    VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV = 0x00000002,
+    VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV = 0x00000004,
+    VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV = 0x00000008,
+    VK_EXTERNAL_MEMORY_HANDLE_TYPE_FLAG_BITS_MAX_ENUM_NV = 0x7FFFFFFF
+} VkExternalMemoryHandleTypeFlagBitsNV;
+
+typedef enum VkExternalMemoryFeatureFlagBitsNV {
+    VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV = 0x00000001,
+    VK_EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV = 0x00000002,
+    VK_EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV = 0x00000004,
+    VK_EXTERNAL_MEMORY_FEATURE_FLAG_BITS_MAX_ENUM_NV = 0x7FFFFFFF
+} VkExternalMemoryFeatureFlagBitsNV;
+
+typedef VkFlags VkExternalMemoryHandleTypeFlagsNV;
+typedef VkFlags VkExternalMemoryFeatureFlagsNV;
+
+typedef struct VkExternalImageFormatPropertiesNV {
+    VkImageFormatProperties              imageFormatProperties;
+    VkExternalMemoryFeatureFlagsNV       externalMemoryFeatures;
+    VkExternalMemoryHandleTypeFlagsNV    exportFromImportedHandleTypes;
+    VkExternalMemoryHandleTypeFlagsNV    compatibleHandleTypes;
+} VkExternalImageFormatPropertiesNV;
+
+
+typedef VkResult (VKAPI_PTR *PFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV)(VkPhysicalDevice physicalDevice, VkFormat format, VkImageType type, VkImageTiling tiling, VkImageUsageFlags usage, VkImageCreateFlags flags, VkExternalMemoryHandleTypeFlagsNV externalHandleType, VkExternalImageFormatPropertiesNV* pExternalImageFormatProperties);
+
+#ifndef VK_NO_PROTOTYPES
+VKAPI_ATTR VkResult VKAPI_CALL vkGetPhysicalDeviceExternalImageFormatPropertiesNV(
+    VkPhysicalDevice                            physicalDevice,
+    VkFormat                                    format,
+    VkImageType                                 type,
+    VkImageTiling                               tiling,
+    VkImageUsageFlags                           usage,
+    VkImageCreateFlags                          flags,
+    VkExternalMemoryHandleTypeFlagsNV           externalHandleType,
+    VkExternalImageFormatPropertiesNV*          pExternalImageFormatProperties);
+#endif
+
+#define VK_NV_external_memory 1
+#define VK_NV_EXTERNAL_MEMORY_SPEC_VERSION 1
+#define VK_NV_EXTERNAL_MEMORY_EXTENSION_NAME "VK_NV_external_memory"
+
+typedef struct VkExternalMemoryImageCreateInfoNV {
+    VkStructureType                      sType;
+    void*                          pNext;
+    VkExternalMemoryHandleTypeFlagsNV    handleTypes;
+} VkExternalMemoryImageCreateInfoNV;
+
+typedef struct VkExportMemoryAllocateInfoNV {
+    VkStructureType                      sType;
+    void*                          pNext;
+    VkExternalMemoryHandleTypeFlagsNV    handleTypes;
+} VkExportMemoryAllocateInfoNV;
+
+
+
+#ifdef VK_USE_PLATFORM_WIN32_KHR
+#define VK_NV_external_memory_win32 1
+#define VK_NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION 1
+#define VK_NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME "VK_NV_external_memory_win32"
+
+typedef struct VkImportMemoryWin32HandleInfoNV {
+    VkStructureType                      sType;
+    void*                          pNext;
+    VkExternalMemoryHandleTypeFlagsNV    handleType;
+    HANDLE                               handle;
+} VkImportMemoryWin32HandleInfoNV;
+
+typedef struct VkExportMemoryWin32HandleInfoNV {
+    VkStructureType               sType;
+    void*                   pNext;
+    SECURITY_ATTRIBUTES*    pAttributes;
+    DWORD                         dwAccess;
+} VkExportMemoryWin32HandleInfoNV;
+
+
+typedef VkResult (VKAPI_PTR *PFN_vkGetMemoryWin32HandleNV)(VkDevice device, VkDeviceMemory memory, VkExternalMemoryHandleTypeFlagsNV handleType, HANDLE* pHandle);
+
+#ifndef VK_NO_PROTOTYPES
+VKAPI_ATTR VkResult VKAPI_CALL vkGetMemoryWin32HandleNV(
+    VkDevice                                    device,
+    VkDeviceMemory                              memory,
+    VkExternalMemoryHandleTypeFlagsNV           handleType,
+    HANDLE*                                     pHandle);
+#endif
+#endif /* VK_USE_PLATFORM_WIN32_KHR */
+
+#ifdef VK_USE_PLATFORM_WIN32_KHR
+#define VK_NV_win32_keyed_mutex 1
+#define VK_NV_WIN32_KEYED_MUTEX_SPEC_VERSION 1
+#define VK_NV_WIN32_KEYED_MUTEX_EXTENSION_NAME "VK_NV_win32_keyed_mutex"
+
+typedef struct VkWin32KeyedMutexAcquireReleaseInfoNV {
+    VkStructureType          sType;
+    void*              pNext;
+    uint32_t                 acquireCount;
+    VkDeviceMemory*    pAcquireSyncs;
+    uint64_t*          pAcquireKeys;
+    uint32_t*          pAcquireTimeoutMilliseconds;
+    uint32_t                 releaseCount;
+    VkDeviceMemory*    pReleaseSyncs;
+    uint64_t*          pReleaseKeys;
+} VkWin32KeyedMutexAcquireReleaseInfoNV;
+
+
+#endif /* VK_USE_PLATFORM_WIN32_KHR */
 
 #ifdef __cplusplus
 }
@@ -6122,8 +6277,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
             int nb = PyList_Size(value);
             int i;
             for (i = 0; i < nb; i++) {
-                uint8_t tmp = (uint8_t) PyLong_AsLong(
-                PyList_GetItem(value, i));
+                uint8_t tmp = (uint8_t) PyLong_AsLong(PyList_GetItem(value, i));
                 ((self->base)->pipelineCacheUUID)[i] = tmp;
             }
             
@@ -6533,7 +6687,25 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return (PyObject *)self;
                 }
                 
+                static int PyVkAllocationCallbacks_setpUserData(PyVkAllocationCallbacks *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pUserData");
+                        return -1;
+                    }
+                (self->base)->pUserData = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkAllocationCallbacks_getpUserData(PyVkAllocationCallbacks *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                     static PyGetSetDef PyVkAllocationCallbacks_getsetters[] = {
+                    
+                        { "pUserData", (getter)PyVkAllocationCallbacks_getpUserData, (setter)PyVkAllocationCallbacks_setpUserData, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkAllocationCallbacksType = {
@@ -13444,8 +13616,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
             int nb = PyList_Size(value);
             int i;
             for (i = 0; i < nb; i++) {
-                uint32_t tmp = (uint32_t) PyLong_AsLong(
-                PyList_GetItem(value, i));
+                uint32_t tmp = (uint32_t) PyLong_AsLong(PyList_GetItem(value, i));
                 ((self->base)->maxComputeWorkGroupCount)[i] = tmp;
             }
             
@@ -13492,8 +13663,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
             int nb = PyList_Size(value);
             int i;
             for (i = 0; i < nb; i++) {
-                uint32_t tmp = (uint32_t) PyLong_AsLong(
-                PyList_GetItem(value, i));
+                uint32_t tmp = (uint32_t) PyLong_AsLong(PyList_GetItem(value, i));
                 ((self->base)->maxComputeWorkGroupSize)[i] = tmp;
             }
             
@@ -13652,8 +13822,7 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
             int nb = PyList_Size(value);
             int i;
             for (i = 0; i < nb; i++) {
-                uint32_t tmp = (uint32_t) PyLong_AsLong(
-                PyList_GetItem(value, i));
+                uint32_t tmp = (uint32_t) PyLong_AsLong(PyList_GetItem(value, i));
                 ((self->base)->maxViewportDimensions)[i] = tmp;
             }
             
@@ -15748,9 +15917,45 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return value;
                 }
                 
+                static int PyVkXlibSurfaceCreateInfoKHR_setdpy(PyVkXlibSurfaceCreateInfoKHR *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with dpy");
+                        return -1;
+                    }
+                (self->base)->dpy = (Display *) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkXlibSurfaceCreateInfoKHR_getdpy(PyVkXlibSurfaceCreateInfoKHR *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkXlibSurfaceCreateInfoKHR_setwindow(PyVkXlibSurfaceCreateInfoKHR *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with window");
+                        return -1;
+                    }
+                (self->base)->window = (XID) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkXlibSurfaceCreateInfoKHR_getwindow(PyVkXlibSurfaceCreateInfoKHR *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->window);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                     static PyGetSetDef PyVkXlibSurfaceCreateInfoKHR_getsetters[] = {
                     
                         { "pNext", (getter)PyVkXlibSurfaceCreateInfoKHR_getpNext, (setter)PyVkXlibSurfaceCreateInfoKHR_setpNext, "", NULL},
+                    
+                        { "dpy", (getter)PyVkXlibSurfaceCreateInfoKHR_getdpy, (setter)PyVkXlibSurfaceCreateInfoKHR_setdpy, "", NULL},
+                    
+                        { "window", (getter)PyVkXlibSurfaceCreateInfoKHR_getwindow, (setter)PyVkXlibSurfaceCreateInfoKHR_setwindow, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkXlibSurfaceCreateInfoKHRType = {
@@ -16132,9 +16337,27 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     return value;
                 }
                 
+                static int PyVkDebugReportCallbackCreateInfoEXT_setpUserData(PyVkDebugReportCallbackCreateInfoEXT *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pUserData");
+                        return -1;
+                    }
+                (self->base)->pUserData = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkDebugReportCallbackCreateInfoEXT_getpUserData(PyVkDebugReportCallbackCreateInfoEXT *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
                     static PyGetSetDef PyVkDebugReportCallbackCreateInfoEXT_getsetters[] = {
                     
                         { "pNext", (getter)PyVkDebugReportCallbackCreateInfoEXT_getpNext, (setter)PyVkDebugReportCallbackCreateInfoEXT_setpNext, "", NULL},
+                    
+                        { "pUserData", (getter)PyVkDebugReportCallbackCreateInfoEXT_getpUserData, (setter)PyVkDebugReportCallbackCreateInfoEXT_setpUserData, "", NULL},
                     {NULL}};
 
                 static PyTypeObject PyVkDebugReportCallbackCreateInfoEXTType = {
@@ -16144,6 +16367,76 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                     "VkDebugReportCallbackCreateInfoEXT object",0,0,0,0,0,0,0,0,
                     PyVkDebugReportCallbackCreateInfoEXT_getsetters,0,0,0,0,0,0,0,PyVkDebugReportCallbackCreateInfoEXT_new,};
+            
+                typedef struct { PyObject_HEAD VkDebugReportLayerFlagsEXT *base; }
+                PyVkDebugReportLayerFlagsEXT;
+                
+                static void PyVkDebugReportLayerFlagsEXT_del(PyVkDebugReportLayerFlagsEXT* self) {
+                    Py_TYPE(self)->tp_free((PyObject*)self); }
+                
+                static PyObject *
+                PyVkDebugReportLayerFlagsEXT_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+                {
+                    PyVkDebugReportLayerFlagsEXT *self;
+                    self = (PyVkDebugReportLayerFlagsEXT *)type->tp_alloc(type, 0);
+                    if (self != NULL) {
+                        self->base = malloc(sizeof(VkDebugReportLayerFlagsEXT));
+                        if (self->base == NULL) {
+                            PyErr_SetString(PyExc_MemoryError,
+                                "Cannot allocate memory for VkDebugReportLayerFlagsEXT");
+                            return NULL;
+                        }
+                    }
+
+                    return (PyObject *)self;
+                }
+                
+                static int PyVkDebugReportLayerFlagsEXT_setpNext(PyVkDebugReportLayerFlagsEXT *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkDebugReportLayerFlagsEXT_getpNext(PyVkDebugReportLayerFlagsEXT *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkDebugReportLayerFlagsEXT_setenabledValidationFlags(PyVkDebugReportLayerFlagsEXT *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with enabledValidationFlags");
+                        return -1;
+                    }
+                (self->base)->enabledValidationFlags = (uint64_t) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkDebugReportLayerFlagsEXT_getenabledValidationFlags(PyVkDebugReportLayerFlagsEXT *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->enabledValidationFlags);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkDebugReportLayerFlagsEXT_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkDebugReportLayerFlagsEXT_getpNext, (setter)PyVkDebugReportLayerFlagsEXT_setpNext, "", NULL},
+                    
+                        { "enabledValidationFlags", (getter)PyVkDebugReportLayerFlagsEXT_getenabledValidationFlags, (setter)PyVkDebugReportLayerFlagsEXT_setenabledValidationFlags, "", NULL},
+                    {NULL}};
+
+                static PyTypeObject PyVkDebugReportLayerFlagsEXTType = {
+                    PyVarObject_HEAD_INIT(NULL, 0)
+                    "vulkan.VkDebugReportLayerFlagsEXT", sizeof(PyVkDebugReportLayerFlagsEXT), 0,
+                    (destructor)PyVkDebugReportLayerFlagsEXT_del,
+                    0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
+                    "VkDebugReportLayerFlagsEXT object",0,0,0,0,0,0,0,0,
+                    PyVkDebugReportLayerFlagsEXT_getsetters,0,0,0,0,0,0,0,PyVkDebugReportLayerFlagsEXT_new,};
             
                 typedef struct { PyObject_HEAD VkPipelineRasterizationStateRasterizationOrderAMD *base; }
                 PyVkPipelineRasterizationStateRasterizationOrderAMD;
@@ -16678,6 +16971,371 @@ static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
                     "VkDedicatedAllocationMemoryAllocateInfoNV object",0,0,0,0,0,0,0,0,
                     PyVkDedicatedAllocationMemoryAllocateInfoNV_getsetters,0,0,0,0,0,0,0,PyVkDedicatedAllocationMemoryAllocateInfoNV_new,};
             
+                typedef struct { PyObject_HEAD VkExternalImageFormatPropertiesNV *base; }
+                PyVkExternalImageFormatPropertiesNV;
+                
+                static void PyVkExternalImageFormatPropertiesNV_del(PyVkExternalImageFormatPropertiesNV* self) {
+                    Py_TYPE(self)->tp_free((PyObject*)self); }
+                
+                static PyObject *
+                PyVkExternalImageFormatPropertiesNV_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+                {
+                    PyVkExternalImageFormatPropertiesNV *self;
+                    self = (PyVkExternalImageFormatPropertiesNV *)type->tp_alloc(type, 0);
+                    if (self != NULL) {
+                        self->base = malloc(sizeof(VkExternalImageFormatPropertiesNV));
+                        if (self->base == NULL) {
+                            PyErr_SetString(PyExc_MemoryError,
+                                "Cannot allocate memory for VkExternalImageFormatPropertiesNV");
+                            return NULL;
+                        }
+                    }
+
+                    return (PyObject *)self;
+                }
+                
+                    static PyGetSetDef PyVkExternalImageFormatPropertiesNV_getsetters[] = {
+                    {NULL}};
+
+                static PyTypeObject PyVkExternalImageFormatPropertiesNVType = {
+                    PyVarObject_HEAD_INIT(NULL, 0)
+                    "vulkan.VkExternalImageFormatPropertiesNV", sizeof(PyVkExternalImageFormatPropertiesNV), 0,
+                    (destructor)PyVkExternalImageFormatPropertiesNV_del,
+                    0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
+                    "VkExternalImageFormatPropertiesNV object",0,0,0,0,0,0,0,0,
+                    PyVkExternalImageFormatPropertiesNV_getsetters,0,0,0,0,0,0,0,PyVkExternalImageFormatPropertiesNV_new,};
+            
+                typedef struct { PyObject_HEAD VkExternalMemoryImageCreateInfoNV *base; }
+                PyVkExternalMemoryImageCreateInfoNV;
+                
+                static void PyVkExternalMemoryImageCreateInfoNV_del(PyVkExternalMemoryImageCreateInfoNV* self) {
+                    Py_TYPE(self)->tp_free((PyObject*)self); }
+                
+                static PyObject *
+                PyVkExternalMemoryImageCreateInfoNV_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+                {
+                    PyVkExternalMemoryImageCreateInfoNV *self;
+                    self = (PyVkExternalMemoryImageCreateInfoNV *)type->tp_alloc(type, 0);
+                    if (self != NULL) {
+                        self->base = malloc(sizeof(VkExternalMemoryImageCreateInfoNV));
+                        if (self->base == NULL) {
+                            PyErr_SetString(PyExc_MemoryError,
+                                "Cannot allocate memory for VkExternalMemoryImageCreateInfoNV");
+                            return NULL;
+                        }
+                    }
+
+                    return (PyObject *)self;
+                }
+                
+                static int PyVkExternalMemoryImageCreateInfoNV_setpNext(PyVkExternalMemoryImageCreateInfoNV *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkExternalMemoryImageCreateInfoNV_getpNext(PyVkExternalMemoryImageCreateInfoNV *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkExternalMemoryImageCreateInfoNV_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkExternalMemoryImageCreateInfoNV_getpNext, (setter)PyVkExternalMemoryImageCreateInfoNV_setpNext, "", NULL},
+                    {NULL}};
+
+                static PyTypeObject PyVkExternalMemoryImageCreateInfoNVType = {
+                    PyVarObject_HEAD_INIT(NULL, 0)
+                    "vulkan.VkExternalMemoryImageCreateInfoNV", sizeof(PyVkExternalMemoryImageCreateInfoNV), 0,
+                    (destructor)PyVkExternalMemoryImageCreateInfoNV_del,
+                    0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
+                    "VkExternalMemoryImageCreateInfoNV object",0,0,0,0,0,0,0,0,
+                    PyVkExternalMemoryImageCreateInfoNV_getsetters,0,0,0,0,0,0,0,PyVkExternalMemoryImageCreateInfoNV_new,};
+            
+                typedef struct { PyObject_HEAD VkExportMemoryAllocateInfoNV *base; }
+                PyVkExportMemoryAllocateInfoNV;
+                
+                static void PyVkExportMemoryAllocateInfoNV_del(PyVkExportMemoryAllocateInfoNV* self) {
+                    Py_TYPE(self)->tp_free((PyObject*)self); }
+                
+                static PyObject *
+                PyVkExportMemoryAllocateInfoNV_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+                {
+                    PyVkExportMemoryAllocateInfoNV *self;
+                    self = (PyVkExportMemoryAllocateInfoNV *)type->tp_alloc(type, 0);
+                    if (self != NULL) {
+                        self->base = malloc(sizeof(VkExportMemoryAllocateInfoNV));
+                        if (self->base == NULL) {
+                            PyErr_SetString(PyExc_MemoryError,
+                                "Cannot allocate memory for VkExportMemoryAllocateInfoNV");
+                            return NULL;
+                        }
+                    }
+
+                    return (PyObject *)self;
+                }
+                
+                static int PyVkExportMemoryAllocateInfoNV_setpNext(PyVkExportMemoryAllocateInfoNV *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkExportMemoryAllocateInfoNV_getpNext(PyVkExportMemoryAllocateInfoNV *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkExportMemoryAllocateInfoNV_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkExportMemoryAllocateInfoNV_getpNext, (setter)PyVkExportMemoryAllocateInfoNV_setpNext, "", NULL},
+                    {NULL}};
+
+                static PyTypeObject PyVkExportMemoryAllocateInfoNVType = {
+                    PyVarObject_HEAD_INIT(NULL, 0)
+                    "vulkan.VkExportMemoryAllocateInfoNV", sizeof(PyVkExportMemoryAllocateInfoNV), 0,
+                    (destructor)PyVkExportMemoryAllocateInfoNV_del,
+                    0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
+                    "VkExportMemoryAllocateInfoNV object",0,0,0,0,0,0,0,0,
+                    PyVkExportMemoryAllocateInfoNV_getsetters,0,0,0,0,0,0,0,PyVkExportMemoryAllocateInfoNV_new,};
+            
+#ifdef VK_USE_PLATFORM_WIN32_KHR
+
+                typedef struct { PyObject_HEAD VkImportMemoryWin32HandleInfoNV *base; }
+                PyVkImportMemoryWin32HandleInfoNV;
+                
+                static void PyVkImportMemoryWin32HandleInfoNV_del(PyVkImportMemoryWin32HandleInfoNV* self) {
+                    Py_TYPE(self)->tp_free((PyObject*)self); }
+                
+                static PyObject *
+                PyVkImportMemoryWin32HandleInfoNV_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+                {
+                    PyVkImportMemoryWin32HandleInfoNV *self;
+                    self = (PyVkImportMemoryWin32HandleInfoNV *)type->tp_alloc(type, 0);
+                    if (self != NULL) {
+                        self->base = malloc(sizeof(VkImportMemoryWin32HandleInfoNV));
+                        if (self->base == NULL) {
+                            PyErr_SetString(PyExc_MemoryError,
+                                "Cannot allocate memory for VkImportMemoryWin32HandleInfoNV");
+                            return NULL;
+                        }
+                    }
+
+                    return (PyObject *)self;
+                }
+                
+                static int PyVkImportMemoryWin32HandleInfoNV_setpNext(PyVkImportMemoryWin32HandleInfoNV *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkImportMemoryWin32HandleInfoNV_getpNext(PyVkImportMemoryWin32HandleInfoNV *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkImportMemoryWin32HandleInfoNV_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkImportMemoryWin32HandleInfoNV_getpNext, (setter)PyVkImportMemoryWin32HandleInfoNV_setpNext, "", NULL},
+                    {NULL}};
+
+                static PyTypeObject PyVkImportMemoryWin32HandleInfoNVType = {
+                    PyVarObject_HEAD_INIT(NULL, 0)
+                    "vulkan.VkImportMemoryWin32HandleInfoNV", sizeof(PyVkImportMemoryWin32HandleInfoNV), 0,
+                    (destructor)PyVkImportMemoryWin32HandleInfoNV_del,
+                    0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
+                    "VkImportMemoryWin32HandleInfoNV object",0,0,0,0,0,0,0,0,
+                    PyVkImportMemoryWin32HandleInfoNV_getsetters,0,0,0,0,0,0,0,PyVkImportMemoryWin32HandleInfoNV_new,};
+            
+#endif
+
+#ifdef VK_USE_PLATFORM_WIN32_KHR
+
+                typedef struct { PyObject_HEAD VkExportMemoryWin32HandleInfoNV *base; }
+                PyVkExportMemoryWin32HandleInfoNV;
+                
+                static void PyVkExportMemoryWin32HandleInfoNV_del(PyVkExportMemoryWin32HandleInfoNV* self) {
+                    Py_TYPE(self)->tp_free((PyObject*)self); }
+                
+                static PyObject *
+                PyVkExportMemoryWin32HandleInfoNV_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+                {
+                    PyVkExportMemoryWin32HandleInfoNV *self;
+                    self = (PyVkExportMemoryWin32HandleInfoNV *)type->tp_alloc(type, 0);
+                    if (self != NULL) {
+                        self->base = malloc(sizeof(VkExportMemoryWin32HandleInfoNV));
+                        if (self->base == NULL) {
+                            PyErr_SetString(PyExc_MemoryError,
+                                "Cannot allocate memory for VkExportMemoryWin32HandleInfoNV");
+                            return NULL;
+                        }
+                    }
+
+                    return (PyObject *)self;
+                }
+                
+                static int PyVkExportMemoryWin32HandleInfoNV_setpNext(PyVkExportMemoryWin32HandleInfoNV *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkExportMemoryWin32HandleInfoNV_getpNext(PyVkExportMemoryWin32HandleInfoNV *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkExportMemoryWin32HandleInfoNV_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkExportMemoryWin32HandleInfoNV_getpNext, (setter)PyVkExportMemoryWin32HandleInfoNV_setpNext, "", NULL},
+                    {NULL}};
+
+                static PyTypeObject PyVkExportMemoryWin32HandleInfoNVType = {
+                    PyVarObject_HEAD_INIT(NULL, 0)
+                    "vulkan.VkExportMemoryWin32HandleInfoNV", sizeof(PyVkExportMemoryWin32HandleInfoNV), 0,
+                    (destructor)PyVkExportMemoryWin32HandleInfoNV_del,
+                    0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
+                    "VkExportMemoryWin32HandleInfoNV object",0,0,0,0,0,0,0,0,
+                    PyVkExportMemoryWin32HandleInfoNV_getsetters,0,0,0,0,0,0,0,PyVkExportMemoryWin32HandleInfoNV_new,};
+            
+#endif
+
+#ifdef VK_USE_PLATFORM_WIN32_KHR
+
+                typedef struct { PyObject_HEAD VkWin32KeyedMutexAcquireReleaseInfoNV *base; }
+                PyVkWin32KeyedMutexAcquireReleaseInfoNV;
+                
+                static void PyVkWin32KeyedMutexAcquireReleaseInfoNV_del(PyVkWin32KeyedMutexAcquireReleaseInfoNV* self) {
+                    Py_TYPE(self)->tp_free((PyObject*)self); }
+                
+                static PyObject *
+                PyVkWin32KeyedMutexAcquireReleaseInfoNV_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+                {
+                    PyVkWin32KeyedMutexAcquireReleaseInfoNV *self;
+                    self = (PyVkWin32KeyedMutexAcquireReleaseInfoNV *)type->tp_alloc(type, 0);
+                    if (self != NULL) {
+                        self->base = malloc(sizeof(VkWin32KeyedMutexAcquireReleaseInfoNV));
+                        if (self->base == NULL) {
+                            PyErr_SetString(PyExc_MemoryError,
+                                "Cannot allocate memory for VkWin32KeyedMutexAcquireReleaseInfoNV");
+                            return NULL;
+                        }
+                    }
+
+                    return (PyObject *)self;
+                }
+                
+                static int PyVkWin32KeyedMutexAcquireReleaseInfoNV_setpNext(PyVkWin32KeyedMutexAcquireReleaseInfoNV *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pNext");
+                        return -1;
+                    }
+                (self->base)->pNext = NULL;
+                    return 0;
+                }
+                
+                static PyObject * PyVkWin32KeyedMutexAcquireReleaseInfoNV_getpNext(PyVkWin32KeyedMutexAcquireReleaseInfoNV *self, void *closure){
+                Py_INCREF(Py_None);PyObject* value = Py_None;
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkWin32KeyedMutexAcquireReleaseInfoNV_setacquireCount(PyVkWin32KeyedMutexAcquireReleaseInfoNV *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with acquireCount");
+                        return -1;
+                    }
+                (self->base)->acquireCount = (uint32_t) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkWin32KeyedMutexAcquireReleaseInfoNV_getacquireCount(PyVkWin32KeyedMutexAcquireReleaseInfoNV *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->acquireCount);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkWin32KeyedMutexAcquireReleaseInfoNV_setpAcquireTimeoutMilliseconds(PyVkWin32KeyedMutexAcquireReleaseInfoNV *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with pAcquireTimeoutMilliseconds");
+                        return -1;
+                    }
+                
+            uint32_t tmp = (uint32_t) PyLong_AsLong(value);
+            uint32_t *t = malloc(sizeof(uint32_t));
+            memcpy(t, &tmp, sizeof(uint32_t));
+            (self->base)->pAcquireTimeoutMilliseconds = t;
+            
+                    return 0;
+                }
+                
+                static PyObject * PyVkWin32KeyedMutexAcquireReleaseInfoNV_getpAcquireTimeoutMilliseconds(PyVkWin32KeyedMutexAcquireReleaseInfoNV *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (*((self->base)->pAcquireTimeoutMilliseconds)));
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                static int PyVkWin32KeyedMutexAcquireReleaseInfoNV_setreleaseCount(PyVkWin32KeyedMutexAcquireReleaseInfoNV *self, PyObject *value,
+                                        void *closure) {
+                    if (value == NULL) {
+                        PyErr_SetString(PyExc_TypeError, "Error with releaseCount");
+                        return -1;
+                    }
+                (self->base)->releaseCount = (uint32_t) PyLong_AsLong(value);
+                    return 0;
+                }
+                
+                static PyObject * PyVkWin32KeyedMutexAcquireReleaseInfoNV_getreleaseCount(PyVkWin32KeyedMutexAcquireReleaseInfoNV *self, void *closure){
+                PyObject* value = PyLong_FromLong((long) (self->base)->releaseCount);
+                    Py_INCREF(value);
+                    return value;
+                }
+                
+                    static PyGetSetDef PyVkWin32KeyedMutexAcquireReleaseInfoNV_getsetters[] = {
+                    
+                        { "pNext", (getter)PyVkWin32KeyedMutexAcquireReleaseInfoNV_getpNext, (setter)PyVkWin32KeyedMutexAcquireReleaseInfoNV_setpNext, "", NULL},
+                    
+                        { "acquireCount", (getter)PyVkWin32KeyedMutexAcquireReleaseInfoNV_getacquireCount, (setter)PyVkWin32KeyedMutexAcquireReleaseInfoNV_setacquireCount, "", NULL},
+                    
+                        { "pAcquireTimeoutMilliseconds", (getter)PyVkWin32KeyedMutexAcquireReleaseInfoNV_getpAcquireTimeoutMilliseconds, (setter)PyVkWin32KeyedMutexAcquireReleaseInfoNV_setpAcquireTimeoutMilliseconds, "", NULL},
+                    
+                        { "releaseCount", (getter)PyVkWin32KeyedMutexAcquireReleaseInfoNV_getreleaseCount, (setter)PyVkWin32KeyedMutexAcquireReleaseInfoNV_setreleaseCount, "", NULL},
+                    {NULL}};
+
+                static PyTypeObject PyVkWin32KeyedMutexAcquireReleaseInfoNVType = {
+                    PyVarObject_HEAD_INIT(NULL, 0)
+                    "vulkan.VkWin32KeyedMutexAcquireReleaseInfoNV", sizeof(PyVkWin32KeyedMutexAcquireReleaseInfoNV), 0,
+                    (destructor)PyVkWin32KeyedMutexAcquireReleaseInfoNV_del,
+                    0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
+                    "VkWin32KeyedMutexAcquireReleaseInfoNV object",0,0,0,0,0,0,0,0,
+                    PyVkWin32KeyedMutexAcquireReleaseInfoNV_getsetters,0,0,0,0,0,0,0,PyVkWin32KeyedMutexAcquireReleaseInfoNV_new,};
+            
+#endif
+
 static PyMethodDef VulkanMethods[] = {
 {"load_sdk", load_sdk, METH_NOARGS, "Load SDK"},
 
@@ -17333,6 +17991,13 @@ PyModule_AddIntConstant(module, "VK_DEBUG_REPORT_ERROR_NONE_EXT", 0);
 PyModule_AddIntConstant(module, "VK_DEBUG_REPORT_ERROR_CALLBACK_REF_EXT", 1);
 PyModule_AddIntConstant(module, "VK_RASTERIZATION_ORDER_STRICT_AMD", 0);
 PyModule_AddIntConstant(module, "VK_RASTERIZATION_ORDER_RELAXED_AMD", 1);
+PyModule_AddIntConstant(module, "VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV", 0x00000001);
+PyModule_AddIntConstant(module, "VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV", 0x00000002);
+PyModule_AddIntConstant(module, "VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV", 0x00000004);
+PyModule_AddIntConstant(module, "VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV", 0x00000008);
+PyModule_AddIntConstant(module, "VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV", 0x00000001);
+PyModule_AddIntConstant(module, "VK_EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV", 0x00000002);
+PyModule_AddIntConstant(module, "VK_EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV", 0x00000004);
 
                     if (PyType_Ready(&PyVkOffset2DType) < 0)
                         return NULL;
@@ -17987,6 +18652,11 @@ PyModule_AddIntConstant(module, "VK_RASTERIZATION_ORDER_RELAXED_AMD", 1);
                     Py_INCREF(&PyVkDebugReportCallbackCreateInfoEXTType);
                     PyModule_AddObject(module, "VkDebugReportCallbackCreateInfoEXT", (PyObject *)&PyVkDebugReportCallbackCreateInfoEXTType);
                 
+                    if (PyType_Ready(&PyVkDebugReportLayerFlagsEXTType) < 0)
+                        return NULL;
+                    Py_INCREF(&PyVkDebugReportLayerFlagsEXTType);
+                    PyModule_AddObject(module, "VkDebugReportLayerFlagsEXT", (PyObject *)&PyVkDebugReportLayerFlagsEXTType);
+                
                     if (PyType_Ready(&PyVkPipelineRasterizationStateRasterizationOrderAMDType) < 0)
                         return NULL;
                     Py_INCREF(&PyVkPipelineRasterizationStateRasterizationOrderAMDType);
@@ -18021,5 +18691,47 @@ PyModule_AddIntConstant(module, "VK_RASTERIZATION_ORDER_RELAXED_AMD", 1);
                         return NULL;
                     Py_INCREF(&PyVkDedicatedAllocationMemoryAllocateInfoNVType);
                     PyModule_AddObject(module, "VkDedicatedAllocationMemoryAllocateInfoNV", (PyObject *)&PyVkDedicatedAllocationMemoryAllocateInfoNVType);
-                return module;
+                
+                    if (PyType_Ready(&PyVkExternalImageFormatPropertiesNVType) < 0)
+                        return NULL;
+                    Py_INCREF(&PyVkExternalImageFormatPropertiesNVType);
+                    PyModule_AddObject(module, "VkExternalImageFormatPropertiesNV", (PyObject *)&PyVkExternalImageFormatPropertiesNVType);
+                
+                    if (PyType_Ready(&PyVkExternalMemoryImageCreateInfoNVType) < 0)
+                        return NULL;
+                    Py_INCREF(&PyVkExternalMemoryImageCreateInfoNVType);
+                    PyModule_AddObject(module, "VkExternalMemoryImageCreateInfoNV", (PyObject *)&PyVkExternalMemoryImageCreateInfoNVType);
+                
+                    if (PyType_Ready(&PyVkExportMemoryAllocateInfoNVType) < 0)
+                        return NULL;
+                    Py_INCREF(&PyVkExportMemoryAllocateInfoNVType);
+                    PyModule_AddObject(module, "VkExportMemoryAllocateInfoNV", (PyObject *)&PyVkExportMemoryAllocateInfoNVType);
+                
+#ifdef VK_USE_PLATFORM_WIN32_KHR
+
+                    if (PyType_Ready(&PyVkImportMemoryWin32HandleInfoNVType) < 0)
+                        return NULL;
+                    Py_INCREF(&PyVkImportMemoryWin32HandleInfoNVType);
+                    PyModule_AddObject(module, "VkImportMemoryWin32HandleInfoNV", (PyObject *)&PyVkImportMemoryWin32HandleInfoNVType);
+                
+#endif
+
+#ifdef VK_USE_PLATFORM_WIN32_KHR
+
+                    if (PyType_Ready(&PyVkExportMemoryWin32HandleInfoNVType) < 0)
+                        return NULL;
+                    Py_INCREF(&PyVkExportMemoryWin32HandleInfoNVType);
+                    PyModule_AddObject(module, "VkExportMemoryWin32HandleInfoNV", (PyObject *)&PyVkExportMemoryWin32HandleInfoNVType);
+                
+#endif
+
+#ifdef VK_USE_PLATFORM_WIN32_KHR
+
+                    if (PyType_Ready(&PyVkWin32KeyedMutexAcquireReleaseInfoNVType) < 0)
+                        return NULL;
+                    Py_INCREF(&PyVkWin32KeyedMutexAcquireReleaseInfoNVType);
+                    PyModule_AddObject(module, "VkWin32KeyedMutexAcquireReleaseInfoNV", (PyObject *)&PyVkWin32KeyedMutexAcquireReleaseInfoNVType);
+                
+#endif
+return module;
 }
