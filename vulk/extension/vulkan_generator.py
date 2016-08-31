@@ -57,7 +57,7 @@ vulkan_h = None
 vk_xml = None
 vk_extension_functions = None
 vk_all_functions = None
-sro = None
+return_structs = None
 create_structs = None
 structs = None
 handles = None
@@ -70,7 +70,7 @@ def main():
     global vk_xml
     global vk_extension_functions
     global vk_all_functions
-    global sro
+    global return_structs
     global create_structs
     global out
     global structs
@@ -82,7 +82,7 @@ def main():
     vk_extension_functions = get_vk_extension_functions()
     vk_all_functions = get_all_vk_functions()
     structs = get_structs()
-    sro = get_structs_returned_only()
+    return_structs = get_structs_returned_only()
     create_structs = get_create_structs()
     handles = get_handles()
 
@@ -190,6 +190,7 @@ def add_pyhandles():
             static PyObject* PyHandle_{0} (PyObject *self, PyObject *args) {{
                   {0}* handle = malloc(sizeof({0}));
                   PyObject* value = PyCapsule_New(handle, "{0}", NULL);
+                  if (value == NULL) return NULL;
                   return value;
             }}
             """.format(handle))
@@ -463,21 +464,41 @@ def add_pyobject():
         out.write(definition.format(s['@name']))
 
     def add_init(s):
-        # init only for create stuct
-        if 'Create' not in s['@name']:
-            return
-
         definition = '''
             static int
             Py{0}_init(Py{0} *self, PyObject *args, PyObject *kwds) {{
             '''.format(s['@name'])
 
-        for member in s['member']:
-            pass
+        if s['@name'] not in return_structs:
+            definition += add_init_vars(s['member'])
+            definition += add_init_kwlist(s['member'])
+            definition += add_init_parse(s['member'])
 
         definition += 'return 0; }'
 
-        out.write(definition.format(s['@name']))
+        out.write(definition)
+
+    def add_init_vars(members):
+        result = []
+        for member in members:
+            result.append('PyObject* %s = NULL;' % member['name'])
+        return '\n'.join(result)
+
+    def add_init_kwlist(members):
+        result = 'static char *kwlist[] = {'
+        for member in members:
+            result += '"{}",'.format(member['name'])
+        result += 'NULL};'
+        return result
+
+    def add_init_parse(members):
+        result = 'PyArg_ParseTupleAndKeywords(args, kwds, "'
+        result += 'O' * len(members)
+        result += '", kwlist'
+        for member in members:
+            result += ', &{}'.format(member['name'])
+        result += ')'
+        return 'if(!%s) return -1;' % result
 
     def add_setters(s):
         def add_setter(member):
@@ -559,7 +580,7 @@ def add_pyobject():
     for struct in structs:
         with check_struct_extension(struct):
             for fun in (add_struct, add_del, add_new, add_setters,
-                        add_type):
+                        add_init, add_type):
                 fun(struct)
 
 

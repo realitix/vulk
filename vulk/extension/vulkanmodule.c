@@ -4278,143 +4278,143 @@ typedef struct VkWin32KeyedMutexAcquireReleaseInfoNV {
 #endif
 // END VULKAN H
 
-static PFN_vkDestroyCommandPool vkDestroyCommandPool;
-static PFN_vkCmdCopyImage vkCmdCopyImage;
-static PFN_vkResetFences vkResetFences;
 static PFN_vkCmdResetEvent vkCmdResetEvent;
-static PFN_vkWaitForFences vkWaitForFences;
-static PFN_vkCmdResetQueryPool vkCmdResetQueryPool;
-static PFN_vkSetEvent vkSetEvent;
-static PFN_vkCmdBindIndexBuffer vkCmdBindIndexBuffer;
-static PFN_vkCreateCommandPool vkCreateCommandPool;
-static PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties;
-static PFN_vkCreateDescriptorSetLayout vkCreateDescriptorSetLayout;
-static PFN_vkFreeDescriptorSets vkFreeDescriptorSets;
-static PFN_vkCmdSetEvent vkCmdSetEvent;
-static PFN_vkFlushMappedMemoryRanges vkFlushMappedMemoryRanges;
-static PFN_vkCmdSetViewport vkCmdSetViewport;
-static PFN_vkCreatePipelineLayout vkCreatePipelineLayout;
-static PFN_vkCreateComputePipelines vkCreateComputePipelines;
-static PFN_vkResetEvent vkResetEvent;
-static PFN_vkDestroyPipelineCache vkDestroyPipelineCache;
 static PFN_vkGetPhysicalDeviceFormatProperties vkGetPhysicalDeviceFormatProperties;
-static PFN_vkGetDeviceProcAddr vkGetDeviceProcAddr;
-static PFN_vkDestroyFence vkDestroyFence;
-static PFN_vkDestroyImage vkDestroyImage;
-static PFN_vkCmdSetDepthBounds vkCmdSetDepthBounds;
-static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
-static PFN_vkResetCommandBuffer vkResetCommandBuffer;
-static PFN_vkCreateBufferView vkCreateBufferView;
-static PFN_vkCmdSetScissor vkCmdSetScissor;
-static PFN_vkCmdDrawIndirect vkCmdDrawIndirect;
-static PFN_vkUnmapMemory vkUnmapMemory;
-static PFN_vkGetPhysicalDeviceSparseImageFormatProperties vkGetPhysicalDeviceSparseImageFormatProperties;
-static PFN_vkCmdSetStencilCompareMask vkCmdSetStencilCompareMask;
-static PFN_vkEnumerateDeviceLayerProperties vkEnumerateDeviceLayerProperties;
-static PFN_vkCmdSetStencilReference vkCmdSetStencilReference;
-static PFN_vkDestroyEvent vkDestroyEvent;
-static PFN_vkCmdFillBuffer vkCmdFillBuffer;
-static PFN_vkCmdPipelineBarrier vkCmdPipelineBarrier;
-static PFN_vkCmdDraw vkCmdDraw;
+static PFN_vkCmdSetViewport vkCmdSetViewport;
+static PFN_vkGetDeviceQueue vkGetDeviceQueue;
+static PFN_vkDestroyFramebuffer vkDestroyFramebuffer;
+static PFN_vkCreateQueryPool vkCreateQueryPool;
+static PFN_vkCmdEndQuery vkCmdEndQuery;
 static PFN_vkCmdBeginRenderPass vkCmdBeginRenderPass;
-static PFN_vkCreatePipelineCache vkCreatePipelineCache;
-static PFN_vkDestroyDevice vkDestroyDevice;
-static PFN_vkResetDescriptorPool vkResetDescriptorPool;
-static PFN_vkGetDeviceMemoryCommitment vkGetDeviceMemoryCommitment;
-static PFN_vkAllocateCommandBuffers vkAllocateCommandBuffers;
-static PFN_vkCmdNextSubpass vkCmdNextSubpass;
-static PFN_vkCmdUpdateBuffer vkCmdUpdateBuffer;
+static PFN_vkDestroyShaderModule vkDestroyShaderModule;
+static PFN_vkCmdSetDepthBounds vkCmdSetDepthBounds;
+static PFN_vkCmdSetStencilCompareMask vkCmdSetStencilCompareMask;
 static PFN_vkGetFenceStatus vkGetFenceStatus;
 static PFN_vkAllocateDescriptorSets vkAllocateDescriptorSets;
+static PFN_vkBindBufferMemory vkBindBufferMemory;
+static PFN_vkCmdUpdateBuffer vkCmdUpdateBuffer;
+static PFN_vkCmdCopyQueryPoolResults vkCmdCopyQueryPoolResults;
+static PFN_vkGetPipelineCacheData vkGetPipelineCacheData;
+static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
+static PFN_vkMergePipelineCaches vkMergePipelineCaches;
+static PFN_vkCmdWaitEvents vkCmdWaitEvents;
+static PFN_vkQueueBindSparse vkQueueBindSparse;
+static PFN_vkCreateDescriptorSetLayout vkCreateDescriptorSetLayout;
+static PFN_vkDestroyCommandPool vkDestroyCommandPool;
+static PFN_vkDeviceWaitIdle vkDeviceWaitIdle;
+static PFN_vkCmdPushConstants vkCmdPushConstants;
+static PFN_vkCreateBuffer vkCreateBuffer;
+static PFN_vkMapMemory vkMapMemory;
+static PFN_vkDestroyDescriptorPool vkDestroyDescriptorPool;
+static PFN_vkCmdSetLineWidth vkCmdSetLineWidth;
+static PFN_vkBeginCommandBuffer vkBeginCommandBuffer;
+static PFN_vkCreateGraphicsPipelines vkCreateGraphicsPipelines;
 static PFN_vkFreeCommandBuffers vkFreeCommandBuffers;
 static PFN_vkCmdBindVertexBuffers vkCmdBindVertexBuffers;
-static PFN_vkResetCommandPool vkResetCommandPool;
-static PFN_vkCreateDevice vkCreateDevice;
-static PFN_vkCmdPushConstants vkCmdPushConstants;
-static PFN_vkGetBufferMemoryRequirements vkGetBufferMemoryRequirements;
-static PFN_vkCmdEndQuery vkCmdEndQuery;
-static PFN_vkCreateInstance vkCreateInstance;
-static PFN_vkCmdClearAttachments vkCmdClearAttachments;
+static PFN_vkCreateShaderModule vkCreateShaderModule;
+static PFN_vkDestroyRenderPass vkDestroyRenderPass;
+static PFN_vkQueueSubmit vkQueueSubmit;
+static PFN_vkDestroyFence vkDestroyFence;
+static PFN_vkCreateFramebuffer vkCreateFramebuffer;
 static PFN_vkDestroyPipeline vkDestroyPipeline;
-static PFN_vkDestroyDescriptorSetLayout vkDestroyDescriptorSetLayout;
-static PFN_vkDestroyDescriptorPool vkDestroyDescriptorPool;
-static PFN_vkEndCommandBuffer vkEndCommandBuffer;
-static PFN_vkCmdDrawIndexed vkCmdDrawIndexed;
-static PFN_vkGetDeviceQueue vkGetDeviceQueue;
-static PFN_vkAllocateMemory vkAllocateMemory;
-static PFN_vkCmdBeginQuery vkCmdBeginQuery;
-static PFN_vkMergePipelineCaches vkMergePipelineCaches;
-static PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements;
-static PFN_vkCreateBuffer vkCreateBuffer;
-static PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices;
-static PFN_vkCmdDispatchIndirect vkCmdDispatchIndirect;
-static PFN_vkCmdCopyBuffer vkCmdCopyBuffer;
-static PFN_vkDestroyBufferView vkDestroyBufferView;
+static PFN_vkCmdBlitImage vkCmdBlitImage;
+static PFN_vkCreateDevice vkCreateDevice;
 static PFN_vkCmdBindDescriptorSets vkCmdBindDescriptorSets;
-static PFN_vkCreateImageView vkCreateImageView;
-static PFN_vkCmdSetDepthBias vkCmdSetDepthBias;
-static PFN_vkCmdCopyImageToBuffer vkCmdCopyImageToBuffer;
-static PFN_vkCreateImage vkCreateImage;
+static PFN_vkResetFences vkResetFences;
+static PFN_vkCreateEvent vkCreateEvent;
+static PFN_vkCmdResetQueryPool vkCmdResetQueryPool;
+static PFN_vkCmdPipelineBarrier vkCmdPipelineBarrier;
+static PFN_vkAllocateCommandBuffers vkAllocateCommandBuffers;
+static PFN_vkDestroySampler vkDestroySampler;
+static PFN_vkCmdCopyBuffer vkCmdCopyBuffer;
+static PFN_vkCreateDescriptorPool vkCreateDescriptorPool;
+static PFN_vkCreateCommandPool vkCreateCommandPool;
+static PFN_vkGetPhysicalDeviceSparseImageFormatProperties vkGetPhysicalDeviceSparseImageFormatProperties;
 static PFN_vkGetRenderAreaGranularity vkGetRenderAreaGranularity;
+static PFN_vkEnumerateInstanceLayerProperties vkEnumerateInstanceLayerProperties;
+static PFN_vkBindImageMemory vkBindImageMemory;
+static PFN_vkEndCommandBuffer vkEndCommandBuffer;
+static PFN_vkCmdDispatchIndirect vkCmdDispatchIndirect;
+static PFN_vkGetPhysicalDeviceQueueFamilyProperties vkGetPhysicalDeviceQueueFamilyProperties;
+static PFN_vkCreateSampler vkCreateSampler;
+static PFN_vkDestroyImageView vkDestroyImageView;
 static PFN_vkCreateSemaphore vkCreateSemaphore;
-static PFN_vkDestroyInstance vkDestroyInstance;
-static PFN_vkCreateQueryPool vkCreateQueryPool;
+static PFN_vkGetPhysicalDeviceProperties vkGetPhysicalDeviceProperties;
+static PFN_vkCmdBindIndexBuffer vkCmdBindIndexBuffer;
+static PFN_vkDestroyEvent vkDestroyEvent;
+static PFN_vkCreateRenderPass vkCreateRenderPass;
+static PFN_vkCmdSetDepthBias vkCmdSetDepthBias;
+static PFN_vkResetCommandBuffer vkResetCommandBuffer;
 static PFN_vkFreeMemory vkFreeMemory;
-static PFN_vkGetQueryPoolResults vkGetQueryPoolResults;
+static PFN_vkDestroyDescriptorSetLayout vkDestroyDescriptorSetLayout;
+static PFN_vkCmdDrawIndexedIndirect vkCmdDrawIndexedIndirect;
+static PFN_vkFreeDescriptorSets vkFreeDescriptorSets;
+static PFN_vkDestroyImage vkDestroyImage;
+static PFN_vkCmdSetStencilReference vkCmdSetStencilReference;
+static PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices;
+static PFN_vkUnmapMemory vkUnmapMemory;
+static PFN_vkCreateComputePipelines vkCreateComputePipelines;
+static PFN_vkDestroyBuffer vkDestroyBuffer;
+static PFN_vkDestroySemaphore vkDestroySemaphore;
+static PFN_vkCmdEndRenderPass vkCmdEndRenderPass;
+static PFN_vkCmdWriteTimestamp vkCmdWriteTimestamp;
+static PFN_vkResetCommandPool vkResetCommandPool;
+static PFN_vkCreateInstance vkCreateInstance;
+static PFN_vkCmdBeginQuery vkCmdBeginQuery;
+static PFN_vkGetImageSparseMemoryRequirements vkGetImageSparseMemoryRequirements;
+static PFN_vkGetBufferMemoryRequirements vkGetBufferMemoryRequirements;
+static PFN_vkCmdNextSubpass vkCmdNextSubpass;
+static PFN_vkCreatePipelineCache vkCreatePipelineCache;
+static PFN_vkCmdClearColorImage vkCmdClearColorImage;
+static PFN_vkCmdSetEvent vkCmdSetEvent;
+static PFN_vkGetDeviceProcAddr vkGetDeviceProcAddr;
+static PFN_vkDestroyBufferView vkDestroyBufferView;
+static PFN_vkCmdSetScissor vkCmdSetScissor;
+static PFN_vkCreateFence vkCreateFence;
+static PFN_vkUpdateDescriptorSets vkUpdateDescriptorSets;
+static PFN_vkDestroyPipelineLayout vkDestroyPipelineLayout;
+static PFN_vkGetPhysicalDeviceFeatures vkGetPhysicalDeviceFeatures;
+static PFN_vkCmdClearAttachments vkCmdClearAttachments;
+static PFN_vkEnumerateDeviceExtensionProperties vkEnumerateDeviceExtensionProperties;
+static PFN_vkSetEvent vkSetEvent;
+static PFN_vkDestroyQueryPool vkDestroyQueryPool;
+static PFN_vkAllocateMemory vkAllocateMemory;
+static PFN_vkGetEventStatus vkGetEventStatus;
+static PFN_vkCmdDraw vkCmdDraw;
+static PFN_vkCmdDrawIndirect vkCmdDrawIndirect;
+static PFN_vkCmdSetStencilWriteMask vkCmdSetStencilWriteMask;
+static PFN_vkFlushMappedMemoryRanges vkFlushMappedMemoryRanges;
+static PFN_vkCmdCopyImageToBuffer vkCmdCopyImageToBuffer;
+static PFN_vkCmdDispatch vkCmdDispatch;
+static PFN_vkResetEvent vkResetEvent;
+static PFN_vkCmdBindPipeline vkCmdBindPipeline;
+static PFN_vkQueueWaitIdle vkQueueWaitIdle;
+static PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements;
+static PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties;
+static PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
+static PFN_vkCmdSetBlendConstants vkCmdSetBlendConstants;
+static PFN_vkDestroyPipelineCache vkDestroyPipelineCache;
+static PFN_vkCmdClearDepthStencilImage vkCmdClearDepthStencilImage;
+static PFN_vkCreatePipelineLayout vkCreatePipelineLayout;
+static PFN_vkGetPhysicalDeviceMemoryProperties vkGetPhysicalDeviceMemoryProperties;
 static PFN_vkCmdCopyBufferToImage vkCmdCopyBufferToImage;
 static PFN_vkGetImageSubresourceLayout vkGetImageSubresourceLayout;
-static PFN_vkCmdDispatch vkCmdDispatch;
-static PFN_vkCmdClearDepthStencilImage vkCmdClearDepthStencilImage;
-static PFN_vkCreateEvent vkCreateEvent;
-static PFN_vkDestroyBuffer vkDestroyBuffer;
-static PFN_vkDestroyFramebuffer vkDestroyFramebuffer;
-static PFN_vkDestroySemaphore vkDestroySemaphore;
-static PFN_vkCreateRenderPass vkCreateRenderPass;
-static PFN_vkCmdWaitEvents vkCmdWaitEvents;
-static PFN_vkEnumerateDeviceExtensionProperties vkEnumerateDeviceExtensionProperties;
-static PFN_vkGetPhysicalDeviceMemoryProperties vkGetPhysicalDeviceMemoryProperties;
-static PFN_vkCreateShaderModule vkCreateShaderModule;
-static PFN_vkBeginCommandBuffer vkBeginCommandBuffer;
-static PFN_vkCreateFence vkCreateFence;
-static PFN_vkDestroyRenderPass vkDestroyRenderPass;
-static PFN_vkCreateFramebuffer vkCreateFramebuffer;
-static PFN_vkCmdSetStencilWriteMask vkCmdSetStencilWriteMask;
-static PFN_vkDestroyImageView vkDestroyImageView;
-static PFN_vkUpdateDescriptorSets vkUpdateDescriptorSets;
-static PFN_vkQueueBindSparse vkQueueBindSparse;
-static PFN_vkQueueSubmit vkQueueSubmit;
-static PFN_vkCreateGraphicsPipelines vkCreateGraphicsPipelines;
-static PFN_vkDeviceWaitIdle vkDeviceWaitIdle;
-static PFN_vkCreateDescriptorPool vkCreateDescriptorPool;
-static PFN_vkCmdSetBlendConstants vkCmdSetBlendConstants;
-static PFN_vkGetPhysicalDeviceFeatures vkGetPhysicalDeviceFeatures;
-static PFN_vkGetPhysicalDeviceQueueFamilyProperties vkGetPhysicalDeviceQueueFamilyProperties;
-static PFN_vkCmdEndRenderPass vkCmdEndRenderPass;
-static PFN_vkCmdDrawIndexedIndirect vkCmdDrawIndexedIndirect;
 static PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
-static PFN_vkGetPipelineCacheData vkGetPipelineCacheData;
+static PFN_vkDestroyDevice vkDestroyDevice;
+static PFN_vkResetDescriptorPool vkResetDescriptorPool;
+static PFN_vkWaitForFences vkWaitForFences;
 static PFN_vkCmdResolveImage vkCmdResolveImage;
+static PFN_vkCmdDrawIndexed vkCmdDrawIndexed;
+static PFN_vkCmdFillBuffer vkCmdFillBuffer;
+static PFN_vkDestroyInstance vkDestroyInstance;
+static PFN_vkCreateBufferView vkCreateBufferView;
+static PFN_vkCmdCopyImage vkCmdCopyImage;
 static PFN_vkGetPhysicalDeviceImageFormatProperties vkGetPhysicalDeviceImageFormatProperties;
-static PFN_vkDestroyQueryPool vkDestroyQueryPool;
-static PFN_vkGetPhysicalDeviceProperties vkGetPhysicalDeviceProperties;
-static PFN_vkCreateSampler vkCreateSampler;
-static PFN_vkEnumerateInstanceLayerProperties vkEnumerateInstanceLayerProperties;
-static PFN_vkDestroyShaderModule vkDestroyShaderModule;
-static PFN_vkMapMemory vkMapMemory;
-static PFN_vkCmdBlitImage vkCmdBlitImage;
-static PFN_vkBindImageMemory vkBindImageMemory;
-static PFN_vkDestroyPipelineLayout vkDestroyPipelineLayout;
-static PFN_vkCmdClearColorImage vkCmdClearColorImage;
-static PFN_vkGetImageSparseMemoryRequirements vkGetImageSparseMemoryRequirements;
-static PFN_vkCmdSetLineWidth vkCmdSetLineWidth;
-static PFN_vkGetEventStatus vkGetEventStatus;
-static PFN_vkQueueWaitIdle vkQueueWaitIdle;
-static PFN_vkCmdCopyQueryPoolResults vkCmdCopyQueryPoolResults;
-static PFN_vkCmdBindPipeline vkCmdBindPipeline;
-static PFN_vkDestroySampler vkDestroySampler;
-static PFN_vkCmdWriteTimestamp vkCmdWriteTimestamp;
-static PFN_vkBindBufferMemory vkBindBufferMemory;
-static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
+static PFN_vkCreateImageView vkCreateImageView;
+static PFN_vkCreateImage vkCreateImage;
+static PFN_vkGetDeviceMemoryCommitment vkGetDeviceMemoryCommitment;
+static PFN_vkEnumerateDeviceLayerProperties vkEnumerateDeviceLayerProperties;
+static PFN_vkGetQueryPoolResults vkGetQueryPoolResults;
 
         static PyObject * load_sdk(PyObject *self, PyObject *args) {
             void* vk_sdk = LOAD_SDK();
@@ -4425,154 +4425,10 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
             }
 
             
-                         vkDestroyCommandPool = (PFN_vkDestroyCommandPool)dlsym(vk_sdk, "vkDestroyCommandPool");
-                         if( vkDestroyCommandPool == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkDestroyCommandPool in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdCopyImage = (PFN_vkCmdCopyImage)dlsym(vk_sdk, "vkCmdCopyImage");
-                         if( vkCmdCopyImage == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdCopyImage in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkResetFences = (PFN_vkResetFences)dlsym(vk_sdk, "vkResetFences");
-                         if( vkResetFences == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkResetFences in sdk");
-                             return NULL;
-                         }
-                         
-
                          vkCmdResetEvent = (PFN_vkCmdResetEvent)dlsym(vk_sdk, "vkCmdResetEvent");
                          if( vkCmdResetEvent == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
                                              "Can't load vkCmdResetEvent in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkWaitForFences = (PFN_vkWaitForFences)dlsym(vk_sdk, "vkWaitForFences");
-                         if( vkWaitForFences == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkWaitForFences in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdResetQueryPool = (PFN_vkCmdResetQueryPool)dlsym(vk_sdk, "vkCmdResetQueryPool");
-                         if( vkCmdResetQueryPool == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdResetQueryPool in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkSetEvent = (PFN_vkSetEvent)dlsym(vk_sdk, "vkSetEvent");
-                         if( vkSetEvent == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkSetEvent in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdBindIndexBuffer = (PFN_vkCmdBindIndexBuffer)dlsym(vk_sdk, "vkCmdBindIndexBuffer");
-                         if( vkCmdBindIndexBuffer == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdBindIndexBuffer in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCreateCommandPool = (PFN_vkCreateCommandPool)dlsym(vk_sdk, "vkCreateCommandPool");
-                         if( vkCreateCommandPool == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCreateCommandPool in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkEnumerateInstanceExtensionProperties = (PFN_vkEnumerateInstanceExtensionProperties)dlsym(vk_sdk, "vkEnumerateInstanceExtensionProperties");
-                         if( vkEnumerateInstanceExtensionProperties == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkEnumerateInstanceExtensionProperties in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCreateDescriptorSetLayout = (PFN_vkCreateDescriptorSetLayout)dlsym(vk_sdk, "vkCreateDescriptorSetLayout");
-                         if( vkCreateDescriptorSetLayout == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCreateDescriptorSetLayout in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkFreeDescriptorSets = (PFN_vkFreeDescriptorSets)dlsym(vk_sdk, "vkFreeDescriptorSets");
-                         if( vkFreeDescriptorSets == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkFreeDescriptorSets in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdSetEvent = (PFN_vkCmdSetEvent)dlsym(vk_sdk, "vkCmdSetEvent");
-                         if( vkCmdSetEvent == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdSetEvent in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkFlushMappedMemoryRanges = (PFN_vkFlushMappedMemoryRanges)dlsym(vk_sdk, "vkFlushMappedMemoryRanges");
-                         if( vkFlushMappedMemoryRanges == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkFlushMappedMemoryRanges in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdSetViewport = (PFN_vkCmdSetViewport)dlsym(vk_sdk, "vkCmdSetViewport");
-                         if( vkCmdSetViewport == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdSetViewport in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCreatePipelineLayout = (PFN_vkCreatePipelineLayout)dlsym(vk_sdk, "vkCreatePipelineLayout");
-                         if( vkCreatePipelineLayout == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCreatePipelineLayout in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCreateComputePipelines = (PFN_vkCreateComputePipelines)dlsym(vk_sdk, "vkCreateComputePipelines");
-                         if( vkCreateComputePipelines == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCreateComputePipelines in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkResetEvent = (PFN_vkResetEvent)dlsym(vk_sdk, "vkResetEvent");
-                         if( vkResetEvent == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkResetEvent in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkDestroyPipelineCache = (PFN_vkDestroyPipelineCache)dlsym(vk_sdk, "vkDestroyPipelineCache");
-                         if( vkDestroyPipelineCache == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkDestroyPipelineCache in sdk");
                              return NULL;
                          }
                          
@@ -4585,146 +4441,42 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                          }
                          
 
-                         vkGetDeviceProcAddr = (PFN_vkGetDeviceProcAddr)dlsym(vk_sdk, "vkGetDeviceProcAddr");
-                         if( vkGetDeviceProcAddr == NULL ) {
+                         vkCmdSetViewport = (PFN_vkCmdSetViewport)dlsym(vk_sdk, "vkCmdSetViewport");
+                         if( vkCmdSetViewport == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkGetDeviceProcAddr in sdk");
+                                             "Can't load vkCmdSetViewport in sdk");
                              return NULL;
                          }
                          
 
-                         vkDestroyFence = (PFN_vkDestroyFence)dlsym(vk_sdk, "vkDestroyFence");
-                         if( vkDestroyFence == NULL ) {
+                         vkGetDeviceQueue = (PFN_vkGetDeviceQueue)dlsym(vk_sdk, "vkGetDeviceQueue");
+                         if( vkGetDeviceQueue == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkDestroyFence in sdk");
+                                             "Can't load vkGetDeviceQueue in sdk");
                              return NULL;
                          }
                          
 
-                         vkDestroyImage = (PFN_vkDestroyImage)dlsym(vk_sdk, "vkDestroyImage");
-                         if( vkDestroyImage == NULL ) {
+                         vkDestroyFramebuffer = (PFN_vkDestroyFramebuffer)dlsym(vk_sdk, "vkDestroyFramebuffer");
+                         if( vkDestroyFramebuffer == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkDestroyImage in sdk");
+                                             "Can't load vkDestroyFramebuffer in sdk");
                              return NULL;
                          }
                          
 
-                         vkCmdSetDepthBounds = (PFN_vkCmdSetDepthBounds)dlsym(vk_sdk, "vkCmdSetDepthBounds");
-                         if( vkCmdSetDepthBounds == NULL ) {
+                         vkCreateQueryPool = (PFN_vkCreateQueryPool)dlsym(vk_sdk, "vkCreateQueryPool");
+                         if( vkCreateQueryPool == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdSetDepthBounds in sdk");
+                                             "Can't load vkCreateQueryPool in sdk");
                              return NULL;
                          }
                          
 
-                         vkCmdExecuteCommands = (PFN_vkCmdExecuteCommands)dlsym(vk_sdk, "vkCmdExecuteCommands");
-                         if( vkCmdExecuteCommands == NULL ) {
+                         vkCmdEndQuery = (PFN_vkCmdEndQuery)dlsym(vk_sdk, "vkCmdEndQuery");
+                         if( vkCmdEndQuery == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdExecuteCommands in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkResetCommandBuffer = (PFN_vkResetCommandBuffer)dlsym(vk_sdk, "vkResetCommandBuffer");
-                         if( vkResetCommandBuffer == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkResetCommandBuffer in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCreateBufferView = (PFN_vkCreateBufferView)dlsym(vk_sdk, "vkCreateBufferView");
-                         if( vkCreateBufferView == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCreateBufferView in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdSetScissor = (PFN_vkCmdSetScissor)dlsym(vk_sdk, "vkCmdSetScissor");
-                         if( vkCmdSetScissor == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdSetScissor in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdDrawIndirect = (PFN_vkCmdDrawIndirect)dlsym(vk_sdk, "vkCmdDrawIndirect");
-                         if( vkCmdDrawIndirect == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdDrawIndirect in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkUnmapMemory = (PFN_vkUnmapMemory)dlsym(vk_sdk, "vkUnmapMemory");
-                         if( vkUnmapMemory == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkUnmapMemory in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkGetPhysicalDeviceSparseImageFormatProperties = (PFN_vkGetPhysicalDeviceSparseImageFormatProperties)dlsym(vk_sdk, "vkGetPhysicalDeviceSparseImageFormatProperties");
-                         if( vkGetPhysicalDeviceSparseImageFormatProperties == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkGetPhysicalDeviceSparseImageFormatProperties in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdSetStencilCompareMask = (PFN_vkCmdSetStencilCompareMask)dlsym(vk_sdk, "vkCmdSetStencilCompareMask");
-                         if( vkCmdSetStencilCompareMask == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdSetStencilCompareMask in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkEnumerateDeviceLayerProperties = (PFN_vkEnumerateDeviceLayerProperties)dlsym(vk_sdk, "vkEnumerateDeviceLayerProperties");
-                         if( vkEnumerateDeviceLayerProperties == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkEnumerateDeviceLayerProperties in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdSetStencilReference = (PFN_vkCmdSetStencilReference)dlsym(vk_sdk, "vkCmdSetStencilReference");
-                         if( vkCmdSetStencilReference == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdSetStencilReference in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkDestroyEvent = (PFN_vkDestroyEvent)dlsym(vk_sdk, "vkDestroyEvent");
-                         if( vkDestroyEvent == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkDestroyEvent in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdFillBuffer = (PFN_vkCmdFillBuffer)dlsym(vk_sdk, "vkCmdFillBuffer");
-                         if( vkCmdFillBuffer == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdFillBuffer in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdPipelineBarrier = (PFN_vkCmdPipelineBarrier)dlsym(vk_sdk, "vkCmdPipelineBarrier");
-                         if( vkCmdPipelineBarrier == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdPipelineBarrier in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdDraw = (PFN_vkCmdDraw)dlsym(vk_sdk, "vkCmdDraw");
-                         if( vkCmdDraw == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdDraw in sdk");
+                                             "Can't load vkCmdEndQuery in sdk");
                              return NULL;
                          }
                          
@@ -4737,58 +4489,26 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                          }
                          
 
-                         vkCreatePipelineCache = (PFN_vkCreatePipelineCache)dlsym(vk_sdk, "vkCreatePipelineCache");
-                         if( vkCreatePipelineCache == NULL ) {
+                         vkDestroyShaderModule = (PFN_vkDestroyShaderModule)dlsym(vk_sdk, "vkDestroyShaderModule");
+                         if( vkDestroyShaderModule == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCreatePipelineCache in sdk");
+                                             "Can't load vkDestroyShaderModule in sdk");
                              return NULL;
                          }
                          
 
-                         vkDestroyDevice = (PFN_vkDestroyDevice)dlsym(vk_sdk, "vkDestroyDevice");
-                         if( vkDestroyDevice == NULL ) {
+                         vkCmdSetDepthBounds = (PFN_vkCmdSetDepthBounds)dlsym(vk_sdk, "vkCmdSetDepthBounds");
+                         if( vkCmdSetDepthBounds == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkDestroyDevice in sdk");
+                                             "Can't load vkCmdSetDepthBounds in sdk");
                              return NULL;
                          }
                          
 
-                         vkResetDescriptorPool = (PFN_vkResetDescriptorPool)dlsym(vk_sdk, "vkResetDescriptorPool");
-                         if( vkResetDescriptorPool == NULL ) {
+                         vkCmdSetStencilCompareMask = (PFN_vkCmdSetStencilCompareMask)dlsym(vk_sdk, "vkCmdSetStencilCompareMask");
+                         if( vkCmdSetStencilCompareMask == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkResetDescriptorPool in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkGetDeviceMemoryCommitment = (PFN_vkGetDeviceMemoryCommitment)dlsym(vk_sdk, "vkGetDeviceMemoryCommitment");
-                         if( vkGetDeviceMemoryCommitment == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkGetDeviceMemoryCommitment in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkAllocateCommandBuffers = (PFN_vkAllocateCommandBuffers)dlsym(vk_sdk, "vkAllocateCommandBuffers");
-                         if( vkAllocateCommandBuffers == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkAllocateCommandBuffers in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdNextSubpass = (PFN_vkCmdNextSubpass)dlsym(vk_sdk, "vkCmdNextSubpass");
-                         if( vkCmdNextSubpass == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdNextSubpass in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdUpdateBuffer = (PFN_vkCmdUpdateBuffer)dlsym(vk_sdk, "vkCmdUpdateBuffer");
-                         if( vkCmdUpdateBuffer == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdUpdateBuffer in sdk");
+                                             "Can't load vkCmdSetStencilCompareMask in sdk");
                              return NULL;
                          }
                          
@@ -4809,6 +4529,150 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                          }
                          
 
+                         vkBindBufferMemory = (PFN_vkBindBufferMemory)dlsym(vk_sdk, "vkBindBufferMemory");
+                         if( vkBindBufferMemory == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkBindBufferMemory in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdUpdateBuffer = (PFN_vkCmdUpdateBuffer)dlsym(vk_sdk, "vkCmdUpdateBuffer");
+                         if( vkCmdUpdateBuffer == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdUpdateBuffer in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdCopyQueryPoolResults = (PFN_vkCmdCopyQueryPoolResults)dlsym(vk_sdk, "vkCmdCopyQueryPoolResults");
+                         if( vkCmdCopyQueryPoolResults == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdCopyQueryPoolResults in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkGetPipelineCacheData = (PFN_vkGetPipelineCacheData)dlsym(vk_sdk, "vkGetPipelineCacheData");
+                         if( vkGetPipelineCacheData == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkGetPipelineCacheData in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkInvalidateMappedMemoryRanges = (PFN_vkInvalidateMappedMemoryRanges)dlsym(vk_sdk, "vkInvalidateMappedMemoryRanges");
+                         if( vkInvalidateMappedMemoryRanges == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkInvalidateMappedMemoryRanges in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkMergePipelineCaches = (PFN_vkMergePipelineCaches)dlsym(vk_sdk, "vkMergePipelineCaches");
+                         if( vkMergePipelineCaches == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkMergePipelineCaches in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdWaitEvents = (PFN_vkCmdWaitEvents)dlsym(vk_sdk, "vkCmdWaitEvents");
+                         if( vkCmdWaitEvents == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdWaitEvents in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkQueueBindSparse = (PFN_vkQueueBindSparse)dlsym(vk_sdk, "vkQueueBindSparse");
+                         if( vkQueueBindSparse == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkQueueBindSparse in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCreateDescriptorSetLayout = (PFN_vkCreateDescriptorSetLayout)dlsym(vk_sdk, "vkCreateDescriptorSetLayout");
+                         if( vkCreateDescriptorSetLayout == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCreateDescriptorSetLayout in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkDestroyCommandPool = (PFN_vkDestroyCommandPool)dlsym(vk_sdk, "vkDestroyCommandPool");
+                         if( vkDestroyCommandPool == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkDestroyCommandPool in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkDeviceWaitIdle = (PFN_vkDeviceWaitIdle)dlsym(vk_sdk, "vkDeviceWaitIdle");
+                         if( vkDeviceWaitIdle == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkDeviceWaitIdle in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdPushConstants = (PFN_vkCmdPushConstants)dlsym(vk_sdk, "vkCmdPushConstants");
+                         if( vkCmdPushConstants == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdPushConstants in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCreateBuffer = (PFN_vkCreateBuffer)dlsym(vk_sdk, "vkCreateBuffer");
+                         if( vkCreateBuffer == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCreateBuffer in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkMapMemory = (PFN_vkMapMemory)dlsym(vk_sdk, "vkMapMemory");
+                         if( vkMapMemory == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkMapMemory in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkDestroyDescriptorPool = (PFN_vkDestroyDescriptorPool)dlsym(vk_sdk, "vkDestroyDescriptorPool");
+                         if( vkDestroyDescriptorPool == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkDestroyDescriptorPool in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdSetLineWidth = (PFN_vkCmdSetLineWidth)dlsym(vk_sdk, "vkCmdSetLineWidth");
+                         if( vkCmdSetLineWidth == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdSetLineWidth in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkBeginCommandBuffer = (PFN_vkBeginCommandBuffer)dlsym(vk_sdk, "vkBeginCommandBuffer");
+                         if( vkBeginCommandBuffer == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkBeginCommandBuffer in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCreateGraphicsPipelines = (PFN_vkCreateGraphicsPipelines)dlsym(vk_sdk, "vkCreateGraphicsPipelines");
+                         if( vkCreateGraphicsPipelines == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCreateGraphicsPipelines in sdk");
+                             return NULL;
+                         }
+                         
+
                          vkFreeCommandBuffers = (PFN_vkFreeCommandBuffers)dlsym(vk_sdk, "vkFreeCommandBuffers");
                          if( vkFreeCommandBuffers == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
@@ -4825,58 +4689,42 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                          }
                          
 
-                         vkResetCommandPool = (PFN_vkResetCommandPool)dlsym(vk_sdk, "vkResetCommandPool");
-                         if( vkResetCommandPool == NULL ) {
+                         vkCreateShaderModule = (PFN_vkCreateShaderModule)dlsym(vk_sdk, "vkCreateShaderModule");
+                         if( vkCreateShaderModule == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkResetCommandPool in sdk");
+                                             "Can't load vkCreateShaderModule in sdk");
                              return NULL;
                          }
                          
 
-                         vkCreateDevice = (PFN_vkCreateDevice)dlsym(vk_sdk, "vkCreateDevice");
-                         if( vkCreateDevice == NULL ) {
+                         vkDestroyRenderPass = (PFN_vkDestroyRenderPass)dlsym(vk_sdk, "vkDestroyRenderPass");
+                         if( vkDestroyRenderPass == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCreateDevice in sdk");
+                                             "Can't load vkDestroyRenderPass in sdk");
                              return NULL;
                          }
                          
 
-                         vkCmdPushConstants = (PFN_vkCmdPushConstants)dlsym(vk_sdk, "vkCmdPushConstants");
-                         if( vkCmdPushConstants == NULL ) {
+                         vkQueueSubmit = (PFN_vkQueueSubmit)dlsym(vk_sdk, "vkQueueSubmit");
+                         if( vkQueueSubmit == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdPushConstants in sdk");
+                                             "Can't load vkQueueSubmit in sdk");
                              return NULL;
                          }
                          
 
-                         vkGetBufferMemoryRequirements = (PFN_vkGetBufferMemoryRequirements)dlsym(vk_sdk, "vkGetBufferMemoryRequirements");
-                         if( vkGetBufferMemoryRequirements == NULL ) {
+                         vkDestroyFence = (PFN_vkDestroyFence)dlsym(vk_sdk, "vkDestroyFence");
+                         if( vkDestroyFence == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkGetBufferMemoryRequirements in sdk");
+                                             "Can't load vkDestroyFence in sdk");
                              return NULL;
                          }
                          
 
-                         vkCmdEndQuery = (PFN_vkCmdEndQuery)dlsym(vk_sdk, "vkCmdEndQuery");
-                         if( vkCmdEndQuery == NULL ) {
+                         vkCreateFramebuffer = (PFN_vkCreateFramebuffer)dlsym(vk_sdk, "vkCreateFramebuffer");
+                         if( vkCreateFramebuffer == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdEndQuery in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCreateInstance = (PFN_vkCreateInstance)dlsym(vk_sdk, "vkCreateInstance");
-                         if( vkCreateInstance == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCreateInstance in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdClearAttachments = (PFN_vkCmdClearAttachments)dlsym(vk_sdk, "vkCmdClearAttachments");
-                         if( vkCmdClearAttachments == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdClearAttachments in sdk");
+                                             "Can't load vkCreateFramebuffer in sdk");
                              return NULL;
                          }
                          
@@ -4889,114 +4737,18 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                          }
                          
 
-                         vkDestroyDescriptorSetLayout = (PFN_vkDestroyDescriptorSetLayout)dlsym(vk_sdk, "vkDestroyDescriptorSetLayout");
-                         if( vkDestroyDescriptorSetLayout == NULL ) {
+                         vkCmdBlitImage = (PFN_vkCmdBlitImage)dlsym(vk_sdk, "vkCmdBlitImage");
+                         if( vkCmdBlitImage == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkDestroyDescriptorSetLayout in sdk");
+                                             "Can't load vkCmdBlitImage in sdk");
                              return NULL;
                          }
                          
 
-                         vkDestroyDescriptorPool = (PFN_vkDestroyDescriptorPool)dlsym(vk_sdk, "vkDestroyDescriptorPool");
-                         if( vkDestroyDescriptorPool == NULL ) {
+                         vkCreateDevice = (PFN_vkCreateDevice)dlsym(vk_sdk, "vkCreateDevice");
+                         if( vkCreateDevice == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkDestroyDescriptorPool in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkEndCommandBuffer = (PFN_vkEndCommandBuffer)dlsym(vk_sdk, "vkEndCommandBuffer");
-                         if( vkEndCommandBuffer == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkEndCommandBuffer in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdDrawIndexed = (PFN_vkCmdDrawIndexed)dlsym(vk_sdk, "vkCmdDrawIndexed");
-                         if( vkCmdDrawIndexed == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdDrawIndexed in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkGetDeviceQueue = (PFN_vkGetDeviceQueue)dlsym(vk_sdk, "vkGetDeviceQueue");
-                         if( vkGetDeviceQueue == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkGetDeviceQueue in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkAllocateMemory = (PFN_vkAllocateMemory)dlsym(vk_sdk, "vkAllocateMemory");
-                         if( vkAllocateMemory == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkAllocateMemory in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdBeginQuery = (PFN_vkCmdBeginQuery)dlsym(vk_sdk, "vkCmdBeginQuery");
-                         if( vkCmdBeginQuery == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdBeginQuery in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkMergePipelineCaches = (PFN_vkMergePipelineCaches)dlsym(vk_sdk, "vkMergePipelineCaches");
-                         if( vkMergePipelineCaches == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkMergePipelineCaches in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkGetImageMemoryRequirements = (PFN_vkGetImageMemoryRequirements)dlsym(vk_sdk, "vkGetImageMemoryRequirements");
-                         if( vkGetImageMemoryRequirements == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkGetImageMemoryRequirements in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCreateBuffer = (PFN_vkCreateBuffer)dlsym(vk_sdk, "vkCreateBuffer");
-                         if( vkCreateBuffer == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCreateBuffer in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkEnumeratePhysicalDevices = (PFN_vkEnumeratePhysicalDevices)dlsym(vk_sdk, "vkEnumeratePhysicalDevices");
-                         if( vkEnumeratePhysicalDevices == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkEnumeratePhysicalDevices in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdDispatchIndirect = (PFN_vkCmdDispatchIndirect)dlsym(vk_sdk, "vkCmdDispatchIndirect");
-                         if( vkCmdDispatchIndirect == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdDispatchIndirect in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdCopyBuffer = (PFN_vkCmdCopyBuffer)dlsym(vk_sdk, "vkCmdCopyBuffer");
-                         if( vkCmdCopyBuffer == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdCopyBuffer in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkDestroyBufferView = (PFN_vkDestroyBufferView)dlsym(vk_sdk, "vkDestroyBufferView");
-                         if( vkDestroyBufferView == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkDestroyBufferView in sdk");
+                                             "Can't load vkCreateDevice in sdk");
                              return NULL;
                          }
                          
@@ -5009,34 +4761,82 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                          }
                          
 
-                         vkCreateImageView = (PFN_vkCreateImageView)dlsym(vk_sdk, "vkCreateImageView");
-                         if( vkCreateImageView == NULL ) {
+                         vkResetFences = (PFN_vkResetFences)dlsym(vk_sdk, "vkResetFences");
+                         if( vkResetFences == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCreateImageView in sdk");
+                                             "Can't load vkResetFences in sdk");
                              return NULL;
                          }
                          
 
-                         vkCmdSetDepthBias = (PFN_vkCmdSetDepthBias)dlsym(vk_sdk, "vkCmdSetDepthBias");
-                         if( vkCmdSetDepthBias == NULL ) {
+                         vkCreateEvent = (PFN_vkCreateEvent)dlsym(vk_sdk, "vkCreateEvent");
+                         if( vkCreateEvent == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdSetDepthBias in sdk");
+                                             "Can't load vkCreateEvent in sdk");
                              return NULL;
                          }
                          
 
-                         vkCmdCopyImageToBuffer = (PFN_vkCmdCopyImageToBuffer)dlsym(vk_sdk, "vkCmdCopyImageToBuffer");
-                         if( vkCmdCopyImageToBuffer == NULL ) {
+                         vkCmdResetQueryPool = (PFN_vkCmdResetQueryPool)dlsym(vk_sdk, "vkCmdResetQueryPool");
+                         if( vkCmdResetQueryPool == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdCopyImageToBuffer in sdk");
+                                             "Can't load vkCmdResetQueryPool in sdk");
                              return NULL;
                          }
                          
 
-                         vkCreateImage = (PFN_vkCreateImage)dlsym(vk_sdk, "vkCreateImage");
-                         if( vkCreateImage == NULL ) {
+                         vkCmdPipelineBarrier = (PFN_vkCmdPipelineBarrier)dlsym(vk_sdk, "vkCmdPipelineBarrier");
+                         if( vkCmdPipelineBarrier == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCreateImage in sdk");
+                                             "Can't load vkCmdPipelineBarrier in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkAllocateCommandBuffers = (PFN_vkAllocateCommandBuffers)dlsym(vk_sdk, "vkAllocateCommandBuffers");
+                         if( vkAllocateCommandBuffers == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkAllocateCommandBuffers in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkDestroySampler = (PFN_vkDestroySampler)dlsym(vk_sdk, "vkDestroySampler");
+                         if( vkDestroySampler == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkDestroySampler in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdCopyBuffer = (PFN_vkCmdCopyBuffer)dlsym(vk_sdk, "vkCmdCopyBuffer");
+                         if( vkCmdCopyBuffer == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdCopyBuffer in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCreateDescriptorPool = (PFN_vkCreateDescriptorPool)dlsym(vk_sdk, "vkCreateDescriptorPool");
+                         if( vkCreateDescriptorPool == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCreateDescriptorPool in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCreateCommandPool = (PFN_vkCreateCommandPool)dlsym(vk_sdk, "vkCreateCommandPool");
+                         if( vkCreateCommandPool == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCreateCommandPool in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkGetPhysicalDeviceSparseImageFormatProperties = (PFN_vkGetPhysicalDeviceSparseImageFormatProperties)dlsym(vk_sdk, "vkGetPhysicalDeviceSparseImageFormatProperties");
+                         if( vkGetPhysicalDeviceSparseImageFormatProperties == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkGetPhysicalDeviceSparseImageFormatProperties in sdk");
                              return NULL;
                          }
                          
@@ -5049,6 +4849,62 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                          }
                          
 
+                         vkEnumerateInstanceLayerProperties = (PFN_vkEnumerateInstanceLayerProperties)dlsym(vk_sdk, "vkEnumerateInstanceLayerProperties");
+                         if( vkEnumerateInstanceLayerProperties == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkEnumerateInstanceLayerProperties in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkBindImageMemory = (PFN_vkBindImageMemory)dlsym(vk_sdk, "vkBindImageMemory");
+                         if( vkBindImageMemory == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkBindImageMemory in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkEndCommandBuffer = (PFN_vkEndCommandBuffer)dlsym(vk_sdk, "vkEndCommandBuffer");
+                         if( vkEndCommandBuffer == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkEndCommandBuffer in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdDispatchIndirect = (PFN_vkCmdDispatchIndirect)dlsym(vk_sdk, "vkCmdDispatchIndirect");
+                         if( vkCmdDispatchIndirect == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdDispatchIndirect in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkGetPhysicalDeviceQueueFamilyProperties = (PFN_vkGetPhysicalDeviceQueueFamilyProperties)dlsym(vk_sdk, "vkGetPhysicalDeviceQueueFamilyProperties");
+                         if( vkGetPhysicalDeviceQueueFamilyProperties == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkGetPhysicalDeviceQueueFamilyProperties in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCreateSampler = (PFN_vkCreateSampler)dlsym(vk_sdk, "vkCreateSampler");
+                         if( vkCreateSampler == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCreateSampler in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkDestroyImageView = (PFN_vkDestroyImageView)dlsym(vk_sdk, "vkDestroyImageView");
+                         if( vkDestroyImageView == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkDestroyImageView in sdk");
+                             return NULL;
+                         }
+                         
+
                          vkCreateSemaphore = (PFN_vkCreateSemaphore)dlsym(vk_sdk, "vkCreateSemaphore");
                          if( vkCreateSemaphore == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
@@ -5057,18 +4913,50 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                          }
                          
 
-                         vkDestroyInstance = (PFN_vkDestroyInstance)dlsym(vk_sdk, "vkDestroyInstance");
-                         if( vkDestroyInstance == NULL ) {
+                         vkGetPhysicalDeviceProperties = (PFN_vkGetPhysicalDeviceProperties)dlsym(vk_sdk, "vkGetPhysicalDeviceProperties");
+                         if( vkGetPhysicalDeviceProperties == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkDestroyInstance in sdk");
+                                             "Can't load vkGetPhysicalDeviceProperties in sdk");
                              return NULL;
                          }
                          
 
-                         vkCreateQueryPool = (PFN_vkCreateQueryPool)dlsym(vk_sdk, "vkCreateQueryPool");
-                         if( vkCreateQueryPool == NULL ) {
+                         vkCmdBindIndexBuffer = (PFN_vkCmdBindIndexBuffer)dlsym(vk_sdk, "vkCmdBindIndexBuffer");
+                         if( vkCmdBindIndexBuffer == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCreateQueryPool in sdk");
+                                             "Can't load vkCmdBindIndexBuffer in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkDestroyEvent = (PFN_vkDestroyEvent)dlsym(vk_sdk, "vkDestroyEvent");
+                         if( vkDestroyEvent == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkDestroyEvent in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCreateRenderPass = (PFN_vkCreateRenderPass)dlsym(vk_sdk, "vkCreateRenderPass");
+                         if( vkCreateRenderPass == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCreateRenderPass in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdSetDepthBias = (PFN_vkCmdSetDepthBias)dlsym(vk_sdk, "vkCmdSetDepthBias");
+                         if( vkCmdSetDepthBias == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdSetDepthBias in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkResetCommandBuffer = (PFN_vkResetCommandBuffer)dlsym(vk_sdk, "vkResetCommandBuffer");
+                         if( vkResetCommandBuffer == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkResetCommandBuffer in sdk");
                              return NULL;
                          }
                          
@@ -5081,10 +4969,410 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                          }
                          
 
-                         vkGetQueryPoolResults = (PFN_vkGetQueryPoolResults)dlsym(vk_sdk, "vkGetQueryPoolResults");
-                         if( vkGetQueryPoolResults == NULL ) {
+                         vkDestroyDescriptorSetLayout = (PFN_vkDestroyDescriptorSetLayout)dlsym(vk_sdk, "vkDestroyDescriptorSetLayout");
+                         if( vkDestroyDescriptorSetLayout == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkGetQueryPoolResults in sdk");
+                                             "Can't load vkDestroyDescriptorSetLayout in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdDrawIndexedIndirect = (PFN_vkCmdDrawIndexedIndirect)dlsym(vk_sdk, "vkCmdDrawIndexedIndirect");
+                         if( vkCmdDrawIndexedIndirect == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdDrawIndexedIndirect in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkFreeDescriptorSets = (PFN_vkFreeDescriptorSets)dlsym(vk_sdk, "vkFreeDescriptorSets");
+                         if( vkFreeDescriptorSets == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkFreeDescriptorSets in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkDestroyImage = (PFN_vkDestroyImage)dlsym(vk_sdk, "vkDestroyImage");
+                         if( vkDestroyImage == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkDestroyImage in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdSetStencilReference = (PFN_vkCmdSetStencilReference)dlsym(vk_sdk, "vkCmdSetStencilReference");
+                         if( vkCmdSetStencilReference == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdSetStencilReference in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkEnumeratePhysicalDevices = (PFN_vkEnumeratePhysicalDevices)dlsym(vk_sdk, "vkEnumeratePhysicalDevices");
+                         if( vkEnumeratePhysicalDevices == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkEnumeratePhysicalDevices in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkUnmapMemory = (PFN_vkUnmapMemory)dlsym(vk_sdk, "vkUnmapMemory");
+                         if( vkUnmapMemory == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkUnmapMemory in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCreateComputePipelines = (PFN_vkCreateComputePipelines)dlsym(vk_sdk, "vkCreateComputePipelines");
+                         if( vkCreateComputePipelines == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCreateComputePipelines in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkDestroyBuffer = (PFN_vkDestroyBuffer)dlsym(vk_sdk, "vkDestroyBuffer");
+                         if( vkDestroyBuffer == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkDestroyBuffer in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkDestroySemaphore = (PFN_vkDestroySemaphore)dlsym(vk_sdk, "vkDestroySemaphore");
+                         if( vkDestroySemaphore == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkDestroySemaphore in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdEndRenderPass = (PFN_vkCmdEndRenderPass)dlsym(vk_sdk, "vkCmdEndRenderPass");
+                         if( vkCmdEndRenderPass == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdEndRenderPass in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdWriteTimestamp = (PFN_vkCmdWriteTimestamp)dlsym(vk_sdk, "vkCmdWriteTimestamp");
+                         if( vkCmdWriteTimestamp == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdWriteTimestamp in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkResetCommandPool = (PFN_vkResetCommandPool)dlsym(vk_sdk, "vkResetCommandPool");
+                         if( vkResetCommandPool == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkResetCommandPool in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCreateInstance = (PFN_vkCreateInstance)dlsym(vk_sdk, "vkCreateInstance");
+                         if( vkCreateInstance == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCreateInstance in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdBeginQuery = (PFN_vkCmdBeginQuery)dlsym(vk_sdk, "vkCmdBeginQuery");
+                         if( vkCmdBeginQuery == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdBeginQuery in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkGetImageSparseMemoryRequirements = (PFN_vkGetImageSparseMemoryRequirements)dlsym(vk_sdk, "vkGetImageSparseMemoryRequirements");
+                         if( vkGetImageSparseMemoryRequirements == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkGetImageSparseMemoryRequirements in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkGetBufferMemoryRequirements = (PFN_vkGetBufferMemoryRequirements)dlsym(vk_sdk, "vkGetBufferMemoryRequirements");
+                         if( vkGetBufferMemoryRequirements == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkGetBufferMemoryRequirements in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdNextSubpass = (PFN_vkCmdNextSubpass)dlsym(vk_sdk, "vkCmdNextSubpass");
+                         if( vkCmdNextSubpass == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdNextSubpass in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCreatePipelineCache = (PFN_vkCreatePipelineCache)dlsym(vk_sdk, "vkCreatePipelineCache");
+                         if( vkCreatePipelineCache == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCreatePipelineCache in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdClearColorImage = (PFN_vkCmdClearColorImage)dlsym(vk_sdk, "vkCmdClearColorImage");
+                         if( vkCmdClearColorImage == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdClearColorImage in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdSetEvent = (PFN_vkCmdSetEvent)dlsym(vk_sdk, "vkCmdSetEvent");
+                         if( vkCmdSetEvent == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdSetEvent in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkGetDeviceProcAddr = (PFN_vkGetDeviceProcAddr)dlsym(vk_sdk, "vkGetDeviceProcAddr");
+                         if( vkGetDeviceProcAddr == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkGetDeviceProcAddr in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkDestroyBufferView = (PFN_vkDestroyBufferView)dlsym(vk_sdk, "vkDestroyBufferView");
+                         if( vkDestroyBufferView == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkDestroyBufferView in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdSetScissor = (PFN_vkCmdSetScissor)dlsym(vk_sdk, "vkCmdSetScissor");
+                         if( vkCmdSetScissor == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdSetScissor in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCreateFence = (PFN_vkCreateFence)dlsym(vk_sdk, "vkCreateFence");
+                         if( vkCreateFence == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCreateFence in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkUpdateDescriptorSets = (PFN_vkUpdateDescriptorSets)dlsym(vk_sdk, "vkUpdateDescriptorSets");
+                         if( vkUpdateDescriptorSets == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkUpdateDescriptorSets in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkDestroyPipelineLayout = (PFN_vkDestroyPipelineLayout)dlsym(vk_sdk, "vkDestroyPipelineLayout");
+                         if( vkDestroyPipelineLayout == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkDestroyPipelineLayout in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkGetPhysicalDeviceFeatures = (PFN_vkGetPhysicalDeviceFeatures)dlsym(vk_sdk, "vkGetPhysicalDeviceFeatures");
+                         if( vkGetPhysicalDeviceFeatures == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkGetPhysicalDeviceFeatures in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdClearAttachments = (PFN_vkCmdClearAttachments)dlsym(vk_sdk, "vkCmdClearAttachments");
+                         if( vkCmdClearAttachments == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdClearAttachments in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkEnumerateDeviceExtensionProperties = (PFN_vkEnumerateDeviceExtensionProperties)dlsym(vk_sdk, "vkEnumerateDeviceExtensionProperties");
+                         if( vkEnumerateDeviceExtensionProperties == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkEnumerateDeviceExtensionProperties in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkSetEvent = (PFN_vkSetEvent)dlsym(vk_sdk, "vkSetEvent");
+                         if( vkSetEvent == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkSetEvent in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkDestroyQueryPool = (PFN_vkDestroyQueryPool)dlsym(vk_sdk, "vkDestroyQueryPool");
+                         if( vkDestroyQueryPool == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkDestroyQueryPool in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkAllocateMemory = (PFN_vkAllocateMemory)dlsym(vk_sdk, "vkAllocateMemory");
+                         if( vkAllocateMemory == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkAllocateMemory in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkGetEventStatus = (PFN_vkGetEventStatus)dlsym(vk_sdk, "vkGetEventStatus");
+                         if( vkGetEventStatus == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkGetEventStatus in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdDraw = (PFN_vkCmdDraw)dlsym(vk_sdk, "vkCmdDraw");
+                         if( vkCmdDraw == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdDraw in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdDrawIndirect = (PFN_vkCmdDrawIndirect)dlsym(vk_sdk, "vkCmdDrawIndirect");
+                         if( vkCmdDrawIndirect == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdDrawIndirect in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdSetStencilWriteMask = (PFN_vkCmdSetStencilWriteMask)dlsym(vk_sdk, "vkCmdSetStencilWriteMask");
+                         if( vkCmdSetStencilWriteMask == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdSetStencilWriteMask in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkFlushMappedMemoryRanges = (PFN_vkFlushMappedMemoryRanges)dlsym(vk_sdk, "vkFlushMappedMemoryRanges");
+                         if( vkFlushMappedMemoryRanges == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkFlushMappedMemoryRanges in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdCopyImageToBuffer = (PFN_vkCmdCopyImageToBuffer)dlsym(vk_sdk, "vkCmdCopyImageToBuffer");
+                         if( vkCmdCopyImageToBuffer == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdCopyImageToBuffer in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdDispatch = (PFN_vkCmdDispatch)dlsym(vk_sdk, "vkCmdDispatch");
+                         if( vkCmdDispatch == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdDispatch in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkResetEvent = (PFN_vkResetEvent)dlsym(vk_sdk, "vkResetEvent");
+                         if( vkResetEvent == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkResetEvent in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdBindPipeline = (PFN_vkCmdBindPipeline)dlsym(vk_sdk, "vkCmdBindPipeline");
+                         if( vkCmdBindPipeline == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdBindPipeline in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkQueueWaitIdle = (PFN_vkQueueWaitIdle)dlsym(vk_sdk, "vkQueueWaitIdle");
+                         if( vkQueueWaitIdle == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkQueueWaitIdle in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkGetImageMemoryRequirements = (PFN_vkGetImageMemoryRequirements)dlsym(vk_sdk, "vkGetImageMemoryRequirements");
+                         if( vkGetImageMemoryRequirements == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkGetImageMemoryRequirements in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkEnumerateInstanceExtensionProperties = (PFN_vkEnumerateInstanceExtensionProperties)dlsym(vk_sdk, "vkEnumerateInstanceExtensionProperties");
+                         if( vkEnumerateInstanceExtensionProperties == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkEnumerateInstanceExtensionProperties in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdExecuteCommands = (PFN_vkCmdExecuteCommands)dlsym(vk_sdk, "vkCmdExecuteCommands");
+                         if( vkCmdExecuteCommands == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdExecuteCommands in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdSetBlendConstants = (PFN_vkCmdSetBlendConstants)dlsym(vk_sdk, "vkCmdSetBlendConstants");
+                         if( vkCmdSetBlendConstants == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdSetBlendConstants in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkDestroyPipelineCache = (PFN_vkDestroyPipelineCache)dlsym(vk_sdk, "vkDestroyPipelineCache");
+                         if( vkDestroyPipelineCache == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkDestroyPipelineCache in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdClearDepthStencilImage = (PFN_vkCmdClearDepthStencilImage)dlsym(vk_sdk, "vkCmdClearDepthStencilImage");
+                         if( vkCmdClearDepthStencilImage == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdClearDepthStencilImage in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCreatePipelineLayout = (PFN_vkCreatePipelineLayout)dlsym(vk_sdk, "vkCreatePipelineLayout");
+                         if( vkCreatePipelineLayout == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCreatePipelineLayout in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkGetPhysicalDeviceMemoryProperties = (PFN_vkGetPhysicalDeviceMemoryProperties)dlsym(vk_sdk, "vkGetPhysicalDeviceMemoryProperties");
+                         if( vkGetPhysicalDeviceMemoryProperties == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkGetPhysicalDeviceMemoryProperties in sdk");
                              return NULL;
                          }
                          
@@ -5105,230 +5393,6 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                          }
                          
 
-                         vkCmdDispatch = (PFN_vkCmdDispatch)dlsym(vk_sdk, "vkCmdDispatch");
-                         if( vkCmdDispatch == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdDispatch in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdClearDepthStencilImage = (PFN_vkCmdClearDepthStencilImage)dlsym(vk_sdk, "vkCmdClearDepthStencilImage");
-                         if( vkCmdClearDepthStencilImage == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdClearDepthStencilImage in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCreateEvent = (PFN_vkCreateEvent)dlsym(vk_sdk, "vkCreateEvent");
-                         if( vkCreateEvent == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCreateEvent in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkDestroyBuffer = (PFN_vkDestroyBuffer)dlsym(vk_sdk, "vkDestroyBuffer");
-                         if( vkDestroyBuffer == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkDestroyBuffer in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkDestroyFramebuffer = (PFN_vkDestroyFramebuffer)dlsym(vk_sdk, "vkDestroyFramebuffer");
-                         if( vkDestroyFramebuffer == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkDestroyFramebuffer in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkDestroySemaphore = (PFN_vkDestroySemaphore)dlsym(vk_sdk, "vkDestroySemaphore");
-                         if( vkDestroySemaphore == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkDestroySemaphore in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCreateRenderPass = (PFN_vkCreateRenderPass)dlsym(vk_sdk, "vkCreateRenderPass");
-                         if( vkCreateRenderPass == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCreateRenderPass in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdWaitEvents = (PFN_vkCmdWaitEvents)dlsym(vk_sdk, "vkCmdWaitEvents");
-                         if( vkCmdWaitEvents == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdWaitEvents in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkEnumerateDeviceExtensionProperties = (PFN_vkEnumerateDeviceExtensionProperties)dlsym(vk_sdk, "vkEnumerateDeviceExtensionProperties");
-                         if( vkEnumerateDeviceExtensionProperties == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkEnumerateDeviceExtensionProperties in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkGetPhysicalDeviceMemoryProperties = (PFN_vkGetPhysicalDeviceMemoryProperties)dlsym(vk_sdk, "vkGetPhysicalDeviceMemoryProperties");
-                         if( vkGetPhysicalDeviceMemoryProperties == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkGetPhysicalDeviceMemoryProperties in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCreateShaderModule = (PFN_vkCreateShaderModule)dlsym(vk_sdk, "vkCreateShaderModule");
-                         if( vkCreateShaderModule == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCreateShaderModule in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkBeginCommandBuffer = (PFN_vkBeginCommandBuffer)dlsym(vk_sdk, "vkBeginCommandBuffer");
-                         if( vkBeginCommandBuffer == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkBeginCommandBuffer in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCreateFence = (PFN_vkCreateFence)dlsym(vk_sdk, "vkCreateFence");
-                         if( vkCreateFence == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCreateFence in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkDestroyRenderPass = (PFN_vkDestroyRenderPass)dlsym(vk_sdk, "vkDestroyRenderPass");
-                         if( vkDestroyRenderPass == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkDestroyRenderPass in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCreateFramebuffer = (PFN_vkCreateFramebuffer)dlsym(vk_sdk, "vkCreateFramebuffer");
-                         if( vkCreateFramebuffer == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCreateFramebuffer in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdSetStencilWriteMask = (PFN_vkCmdSetStencilWriteMask)dlsym(vk_sdk, "vkCmdSetStencilWriteMask");
-                         if( vkCmdSetStencilWriteMask == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdSetStencilWriteMask in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkDestroyImageView = (PFN_vkDestroyImageView)dlsym(vk_sdk, "vkDestroyImageView");
-                         if( vkDestroyImageView == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkDestroyImageView in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkUpdateDescriptorSets = (PFN_vkUpdateDescriptorSets)dlsym(vk_sdk, "vkUpdateDescriptorSets");
-                         if( vkUpdateDescriptorSets == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkUpdateDescriptorSets in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkQueueBindSparse = (PFN_vkQueueBindSparse)dlsym(vk_sdk, "vkQueueBindSparse");
-                         if( vkQueueBindSparse == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkQueueBindSparse in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkQueueSubmit = (PFN_vkQueueSubmit)dlsym(vk_sdk, "vkQueueSubmit");
-                         if( vkQueueSubmit == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkQueueSubmit in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCreateGraphicsPipelines = (PFN_vkCreateGraphicsPipelines)dlsym(vk_sdk, "vkCreateGraphicsPipelines");
-                         if( vkCreateGraphicsPipelines == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCreateGraphicsPipelines in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkDeviceWaitIdle = (PFN_vkDeviceWaitIdle)dlsym(vk_sdk, "vkDeviceWaitIdle");
-                         if( vkDeviceWaitIdle == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkDeviceWaitIdle in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCreateDescriptorPool = (PFN_vkCreateDescriptorPool)dlsym(vk_sdk, "vkCreateDescriptorPool");
-                         if( vkCreateDescriptorPool == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCreateDescriptorPool in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdSetBlendConstants = (PFN_vkCmdSetBlendConstants)dlsym(vk_sdk, "vkCmdSetBlendConstants");
-                         if( vkCmdSetBlendConstants == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdSetBlendConstants in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkGetPhysicalDeviceFeatures = (PFN_vkGetPhysicalDeviceFeatures)dlsym(vk_sdk, "vkGetPhysicalDeviceFeatures");
-                         if( vkGetPhysicalDeviceFeatures == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkGetPhysicalDeviceFeatures in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkGetPhysicalDeviceQueueFamilyProperties = (PFN_vkGetPhysicalDeviceQueueFamilyProperties)dlsym(vk_sdk, "vkGetPhysicalDeviceQueueFamilyProperties");
-                         if( vkGetPhysicalDeviceQueueFamilyProperties == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkGetPhysicalDeviceQueueFamilyProperties in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdEndRenderPass = (PFN_vkCmdEndRenderPass)dlsym(vk_sdk, "vkCmdEndRenderPass");
-                         if( vkCmdEndRenderPass == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdEndRenderPass in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdDrawIndexedIndirect = (PFN_vkCmdDrawIndexedIndirect)dlsym(vk_sdk, "vkCmdDrawIndexedIndirect");
-                         if( vkCmdDrawIndexedIndirect == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdDrawIndexedIndirect in sdk");
-                             return NULL;
-                         }
-                         
-
                          vkGetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)dlsym(vk_sdk, "vkGetInstanceProcAddr");
                          if( vkGetInstanceProcAddr == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
@@ -5337,10 +5401,26 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                          }
                          
 
-                         vkGetPipelineCacheData = (PFN_vkGetPipelineCacheData)dlsym(vk_sdk, "vkGetPipelineCacheData");
-                         if( vkGetPipelineCacheData == NULL ) {
+                         vkDestroyDevice = (PFN_vkDestroyDevice)dlsym(vk_sdk, "vkDestroyDevice");
+                         if( vkDestroyDevice == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkGetPipelineCacheData in sdk");
+                                             "Can't load vkDestroyDevice in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkResetDescriptorPool = (PFN_vkResetDescriptorPool)dlsym(vk_sdk, "vkResetDescriptorPool");
+                         if( vkResetDescriptorPool == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkResetDescriptorPool in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkWaitForFences = (PFN_vkWaitForFences)dlsym(vk_sdk, "vkWaitForFences");
+                         if( vkWaitForFences == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkWaitForFences in sdk");
                              return NULL;
                          }
                          
@@ -5353,6 +5433,46 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                          }
                          
 
+                         vkCmdDrawIndexed = (PFN_vkCmdDrawIndexed)dlsym(vk_sdk, "vkCmdDrawIndexed");
+                         if( vkCmdDrawIndexed == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdDrawIndexed in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdFillBuffer = (PFN_vkCmdFillBuffer)dlsym(vk_sdk, "vkCmdFillBuffer");
+                         if( vkCmdFillBuffer == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdFillBuffer in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkDestroyInstance = (PFN_vkDestroyInstance)dlsym(vk_sdk, "vkDestroyInstance");
+                         if( vkDestroyInstance == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkDestroyInstance in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCreateBufferView = (PFN_vkCreateBufferView)dlsym(vk_sdk, "vkCreateBufferView");
+                         if( vkCreateBufferView == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCreateBufferView in sdk");
+                             return NULL;
+                         }
+                         
+
+                         vkCmdCopyImage = (PFN_vkCmdCopyImage)dlsym(vk_sdk, "vkCmdCopyImage");
+                         if( vkCmdCopyImage == NULL ) {
+                             PyErr_SetString(PyExc_ImportError,
+                                             "Can't load vkCmdCopyImage in sdk");
+                             return NULL;
+                         }
+                         
+
                          vkGetPhysicalDeviceImageFormatProperties = (PFN_vkGetPhysicalDeviceImageFormatProperties)dlsym(vk_sdk, "vkGetPhysicalDeviceImageFormatProperties");
                          if( vkGetPhysicalDeviceImageFormatProperties == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
@@ -5361,162 +5481,42 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                          }
                          
 
-                         vkDestroyQueryPool = (PFN_vkDestroyQueryPool)dlsym(vk_sdk, "vkDestroyQueryPool");
-                         if( vkDestroyQueryPool == NULL ) {
+                         vkCreateImageView = (PFN_vkCreateImageView)dlsym(vk_sdk, "vkCreateImageView");
+                         if( vkCreateImageView == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkDestroyQueryPool in sdk");
+                                             "Can't load vkCreateImageView in sdk");
                              return NULL;
                          }
                          
 
-                         vkGetPhysicalDeviceProperties = (PFN_vkGetPhysicalDeviceProperties)dlsym(vk_sdk, "vkGetPhysicalDeviceProperties");
-                         if( vkGetPhysicalDeviceProperties == NULL ) {
+                         vkCreateImage = (PFN_vkCreateImage)dlsym(vk_sdk, "vkCreateImage");
+                         if( vkCreateImage == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkGetPhysicalDeviceProperties in sdk");
+                                             "Can't load vkCreateImage in sdk");
                              return NULL;
                          }
                          
 
-                         vkCreateSampler = (PFN_vkCreateSampler)dlsym(vk_sdk, "vkCreateSampler");
-                         if( vkCreateSampler == NULL ) {
+                         vkGetDeviceMemoryCommitment = (PFN_vkGetDeviceMemoryCommitment)dlsym(vk_sdk, "vkGetDeviceMemoryCommitment");
+                         if( vkGetDeviceMemoryCommitment == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCreateSampler in sdk");
+                                             "Can't load vkGetDeviceMemoryCommitment in sdk");
                              return NULL;
                          }
                          
 
-                         vkEnumerateInstanceLayerProperties = (PFN_vkEnumerateInstanceLayerProperties)dlsym(vk_sdk, "vkEnumerateInstanceLayerProperties");
-                         if( vkEnumerateInstanceLayerProperties == NULL ) {
+                         vkEnumerateDeviceLayerProperties = (PFN_vkEnumerateDeviceLayerProperties)dlsym(vk_sdk, "vkEnumerateDeviceLayerProperties");
+                         if( vkEnumerateDeviceLayerProperties == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkEnumerateInstanceLayerProperties in sdk");
+                                             "Can't load vkEnumerateDeviceLayerProperties in sdk");
                              return NULL;
                          }
                          
 
-                         vkDestroyShaderModule = (PFN_vkDestroyShaderModule)dlsym(vk_sdk, "vkDestroyShaderModule");
-                         if( vkDestroyShaderModule == NULL ) {
+                         vkGetQueryPoolResults = (PFN_vkGetQueryPoolResults)dlsym(vk_sdk, "vkGetQueryPoolResults");
+                         if( vkGetQueryPoolResults == NULL ) {
                              PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkDestroyShaderModule in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkMapMemory = (PFN_vkMapMemory)dlsym(vk_sdk, "vkMapMemory");
-                         if( vkMapMemory == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkMapMemory in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdBlitImage = (PFN_vkCmdBlitImage)dlsym(vk_sdk, "vkCmdBlitImage");
-                         if( vkCmdBlitImage == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdBlitImage in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkBindImageMemory = (PFN_vkBindImageMemory)dlsym(vk_sdk, "vkBindImageMemory");
-                         if( vkBindImageMemory == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkBindImageMemory in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkDestroyPipelineLayout = (PFN_vkDestroyPipelineLayout)dlsym(vk_sdk, "vkDestroyPipelineLayout");
-                         if( vkDestroyPipelineLayout == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkDestroyPipelineLayout in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdClearColorImage = (PFN_vkCmdClearColorImage)dlsym(vk_sdk, "vkCmdClearColorImage");
-                         if( vkCmdClearColorImage == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdClearColorImage in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkGetImageSparseMemoryRequirements = (PFN_vkGetImageSparseMemoryRequirements)dlsym(vk_sdk, "vkGetImageSparseMemoryRequirements");
-                         if( vkGetImageSparseMemoryRequirements == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkGetImageSparseMemoryRequirements in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdSetLineWidth = (PFN_vkCmdSetLineWidth)dlsym(vk_sdk, "vkCmdSetLineWidth");
-                         if( vkCmdSetLineWidth == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdSetLineWidth in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkGetEventStatus = (PFN_vkGetEventStatus)dlsym(vk_sdk, "vkGetEventStatus");
-                         if( vkGetEventStatus == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkGetEventStatus in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkQueueWaitIdle = (PFN_vkQueueWaitIdle)dlsym(vk_sdk, "vkQueueWaitIdle");
-                         if( vkQueueWaitIdle == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkQueueWaitIdle in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdCopyQueryPoolResults = (PFN_vkCmdCopyQueryPoolResults)dlsym(vk_sdk, "vkCmdCopyQueryPoolResults");
-                         if( vkCmdCopyQueryPoolResults == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdCopyQueryPoolResults in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdBindPipeline = (PFN_vkCmdBindPipeline)dlsym(vk_sdk, "vkCmdBindPipeline");
-                         if( vkCmdBindPipeline == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdBindPipeline in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkDestroySampler = (PFN_vkDestroySampler)dlsym(vk_sdk, "vkDestroySampler");
-                         if( vkDestroySampler == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkDestroySampler in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkCmdWriteTimestamp = (PFN_vkCmdWriteTimestamp)dlsym(vk_sdk, "vkCmdWriteTimestamp");
-                         if( vkCmdWriteTimestamp == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkCmdWriteTimestamp in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkBindBufferMemory = (PFN_vkBindBufferMemory)dlsym(vk_sdk, "vkBindBufferMemory");
-                         if( vkBindBufferMemory == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkBindBufferMemory in sdk");
-                             return NULL;
-                         }
-                         
-
-                         vkInvalidateMappedMemoryRanges = (PFN_vkInvalidateMappedMemoryRanges)dlsym(vk_sdk, "vkInvalidateMappedMemoryRanges");
-                         if( vkInvalidateMappedMemoryRanges == NULL ) {
-                             PyErr_SetString(PyExc_ImportError,
-                                             "Can't load vkInvalidateMappedMemoryRanges in sdk");
+                                             "Can't load vkGetQueryPoolResults in sdk");
                              return NULL;
                          }
                          
@@ -5525,183 +5525,213 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
             return Py_None;
         }
     
-            static PyObject* PyHandle_VkDisplayKHR (PyObject *self, PyObject *args) {
-                  VkDisplayKHR* handle = malloc(sizeof(VkDisplayKHR));
-                  PyObject* value = PyCapsule_New(handle, "VkDisplayKHR", NULL);
-                  return value;
-            }
-            
-            static PyObject* PyHandle_VkDisplayModeKHR (PyObject *self, PyObject *args) {
-                  VkDisplayModeKHR* handle = malloc(sizeof(VkDisplayModeKHR));
-                  PyObject* value = PyCapsule_New(handle, "VkDisplayModeKHR", NULL);
-                  return value;
-            }
-            
-            static PyObject* PyHandle_VkQueryPool (PyObject *self, PyObject *args) {
-                  VkQueryPool* handle = malloc(sizeof(VkQueryPool));
-                  PyObject* value = PyCapsule_New(handle, "VkQueryPool", NULL);
-                  return value;
-            }
-            
-            static PyObject* PyHandle_VkDebugReportCallbackEXT (PyObject *self, PyObject *args) {
-                  VkDebugReportCallbackEXT* handle = malloc(sizeof(VkDebugReportCallbackEXT));
-                  PyObject* value = PyCapsule_New(handle, "VkDebugReportCallbackEXT", NULL);
-                  return value;
-            }
-            
-            static PyObject* PyHandle_VkPipelineCache (PyObject *self, PyObject *args) {
-                  VkPipelineCache* handle = malloc(sizeof(VkPipelineCache));
-                  PyObject* value = PyCapsule_New(handle, "VkPipelineCache", NULL);
-                  return value;
-            }
-            
-            static PyObject* PyHandle_VkCommandBuffer (PyObject *self, PyObject *args) {
-                  VkCommandBuffer* handle = malloc(sizeof(VkCommandBuffer));
-                  PyObject* value = PyCapsule_New(handle, "VkCommandBuffer", NULL);
-                  return value;
-            }
-            
-            static PyObject* PyHandle_VkPhysicalDevice (PyObject *self, PyObject *args) {
-                  VkPhysicalDevice* handle = malloc(sizeof(VkPhysicalDevice));
-                  PyObject* value = PyCapsule_New(handle, "VkPhysicalDevice", NULL);
-                  return value;
-            }
-            
-            static PyObject* PyHandle_VkCommandPool (PyObject *self, PyObject *args) {
-                  VkCommandPool* handle = malloc(sizeof(VkCommandPool));
-                  PyObject* value = PyCapsule_New(handle, "VkCommandPool", NULL);
+            static PyObject* PyHandle_VkDescriptorSet (PyObject *self, PyObject *args) {
+                  VkDescriptorSet* handle = malloc(sizeof(VkDescriptorSet));
+                  PyObject* value = PyCapsule_New(handle, "VkDescriptorSet", NULL);
+                  if (value == NULL) return NULL;
                   return value;
             }
             
             static PyObject* PyHandle_VkPipelineLayout (PyObject *self, PyObject *args) {
                   VkPipelineLayout* handle = malloc(sizeof(VkPipelineLayout));
                   PyObject* value = PyCapsule_New(handle, "VkPipelineLayout", NULL);
-                  return value;
-            }
-            
-            static PyObject* PyHandle_VkSurfaceKHR (PyObject *self, PyObject *args) {
-                  VkSurfaceKHR* handle = malloc(sizeof(VkSurfaceKHR));
-                  PyObject* value = PyCapsule_New(handle, "VkSurfaceKHR", NULL);
-                  return value;
-            }
-            
-            static PyObject* PyHandle_VkInstance (PyObject *self, PyObject *args) {
-                  VkInstance* handle = malloc(sizeof(VkInstance));
-                  PyObject* value = PyCapsule_New(handle, "VkInstance", NULL);
-                  return value;
-            }
-            
-            static PyObject* PyHandle_VkDeviceMemory (PyObject *self, PyObject *args) {
-                  VkDeviceMemory* handle = malloc(sizeof(VkDeviceMemory));
-                  PyObject* value = PyCapsule_New(handle, "VkDeviceMemory", NULL);
+                  if (value == NULL) return NULL;
                   return value;
             }
             
             static PyObject* PyHandle_VkSwapchainKHR (PyObject *self, PyObject *args) {
                   VkSwapchainKHR* handle = malloc(sizeof(VkSwapchainKHR));
                   PyObject* value = PyCapsule_New(handle, "VkSwapchainKHR", NULL);
-                  return value;
-            }
-            
-            static PyObject* PyHandle_VkImageView (PyObject *self, PyObject *args) {
-                  VkImageView* handle = malloc(sizeof(VkImageView));
-                  PyObject* value = PyCapsule_New(handle, "VkImageView", NULL);
-                  return value;
-            }
-            
-            static PyObject* PyHandle_VkBufferView (PyObject *self, PyObject *args) {
-                  VkBufferView* handle = malloc(sizeof(VkBufferView));
-                  PyObject* value = PyCapsule_New(handle, "VkBufferView", NULL);
-                  return value;
-            }
-            
-            static PyObject* PyHandle_VkDescriptorPool (PyObject *self, PyObject *args) {
-                  VkDescriptorPool* handle = malloc(sizeof(VkDescriptorPool));
-                  PyObject* value = PyCapsule_New(handle, "VkDescriptorPool", NULL);
-                  return value;
-            }
-            
-            static PyObject* PyHandle_VkSampler (PyObject *self, PyObject *args) {
-                  VkSampler* handle = malloc(sizeof(VkSampler));
-                  PyObject* value = PyCapsule_New(handle, "VkSampler", NULL);
-                  return value;
-            }
-            
-            static PyObject* PyHandle_VkQueue (PyObject *self, PyObject *args) {
-                  VkQueue* handle = malloc(sizeof(VkQueue));
-                  PyObject* value = PyCapsule_New(handle, "VkQueue", NULL);
-                  return value;
-            }
-            
-            static PyObject* PyHandle_VkShaderModule (PyObject *self, PyObject *args) {
-                  VkShaderModule* handle = malloc(sizeof(VkShaderModule));
-                  PyObject* value = PyCapsule_New(handle, "VkShaderModule", NULL);
+                  if (value == NULL) return NULL;
                   return value;
             }
             
             static PyObject* PyHandle_VkRenderPass (PyObject *self, PyObject *args) {
                   VkRenderPass* handle = malloc(sizeof(VkRenderPass));
                   PyObject* value = PyCapsule_New(handle, "VkRenderPass", NULL);
+                  if (value == NULL) return NULL;
                   return value;
             }
             
-            static PyObject* PyHandle_VkFramebuffer (PyObject *self, PyObject *args) {
-                  VkFramebuffer* handle = malloc(sizeof(VkFramebuffer));
-                  PyObject* value = PyCapsule_New(handle, "VkFramebuffer", NULL);
+            static PyObject* PyHandle_VkCommandBuffer (PyObject *self, PyObject *args) {
+                  VkCommandBuffer* handle = malloc(sizeof(VkCommandBuffer));
+                  PyObject* value = PyCapsule_New(handle, "VkCommandBuffer", NULL);
+                  if (value == NULL) return NULL;
                   return value;
             }
             
-            static PyObject* PyHandle_VkImage (PyObject *self, PyObject *args) {
-                  VkImage* handle = malloc(sizeof(VkImage));
-                  PyObject* value = PyCapsule_New(handle, "VkImage", NULL);
+            static PyObject* PyHandle_VkShaderModule (PyObject *self, PyObject *args) {
+                  VkShaderModule* handle = malloc(sizeof(VkShaderModule));
+                  PyObject* value = PyCapsule_New(handle, "VkShaderModule", NULL);
+                  if (value == NULL) return NULL;
                   return value;
             }
             
-            static PyObject* PyHandle_VkDescriptorSet (PyObject *self, PyObject *args) {
-                  VkDescriptorSet* handle = malloc(sizeof(VkDescriptorSet));
-                  PyObject* value = PyCapsule_New(handle, "VkDescriptorSet", NULL);
+            static PyObject* PyHandle_VkQueryPool (PyObject *self, PyObject *args) {
+                  VkQueryPool* handle = malloc(sizeof(VkQueryPool));
+                  PyObject* value = PyCapsule_New(handle, "VkQueryPool", NULL);
+                  if (value == NULL) return NULL;
                   return value;
             }
             
-            static PyObject* PyHandle_VkFence (PyObject *self, PyObject *args) {
-                  VkFence* handle = malloc(sizeof(VkFence));
-                  PyObject* value = PyCapsule_New(handle, "VkFence", NULL);
-                  return value;
-            }
-            
-            static PyObject* PyHandle_VkBuffer (PyObject *self, PyObject *args) {
-                  VkBuffer* handle = malloc(sizeof(VkBuffer));
-                  PyObject* value = PyCapsule_New(handle, "VkBuffer", NULL);
+            static PyObject* PyHandle_VkPhysicalDevice (PyObject *self, PyObject *args) {
+                  VkPhysicalDevice* handle = malloc(sizeof(VkPhysicalDevice));
+                  PyObject* value = PyCapsule_New(handle, "VkPhysicalDevice", NULL);
+                  if (value == NULL) return NULL;
                   return value;
             }
             
             static PyObject* PyHandle_VkDescriptorSetLayout (PyObject *self, PyObject *args) {
                   VkDescriptorSetLayout* handle = malloc(sizeof(VkDescriptorSetLayout));
                   PyObject* value = PyCapsule_New(handle, "VkDescriptorSetLayout", NULL);
+                  if (value == NULL) return NULL;
+                  return value;
+            }
+            
+            static PyObject* PyHandle_VkBufferView (PyObject *self, PyObject *args) {
+                  VkBufferView* handle = malloc(sizeof(VkBufferView));
+                  PyObject* value = PyCapsule_New(handle, "VkBufferView", NULL);
+                  if (value == NULL) return NULL;
+                  return value;
+            }
+            
+            static PyObject* PyHandle_VkDisplayKHR (PyObject *self, PyObject *args) {
+                  VkDisplayKHR* handle = malloc(sizeof(VkDisplayKHR));
+                  PyObject* value = PyCapsule_New(handle, "VkDisplayKHR", NULL);
+                  if (value == NULL) return NULL;
                   return value;
             }
             
             static PyObject* PyHandle_VkDevice (PyObject *self, PyObject *args) {
                   VkDevice* handle = malloc(sizeof(VkDevice));
                   PyObject* value = PyCapsule_New(handle, "VkDevice", NULL);
+                  if (value == NULL) return NULL;
                   return value;
             }
             
-            static PyObject* PyHandle_VkSemaphore (PyObject *self, PyObject *args) {
-                  VkSemaphore* handle = malloc(sizeof(VkSemaphore));
-                  PyObject* value = PyCapsule_New(handle, "VkSemaphore", NULL);
+            static PyObject* PyHandle_VkImageView (PyObject *self, PyObject *args) {
+                  VkImageView* handle = malloc(sizeof(VkImageView));
+                  PyObject* value = PyCapsule_New(handle, "VkImageView", NULL);
+                  if (value == NULL) return NULL;
+                  return value;
+            }
+            
+            static PyObject* PyHandle_VkDisplayModeKHR (PyObject *self, PyObject *args) {
+                  VkDisplayModeKHR* handle = malloc(sizeof(VkDisplayModeKHR));
+                  PyObject* value = PyCapsule_New(handle, "VkDisplayModeKHR", NULL);
+                  if (value == NULL) return NULL;
+                  return value;
+            }
+            
+            static PyObject* PyHandle_VkBuffer (PyObject *self, PyObject *args) {
+                  VkBuffer* handle = malloc(sizeof(VkBuffer));
+                  PyObject* value = PyCapsule_New(handle, "VkBuffer", NULL);
+                  if (value == NULL) return NULL;
+                  return value;
+            }
+            
+            static PyObject* PyHandle_VkDeviceMemory (PyObject *self, PyObject *args) {
+                  VkDeviceMemory* handle = malloc(sizeof(VkDeviceMemory));
+                  PyObject* value = PyCapsule_New(handle, "VkDeviceMemory", NULL);
+                  if (value == NULL) return NULL;
                   return value;
             }
             
             static PyObject* PyHandle_VkPipeline (PyObject *self, PyObject *args) {
                   VkPipeline* handle = malloc(sizeof(VkPipeline));
                   PyObject* value = PyCapsule_New(handle, "VkPipeline", NULL);
+                  if (value == NULL) return NULL;
+                  return value;
+            }
+            
+            static PyObject* PyHandle_VkPipelineCache (PyObject *self, PyObject *args) {
+                  VkPipelineCache* handle = malloc(sizeof(VkPipelineCache));
+                  PyObject* value = PyCapsule_New(handle, "VkPipelineCache", NULL);
+                  if (value == NULL) return NULL;
+                  return value;
+            }
+            
+            static PyObject* PyHandle_VkCommandPool (PyObject *self, PyObject *args) {
+                  VkCommandPool* handle = malloc(sizeof(VkCommandPool));
+                  PyObject* value = PyCapsule_New(handle, "VkCommandPool", NULL);
+                  if (value == NULL) return NULL;
+                  return value;
+            }
+            
+            static PyObject* PyHandle_VkFence (PyObject *self, PyObject *args) {
+                  VkFence* handle = malloc(sizeof(VkFence));
+                  PyObject* value = PyCapsule_New(handle, "VkFence", NULL);
+                  if (value == NULL) return NULL;
                   return value;
             }
             
             static PyObject* PyHandle_VkEvent (PyObject *self, PyObject *args) {
                   VkEvent* handle = malloc(sizeof(VkEvent));
                   PyObject* value = PyCapsule_New(handle, "VkEvent", NULL);
+                  if (value == NULL) return NULL;
+                  return value;
+            }
+            
+            static PyObject* PyHandle_VkImage (PyObject *self, PyObject *args) {
+                  VkImage* handle = malloc(sizeof(VkImage));
+                  PyObject* value = PyCapsule_New(handle, "VkImage", NULL);
+                  if (value == NULL) return NULL;
+                  return value;
+            }
+            
+            static PyObject* PyHandle_VkSampler (PyObject *self, PyObject *args) {
+                  VkSampler* handle = malloc(sizeof(VkSampler));
+                  PyObject* value = PyCapsule_New(handle, "VkSampler", NULL);
+                  if (value == NULL) return NULL;
+                  return value;
+            }
+            
+            static PyObject* PyHandle_VkFramebuffer (PyObject *self, PyObject *args) {
+                  VkFramebuffer* handle = malloc(sizeof(VkFramebuffer));
+                  PyObject* value = PyCapsule_New(handle, "VkFramebuffer", NULL);
+                  if (value == NULL) return NULL;
+                  return value;
+            }
+            
+            static PyObject* PyHandle_VkSemaphore (PyObject *self, PyObject *args) {
+                  VkSemaphore* handle = malloc(sizeof(VkSemaphore));
+                  PyObject* value = PyCapsule_New(handle, "VkSemaphore", NULL);
+                  if (value == NULL) return NULL;
+                  return value;
+            }
+            
+            static PyObject* PyHandle_VkQueue (PyObject *self, PyObject *args) {
+                  VkQueue* handle = malloc(sizeof(VkQueue));
+                  PyObject* value = PyCapsule_New(handle, "VkQueue", NULL);
+                  if (value == NULL) return NULL;
+                  return value;
+            }
+            
+            static PyObject* PyHandle_VkDescriptorPool (PyObject *self, PyObject *args) {
+                  VkDescriptorPool* handle = malloc(sizeof(VkDescriptorPool));
+                  PyObject* value = PyCapsule_New(handle, "VkDescriptorPool", NULL);
+                  if (value == NULL) return NULL;
+                  return value;
+            }
+            
+            static PyObject* PyHandle_VkSurfaceKHR (PyObject *self, PyObject *args) {
+                  VkSurfaceKHR* handle = malloc(sizeof(VkSurfaceKHR));
+                  PyObject* value = PyCapsule_New(handle, "VkSurfaceKHR", NULL);
+                  if (value == NULL) return NULL;
+                  return value;
+            }
+            
+            static PyObject* PyHandle_VkInstance (PyObject *self, PyObject *args) {
+                  VkInstance* handle = malloc(sizeof(VkInstance));
+                  PyObject* value = PyCapsule_New(handle, "VkInstance", NULL);
+                  if (value == NULL) return NULL;
+                  return value;
+            }
+            
+            static PyObject* PyHandle_VkDebugReportCallbackEXT (PyObject *self, PyObject *args) {
+                  VkDebugReportCallbackEXT* handle = malloc(sizeof(VkDebugReportCallbackEXT));
+                  PyObject* value = PyCapsule_New(handle, "VkDebugReportCallbackEXT", NULL);
+                  if (value == NULL) return NULL;
                   return value;
             }
             
@@ -5767,6 +5797,10 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "y", (getter)PyVkOffset2D_gety, (setter)PyVkOffset2D_sety, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkOffset2D_init(PyVkOffset2D *self, PyObject *args, PyObject *kwds) {
+            PyObject* x = NULL;
+PyObject* y = NULL;static char *kwlist[] = {"x","y",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OO", kwlist, &x, &y)) return -1;return 0; }
             static PyTypeObject PyVkOffset2DType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkOffset2D", sizeof(PyVkOffset2D), 0,
@@ -5855,6 +5889,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "z", (getter)PyVkOffset3D_getz, (setter)PyVkOffset3D_setz, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkOffset3D_init(PyVkOffset3D *self, PyObject *args, PyObject *kwds) {
+            PyObject* x = NULL;
+PyObject* y = NULL;
+PyObject* z = NULL;static char *kwlist[] = {"x","y","z",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &x, &y, &z)) return -1;return 0; }
             static PyTypeObject PyVkOffset3DType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkOffset3D", sizeof(PyVkOffset3D), 0,
@@ -5925,6 +5964,10 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "height", (getter)PyVkExtent2D_getheight, (setter)PyVkExtent2D_setheight, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkExtent2D_init(PyVkExtent2D *self, PyObject *args, PyObject *kwds) {
+            PyObject* width = NULL;
+PyObject* height = NULL;static char *kwlist[] = {"width","height",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OO", kwlist, &width, &height)) return -1;return 0; }
             static PyTypeObject PyVkExtent2DType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkExtent2D", sizeof(PyVkExtent2D), 0,
@@ -6013,6 +6056,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "depth", (getter)PyVkExtent3D_getdepth, (setter)PyVkExtent3D_setdepth, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkExtent3D_init(PyVkExtent3D *self, PyObject *args, PyObject *kwds) {
+            PyObject* width = NULL;
+PyObject* height = NULL;
+PyObject* depth = NULL;static char *kwlist[] = {"width","height","depth",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &width, &height, &depth)) return -1;return 0; }
             static PyTypeObject PyVkExtent3DType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkExtent3D", sizeof(PyVkExtent3D), 0,
@@ -6155,6 +6203,14 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "maxDepth", (getter)PyVkViewport_getmaxDepth, (setter)PyVkViewport_setmaxDepth, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkViewport_init(PyVkViewport *self, PyObject *args, PyObject *kwds) {
+            PyObject* x = NULL;
+PyObject* y = NULL;
+PyObject* width = NULL;
+PyObject* height = NULL;
+PyObject* minDepth = NULL;
+PyObject* maxDepth = NULL;static char *kwlist[] = {"x","y","width","height","minDepth","maxDepth",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOO", kwlist, &x, &y, &width, &height, &minDepth, &maxDepth)) return -1;return 0; }
             static PyTypeObject PyVkViewportType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkViewport", sizeof(PyVkViewport), 0,
@@ -6189,6 +6245,10 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkRect2D_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkRect2D_init(PyVkRect2D *self, PyObject *args, PyObject *kwds) {
+            PyObject* offset = NULL;
+PyObject* extent = NULL;static char *kwlist[] = {"offset","extent",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OO", kwlist, &offset, &extent)) return -1;return 0; }
             static PyTypeObject PyVkRect2DType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkRect2D", sizeof(PyVkRect2D), 0,
@@ -6225,6 +6285,10 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkRect3D_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkRect3D_init(PyVkRect3D *self, PyObject *args, PyObject *kwds) {
+            PyObject* offset = NULL;
+PyObject* extent = NULL;static char *kwlist[] = {"offset","extent",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OO", kwlist, &offset, &extent)) return -1;return 0; }
             static PyTypeObject PyVkRect3DType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkRect3D", sizeof(PyVkRect3D), 0,
@@ -6297,6 +6361,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "layerCount", (getter)PyVkClearRect_getlayerCount, (setter)PyVkClearRect_setlayerCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkClearRect_init(PyVkClearRect *self, PyObject *args, PyObject *kwds) {
+            PyObject* rect = NULL;
+PyObject* baseArrayLayer = NULL;
+PyObject* layerCount = NULL;static char *kwlist[] = {"rect","baseArrayLayer","layerCount",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &rect, &baseArrayLayer, &layerCount)) return -1;return 0; }
             static PyTypeObject PyVkClearRectType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkClearRect", sizeof(PyVkClearRect), 0,
@@ -6331,6 +6400,12 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkComponentMapping_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkComponentMapping_init(PyVkComponentMapping *self, PyObject *args, PyObject *kwds) {
+            PyObject* r = NULL;
+PyObject* g = NULL;
+PyObject* b = NULL;
+PyObject* a = NULL;static char *kwlist[] = {"r","g","b","a",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOO", kwlist, &r, &g, &b, &a)) return -1;return 0; }
             static PyTypeObject PyVkComponentMappingType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkComponentMapping", sizeof(PyVkComponentMapping), 0,
@@ -6493,6 +6568,9 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pipelineCacheUUID", (getter)PyVkPhysicalDeviceProperties_getpipelineCacheUUID, (setter)PyVkPhysicalDeviceProperties_setpipelineCacheUUID, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkPhysicalDeviceProperties_init(PyVkPhysicalDeviceProperties *self, PyObject *args, PyObject *kwds) {
+            return 0; }
             static PyTypeObject PyVkPhysicalDevicePropertiesType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkPhysicalDeviceProperties", sizeof(PyVkPhysicalDeviceProperties), 0,
@@ -6568,6 +6646,9 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "specVersion", (getter)PyVkExtensionProperties_getspecVersion, (setter)PyVkExtensionProperties_setspecVersion, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkExtensionProperties_init(PyVkExtensionProperties *self, PyObject *args, PyObject *kwds) {
+            return 0; }
             static PyTypeObject PyVkExtensionPropertiesType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkExtensionProperties", sizeof(PyVkExtensionProperties), 0,
@@ -6684,6 +6765,9 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "description", (getter)PyVkLayerProperties_getdescription, (setter)PyVkLayerProperties_setdescription, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkLayerProperties_init(PyVkLayerProperties *self, PyObject *args, PyObject *kwds) {
+            return 0; }
             static PyTypeObject PyVkLayerPropertiesType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkLayerProperties", sizeof(PyVkLayerProperties), 0,
@@ -6836,6 +6920,15 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "apiVersion", (getter)PyVkApplicationInfo_getapiVersion, (setter)PyVkApplicationInfo_setapiVersion, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkApplicationInfo_init(PyVkApplicationInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* pApplicationName = NULL;
+PyObject* applicationVersion = NULL;
+PyObject* pEngineName = NULL;
+PyObject* engineVersion = NULL;
+PyObject* apiVersion = NULL;static char *kwlist[] = {"sType","pNext","pApplicationName","applicationVersion","pEngineName","engineVersion","apiVersion",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOO", kwlist, &sType, &pNext, &pApplicationName, &applicationVersion, &pEngineName, &engineVersion, &apiVersion)) return -1;return 0; }
             static PyTypeObject PyVkApplicationInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkApplicationInfo", sizeof(PyVkApplicationInfo), 0,
@@ -6888,6 +6981,14 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pUserData", (getter)PyVkAllocationCallbacks_getpUserData, (setter)PyVkAllocationCallbacks_setpUserData, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkAllocationCallbacks_init(PyVkAllocationCallbacks *self, PyObject *args, PyObject *kwds) {
+            PyObject* pUserData = NULL;
+PyObject* pfnAllocation = NULL;
+PyObject* pfnReallocation = NULL;
+PyObject* pfnFree = NULL;
+PyObject* pfnInternalAllocation = NULL;
+PyObject* pfnInternalFree = NULL;static char *kwlist[] = {"pUserData","pfnAllocation","pfnReallocation","pfnFree","pfnInternalAllocation","pfnInternalFree",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOO", kwlist, &pUserData, &pfnAllocation, &pfnReallocation, &pfnFree, &pfnInternalAllocation, &pfnInternalFree)) return -1;return 0; }
             static PyTypeObject PyVkAllocationCallbacksType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkAllocationCallbacks", sizeof(PyVkAllocationCallbacks), 0,
@@ -6999,6 +7100,14 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pQueuePriorities", (getter)PyVkDeviceQueueCreateInfo_getpQueuePriorities, (setter)PyVkDeviceQueueCreateInfo_setpQueuePriorities, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDeviceQueueCreateInfo_init(PyVkDeviceQueueCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* queueFamilyIndex = NULL;
+PyObject* queueCount = NULL;
+PyObject* pQueuePriorities = NULL;static char *kwlist[] = {"sType","pNext","flags","queueFamilyIndex","queueCount","pQueuePriorities",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOO", kwlist, &sType, &pNext, &flags, &queueFamilyIndex, &queueCount, &pQueuePriorities)) return -1;return 0; }
             static PyTypeObject PyVkDeviceQueueCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDeviceQueueCreateInfo", sizeof(PyVkDeviceQueueCreateInfo), 0,
@@ -7185,6 +7294,18 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "ppEnabledExtensionNames", (getter)PyVkDeviceCreateInfo_getppEnabledExtensionNames, (setter)PyVkDeviceCreateInfo_setppEnabledExtensionNames, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDeviceCreateInfo_init(PyVkDeviceCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* queueCreateInfoCount = NULL;
+PyObject* pQueueCreateInfos = NULL;
+PyObject* enabledLayerCount = NULL;
+PyObject* ppEnabledLayerNames = NULL;
+PyObject* enabledExtensionCount = NULL;
+PyObject* ppEnabledExtensionNames = NULL;
+PyObject* pEnabledFeatures = NULL;static char *kwlist[] = {"sType","pNext","flags","queueCreateInfoCount","pQueueCreateInfos","enabledLayerCount","ppEnabledLayerNames","enabledExtensionCount","ppEnabledExtensionNames","pEnabledFeatures",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOOO", kwlist, &sType, &pNext, &flags, &queueCreateInfoCount, &pQueueCreateInfos, &enabledLayerCount, &ppEnabledLayerNames, &enabledExtensionCount, &ppEnabledExtensionNames, &pEnabledFeatures)) return -1;return 0; }
             static PyTypeObject PyVkDeviceCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDeviceCreateInfo", sizeof(PyVkDeviceCreateInfo), 0,
@@ -7353,6 +7474,16 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "ppEnabledExtensionNames", (getter)PyVkInstanceCreateInfo_getppEnabledExtensionNames, (setter)PyVkInstanceCreateInfo_setppEnabledExtensionNames, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkInstanceCreateInfo_init(PyVkInstanceCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* pApplicationInfo = NULL;
+PyObject* enabledLayerCount = NULL;
+PyObject* ppEnabledLayerNames = NULL;
+PyObject* enabledExtensionCount = NULL;
+PyObject* ppEnabledExtensionNames = NULL;static char *kwlist[] = {"sType","pNext","flags","pApplicationInfo","enabledLayerCount","ppEnabledLayerNames","enabledExtensionCount","ppEnabledExtensionNames",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOO", kwlist, &sType, &pNext, &flags, &pApplicationInfo, &enabledLayerCount, &ppEnabledLayerNames, &enabledExtensionCount, &ppEnabledExtensionNames)) return -1;return 0; }
             static PyTypeObject PyVkInstanceCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkInstanceCreateInfo", sizeof(PyVkInstanceCreateInfo), 0,
@@ -7423,6 +7554,9 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "timestampValidBits", (getter)PyVkQueueFamilyProperties_gettimestampValidBits, (setter)PyVkQueueFamilyProperties_settimestampValidBits, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkQueueFamilyProperties_init(PyVkQueueFamilyProperties *self, PyObject *args, PyObject *kwds) {
+            return 0; }
             static PyTypeObject PyVkQueueFamilyPropertiesType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkQueueFamilyProperties", sizeof(PyVkQueueFamilyProperties), 0,
@@ -7493,6 +7627,9 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "memoryHeapCount", (getter)PyVkPhysicalDeviceMemoryProperties_getmemoryHeapCount, (setter)PyVkPhysicalDeviceMemoryProperties_setmemoryHeapCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkPhysicalDeviceMemoryProperties_init(PyVkPhysicalDeviceMemoryProperties *self, PyObject *args, PyObject *kwds) {
+            return 0; }
             static PyTypeObject PyVkPhysicalDeviceMemoryPropertiesType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkPhysicalDeviceMemoryProperties", sizeof(PyVkPhysicalDeviceMemoryProperties), 0,
@@ -7563,6 +7700,12 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "memoryTypeIndex", (getter)PyVkMemoryAllocateInfo_getmemoryTypeIndex, (setter)PyVkMemoryAllocateInfo_setmemoryTypeIndex, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkMemoryAllocateInfo_init(PyVkMemoryAllocateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* allocationSize = NULL;
+PyObject* memoryTypeIndex = NULL;static char *kwlist[] = {"sType","pNext","allocationSize","memoryTypeIndex",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOO", kwlist, &sType, &pNext, &allocationSize, &memoryTypeIndex)) return -1;return 0; }
             static PyTypeObject PyVkMemoryAllocateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkMemoryAllocateInfo", sizeof(PyVkMemoryAllocateInfo), 0,
@@ -7615,6 +7758,9 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "memoryTypeBits", (getter)PyVkMemoryRequirements_getmemoryTypeBits, (setter)PyVkMemoryRequirements_setmemoryTypeBits, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkMemoryRequirements_init(PyVkMemoryRequirements *self, PyObject *args, PyObject *kwds) {
+            return 0; }
             static PyTypeObject PyVkMemoryRequirementsType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkMemoryRequirements", sizeof(PyVkMemoryRequirements), 0,
@@ -7649,6 +7795,9 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkSparseImageFormatProperties_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkSparseImageFormatProperties_init(PyVkSparseImageFormatProperties *self, PyObject *args, PyObject *kwds) {
+            return 0; }
             static PyTypeObject PyVkSparseImageFormatPropertiesType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkSparseImageFormatProperties", sizeof(PyVkSparseImageFormatProperties), 0,
@@ -7701,6 +7850,9 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "imageMipTailFirstLod", (getter)PyVkSparseImageMemoryRequirements_getimageMipTailFirstLod, (setter)PyVkSparseImageMemoryRequirements_setimageMipTailFirstLod, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkSparseImageMemoryRequirements_init(PyVkSparseImageMemoryRequirements *self, PyObject *args, PyObject *kwds) {
+            return 0; }
             static PyTypeObject PyVkSparseImageMemoryRequirementsType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkSparseImageMemoryRequirements", sizeof(PyVkSparseImageMemoryRequirements), 0,
@@ -7753,6 +7905,9 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "heapIndex", (getter)PyVkMemoryType_getheapIndex, (setter)PyVkMemoryType_setheapIndex, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkMemoryType_init(PyVkMemoryType *self, PyObject *args, PyObject *kwds) {
+            return 0; }
             static PyTypeObject PyVkMemoryTypeType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkMemoryType", sizeof(PyVkMemoryType), 0,
@@ -7787,6 +7942,9 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkMemoryHeap_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkMemoryHeap_init(PyVkMemoryHeap *self, PyObject *args, PyObject *kwds) {
+            return 0; }
             static PyTypeObject PyVkMemoryHeapType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkMemoryHeap", sizeof(PyVkMemoryHeap), 0,
@@ -7839,6 +7997,13 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkMappedMemoryRange_getpNext, (setter)PyVkMappedMemoryRange_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkMappedMemoryRange_init(PyVkMappedMemoryRange *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* memory = NULL;
+PyObject* offset = NULL;
+PyObject* size = NULL;static char *kwlist[] = {"sType","pNext","memory","offset","size",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOO", kwlist, &sType, &pNext, &memory, &offset, &size)) return -1;return 0; }
             static PyTypeObject PyVkMappedMemoryRangeType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkMappedMemoryRange", sizeof(PyVkMappedMemoryRange), 0,
@@ -7873,6 +8038,9 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkFormatProperties_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkFormatProperties_init(PyVkFormatProperties *self, PyObject *args, PyObject *kwds) {
+            return 0; }
             static PyTypeObject PyVkFormatPropertiesType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkFormatProperties", sizeof(PyVkFormatProperties), 0,
@@ -7943,6 +8111,9 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "maxArrayLayers", (getter)PyVkImageFormatProperties_getmaxArrayLayers, (setter)PyVkImageFormatProperties_setmaxArrayLayers, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkImageFormatProperties_init(PyVkImageFormatProperties *self, PyObject *args, PyObject *kwds) {
+            return 0; }
             static PyTypeObject PyVkImageFormatPropertiesType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkImageFormatProperties", sizeof(PyVkImageFormatProperties), 0,
@@ -7977,6 +8148,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkDescriptorBufferInfo_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkDescriptorBufferInfo_init(PyVkDescriptorBufferInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* buffer = NULL;
+PyObject* offset = NULL;
+PyObject* range = NULL;static char *kwlist[] = {"buffer","offset","range",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &buffer, &offset, &range)) return -1;return 0; }
             static PyTypeObject PyVkDescriptorBufferInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDescriptorBufferInfo", sizeof(PyVkDescriptorBufferInfo), 0,
@@ -8011,6 +8187,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkDescriptorImageInfo_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkDescriptorImageInfo_init(PyVkDescriptorImageInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sampler = NULL;
+PyObject* imageView = NULL;
+PyObject* imageLayout = NULL;static char *kwlist[] = {"sampler","imageView","imageLayout",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &sampler, &imageView, &imageLayout)) return -1;return 0; }
             static PyTypeObject PyVkDescriptorImageInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDescriptorImageInfo", sizeof(PyVkDescriptorImageInfo), 0,
@@ -8117,6 +8298,18 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "descriptorCount", (getter)PyVkWriteDescriptorSet_getdescriptorCount, (setter)PyVkWriteDescriptorSet_setdescriptorCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkWriteDescriptorSet_init(PyVkWriteDescriptorSet *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* dstSet = NULL;
+PyObject* dstBinding = NULL;
+PyObject* dstArrayElement = NULL;
+PyObject* descriptorCount = NULL;
+PyObject* descriptorType = NULL;
+PyObject* pImageInfo = NULL;
+PyObject* pBufferInfo = NULL;
+PyObject* pTexelBufferView = NULL;static char *kwlist[] = {"sType","pNext","dstSet","dstBinding","dstArrayElement","descriptorCount","descriptorType","pImageInfo","pBufferInfo","pTexelBufferView",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOOO", kwlist, &sType, &pNext, &dstSet, &dstBinding, &dstArrayElement, &descriptorCount, &descriptorType, &pImageInfo, &pBufferInfo, &pTexelBufferView)) return -1;return 0; }
             static PyTypeObject PyVkWriteDescriptorSetType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkWriteDescriptorSet", sizeof(PyVkWriteDescriptorSet), 0,
@@ -8259,6 +8452,17 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "descriptorCount", (getter)PyVkCopyDescriptorSet_getdescriptorCount, (setter)PyVkCopyDescriptorSet_setdescriptorCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkCopyDescriptorSet_init(PyVkCopyDescriptorSet *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* srcSet = NULL;
+PyObject* srcBinding = NULL;
+PyObject* srcArrayElement = NULL;
+PyObject* dstSet = NULL;
+PyObject* dstBinding = NULL;
+PyObject* dstArrayElement = NULL;
+PyObject* descriptorCount = NULL;static char *kwlist[] = {"sType","pNext","srcSet","srcBinding","srcArrayElement","dstSet","dstBinding","dstArrayElement","descriptorCount",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOO", kwlist, &sType, &pNext, &srcSet, &srcBinding, &srcArrayElement, &dstSet, &dstBinding, &dstArrayElement, &descriptorCount)) return -1;return 0; }
             static PyTypeObject PyVkCopyDescriptorSetType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkCopyDescriptorSet", sizeof(PyVkCopyDescriptorSet), 0,
@@ -8352,6 +8556,16 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pQueueFamilyIndices", (getter)PyVkBufferCreateInfo_getpQueueFamilyIndices, (setter)PyVkBufferCreateInfo_setpQueueFamilyIndices, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkBufferCreateInfo_init(PyVkBufferCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* size = NULL;
+PyObject* usage = NULL;
+PyObject* sharingMode = NULL;
+PyObject* queueFamilyIndexCount = NULL;
+PyObject* pQueueFamilyIndices = NULL;static char *kwlist[] = {"sType","pNext","flags","size","usage","sharingMode","queueFamilyIndexCount","pQueueFamilyIndices",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOO", kwlist, &sType, &pNext, &flags, &size, &usage, &sharingMode, &queueFamilyIndexCount, &pQueueFamilyIndices)) return -1;return 0; }
             static PyTypeObject PyVkBufferCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkBufferCreateInfo", sizeof(PyVkBufferCreateInfo), 0,
@@ -8404,6 +8618,15 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkBufferViewCreateInfo_getpNext, (setter)PyVkBufferViewCreateInfo_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkBufferViewCreateInfo_init(PyVkBufferViewCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* buffer = NULL;
+PyObject* format = NULL;
+PyObject* offset = NULL;
+PyObject* range = NULL;static char *kwlist[] = {"sType","pNext","flags","buffer","format","offset","range",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOO", kwlist, &sType, &pNext, &flags, &buffer, &format, &offset, &range)) return -1;return 0; }
             static PyTypeObject PyVkBufferViewCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkBufferViewCreateInfo", sizeof(PyVkBufferViewCreateInfo), 0,
@@ -8474,6 +8697,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "arrayLayer", (getter)PyVkImageSubresource_getarrayLayer, (setter)PyVkImageSubresource_setarrayLayer, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkImageSubresource_init(PyVkImageSubresource *self, PyObject *args, PyObject *kwds) {
+            PyObject* aspectMask = NULL;
+PyObject* mipLevel = NULL;
+PyObject* arrayLayer = NULL;static char *kwlist[] = {"aspectMask","mipLevel","arrayLayer",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &aspectMask, &mipLevel, &arrayLayer)) return -1;return 0; }
             static PyTypeObject PyVkImageSubresourceType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkImageSubresource", sizeof(PyVkImageSubresource), 0,
@@ -8562,6 +8790,12 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "layerCount", (getter)PyVkImageSubresourceLayers_getlayerCount, (setter)PyVkImageSubresourceLayers_setlayerCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkImageSubresourceLayers_init(PyVkImageSubresourceLayers *self, PyObject *args, PyObject *kwds) {
+            PyObject* aspectMask = NULL;
+PyObject* mipLevel = NULL;
+PyObject* baseArrayLayer = NULL;
+PyObject* layerCount = NULL;static char *kwlist[] = {"aspectMask","mipLevel","baseArrayLayer","layerCount",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOO", kwlist, &aspectMask, &mipLevel, &baseArrayLayer, &layerCount)) return -1;return 0; }
             static PyTypeObject PyVkImageSubresourceLayersType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkImageSubresourceLayers", sizeof(PyVkImageSubresourceLayers), 0,
@@ -8668,6 +8902,13 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "layerCount", (getter)PyVkImageSubresourceRange_getlayerCount, (setter)PyVkImageSubresourceRange_setlayerCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkImageSubresourceRange_init(PyVkImageSubresourceRange *self, PyObject *args, PyObject *kwds) {
+            PyObject* aspectMask = NULL;
+PyObject* baseMipLevel = NULL;
+PyObject* levelCount = NULL;
+PyObject* baseArrayLayer = NULL;
+PyObject* layerCount = NULL;static char *kwlist[] = {"aspectMask","baseMipLevel","levelCount","baseArrayLayer","layerCount",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOO", kwlist, &aspectMask, &baseMipLevel, &levelCount, &baseArrayLayer, &layerCount)) return -1;return 0; }
             static PyTypeObject PyVkImageSubresourceRangeType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkImageSubresourceRange", sizeof(PyVkImageSubresourceRange), 0,
@@ -8720,6 +8961,12 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkMemoryBarrier_getpNext, (setter)PyVkMemoryBarrier_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkMemoryBarrier_init(PyVkMemoryBarrier *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* srcAccessMask = NULL;
+PyObject* dstAccessMask = NULL;static char *kwlist[] = {"sType","pNext","srcAccessMask","dstAccessMask",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOO", kwlist, &sType, &pNext, &srcAccessMask, &dstAccessMask)) return -1;return 0; }
             static PyTypeObject PyVkMemoryBarrierType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkMemoryBarrier", sizeof(PyVkMemoryBarrier), 0,
@@ -8808,6 +9055,17 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "dstQueueFamilyIndex", (getter)PyVkBufferMemoryBarrier_getdstQueueFamilyIndex, (setter)PyVkBufferMemoryBarrier_setdstQueueFamilyIndex, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkBufferMemoryBarrier_init(PyVkBufferMemoryBarrier *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* srcAccessMask = NULL;
+PyObject* dstAccessMask = NULL;
+PyObject* srcQueueFamilyIndex = NULL;
+PyObject* dstQueueFamilyIndex = NULL;
+PyObject* buffer = NULL;
+PyObject* offset = NULL;
+PyObject* size = NULL;static char *kwlist[] = {"sType","pNext","srcAccessMask","dstAccessMask","srcQueueFamilyIndex","dstQueueFamilyIndex","buffer","offset","size",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOO", kwlist, &sType, &pNext, &srcAccessMask, &dstAccessMask, &srcQueueFamilyIndex, &dstQueueFamilyIndex, &buffer, &offset, &size)) return -1;return 0; }
             static PyTypeObject PyVkBufferMemoryBarrierType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkBufferMemoryBarrier", sizeof(PyVkBufferMemoryBarrier), 0,
@@ -8896,6 +9154,18 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "dstQueueFamilyIndex", (getter)PyVkImageMemoryBarrier_getdstQueueFamilyIndex, (setter)PyVkImageMemoryBarrier_setdstQueueFamilyIndex, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkImageMemoryBarrier_init(PyVkImageMemoryBarrier *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* srcAccessMask = NULL;
+PyObject* dstAccessMask = NULL;
+PyObject* oldLayout = NULL;
+PyObject* newLayout = NULL;
+PyObject* srcQueueFamilyIndex = NULL;
+PyObject* dstQueueFamilyIndex = NULL;
+PyObject* image = NULL;
+PyObject* subresourceRange = NULL;static char *kwlist[] = {"sType","pNext","srcAccessMask","dstAccessMask","oldLayout","newLayout","srcQueueFamilyIndex","dstQueueFamilyIndex","image","subresourceRange",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOOO", kwlist, &sType, &pNext, &srcAccessMask, &dstAccessMask, &oldLayout, &newLayout, &srcQueueFamilyIndex, &dstQueueFamilyIndex, &image, &subresourceRange)) return -1;return 0; }
             static PyTypeObject PyVkImageMemoryBarrierType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkImageMemoryBarrier", sizeof(PyVkImageMemoryBarrier), 0,
@@ -9025,6 +9295,23 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pQueueFamilyIndices", (getter)PyVkImageCreateInfo_getpQueueFamilyIndices, (setter)PyVkImageCreateInfo_setpQueueFamilyIndices, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkImageCreateInfo_init(PyVkImageCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* imageType = NULL;
+PyObject* format = NULL;
+PyObject* extent = NULL;
+PyObject* mipLevels = NULL;
+PyObject* arrayLayers = NULL;
+PyObject* samples = NULL;
+PyObject* tiling = NULL;
+PyObject* usage = NULL;
+PyObject* sharingMode = NULL;
+PyObject* queueFamilyIndexCount = NULL;
+PyObject* pQueueFamilyIndices = NULL;
+PyObject* initialLayout = NULL;static char *kwlist[] = {"sType","pNext","flags","imageType","format","extent","mipLevels","arrayLayers","samples","tiling","usage","sharingMode","queueFamilyIndexCount","pQueueFamilyIndices","initialLayout",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOOOOOOOO", kwlist, &sType, &pNext, &flags, &imageType, &format, &extent, &mipLevels, &arrayLayers, &samples, &tiling, &usage, &sharingMode, &queueFamilyIndexCount, &pQueueFamilyIndices, &initialLayout)) return -1;return 0; }
             static PyTypeObject PyVkImageCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkImageCreateInfo", sizeof(PyVkImageCreateInfo), 0,
@@ -9059,6 +9346,9 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkSubresourceLayout_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkSubresourceLayout_init(PyVkSubresourceLayout *self, PyObject *args, PyObject *kwds) {
+            return 0; }
             static PyTypeObject PyVkSubresourceLayoutType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkSubresourceLayout", sizeof(PyVkSubresourceLayout), 0,
@@ -9111,6 +9401,16 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkImageViewCreateInfo_getpNext, (setter)PyVkImageViewCreateInfo_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkImageViewCreateInfo_init(PyVkImageViewCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* image = NULL;
+PyObject* viewType = NULL;
+PyObject* format = NULL;
+PyObject* components = NULL;
+PyObject* subresourceRange = NULL;static char *kwlist[] = {"sType","pNext","flags","image","viewType","format","components","subresourceRange",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOO", kwlist, &sType, &pNext, &flags, &image, &viewType, &format, &components, &subresourceRange)) return -1;return 0; }
             static PyTypeObject PyVkImageViewCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkImageViewCreateInfo", sizeof(PyVkImageViewCreateInfo), 0,
@@ -9145,6 +9445,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkBufferCopy_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkBufferCopy_init(PyVkBufferCopy *self, PyObject *args, PyObject *kwds) {
+            PyObject* srcOffset = NULL;
+PyObject* dstOffset = NULL;
+PyObject* size = NULL;static char *kwlist[] = {"srcOffset","dstOffset","size",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &srcOffset, &dstOffset, &size)) return -1;return 0; }
             static PyTypeObject PyVkBufferCopyType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkBufferCopy", sizeof(PyVkBufferCopy), 0,
@@ -9179,6 +9484,13 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkSparseMemoryBind_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkSparseMemoryBind_init(PyVkSparseMemoryBind *self, PyObject *args, PyObject *kwds) {
+            PyObject* resourceOffset = NULL;
+PyObject* size = NULL;
+PyObject* memory = NULL;
+PyObject* memoryOffset = NULL;
+PyObject* flags = NULL;static char *kwlist[] = {"resourceOffset","size","memory","memoryOffset","flags",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOO", kwlist, &resourceOffset, &size, &memory, &memoryOffset, &flags)) return -1;return 0; }
             static PyTypeObject PyVkSparseMemoryBindType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkSparseMemoryBind", sizeof(PyVkSparseMemoryBind), 0,
@@ -9213,6 +9525,14 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkSparseImageMemoryBind_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkSparseImageMemoryBind_init(PyVkSparseImageMemoryBind *self, PyObject *args, PyObject *kwds) {
+            PyObject* subresource = NULL;
+PyObject* offset = NULL;
+PyObject* extent = NULL;
+PyObject* memory = NULL;
+PyObject* memoryOffset = NULL;
+PyObject* flags = NULL;static char *kwlist[] = {"subresource","offset","extent","memory","memoryOffset","flags",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOO", kwlist, &subresource, &offset, &extent, &memory, &memoryOffset, &flags)) return -1;return 0; }
             static PyTypeObject PyVkSparseImageMemoryBindType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkSparseImageMemoryBind", sizeof(PyVkSparseImageMemoryBind), 0,
@@ -9265,6 +9585,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "bindCount", (getter)PyVkSparseBufferMemoryBindInfo_getbindCount, (setter)PyVkSparseBufferMemoryBindInfo_setbindCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkSparseBufferMemoryBindInfo_init(PyVkSparseBufferMemoryBindInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* buffer = NULL;
+PyObject* bindCount = NULL;
+PyObject* pBinds = NULL;static char *kwlist[] = {"buffer","bindCount","pBinds",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &buffer, &bindCount, &pBinds)) return -1;return 0; }
             static PyTypeObject PyVkSparseBufferMemoryBindInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkSparseBufferMemoryBindInfo", sizeof(PyVkSparseBufferMemoryBindInfo), 0,
@@ -9317,6 +9642,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "bindCount", (getter)PyVkSparseImageOpaqueMemoryBindInfo_getbindCount, (setter)PyVkSparseImageOpaqueMemoryBindInfo_setbindCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkSparseImageOpaqueMemoryBindInfo_init(PyVkSparseImageOpaqueMemoryBindInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* image = NULL;
+PyObject* bindCount = NULL;
+PyObject* pBinds = NULL;static char *kwlist[] = {"image","bindCount","pBinds",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &image, &bindCount, &pBinds)) return -1;return 0; }
             static PyTypeObject PyVkSparseImageOpaqueMemoryBindInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkSparseImageOpaqueMemoryBindInfo", sizeof(PyVkSparseImageOpaqueMemoryBindInfo), 0,
@@ -9369,6 +9699,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "bindCount", (getter)PyVkSparseImageMemoryBindInfo_getbindCount, (setter)PyVkSparseImageMemoryBindInfo_setbindCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkSparseImageMemoryBindInfo_init(PyVkSparseImageMemoryBindInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* image = NULL;
+PyObject* bindCount = NULL;
+PyObject* pBinds = NULL;static char *kwlist[] = {"image","bindCount","pBinds",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &image, &bindCount, &pBinds)) return -1;return 0; }
             static PyTypeObject PyVkSparseImageMemoryBindInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkSparseImageMemoryBindInfo", sizeof(PyVkSparseImageMemoryBindInfo), 0,
@@ -9511,6 +9846,20 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "signalSemaphoreCount", (getter)PyVkBindSparseInfo_getsignalSemaphoreCount, (setter)PyVkBindSparseInfo_setsignalSemaphoreCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkBindSparseInfo_init(PyVkBindSparseInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* waitSemaphoreCount = NULL;
+PyObject* pWaitSemaphores = NULL;
+PyObject* bufferBindCount = NULL;
+PyObject* pBufferBinds = NULL;
+PyObject* imageOpaqueBindCount = NULL;
+PyObject* pImageOpaqueBinds = NULL;
+PyObject* imageBindCount = NULL;
+PyObject* pImageBinds = NULL;
+PyObject* signalSemaphoreCount = NULL;
+PyObject* pSignalSemaphores = NULL;static char *kwlist[] = {"sType","pNext","waitSemaphoreCount","pWaitSemaphores","bufferBindCount","pBufferBinds","imageOpaqueBindCount","pImageOpaqueBinds","imageBindCount","pImageBinds","signalSemaphoreCount","pSignalSemaphores",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOOOOO", kwlist, &sType, &pNext, &waitSemaphoreCount, &pWaitSemaphores, &bufferBindCount, &pBufferBinds, &imageOpaqueBindCount, &pImageOpaqueBinds, &imageBindCount, &pImageBinds, &signalSemaphoreCount, &pSignalSemaphores)) return -1;return 0; }
             static PyTypeObject PyVkBindSparseInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkBindSparseInfo", sizeof(PyVkBindSparseInfo), 0,
@@ -9545,6 +9894,13 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkImageCopy_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkImageCopy_init(PyVkImageCopy *self, PyObject *args, PyObject *kwds) {
+            PyObject* srcSubresource = NULL;
+PyObject* srcOffset = NULL;
+PyObject* dstSubresource = NULL;
+PyObject* dstOffset = NULL;
+PyObject* extent = NULL;static char *kwlist[] = {"srcSubresource","srcOffset","dstSubresource","dstOffset","extent",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOO", kwlist, &srcSubresource, &srcOffset, &dstSubresource, &dstOffset, &extent)) return -1;return 0; }
             static PyTypeObject PyVkImageCopyType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkImageCopy", sizeof(PyVkImageCopy), 0,
@@ -9579,6 +9935,12 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkImageBlit_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkImageBlit_init(PyVkImageBlit *self, PyObject *args, PyObject *kwds) {
+            PyObject* srcSubresource = NULL;
+PyObject* srcOffsets = NULL;
+PyObject* dstSubresource = NULL;
+PyObject* dstOffsets = NULL;static char *kwlist[] = {"srcSubresource","srcOffsets","dstSubresource","dstOffsets",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOO", kwlist, &srcSubresource, &srcOffsets, &dstSubresource, &dstOffsets)) return -1;return 0; }
             static PyTypeObject PyVkImageBlitType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkImageBlit", sizeof(PyVkImageBlit), 0,
@@ -9649,6 +10011,14 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "bufferImageHeight", (getter)PyVkBufferImageCopy_getbufferImageHeight, (setter)PyVkBufferImageCopy_setbufferImageHeight, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkBufferImageCopy_init(PyVkBufferImageCopy *self, PyObject *args, PyObject *kwds) {
+            PyObject* bufferOffset = NULL;
+PyObject* bufferRowLength = NULL;
+PyObject* bufferImageHeight = NULL;
+PyObject* imageSubresource = NULL;
+PyObject* imageOffset = NULL;
+PyObject* imageExtent = NULL;static char *kwlist[] = {"bufferOffset","bufferRowLength","bufferImageHeight","imageSubresource","imageOffset","imageExtent",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOO", kwlist, &bufferOffset, &bufferRowLength, &bufferImageHeight, &imageSubresource, &imageOffset, &imageExtent)) return -1;return 0; }
             static PyTypeObject PyVkBufferImageCopyType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkBufferImageCopy", sizeof(PyVkBufferImageCopy), 0,
@@ -9683,6 +10053,13 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkImageResolve_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkImageResolve_init(PyVkImageResolve *self, PyObject *args, PyObject *kwds) {
+            PyObject* srcSubresource = NULL;
+PyObject* srcOffset = NULL;
+PyObject* dstSubresource = NULL;
+PyObject* dstOffset = NULL;
+PyObject* extent = NULL;static char *kwlist[] = {"srcSubresource","srcOffset","dstSubresource","dstOffset","extent",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOO", kwlist, &srcSubresource, &srcOffset, &dstSubresource, &dstOffset, &extent)) return -1;return 0; }
             static PyTypeObject PyVkImageResolveType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkImageResolve", sizeof(PyVkImageResolve), 0,
@@ -9776,6 +10153,13 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pCode", (getter)PyVkShaderModuleCreateInfo_getpCode, (setter)PyVkShaderModuleCreateInfo_setpCode, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkShaderModuleCreateInfo_init(PyVkShaderModuleCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* codeSize = NULL;
+PyObject* pCode = NULL;static char *kwlist[] = {"sType","pNext","flags","codeSize","pCode",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOO", kwlist, &sType, &pNext, &flags, &codeSize, &pCode)) return -1;return 0; }
             static PyTypeObject PyVkShaderModuleCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkShaderModuleCreateInfo", sizeof(PyVkShaderModuleCreateInfo), 0,
@@ -9846,6 +10230,13 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "descriptorCount", (getter)PyVkDescriptorSetLayoutBinding_getdescriptorCount, (setter)PyVkDescriptorSetLayoutBinding_setdescriptorCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDescriptorSetLayoutBinding_init(PyVkDescriptorSetLayoutBinding *self, PyObject *args, PyObject *kwds) {
+            PyObject* binding = NULL;
+PyObject* descriptorType = NULL;
+PyObject* descriptorCount = NULL;
+PyObject* stageFlags = NULL;
+PyObject* pImmutableSamplers = NULL;static char *kwlist[] = {"binding","descriptorType","descriptorCount","stageFlags","pImmutableSamplers",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOO", kwlist, &binding, &descriptorType, &descriptorCount, &stageFlags, &pImmutableSamplers)) return -1;return 0; }
             static PyTypeObject PyVkDescriptorSetLayoutBindingType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDescriptorSetLayoutBinding", sizeof(PyVkDescriptorSetLayoutBinding), 0,
@@ -9916,6 +10307,13 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "bindingCount", (getter)PyVkDescriptorSetLayoutCreateInfo_getbindingCount, (setter)PyVkDescriptorSetLayoutCreateInfo_setbindingCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDescriptorSetLayoutCreateInfo_init(PyVkDescriptorSetLayoutCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* bindingCount = NULL;
+PyObject* pBindings = NULL;static char *kwlist[] = {"sType","pNext","flags","bindingCount","pBindings",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOO", kwlist, &sType, &pNext, &flags, &bindingCount, &pBindings)) return -1;return 0; }
             static PyTypeObject PyVkDescriptorSetLayoutCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDescriptorSetLayoutCreateInfo", sizeof(PyVkDescriptorSetLayoutCreateInfo), 0,
@@ -9968,6 +10366,10 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "descriptorCount", (getter)PyVkDescriptorPoolSize_getdescriptorCount, (setter)PyVkDescriptorPoolSize_setdescriptorCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDescriptorPoolSize_init(PyVkDescriptorPoolSize *self, PyObject *args, PyObject *kwds) {
+            PyObject* type = NULL;
+PyObject* descriptorCount = NULL;static char *kwlist[] = {"type","descriptorCount",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OO", kwlist, &type, &descriptorCount)) return -1;return 0; }
             static PyTypeObject PyVkDescriptorPoolSizeType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDescriptorPoolSize", sizeof(PyVkDescriptorPoolSize), 0,
@@ -10056,6 +10458,14 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "poolSizeCount", (getter)PyVkDescriptorPoolCreateInfo_getpoolSizeCount, (setter)PyVkDescriptorPoolCreateInfo_setpoolSizeCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDescriptorPoolCreateInfo_init(PyVkDescriptorPoolCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* maxSets = NULL;
+PyObject* poolSizeCount = NULL;
+PyObject* pPoolSizes = NULL;static char *kwlist[] = {"sType","pNext","flags","maxSets","poolSizeCount","pPoolSizes",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOO", kwlist, &sType, &pNext, &flags, &maxSets, &poolSizeCount, &pPoolSizes)) return -1;return 0; }
             static PyTypeObject PyVkDescriptorPoolCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDescriptorPoolCreateInfo", sizeof(PyVkDescriptorPoolCreateInfo), 0,
@@ -10126,6 +10536,13 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "descriptorSetCount", (getter)PyVkDescriptorSetAllocateInfo_getdescriptorSetCount, (setter)PyVkDescriptorSetAllocateInfo_setdescriptorSetCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDescriptorSetAllocateInfo_init(PyVkDescriptorSetAllocateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* descriptorPool = NULL;
+PyObject* descriptorSetCount = NULL;
+PyObject* pSetLayouts = NULL;static char *kwlist[] = {"sType","pNext","descriptorPool","descriptorSetCount","pSetLayouts",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOO", kwlist, &sType, &pNext, &descriptorPool, &descriptorSetCount, &pSetLayouts)) return -1;return 0; }
             static PyTypeObject PyVkDescriptorSetAllocateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDescriptorSetAllocateInfo", sizeof(PyVkDescriptorSetAllocateInfo), 0,
@@ -10214,6 +10631,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "size", (getter)PyVkSpecializationMapEntry_getsize, (setter)PyVkSpecializationMapEntry_setsize, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkSpecializationMapEntry_init(PyVkSpecializationMapEntry *self, PyObject *args, PyObject *kwds) {
+            PyObject* constantID = NULL;
+PyObject* offset = NULL;
+PyObject* size = NULL;static char *kwlist[] = {"constantID","offset","size",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &constantID, &offset, &size)) return -1;return 0; }
             static PyTypeObject PyVkSpecializationMapEntryType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkSpecializationMapEntry", sizeof(PyVkSpecializationMapEntry), 0,
@@ -10302,6 +10724,12 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pData", (getter)PyVkSpecializationInfo_getpData, (setter)PyVkSpecializationInfo_setpData, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkSpecializationInfo_init(PyVkSpecializationInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* mapEntryCount = NULL;
+PyObject* pMapEntries = NULL;
+PyObject* dataSize = NULL;
+PyObject* pData = NULL;static char *kwlist[] = {"mapEntryCount","pMapEntries","dataSize","pData",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOO", kwlist, &mapEntryCount, &pMapEntries, &dataSize, &pData)) return -1;return 0; }
             static PyTypeObject PyVkSpecializationInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkSpecializationInfo", sizeof(PyVkSpecializationInfo), 0,
@@ -10377,6 +10805,15 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pName", (getter)PyVkPipelineShaderStageCreateInfo_getpName, (setter)PyVkPipelineShaderStageCreateInfo_setpName, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkPipelineShaderStageCreateInfo_init(PyVkPipelineShaderStageCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* stage = NULL;
+PyObject* module = NULL;
+PyObject* pName = NULL;
+PyObject* pSpecializationInfo = NULL;static char *kwlist[] = {"sType","pNext","flags","stage","module","pName","pSpecializationInfo",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOO", kwlist, &sType, &pNext, &flags, &stage, &module, &pName, &pSpecializationInfo)) return -1;return 0; }
             static PyTypeObject PyVkPipelineShaderStageCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkPipelineShaderStageCreateInfo", sizeof(PyVkPipelineShaderStageCreateInfo), 0,
@@ -10447,6 +10884,15 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "basePipelineIndex", (getter)PyVkComputePipelineCreateInfo_getbasePipelineIndex, (setter)PyVkComputePipelineCreateInfo_setbasePipelineIndex, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkComputePipelineCreateInfo_init(PyVkComputePipelineCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* stage = NULL;
+PyObject* layout = NULL;
+PyObject* basePipelineHandle = NULL;
+PyObject* basePipelineIndex = NULL;static char *kwlist[] = {"sType","pNext","flags","stage","layout","basePipelineHandle","basePipelineIndex",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOO", kwlist, &sType, &pNext, &flags, &stage, &layout, &basePipelineHandle, &basePipelineIndex)) return -1;return 0; }
             static PyTypeObject PyVkComputePipelineCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkComputePipelineCreateInfo", sizeof(PyVkComputePipelineCreateInfo), 0,
@@ -10517,6 +10963,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "stride", (getter)PyVkVertexInputBindingDescription_getstride, (setter)PyVkVertexInputBindingDescription_setstride, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkVertexInputBindingDescription_init(PyVkVertexInputBindingDescription *self, PyObject *args, PyObject *kwds) {
+            PyObject* binding = NULL;
+PyObject* stride = NULL;
+PyObject* inputRate = NULL;static char *kwlist[] = {"binding","stride","inputRate",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &binding, &stride, &inputRate)) return -1;return 0; }
             static PyTypeObject PyVkVertexInputBindingDescriptionType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkVertexInputBindingDescription", sizeof(PyVkVertexInputBindingDescription), 0,
@@ -10605,6 +11056,12 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "offset", (getter)PyVkVertexInputAttributeDescription_getoffset, (setter)PyVkVertexInputAttributeDescription_setoffset, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkVertexInputAttributeDescription_init(PyVkVertexInputAttributeDescription *self, PyObject *args, PyObject *kwds) {
+            PyObject* location = NULL;
+PyObject* binding = NULL;
+PyObject* format = NULL;
+PyObject* offset = NULL;static char *kwlist[] = {"location","binding","format","offset",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOO", kwlist, &location, &binding, &format, &offset)) return -1;return 0; }
             static PyTypeObject PyVkVertexInputAttributeDescriptionType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkVertexInputAttributeDescription", sizeof(PyVkVertexInputAttributeDescription), 0,
@@ -10693,6 +11150,15 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "vertexAttributeDescriptionCount", (getter)PyVkPipelineVertexInputStateCreateInfo_getvertexAttributeDescriptionCount, (setter)PyVkPipelineVertexInputStateCreateInfo_setvertexAttributeDescriptionCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkPipelineVertexInputStateCreateInfo_init(PyVkPipelineVertexInputStateCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* vertexBindingDescriptionCount = NULL;
+PyObject* pVertexBindingDescriptions = NULL;
+PyObject* vertexAttributeDescriptionCount = NULL;
+PyObject* pVertexAttributeDescriptions = NULL;static char *kwlist[] = {"sType","pNext","flags","vertexBindingDescriptionCount","pVertexBindingDescriptions","vertexAttributeDescriptionCount","pVertexAttributeDescriptions",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOO", kwlist, &sType, &pNext, &flags, &vertexBindingDescriptionCount, &pVertexBindingDescriptions, &vertexAttributeDescriptionCount, &pVertexAttributeDescriptions)) return -1;return 0; }
             static PyTypeObject PyVkPipelineVertexInputStateCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkPipelineVertexInputStateCreateInfo", sizeof(PyVkPipelineVertexInputStateCreateInfo), 0,
@@ -10745,6 +11211,13 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkPipelineInputAssemblyStateCreateInfo_getpNext, (setter)PyVkPipelineInputAssemblyStateCreateInfo_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkPipelineInputAssemblyStateCreateInfo_init(PyVkPipelineInputAssemblyStateCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* topology = NULL;
+PyObject* primitiveRestartEnable = NULL;static char *kwlist[] = {"sType","pNext","flags","topology","primitiveRestartEnable",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOO", kwlist, &sType, &pNext, &flags, &topology, &primitiveRestartEnable)) return -1;return 0; }
             static PyTypeObject PyVkPipelineInputAssemblyStateCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkPipelineInputAssemblyStateCreateInfo", sizeof(PyVkPipelineInputAssemblyStateCreateInfo), 0,
@@ -10815,6 +11288,12 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "patchControlPoints", (getter)PyVkPipelineTessellationStateCreateInfo_getpatchControlPoints, (setter)PyVkPipelineTessellationStateCreateInfo_setpatchControlPoints, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkPipelineTessellationStateCreateInfo_init(PyVkPipelineTessellationStateCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* patchControlPoints = NULL;static char *kwlist[] = {"sType","pNext","flags","patchControlPoints",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOO", kwlist, &sType, &pNext, &flags, &patchControlPoints)) return -1;return 0; }
             static PyTypeObject PyVkPipelineTessellationStateCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkPipelineTessellationStateCreateInfo", sizeof(PyVkPipelineTessellationStateCreateInfo), 0,
@@ -10903,6 +11382,15 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "scissorCount", (getter)PyVkPipelineViewportStateCreateInfo_getscissorCount, (setter)PyVkPipelineViewportStateCreateInfo_setscissorCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkPipelineViewportStateCreateInfo_init(PyVkPipelineViewportStateCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* viewportCount = NULL;
+PyObject* pViewports = NULL;
+PyObject* scissorCount = NULL;
+PyObject* pScissors = NULL;static char *kwlist[] = {"sType","pNext","flags","viewportCount","pViewports","scissorCount","pScissors",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOO", kwlist, &sType, &pNext, &flags, &viewportCount, &pViewports, &scissorCount, &pScissors)) return -1;return 0; }
             static PyTypeObject PyVkPipelineViewportStateCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkPipelineViewportStateCreateInfo", sizeof(PyVkPipelineViewportStateCreateInfo), 0,
@@ -11027,6 +11515,21 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "lineWidth", (getter)PyVkPipelineRasterizationStateCreateInfo_getlineWidth, (setter)PyVkPipelineRasterizationStateCreateInfo_setlineWidth, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkPipelineRasterizationStateCreateInfo_init(PyVkPipelineRasterizationStateCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* depthClampEnable = NULL;
+PyObject* rasterizerDiscardEnable = NULL;
+PyObject* polygonMode = NULL;
+PyObject* cullMode = NULL;
+PyObject* frontFace = NULL;
+PyObject* depthBiasEnable = NULL;
+PyObject* depthBiasConstantFactor = NULL;
+PyObject* depthBiasClamp = NULL;
+PyObject* depthBiasSlopeFactor = NULL;
+PyObject* lineWidth = NULL;static char *kwlist[] = {"sType","pNext","flags","depthClampEnable","rasterizerDiscardEnable","polygonMode","cullMode","frontFace","depthBiasEnable","depthBiasConstantFactor","depthBiasClamp","depthBiasSlopeFactor","lineWidth",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOOOOOO", kwlist, &sType, &pNext, &flags, &depthClampEnable, &rasterizerDiscardEnable, &polygonMode, &cullMode, &frontFace, &depthBiasEnable, &depthBiasConstantFactor, &depthBiasClamp, &depthBiasSlopeFactor, &lineWidth)) return -1;return 0; }
             static PyTypeObject PyVkPipelineRasterizationStateCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkPipelineRasterizationStateCreateInfo", sizeof(PyVkPipelineRasterizationStateCreateInfo), 0,
@@ -11097,6 +11600,17 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "minSampleShading", (getter)PyVkPipelineMultisampleStateCreateInfo_getminSampleShading, (setter)PyVkPipelineMultisampleStateCreateInfo_setminSampleShading, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkPipelineMultisampleStateCreateInfo_init(PyVkPipelineMultisampleStateCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* rasterizationSamples = NULL;
+PyObject* sampleShadingEnable = NULL;
+PyObject* minSampleShading = NULL;
+PyObject* pSampleMask = NULL;
+PyObject* alphaToCoverageEnable = NULL;
+PyObject* alphaToOneEnable = NULL;static char *kwlist[] = {"sType","pNext","flags","rasterizationSamples","sampleShadingEnable","minSampleShading","pSampleMask","alphaToCoverageEnable","alphaToOneEnable",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOO", kwlist, &sType, &pNext, &flags, &rasterizationSamples, &sampleShadingEnable, &minSampleShading, &pSampleMask, &alphaToCoverageEnable, &alphaToOneEnable)) return -1;return 0; }
             static PyTypeObject PyVkPipelineMultisampleStateCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkPipelineMultisampleStateCreateInfo", sizeof(PyVkPipelineMultisampleStateCreateInfo), 0,
@@ -11131,6 +11645,16 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkPipelineColorBlendAttachmentState_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkPipelineColorBlendAttachmentState_init(PyVkPipelineColorBlendAttachmentState *self, PyObject *args, PyObject *kwds) {
+            PyObject* blendEnable = NULL;
+PyObject* srcColorBlendFactor = NULL;
+PyObject* dstColorBlendFactor = NULL;
+PyObject* colorBlendOp = NULL;
+PyObject* srcAlphaBlendFactor = NULL;
+PyObject* dstAlphaBlendFactor = NULL;
+PyObject* alphaBlendOp = NULL;
+PyObject* colorWriteMask = NULL;static char *kwlist[] = {"blendEnable","srcColorBlendFactor","dstColorBlendFactor","colorBlendOp","srcAlphaBlendFactor","dstAlphaBlendFactor","alphaBlendOp","colorWriteMask",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOO", kwlist, &blendEnable, &srcColorBlendFactor, &dstColorBlendFactor, &colorBlendOp, &srcAlphaBlendFactor, &dstAlphaBlendFactor, &alphaBlendOp, &colorWriteMask)) return -1;return 0; }
             static PyTypeObject PyVkPipelineColorBlendAttachmentStateType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkPipelineColorBlendAttachmentState", sizeof(PyVkPipelineColorBlendAttachmentState), 0,
@@ -11234,6 +11758,16 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "blendConstants", (getter)PyVkPipelineColorBlendStateCreateInfo_getblendConstants, (setter)PyVkPipelineColorBlendStateCreateInfo_setblendConstants, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkPipelineColorBlendStateCreateInfo_init(PyVkPipelineColorBlendStateCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* logicOpEnable = NULL;
+PyObject* logicOp = NULL;
+PyObject* attachmentCount = NULL;
+PyObject* pAttachments = NULL;
+PyObject* blendConstants = NULL;static char *kwlist[] = {"sType","pNext","flags","logicOpEnable","logicOp","attachmentCount","pAttachments","blendConstants",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOO", kwlist, &sType, &pNext, &flags, &logicOpEnable, &logicOp, &attachmentCount, &pAttachments, &blendConstants)) return -1;return 0; }
             static PyTypeObject PyVkPipelineColorBlendStateCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkPipelineColorBlendStateCreateInfo", sizeof(PyVkPipelineColorBlendStateCreateInfo), 0,
@@ -11304,6 +11838,13 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "dynamicStateCount", (getter)PyVkPipelineDynamicStateCreateInfo_getdynamicStateCount, (setter)PyVkPipelineDynamicStateCreateInfo_setdynamicStateCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkPipelineDynamicStateCreateInfo_init(PyVkPipelineDynamicStateCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* dynamicStateCount = NULL;
+PyObject* pDynamicStates = NULL;static char *kwlist[] = {"sType","pNext","flags","dynamicStateCount","pDynamicStates",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOO", kwlist, &sType, &pNext, &flags, &dynamicStateCount, &pDynamicStates)) return -1;return 0; }
             static PyTypeObject PyVkPipelineDynamicStateCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkPipelineDynamicStateCreateInfo", sizeof(PyVkPipelineDynamicStateCreateInfo), 0,
@@ -11392,6 +11933,15 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "reference", (getter)PyVkStencilOpState_getreference, (setter)PyVkStencilOpState_setreference, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkStencilOpState_init(PyVkStencilOpState *self, PyObject *args, PyObject *kwds) {
+            PyObject* failOp = NULL;
+PyObject* passOp = NULL;
+PyObject* depthFailOp = NULL;
+PyObject* compareOp = NULL;
+PyObject* compareMask = NULL;
+PyObject* writeMask = NULL;
+PyObject* reference = NULL;static char *kwlist[] = {"failOp","passOp","depthFailOp","compareOp","compareMask","writeMask","reference",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOO", kwlist, &failOp, &passOp, &depthFailOp, &compareOp, &compareMask, &writeMask, &reference)) return -1;return 0; }
             static PyTypeObject PyVkStencilOpStateType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkStencilOpState", sizeof(PyVkStencilOpState), 0,
@@ -11480,6 +12030,20 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "maxDepthBounds", (getter)PyVkPipelineDepthStencilStateCreateInfo_getmaxDepthBounds, (setter)PyVkPipelineDepthStencilStateCreateInfo_setmaxDepthBounds, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkPipelineDepthStencilStateCreateInfo_init(PyVkPipelineDepthStencilStateCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* depthTestEnable = NULL;
+PyObject* depthWriteEnable = NULL;
+PyObject* depthCompareOp = NULL;
+PyObject* depthBoundsTestEnable = NULL;
+PyObject* stencilTestEnable = NULL;
+PyObject* front = NULL;
+PyObject* back = NULL;
+PyObject* minDepthBounds = NULL;
+PyObject* maxDepthBounds = NULL;static char *kwlist[] = {"sType","pNext","flags","depthTestEnable","depthWriteEnable","depthCompareOp","depthBoundsTestEnable","stencilTestEnable","front","back","minDepthBounds","maxDepthBounds",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOOOOO", kwlist, &sType, &pNext, &flags, &depthTestEnable, &depthWriteEnable, &depthCompareOp, &depthBoundsTestEnable, &stencilTestEnable, &front, &back, &minDepthBounds, &maxDepthBounds)) return -1;return 0; }
             static PyTypeObject PyVkPipelineDepthStencilStateCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkPipelineDepthStencilStateCreateInfo", sizeof(PyVkPipelineDepthStencilStateCreateInfo), 0,
@@ -11586,6 +12150,27 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "basePipelineIndex", (getter)PyVkGraphicsPipelineCreateInfo_getbasePipelineIndex, (setter)PyVkGraphicsPipelineCreateInfo_setbasePipelineIndex, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkGraphicsPipelineCreateInfo_init(PyVkGraphicsPipelineCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* stageCount = NULL;
+PyObject* pStages = NULL;
+PyObject* pVertexInputState = NULL;
+PyObject* pInputAssemblyState = NULL;
+PyObject* pTessellationState = NULL;
+PyObject* pViewportState = NULL;
+PyObject* pRasterizationState = NULL;
+PyObject* pMultisampleState = NULL;
+PyObject* pDepthStencilState = NULL;
+PyObject* pColorBlendState = NULL;
+PyObject* pDynamicState = NULL;
+PyObject* layout = NULL;
+PyObject* renderPass = NULL;
+PyObject* subpass = NULL;
+PyObject* basePipelineHandle = NULL;
+PyObject* basePipelineIndex = NULL;static char *kwlist[] = {"sType","pNext","flags","stageCount","pStages","pVertexInputState","pInputAssemblyState","pTessellationState","pViewportState","pRasterizationState","pMultisampleState","pDepthStencilState","pColorBlendState","pDynamicState","layout","renderPass","subpass","basePipelineHandle","basePipelineIndex",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOOOOOOOOOOOO", kwlist, &sType, &pNext, &flags, &stageCount, &pStages, &pVertexInputState, &pInputAssemblyState, &pTessellationState, &pViewportState, &pRasterizationState, &pMultisampleState, &pDepthStencilState, &pColorBlendState, &pDynamicState, &layout, &renderPass, &subpass, &basePipelineHandle, &basePipelineIndex)) return -1;return 0; }
             static PyTypeObject PyVkGraphicsPipelineCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkGraphicsPipelineCreateInfo", sizeof(PyVkGraphicsPipelineCreateInfo), 0,
@@ -11674,6 +12259,13 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pInitialData", (getter)PyVkPipelineCacheCreateInfo_getpInitialData, (setter)PyVkPipelineCacheCreateInfo_setpInitialData, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkPipelineCacheCreateInfo_init(PyVkPipelineCacheCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* initialDataSize = NULL;
+PyObject* pInitialData = NULL;static char *kwlist[] = {"sType","pNext","flags","initialDataSize","pInitialData",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOO", kwlist, &sType, &pNext, &flags, &initialDataSize, &pInitialData)) return -1;return 0; }
             static PyTypeObject PyVkPipelineCacheCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkPipelineCacheCreateInfo", sizeof(PyVkPipelineCacheCreateInfo), 0,
@@ -11744,6 +12336,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "size", (getter)PyVkPushConstantRange_getsize, (setter)PyVkPushConstantRange_setsize, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkPushConstantRange_init(PyVkPushConstantRange *self, PyObject *args, PyObject *kwds) {
+            PyObject* stageFlags = NULL;
+PyObject* offset = NULL;
+PyObject* size = NULL;static char *kwlist[] = {"stageFlags","offset","size",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &stageFlags, &offset, &size)) return -1;return 0; }
             static PyTypeObject PyVkPushConstantRangeType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkPushConstantRange", sizeof(PyVkPushConstantRange), 0,
@@ -11832,6 +12429,15 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pushConstantRangeCount", (getter)PyVkPipelineLayoutCreateInfo_getpushConstantRangeCount, (setter)PyVkPipelineLayoutCreateInfo_setpushConstantRangeCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkPipelineLayoutCreateInfo_init(PyVkPipelineLayoutCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* setLayoutCount = NULL;
+PyObject* pSetLayouts = NULL;
+PyObject* pushConstantRangeCount = NULL;
+PyObject* pPushConstantRanges = NULL;static char *kwlist[] = {"sType","pNext","flags","setLayoutCount","pSetLayouts","pushConstantRangeCount","pPushConstantRanges",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOO", kwlist, &sType, &pNext, &flags, &setLayoutCount, &pSetLayouts, &pushConstantRangeCount, &pPushConstantRanges)) return -1;return 0; }
             static PyTypeObject PyVkPipelineLayoutCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkPipelineLayoutCreateInfo", sizeof(PyVkPipelineLayoutCreateInfo), 0,
@@ -11956,6 +12562,26 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "maxLod", (getter)PyVkSamplerCreateInfo_getmaxLod, (setter)PyVkSamplerCreateInfo_setmaxLod, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkSamplerCreateInfo_init(PyVkSamplerCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* magFilter = NULL;
+PyObject* minFilter = NULL;
+PyObject* mipmapMode = NULL;
+PyObject* addressModeU = NULL;
+PyObject* addressModeV = NULL;
+PyObject* addressModeW = NULL;
+PyObject* mipLodBias = NULL;
+PyObject* anisotropyEnable = NULL;
+PyObject* maxAnisotropy = NULL;
+PyObject* compareEnable = NULL;
+PyObject* compareOp = NULL;
+PyObject* minLod = NULL;
+PyObject* maxLod = NULL;
+PyObject* borderColor = NULL;
+PyObject* unnormalizedCoordinates = NULL;static char *kwlist[] = {"sType","pNext","flags","magFilter","minFilter","mipmapMode","addressModeU","addressModeV","addressModeW","mipLodBias","anisotropyEnable","maxAnisotropy","compareEnable","compareOp","minLod","maxLod","borderColor","unnormalizedCoordinates",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOOOOOOOOOOO", kwlist, &sType, &pNext, &flags, &magFilter, &minFilter, &mipmapMode, &addressModeU, &addressModeV, &addressModeW, &mipLodBias, &anisotropyEnable, &maxAnisotropy, &compareEnable, &compareOp, &minLod, &maxLod, &borderColor, &unnormalizedCoordinates)) return -1;return 0; }
             static PyTypeObject PyVkSamplerCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkSamplerCreateInfo", sizeof(PyVkSamplerCreateInfo), 0,
@@ -12026,6 +12652,12 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "queueFamilyIndex", (getter)PyVkCommandPoolCreateInfo_getqueueFamilyIndex, (setter)PyVkCommandPoolCreateInfo_setqueueFamilyIndex, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkCommandPoolCreateInfo_init(PyVkCommandPoolCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* queueFamilyIndex = NULL;static char *kwlist[] = {"sType","pNext","flags","queueFamilyIndex",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOO", kwlist, &sType, &pNext, &flags, &queueFamilyIndex)) return -1;return 0; }
             static PyTypeObject PyVkCommandPoolCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkCommandPoolCreateInfo", sizeof(PyVkCommandPoolCreateInfo), 0,
@@ -12096,6 +12728,13 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "commandBufferCount", (getter)PyVkCommandBufferAllocateInfo_getcommandBufferCount, (setter)PyVkCommandBufferAllocateInfo_setcommandBufferCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkCommandBufferAllocateInfo_init(PyVkCommandBufferAllocateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* commandPool = NULL;
+PyObject* level = NULL;
+PyObject* commandBufferCount = NULL;static char *kwlist[] = {"sType","pNext","commandPool","level","commandBufferCount",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOO", kwlist, &sType, &pNext, &commandPool, &level, &commandBufferCount)) return -1;return 0; }
             static PyTypeObject PyVkCommandBufferAllocateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkCommandBufferAllocateInfo", sizeof(PyVkCommandBufferAllocateInfo), 0,
@@ -12166,6 +12805,16 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "subpass", (getter)PyVkCommandBufferInheritanceInfo_getsubpass, (setter)PyVkCommandBufferInheritanceInfo_setsubpass, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkCommandBufferInheritanceInfo_init(PyVkCommandBufferInheritanceInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* renderPass = NULL;
+PyObject* subpass = NULL;
+PyObject* framebuffer = NULL;
+PyObject* occlusionQueryEnable = NULL;
+PyObject* queryFlags = NULL;
+PyObject* pipelineStatistics = NULL;static char *kwlist[] = {"sType","pNext","renderPass","subpass","framebuffer","occlusionQueryEnable","queryFlags","pipelineStatistics",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOO", kwlist, &sType, &pNext, &renderPass, &subpass, &framebuffer, &occlusionQueryEnable, &queryFlags, &pipelineStatistics)) return -1;return 0; }
             static PyTypeObject PyVkCommandBufferInheritanceInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkCommandBufferInheritanceInfo", sizeof(PyVkCommandBufferInheritanceInfo), 0,
@@ -12218,6 +12867,12 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkCommandBufferBeginInfo_getpNext, (setter)PyVkCommandBufferBeginInfo_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkCommandBufferBeginInfo_init(PyVkCommandBufferBeginInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* pInheritanceInfo = NULL;static char *kwlist[] = {"sType","pNext","flags","pInheritanceInfo",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOO", kwlist, &sType, &pNext, &flags, &pInheritanceInfo)) return -1;return 0; }
             static PyTypeObject PyVkCommandBufferBeginInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkCommandBufferBeginInfo", sizeof(PyVkCommandBufferBeginInfo), 0,
@@ -12288,6 +12943,15 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "clearValueCount", (getter)PyVkRenderPassBeginInfo_getclearValueCount, (setter)PyVkRenderPassBeginInfo_setclearValueCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkRenderPassBeginInfo_init(PyVkRenderPassBeginInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* renderPass = NULL;
+PyObject* framebuffer = NULL;
+PyObject* renderArea = NULL;
+PyObject* clearValueCount = NULL;
+PyObject* pClearValues = NULL;static char *kwlist[] = {"sType","pNext","renderPass","framebuffer","renderArea","clearValueCount","pClearValues",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOO", kwlist, &sType, &pNext, &renderPass, &framebuffer, &renderArea, &clearValueCount, &pClearValues)) return -1;return 0; }
             static PyTypeObject PyVkRenderPassBeginInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkRenderPassBeginInfo", sizeof(PyVkRenderPassBeginInfo), 0,
@@ -12358,6 +13022,10 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "stencil", (getter)PyVkClearDepthStencilValue_getstencil, (setter)PyVkClearDepthStencilValue_setstencil, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkClearDepthStencilValue_init(PyVkClearDepthStencilValue *self, PyObject *args, PyObject *kwds) {
+            PyObject* depth = NULL;
+PyObject* stencil = NULL;static char *kwlist[] = {"depth","stencil",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OO", kwlist, &depth, &stencil)) return -1;return 0; }
             static PyTypeObject PyVkClearDepthStencilValueType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkClearDepthStencilValue", sizeof(PyVkClearDepthStencilValue), 0,
@@ -12410,6 +13078,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "colorAttachment", (getter)PyVkClearAttachment_getcolorAttachment, (setter)PyVkClearAttachment_setcolorAttachment, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkClearAttachment_init(PyVkClearAttachment *self, PyObject *args, PyObject *kwds) {
+            PyObject* aspectMask = NULL;
+PyObject* colorAttachment = NULL;
+PyObject* clearValue = NULL;static char *kwlist[] = {"aspectMask","colorAttachment","clearValue",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &aspectMask, &colorAttachment, &clearValue)) return -1;return 0; }
             static PyTypeObject PyVkClearAttachmentType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkClearAttachment", sizeof(PyVkClearAttachment), 0,
@@ -12444,6 +13117,17 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkAttachmentDescription_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkAttachmentDescription_init(PyVkAttachmentDescription *self, PyObject *args, PyObject *kwds) {
+            PyObject* flags = NULL;
+PyObject* format = NULL;
+PyObject* samples = NULL;
+PyObject* loadOp = NULL;
+PyObject* storeOp = NULL;
+PyObject* stencilLoadOp = NULL;
+PyObject* stencilStoreOp = NULL;
+PyObject* initialLayout = NULL;
+PyObject* finalLayout = NULL;static char *kwlist[] = {"flags","format","samples","loadOp","storeOp","stencilLoadOp","stencilStoreOp","initialLayout","finalLayout",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOO", kwlist, &flags, &format, &samples, &loadOp, &storeOp, &stencilLoadOp, &stencilStoreOp, &initialLayout, &finalLayout)) return -1;return 0; }
             static PyTypeObject PyVkAttachmentDescriptionType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkAttachmentDescription", sizeof(PyVkAttachmentDescription), 0,
@@ -12496,6 +13180,10 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "attachment", (getter)PyVkAttachmentReference_getattachment, (setter)PyVkAttachmentReference_setattachment, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkAttachmentReference_init(PyVkAttachmentReference *self, PyObject *args, PyObject *kwds) {
+            PyObject* attachment = NULL;
+PyObject* layout = NULL;static char *kwlist[] = {"attachment","layout",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OO", kwlist, &attachment, &layout)) return -1;return 0; }
             static PyTypeObject PyVkAttachmentReferenceType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkAttachmentReference", sizeof(PyVkAttachmentReference), 0,
@@ -12607,6 +13295,18 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pPreserveAttachments", (getter)PyVkSubpassDescription_getpPreserveAttachments, (setter)PyVkSubpassDescription_setpPreserveAttachments, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkSubpassDescription_init(PyVkSubpassDescription *self, PyObject *args, PyObject *kwds) {
+            PyObject* flags = NULL;
+PyObject* pipelineBindPoint = NULL;
+PyObject* inputAttachmentCount = NULL;
+PyObject* pInputAttachments = NULL;
+PyObject* colorAttachmentCount = NULL;
+PyObject* pColorAttachments = NULL;
+PyObject* pResolveAttachments = NULL;
+PyObject* pDepthStencilAttachment = NULL;
+PyObject* preserveAttachmentCount = NULL;
+PyObject* pPreserveAttachments = NULL;static char *kwlist[] = {"flags","pipelineBindPoint","inputAttachmentCount","pInputAttachments","colorAttachmentCount","pColorAttachments","pResolveAttachments","pDepthStencilAttachment","preserveAttachmentCount","pPreserveAttachments",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOOO", kwlist, &flags, &pipelineBindPoint, &inputAttachmentCount, &pInputAttachments, &colorAttachmentCount, &pColorAttachments, &pResolveAttachments, &pDepthStencilAttachment, &preserveAttachmentCount, &pPreserveAttachments)) return -1;return 0; }
             static PyTypeObject PyVkSubpassDescriptionType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkSubpassDescription", sizeof(PyVkSubpassDescription), 0,
@@ -12677,6 +13377,15 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "dstSubpass", (getter)PyVkSubpassDependency_getdstSubpass, (setter)PyVkSubpassDependency_setdstSubpass, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkSubpassDependency_init(PyVkSubpassDependency *self, PyObject *args, PyObject *kwds) {
+            PyObject* srcSubpass = NULL;
+PyObject* dstSubpass = NULL;
+PyObject* srcStageMask = NULL;
+PyObject* dstStageMask = NULL;
+PyObject* srcAccessMask = NULL;
+PyObject* dstAccessMask = NULL;
+PyObject* dependencyFlags = NULL;static char *kwlist[] = {"srcSubpass","dstSubpass","srcStageMask","dstStageMask","srcAccessMask","dstAccessMask","dependencyFlags",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOO", kwlist, &srcSubpass, &dstSubpass, &srcStageMask, &dstStageMask, &srcAccessMask, &dstAccessMask, &dependencyFlags)) return -1;return 0; }
             static PyTypeObject PyVkSubpassDependencyType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkSubpassDependency", sizeof(PyVkSubpassDependency), 0,
@@ -12783,6 +13492,17 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "dependencyCount", (getter)PyVkRenderPassCreateInfo_getdependencyCount, (setter)PyVkRenderPassCreateInfo_setdependencyCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkRenderPassCreateInfo_init(PyVkRenderPassCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* attachmentCount = NULL;
+PyObject* pAttachments = NULL;
+PyObject* subpassCount = NULL;
+PyObject* pSubpasses = NULL;
+PyObject* dependencyCount = NULL;
+PyObject* pDependencies = NULL;static char *kwlist[] = {"sType","pNext","flags","attachmentCount","pAttachments","subpassCount","pSubpasses","dependencyCount","pDependencies",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOO", kwlist, &sType, &pNext, &flags, &attachmentCount, &pAttachments, &subpassCount, &pSubpasses, &dependencyCount, &pDependencies)) return -1;return 0; }
             static PyTypeObject PyVkRenderPassCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkRenderPassCreateInfo", sizeof(PyVkRenderPassCreateInfo), 0,
@@ -12835,6 +13555,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkEventCreateInfo_getpNext, (setter)PyVkEventCreateInfo_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkEventCreateInfo_init(PyVkEventCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;static char *kwlist[] = {"sType","pNext","flags",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &sType, &pNext, &flags)) return -1;return 0; }
             static PyTypeObject PyVkEventCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkEventCreateInfo", sizeof(PyVkEventCreateInfo), 0,
@@ -12887,6 +13612,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkFenceCreateInfo_getpNext, (setter)PyVkFenceCreateInfo_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkFenceCreateInfo_init(PyVkFenceCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;static char *kwlist[] = {"sType","pNext","flags",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &sType, &pNext, &flags)) return -1;return 0; }
             static PyTypeObject PyVkFenceCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkFenceCreateInfo", sizeof(PyVkFenceCreateInfo), 0,
@@ -12921,6 +13651,63 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkPhysicalDeviceFeatures_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkPhysicalDeviceFeatures_init(PyVkPhysicalDeviceFeatures *self, PyObject *args, PyObject *kwds) {
+            PyObject* robustBufferAccess = NULL;
+PyObject* fullDrawIndexUint32 = NULL;
+PyObject* imageCubeArray = NULL;
+PyObject* independentBlend = NULL;
+PyObject* geometryShader = NULL;
+PyObject* tessellationShader = NULL;
+PyObject* sampleRateShading = NULL;
+PyObject* dualSrcBlend = NULL;
+PyObject* logicOp = NULL;
+PyObject* multiDrawIndirect = NULL;
+PyObject* drawIndirectFirstInstance = NULL;
+PyObject* depthClamp = NULL;
+PyObject* depthBiasClamp = NULL;
+PyObject* fillModeNonSolid = NULL;
+PyObject* depthBounds = NULL;
+PyObject* wideLines = NULL;
+PyObject* largePoints = NULL;
+PyObject* alphaToOne = NULL;
+PyObject* multiViewport = NULL;
+PyObject* samplerAnisotropy = NULL;
+PyObject* textureCompressionETC2 = NULL;
+PyObject* textureCompressionASTC_LDR = NULL;
+PyObject* textureCompressionBC = NULL;
+PyObject* occlusionQueryPrecise = NULL;
+PyObject* pipelineStatisticsQuery = NULL;
+PyObject* vertexPipelineStoresAndAtomics = NULL;
+PyObject* fragmentStoresAndAtomics = NULL;
+PyObject* shaderTessellationAndGeometryPointSize = NULL;
+PyObject* shaderImageGatherExtended = NULL;
+PyObject* shaderStorageImageExtendedFormats = NULL;
+PyObject* shaderStorageImageMultisample = NULL;
+PyObject* shaderStorageImageReadWithoutFormat = NULL;
+PyObject* shaderStorageImageWriteWithoutFormat = NULL;
+PyObject* shaderUniformBufferArrayDynamicIndexing = NULL;
+PyObject* shaderSampledImageArrayDynamicIndexing = NULL;
+PyObject* shaderStorageBufferArrayDynamicIndexing = NULL;
+PyObject* shaderStorageImageArrayDynamicIndexing = NULL;
+PyObject* shaderClipDistance = NULL;
+PyObject* shaderCullDistance = NULL;
+PyObject* shaderFloat64 = NULL;
+PyObject* shaderInt64 = NULL;
+PyObject* shaderInt16 = NULL;
+PyObject* shaderResourceResidency = NULL;
+PyObject* shaderResourceMinLod = NULL;
+PyObject* sparseBinding = NULL;
+PyObject* sparseResidencyBuffer = NULL;
+PyObject* sparseResidencyImage2D = NULL;
+PyObject* sparseResidencyImage3D = NULL;
+PyObject* sparseResidency2Samples = NULL;
+PyObject* sparseResidency4Samples = NULL;
+PyObject* sparseResidency8Samples = NULL;
+PyObject* sparseResidency16Samples = NULL;
+PyObject* sparseResidencyAliased = NULL;
+PyObject* variableMultisampleRate = NULL;
+PyObject* inheritedQueries = NULL;static char *kwlist[] = {"robustBufferAccess","fullDrawIndexUint32","imageCubeArray","independentBlend","geometryShader","tessellationShader","sampleRateShading","dualSrcBlend","logicOp","multiDrawIndirect","drawIndirectFirstInstance","depthClamp","depthBiasClamp","fillModeNonSolid","depthBounds","wideLines","largePoints","alphaToOne","multiViewport","samplerAnisotropy","textureCompressionETC2","textureCompressionASTC_LDR","textureCompressionBC","occlusionQueryPrecise","pipelineStatisticsQuery","vertexPipelineStoresAndAtomics","fragmentStoresAndAtomics","shaderTessellationAndGeometryPointSize","shaderImageGatherExtended","shaderStorageImageExtendedFormats","shaderStorageImageMultisample","shaderStorageImageReadWithoutFormat","shaderStorageImageWriteWithoutFormat","shaderUniformBufferArrayDynamicIndexing","shaderSampledImageArrayDynamicIndexing","shaderStorageBufferArrayDynamicIndexing","shaderStorageImageArrayDynamicIndexing","shaderClipDistance","shaderCullDistance","shaderFloat64","shaderInt64","shaderInt16","shaderResourceResidency","shaderResourceMinLod","sparseBinding","sparseResidencyBuffer","sparseResidencyImage2D","sparseResidencyImage3D","sparseResidency2Samples","sparseResidency4Samples","sparseResidency8Samples","sparseResidency16Samples","sparseResidencyAliased","variableMultisampleRate","inheritedQueries",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO", kwlist, &robustBufferAccess, &fullDrawIndexUint32, &imageCubeArray, &independentBlend, &geometryShader, &tessellationShader, &sampleRateShading, &dualSrcBlend, &logicOp, &multiDrawIndirect, &drawIndirectFirstInstance, &depthClamp, &depthBiasClamp, &fillModeNonSolid, &depthBounds, &wideLines, &largePoints, &alphaToOne, &multiViewport, &samplerAnisotropy, &textureCompressionETC2, &textureCompressionASTC_LDR, &textureCompressionBC, &occlusionQueryPrecise, &pipelineStatisticsQuery, &vertexPipelineStoresAndAtomics, &fragmentStoresAndAtomics, &shaderTessellationAndGeometryPointSize, &shaderImageGatherExtended, &shaderStorageImageExtendedFormats, &shaderStorageImageMultisample, &shaderStorageImageReadWithoutFormat, &shaderStorageImageWriteWithoutFormat, &shaderUniformBufferArrayDynamicIndexing, &shaderSampledImageArrayDynamicIndexing, &shaderStorageBufferArrayDynamicIndexing, &shaderStorageImageArrayDynamicIndexing, &shaderClipDistance, &shaderCullDistance, &shaderFloat64, &shaderInt64, &shaderInt16, &shaderResourceResidency, &shaderResourceMinLod, &sparseBinding, &sparseResidencyBuffer, &sparseResidencyImage2D, &sparseResidencyImage3D, &sparseResidency2Samples, &sparseResidency4Samples, &sparseResidency8Samples, &sparseResidency16Samples, &sparseResidencyAliased, &variableMultisampleRate, &inheritedQueries)) return -1;return 0; }
             static PyTypeObject PyVkPhysicalDeviceFeaturesType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkPhysicalDeviceFeatures", sizeof(PyVkPhysicalDeviceFeatures), 0,
@@ -12955,6 +13742,9 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkPhysicalDeviceSparseProperties_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkPhysicalDeviceSparseProperties_init(PyVkPhysicalDeviceSparseProperties *self, PyObject *args, PyObject *kwds) {
+            return 0; }
             static PyTypeObject PyVkPhysicalDeviceSparsePropertiesType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkPhysicalDeviceSparseProperties", sizeof(PyVkPhysicalDeviceSparseProperties), 0,
@@ -14627,6 +15417,9 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "lineWidthGranularity", (getter)PyVkPhysicalDeviceLimits_getlineWidthGranularity, (setter)PyVkPhysicalDeviceLimits_setlineWidthGranularity, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkPhysicalDeviceLimits_init(PyVkPhysicalDeviceLimits *self, PyObject *args, PyObject *kwds) {
+            return 0; }
             static PyTypeObject PyVkPhysicalDeviceLimitsType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkPhysicalDeviceLimits", sizeof(PyVkPhysicalDeviceLimits), 0,
@@ -14679,6 +15472,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkSemaphoreCreateInfo_getpNext, (setter)PyVkSemaphoreCreateInfo_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkSemaphoreCreateInfo_init(PyVkSemaphoreCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;static char *kwlist[] = {"sType","pNext","flags",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &sType, &pNext, &flags)) return -1;return 0; }
             static PyTypeObject PyVkSemaphoreCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkSemaphoreCreateInfo", sizeof(PyVkSemaphoreCreateInfo), 0,
@@ -14749,6 +15547,14 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "queryCount", (getter)PyVkQueryPoolCreateInfo_getqueryCount, (setter)PyVkQueryPoolCreateInfo_setqueryCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkQueryPoolCreateInfo_init(PyVkQueryPoolCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* queryType = NULL;
+PyObject* queryCount = NULL;
+PyObject* pipelineStatistics = NULL;static char *kwlist[] = {"sType","pNext","flags","queryType","queryCount","pipelineStatistics",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOO", kwlist, &sType, &pNext, &flags, &queryType, &queryCount, &pipelineStatistics)) return -1;return 0; }
             static PyTypeObject PyVkQueryPoolCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkQueryPoolCreateInfo", sizeof(PyVkQueryPoolCreateInfo), 0,
@@ -14873,6 +15679,17 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "layers", (getter)PyVkFramebufferCreateInfo_getlayers, (setter)PyVkFramebufferCreateInfo_setlayers, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkFramebufferCreateInfo_init(PyVkFramebufferCreateInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* renderPass = NULL;
+PyObject* attachmentCount = NULL;
+PyObject* pAttachments = NULL;
+PyObject* width = NULL;
+PyObject* height = NULL;
+PyObject* layers = NULL;static char *kwlist[] = {"sType","pNext","flags","renderPass","attachmentCount","pAttachments","width","height","layers",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOO", kwlist, &sType, &pNext, &flags, &renderPass, &attachmentCount, &pAttachments, &width, &height, &layers)) return -1;return 0; }
             static PyTypeObject PyVkFramebufferCreateInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkFramebufferCreateInfo", sizeof(PyVkFramebufferCreateInfo), 0,
@@ -14979,6 +15796,12 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "firstInstance", (getter)PyVkDrawIndirectCommand_getfirstInstance, (setter)PyVkDrawIndirectCommand_setfirstInstance, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDrawIndirectCommand_init(PyVkDrawIndirectCommand *self, PyObject *args, PyObject *kwds) {
+            PyObject* vertexCount = NULL;
+PyObject* instanceCount = NULL;
+PyObject* firstVertex = NULL;
+PyObject* firstInstance = NULL;static char *kwlist[] = {"vertexCount","instanceCount","firstVertex","firstInstance",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOO", kwlist, &vertexCount, &instanceCount, &firstVertex, &firstInstance)) return -1;return 0; }
             static PyTypeObject PyVkDrawIndirectCommandType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDrawIndirectCommand", sizeof(PyVkDrawIndirectCommand), 0,
@@ -15103,6 +15926,13 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "firstInstance", (getter)PyVkDrawIndexedIndirectCommand_getfirstInstance, (setter)PyVkDrawIndexedIndirectCommand_setfirstInstance, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDrawIndexedIndirectCommand_init(PyVkDrawIndexedIndirectCommand *self, PyObject *args, PyObject *kwds) {
+            PyObject* indexCount = NULL;
+PyObject* instanceCount = NULL;
+PyObject* firstIndex = NULL;
+PyObject* vertexOffset = NULL;
+PyObject* firstInstance = NULL;static char *kwlist[] = {"indexCount","instanceCount","firstIndex","vertexOffset","firstInstance",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOO", kwlist, &indexCount, &instanceCount, &firstIndex, &vertexOffset, &firstInstance)) return -1;return 0; }
             static PyTypeObject PyVkDrawIndexedIndirectCommandType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDrawIndexedIndirectCommand", sizeof(PyVkDrawIndexedIndirectCommand), 0,
@@ -15191,6 +16021,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "z", (getter)PyVkDispatchIndirectCommand_getz, (setter)PyVkDispatchIndirectCommand_setz, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDispatchIndirectCommand_init(PyVkDispatchIndirectCommand *self, PyObject *args, PyObject *kwds) {
+            PyObject* x = NULL;
+PyObject* y = NULL;
+PyObject* z = NULL;static char *kwlist[] = {"x","y","z",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &x, &y, &z)) return -1;return 0; }
             static PyTypeObject PyVkDispatchIndirectCommandType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDispatchIndirectCommand", sizeof(PyVkDispatchIndirectCommand), 0,
@@ -15297,6 +16132,17 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "signalSemaphoreCount", (getter)PyVkSubmitInfo_getsignalSemaphoreCount, (setter)PyVkSubmitInfo_setsignalSemaphoreCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkSubmitInfo_init(PyVkSubmitInfo *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* waitSemaphoreCount = NULL;
+PyObject* pWaitSemaphores = NULL;
+PyObject* pWaitDstStageMask = NULL;
+PyObject* commandBufferCount = NULL;
+PyObject* pCommandBuffers = NULL;
+PyObject* signalSemaphoreCount = NULL;
+PyObject* pSignalSemaphores = NULL;static char *kwlist[] = {"sType","pNext","waitSemaphoreCount","pWaitSemaphores","pWaitDstStageMask","commandBufferCount","pCommandBuffers","signalSemaphoreCount","pSignalSemaphores",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOO", kwlist, &sType, &pNext, &waitSemaphoreCount, &pWaitSemaphores, &pWaitDstStageMask, &commandBufferCount, &pCommandBuffers, &signalSemaphoreCount, &pSignalSemaphores)) return -1;return 0; }
             static PyTypeObject PyVkSubmitInfoType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkSubmitInfo", sizeof(PyVkSubmitInfo), 0,
@@ -15354,6 +16200,15 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "displayName", (getter)PyVkDisplayPropertiesKHR_getdisplayName, (setter)PyVkDisplayPropertiesKHR_setdisplayName, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDisplayPropertiesKHR_init(PyVkDisplayPropertiesKHR *self, PyObject *args, PyObject *kwds) {
+            PyObject* display = NULL;
+PyObject* displayName = NULL;
+PyObject* physicalDimensions = NULL;
+PyObject* physicalResolution = NULL;
+PyObject* supportedTransforms = NULL;
+PyObject* planeReorderPossible = NULL;
+PyObject* persistentContent = NULL;static char *kwlist[] = {"display","displayName","physicalDimensions","physicalResolution","supportedTransforms","planeReorderPossible","persistentContent",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOO", kwlist, &display, &displayName, &physicalDimensions, &physicalResolution, &supportedTransforms, &planeReorderPossible, &persistentContent)) return -1;return 0; }
             static PyTypeObject PyVkDisplayPropertiesKHRType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDisplayPropertiesKHR", sizeof(PyVkDisplayPropertiesKHR), 0,
@@ -15406,6 +16261,10 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "currentStackIndex", (getter)PyVkDisplayPlanePropertiesKHR_getcurrentStackIndex, (setter)PyVkDisplayPlanePropertiesKHR_setcurrentStackIndex, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDisplayPlanePropertiesKHR_init(PyVkDisplayPlanePropertiesKHR *self, PyObject *args, PyObject *kwds) {
+            PyObject* currentDisplay = NULL;
+PyObject* currentStackIndex = NULL;static char *kwlist[] = {"currentDisplay","currentStackIndex",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OO", kwlist, &currentDisplay, &currentStackIndex)) return -1;return 0; }
             static PyTypeObject PyVkDisplayPlanePropertiesKHRType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDisplayPlanePropertiesKHR", sizeof(PyVkDisplayPlanePropertiesKHR), 0,
@@ -15458,6 +16317,10 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "refreshRate", (getter)PyVkDisplayModeParametersKHR_getrefreshRate, (setter)PyVkDisplayModeParametersKHR_setrefreshRate, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDisplayModeParametersKHR_init(PyVkDisplayModeParametersKHR *self, PyObject *args, PyObject *kwds) {
+            PyObject* visibleRegion = NULL;
+PyObject* refreshRate = NULL;static char *kwlist[] = {"visibleRegion","refreshRate",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OO", kwlist, &visibleRegion, &refreshRate)) return -1;return 0; }
             static PyTypeObject PyVkDisplayModeParametersKHRType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDisplayModeParametersKHR", sizeof(PyVkDisplayModeParametersKHR), 0,
@@ -15492,6 +16355,10 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkDisplayModePropertiesKHR_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkDisplayModePropertiesKHR_init(PyVkDisplayModePropertiesKHR *self, PyObject *args, PyObject *kwds) {
+            PyObject* displayMode = NULL;
+PyObject* parameters = NULL;static char *kwlist[] = {"displayMode","parameters",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OO", kwlist, &displayMode, &parameters)) return -1;return 0; }
             static PyTypeObject PyVkDisplayModePropertiesKHRType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDisplayModePropertiesKHR", sizeof(PyVkDisplayModePropertiesKHR), 0,
@@ -15544,6 +16411,12 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkDisplayModeCreateInfoKHR_getpNext, (setter)PyVkDisplayModeCreateInfoKHR_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDisplayModeCreateInfoKHR_init(PyVkDisplayModeCreateInfoKHR *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* parameters = NULL;static char *kwlist[] = {"sType","pNext","flags","parameters",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOO", kwlist, &sType, &pNext, &flags, &parameters)) return -1;return 0; }
             static PyTypeObject PyVkDisplayModeCreateInfoKHRType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDisplayModeCreateInfoKHR", sizeof(PyVkDisplayModeCreateInfoKHR), 0,
@@ -15578,6 +16451,17 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkDisplayPlaneCapabilitiesKHR_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkDisplayPlaneCapabilitiesKHR_init(PyVkDisplayPlaneCapabilitiesKHR *self, PyObject *args, PyObject *kwds) {
+            PyObject* supportedAlpha = NULL;
+PyObject* minSrcPosition = NULL;
+PyObject* maxSrcPosition = NULL;
+PyObject* minSrcExtent = NULL;
+PyObject* maxSrcExtent = NULL;
+PyObject* minDstPosition = NULL;
+PyObject* maxDstPosition = NULL;
+PyObject* minDstExtent = NULL;
+PyObject* maxDstExtent = NULL;static char *kwlist[] = {"supportedAlpha","minSrcPosition","maxSrcPosition","minSrcExtent","maxSrcExtent","minDstPosition","maxDstPosition","minDstExtent","maxDstExtent",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOO", kwlist, &supportedAlpha, &minSrcPosition, &maxSrcPosition, &minSrcExtent, &maxSrcExtent, &minDstPosition, &maxDstPosition, &minDstExtent, &maxDstExtent)) return -1;return 0; }
             static PyTypeObject PyVkDisplayPlaneCapabilitiesKHRType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDisplayPlaneCapabilitiesKHR", sizeof(PyVkDisplayPlaneCapabilitiesKHR), 0,
@@ -15684,6 +16568,18 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "globalAlpha", (getter)PyVkDisplaySurfaceCreateInfoKHR_getglobalAlpha, (setter)PyVkDisplaySurfaceCreateInfoKHR_setglobalAlpha, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDisplaySurfaceCreateInfoKHR_init(PyVkDisplaySurfaceCreateInfoKHR *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* displayMode = NULL;
+PyObject* planeIndex = NULL;
+PyObject* planeStackIndex = NULL;
+PyObject* transform = NULL;
+PyObject* globalAlpha = NULL;
+PyObject* alphaMode = NULL;
+PyObject* imageExtent = NULL;static char *kwlist[] = {"sType","pNext","flags","displayMode","planeIndex","planeStackIndex","transform","globalAlpha","alphaMode","imageExtent",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOOO", kwlist, &sType, &pNext, &flags, &displayMode, &planeIndex, &planeStackIndex, &transform, &globalAlpha, &alphaMode, &imageExtent)) return -1;return 0; }
             static PyTypeObject PyVkDisplaySurfaceCreateInfoKHRType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDisplaySurfaceCreateInfoKHR", sizeof(PyVkDisplaySurfaceCreateInfoKHR), 0,
@@ -15736,6 +16632,13 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkDisplayPresentInfoKHR_getpNext, (setter)PyVkDisplayPresentInfoKHR_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDisplayPresentInfoKHR_init(PyVkDisplayPresentInfoKHR *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* srcRect = NULL;
+PyObject* dstRect = NULL;
+PyObject* persistent = NULL;static char *kwlist[] = {"sType","pNext","srcRect","dstRect","persistent",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOO", kwlist, &sType, &pNext, &srcRect, &dstRect, &persistent)) return -1;return 0; }
             static PyTypeObject PyVkDisplayPresentInfoKHRType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDisplayPresentInfoKHR", sizeof(PyVkDisplayPresentInfoKHR), 0,
@@ -15824,6 +16727,18 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "maxImageArrayLayers", (getter)PyVkSurfaceCapabilitiesKHR_getmaxImageArrayLayers, (setter)PyVkSurfaceCapabilitiesKHR_setmaxImageArrayLayers, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkSurfaceCapabilitiesKHR_init(PyVkSurfaceCapabilitiesKHR *self, PyObject *args, PyObject *kwds) {
+            PyObject* minImageCount = NULL;
+PyObject* maxImageCount = NULL;
+PyObject* currentExtent = NULL;
+PyObject* minImageExtent = NULL;
+PyObject* maxImageExtent = NULL;
+PyObject* maxImageArrayLayers = NULL;
+PyObject* supportedTransforms = NULL;
+PyObject* currentTransform = NULL;
+PyObject* supportedCompositeAlpha = NULL;
+PyObject* supportedUsageFlags = NULL;static char *kwlist[] = {"minImageCount","maxImageCount","currentExtent","minImageExtent","maxImageExtent","maxImageArrayLayers","supportedTransforms","currentTransform","supportedCompositeAlpha","supportedUsageFlags",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOOO", kwlist, &minImageCount, &maxImageCount, &currentExtent, &minImageExtent, &maxImageExtent, &maxImageArrayLayers, &supportedTransforms, &currentTransform, &supportedCompositeAlpha, &supportedUsageFlags)) return -1;return 0; }
             static PyTypeObject PyVkSurfaceCapabilitiesKHRType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkSurfaceCapabilitiesKHR", sizeof(PyVkSurfaceCapabilitiesKHR), 0,
@@ -15878,6 +16793,12 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkAndroidSurfaceCreateInfoKHR_getpNext, (setter)PyVkAndroidSurfaceCreateInfoKHR_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkAndroidSurfaceCreateInfoKHR_init(PyVkAndroidSurfaceCreateInfoKHR *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* window = NULL;static char *kwlist[] = {"sType","pNext","flags","window",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOO", kwlist, &sType, &pNext, &flags, &window)) return -1;return 0; }
             static PyTypeObject PyVkAndroidSurfaceCreateInfoKHRType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkAndroidSurfaceCreateInfoKHR", sizeof(PyVkAndroidSurfaceCreateInfoKHR), 0,
@@ -15934,6 +16855,13 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkMirSurfaceCreateInfoKHR_getpNext, (setter)PyVkMirSurfaceCreateInfoKHR_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkMirSurfaceCreateInfoKHR_init(PyVkMirSurfaceCreateInfoKHR *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* connection = NULL;
+PyObject* mirSurface = NULL;static char *kwlist[] = {"sType","pNext","flags","connection","mirSurface",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOO", kwlist, &sType, &pNext, &flags, &connection, &mirSurface)) return -1;return 0; }
             static PyTypeObject PyVkMirSurfaceCreateInfoKHRType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkMirSurfaceCreateInfoKHR", sizeof(PyVkMirSurfaceCreateInfoKHR), 0,
@@ -15990,6 +16918,13 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkWaylandSurfaceCreateInfoKHR_getpNext, (setter)PyVkWaylandSurfaceCreateInfoKHR_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkWaylandSurfaceCreateInfoKHR_init(PyVkWaylandSurfaceCreateInfoKHR *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* display = NULL;
+PyObject* surface = NULL;static char *kwlist[] = {"sType","pNext","flags","display","surface",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOO", kwlist, &sType, &pNext, &flags, &display, &surface)) return -1;return 0; }
             static PyTypeObject PyVkWaylandSurfaceCreateInfoKHRType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkWaylandSurfaceCreateInfoKHR", sizeof(PyVkWaylandSurfaceCreateInfoKHR), 0,
@@ -16046,6 +16981,13 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkWin32SurfaceCreateInfoKHR_getpNext, (setter)PyVkWin32SurfaceCreateInfoKHR_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkWin32SurfaceCreateInfoKHR_init(PyVkWin32SurfaceCreateInfoKHR *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* hinstance = NULL;
+PyObject* hwnd = NULL;static char *kwlist[] = {"sType","pNext","flags","hinstance","hwnd",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOO", kwlist, &sType, &pNext, &flags, &hinstance, &hwnd)) return -1;return 0; }
             static PyTypeObject PyVkWin32SurfaceCreateInfoKHRType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkWin32SurfaceCreateInfoKHR", sizeof(PyVkWin32SurfaceCreateInfoKHR), 0,
@@ -16138,6 +17080,13 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "window", (getter)PyVkXlibSurfaceCreateInfoKHR_getwindow, (setter)PyVkXlibSurfaceCreateInfoKHR_setwindow, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkXlibSurfaceCreateInfoKHR_init(PyVkXlibSurfaceCreateInfoKHR *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* dpy = NULL;
+PyObject* window = NULL;static char *kwlist[] = {"sType","pNext","flags","dpy","window",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOO", kwlist, &sType, &pNext, &flags, &dpy, &window)) return -1;return 0; }
             static PyTypeObject PyVkXlibSurfaceCreateInfoKHRType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkXlibSurfaceCreateInfoKHR", sizeof(PyVkXlibSurfaceCreateInfoKHR), 0,
@@ -16194,6 +17143,13 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkXcbSurfaceCreateInfoKHR_getpNext, (setter)PyVkXcbSurfaceCreateInfoKHR_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkXcbSurfaceCreateInfoKHR_init(PyVkXcbSurfaceCreateInfoKHR *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* connection = NULL;
+PyObject* window = NULL;static char *kwlist[] = {"sType","pNext","flags","connection","window",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOO", kwlist, &sType, &pNext, &flags, &connection, &window)) return -1;return 0; }
             static PyTypeObject PyVkXcbSurfaceCreateInfoKHRType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkXcbSurfaceCreateInfoKHR", sizeof(PyVkXcbSurfaceCreateInfoKHR), 0,
@@ -16230,6 +17186,10 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkSurfaceFormatKHR_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkSurfaceFormatKHR_init(PyVkSurfaceFormatKHR *self, PyObject *args, PyObject *kwds) {
+            PyObject* format = NULL;
+PyObject* colorSpace = NULL;static char *kwlist[] = {"format","colorSpace",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OO", kwlist, &format, &colorSpace)) return -1;return 0; }
             static PyTypeObject PyVkSurfaceFormatKHRType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkSurfaceFormatKHR", sizeof(PyVkSurfaceFormatKHR), 0,
@@ -16359,6 +17319,26 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pQueueFamilyIndices", (getter)PyVkSwapchainCreateInfoKHR_getpQueueFamilyIndices, (setter)PyVkSwapchainCreateInfoKHR_setpQueueFamilyIndices, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkSwapchainCreateInfoKHR_init(PyVkSwapchainCreateInfoKHR *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* surface = NULL;
+PyObject* minImageCount = NULL;
+PyObject* imageFormat = NULL;
+PyObject* imageColorSpace = NULL;
+PyObject* imageExtent = NULL;
+PyObject* imageArrayLayers = NULL;
+PyObject* imageUsage = NULL;
+PyObject* imageSharingMode = NULL;
+PyObject* queueFamilyIndexCount = NULL;
+PyObject* pQueueFamilyIndices = NULL;
+PyObject* preTransform = NULL;
+PyObject* compositeAlpha = NULL;
+PyObject* presentMode = NULL;
+PyObject* clipped = NULL;
+PyObject* oldSwapchain = NULL;static char *kwlist[] = {"sType","pNext","flags","surface","minImageCount","imageFormat","imageColorSpace","imageExtent","imageArrayLayers","imageUsage","imageSharingMode","queueFamilyIndexCount","pQueueFamilyIndices","preTransform","compositeAlpha","presentMode","clipped","oldSwapchain",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOOOOOOOOOOO", kwlist, &sType, &pNext, &flags, &surface, &minImageCount, &imageFormat, &imageColorSpace, &imageExtent, &imageArrayLayers, &imageUsage, &imageSharingMode, &queueFamilyIndexCount, &pQueueFamilyIndices, &preTransform, &compositeAlpha, &presentMode, &clipped, &oldSwapchain)) return -1;return 0; }
             static PyTypeObject PyVkSwapchainCreateInfoKHRType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkSwapchainCreateInfoKHR", sizeof(PyVkSwapchainCreateInfoKHR), 0,
@@ -16470,6 +17450,16 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pImageIndices", (getter)PyVkPresentInfoKHR_getpImageIndices, (setter)PyVkPresentInfoKHR_setpImageIndices, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkPresentInfoKHR_init(PyVkPresentInfoKHR *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* waitSemaphoreCount = NULL;
+PyObject* pWaitSemaphores = NULL;
+PyObject* swapchainCount = NULL;
+PyObject* pSwapchains = NULL;
+PyObject* pImageIndices = NULL;
+PyObject* pResults = NULL;static char *kwlist[] = {"sType","pNext","waitSemaphoreCount","pWaitSemaphores","swapchainCount","pSwapchains","pImageIndices","pResults",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOO", kwlist, &sType, &pNext, &waitSemaphoreCount, &pWaitSemaphores, &swapchainCount, &pSwapchains, &pImageIndices, &pResults)) return -1;return 0; }
             static PyTypeObject PyVkPresentInfoKHRType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkPresentInfoKHR", sizeof(PyVkPresentInfoKHR), 0,
@@ -16540,6 +17530,13 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pUserData", (getter)PyVkDebugReportCallbackCreateInfoEXT_getpUserData, (setter)PyVkDebugReportCallbackCreateInfoEXT_setpUserData, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDebugReportCallbackCreateInfoEXT_init(PyVkDebugReportCallbackCreateInfoEXT *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* flags = NULL;
+PyObject* pfnCallback = NULL;
+PyObject* pUserData = NULL;static char *kwlist[] = {"sType","pNext","flags","pfnCallback","pUserData",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOO", kwlist, &sType, &pNext, &flags, &pfnCallback, &pUserData)) return -1;return 0; }
             static PyTypeObject PyVkDebugReportCallbackCreateInfoEXTType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDebugReportCallbackCreateInfoEXT", sizeof(PyVkDebugReportCallbackCreateInfoEXT), 0,
@@ -16610,6 +17607,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "enabledValidationFlags", (getter)PyVkDebugReportLayerFlagsEXT_getenabledValidationFlags, (setter)PyVkDebugReportLayerFlagsEXT_setenabledValidationFlags, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDebugReportLayerFlagsEXT_init(PyVkDebugReportLayerFlagsEXT *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* enabledValidationFlags = NULL;static char *kwlist[] = {"sType","pNext","enabledValidationFlags",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &sType, &pNext, &enabledValidationFlags)) return -1;return 0; }
             static PyTypeObject PyVkDebugReportLayerFlagsEXTType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDebugReportLayerFlagsEXT", sizeof(PyVkDebugReportLayerFlagsEXT), 0,
@@ -16662,6 +17664,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkPipelineRasterizationStateRasterizationOrderAMD_getpNext, (setter)PyVkPipelineRasterizationStateRasterizationOrderAMD_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkPipelineRasterizationStateRasterizationOrderAMD_init(PyVkPipelineRasterizationStateRasterizationOrderAMD *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* rasterizationOrder = NULL;static char *kwlist[] = {"sType","pNext","rasterizationOrder",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &sType, &pNext, &rasterizationOrder)) return -1;return 0; }
             static PyTypeObject PyVkPipelineRasterizationStateRasterizationOrderAMDType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkPipelineRasterizationStateRasterizationOrderAMD", sizeof(PyVkPipelineRasterizationStateRasterizationOrderAMD), 0,
@@ -16755,6 +17762,13 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pObjectName", (getter)PyVkDebugMarkerObjectNameInfoEXT_getpObjectName, (setter)PyVkDebugMarkerObjectNameInfoEXT_setpObjectName, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDebugMarkerObjectNameInfoEXT_init(PyVkDebugMarkerObjectNameInfoEXT *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* objectType = NULL;
+PyObject* object = NULL;
+PyObject* pObjectName = NULL;static char *kwlist[] = {"sType","pNext","objectType","object","pObjectName",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOO", kwlist, &sType, &pNext, &objectType, &object, &pObjectName)) return -1;return 0; }
             static PyTypeObject PyVkDebugMarkerObjectNameInfoEXTType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDebugMarkerObjectNameInfoEXT", sizeof(PyVkDebugMarkerObjectNameInfoEXT), 0,
@@ -16879,6 +17893,15 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pTag", (getter)PyVkDebugMarkerObjectTagInfoEXT_getpTag, (setter)PyVkDebugMarkerObjectTagInfoEXT_setpTag, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDebugMarkerObjectTagInfoEXT_init(PyVkDebugMarkerObjectTagInfoEXT *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* objectType = NULL;
+PyObject* object = NULL;
+PyObject* tagName = NULL;
+PyObject* tagSize = NULL;
+PyObject* pTag = NULL;static char *kwlist[] = {"sType","pNext","objectType","object","tagName","tagSize","pTag",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOO", kwlist, &sType, &pNext, &objectType, &object, &tagName, &tagSize, &pTag)) return -1;return 0; }
             static PyTypeObject PyVkDebugMarkerObjectTagInfoEXTType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDebugMarkerObjectTagInfoEXT", sizeof(PyVkDebugMarkerObjectTagInfoEXT), 0,
@@ -16987,6 +18010,12 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "color", (getter)PyVkDebugMarkerMarkerInfoEXT_getcolor, (setter)PyVkDebugMarkerMarkerInfoEXT_setcolor, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDebugMarkerMarkerInfoEXT_init(PyVkDebugMarkerMarkerInfoEXT *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* pMarkerName = NULL;
+PyObject* color = NULL;static char *kwlist[] = {"sType","pNext","pMarkerName","color",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOO", kwlist, &sType, &pNext, &pMarkerName, &color)) return -1;return 0; }
             static PyTypeObject PyVkDebugMarkerMarkerInfoEXTType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDebugMarkerMarkerInfoEXT", sizeof(PyVkDebugMarkerMarkerInfoEXT), 0,
@@ -17039,6 +18068,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkDedicatedAllocationImageCreateInfoNV_getpNext, (setter)PyVkDedicatedAllocationImageCreateInfoNV_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDedicatedAllocationImageCreateInfoNV_init(PyVkDedicatedAllocationImageCreateInfoNV *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* dedicatedAllocation = NULL;static char *kwlist[] = {"sType","pNext","dedicatedAllocation",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &sType, &pNext, &dedicatedAllocation)) return -1;return 0; }
             static PyTypeObject PyVkDedicatedAllocationImageCreateInfoNVType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDedicatedAllocationImageCreateInfoNV", sizeof(PyVkDedicatedAllocationImageCreateInfoNV), 0,
@@ -17091,6 +18125,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkDedicatedAllocationBufferCreateInfoNV_getpNext, (setter)PyVkDedicatedAllocationBufferCreateInfoNV_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDedicatedAllocationBufferCreateInfoNV_init(PyVkDedicatedAllocationBufferCreateInfoNV *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* dedicatedAllocation = NULL;static char *kwlist[] = {"sType","pNext","dedicatedAllocation",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &sType, &pNext, &dedicatedAllocation)) return -1;return 0; }
             static PyTypeObject PyVkDedicatedAllocationBufferCreateInfoNVType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDedicatedAllocationBufferCreateInfoNV", sizeof(PyVkDedicatedAllocationBufferCreateInfoNV), 0,
@@ -17143,6 +18182,12 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkDedicatedAllocationMemoryAllocateInfoNV_getpNext, (setter)PyVkDedicatedAllocationMemoryAllocateInfoNV_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkDedicatedAllocationMemoryAllocateInfoNV_init(PyVkDedicatedAllocationMemoryAllocateInfoNV *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* image = NULL;
+PyObject* buffer = NULL;static char *kwlist[] = {"sType","pNext","image","buffer",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOO", kwlist, &sType, &pNext, &image, &buffer)) return -1;return 0; }
             static PyTypeObject PyVkDedicatedAllocationMemoryAllocateInfoNVType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkDedicatedAllocationMemoryAllocateInfoNV", sizeof(PyVkDedicatedAllocationMemoryAllocateInfoNV), 0,
@@ -17177,6 +18222,12 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                 static PyGetSetDef PyVkExternalImageFormatPropertiesNV_getsetters[] = {
                 {NULL}};
 
+            static int
+            PyVkExternalImageFormatPropertiesNV_init(PyVkExternalImageFormatPropertiesNV *self, PyObject *args, PyObject *kwds) {
+            PyObject* imageFormatProperties = NULL;
+PyObject* externalMemoryFeatures = NULL;
+PyObject* exportFromImportedHandleTypes = NULL;
+PyObject* compatibleHandleTypes = NULL;static char *kwlist[] = {"imageFormatProperties","externalMemoryFeatures","exportFromImportedHandleTypes","compatibleHandleTypes",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOO", kwlist, &imageFormatProperties, &externalMemoryFeatures, &exportFromImportedHandleTypes, &compatibleHandleTypes)) return -1;return 0; }
             static PyTypeObject PyVkExternalImageFormatPropertiesNVType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkExternalImageFormatPropertiesNV", sizeof(PyVkExternalImageFormatPropertiesNV), 0,
@@ -17229,6 +18280,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkExternalMemoryImageCreateInfoNV_getpNext, (setter)PyVkExternalMemoryImageCreateInfoNV_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkExternalMemoryImageCreateInfoNV_init(PyVkExternalMemoryImageCreateInfoNV *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* handleTypes = NULL;static char *kwlist[] = {"sType","pNext","handleTypes",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &sType, &pNext, &handleTypes)) return -1;return 0; }
             static PyTypeObject PyVkExternalMemoryImageCreateInfoNVType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkExternalMemoryImageCreateInfoNV", sizeof(PyVkExternalMemoryImageCreateInfoNV), 0,
@@ -17281,6 +18337,11 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkExportMemoryAllocateInfoNV_getpNext, (setter)PyVkExportMemoryAllocateInfoNV_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkExportMemoryAllocateInfoNV_init(PyVkExportMemoryAllocateInfoNV *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* handleTypes = NULL;static char *kwlist[] = {"sType","pNext","handleTypes",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOO", kwlist, &sType, &pNext, &handleTypes)) return -1;return 0; }
             static PyTypeObject PyVkExportMemoryAllocateInfoNVType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkExportMemoryAllocateInfoNV", sizeof(PyVkExportMemoryAllocateInfoNV), 0,
@@ -17335,6 +18396,12 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkImportMemoryWin32HandleInfoNV_getpNext, (setter)PyVkImportMemoryWin32HandleInfoNV_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkImportMemoryWin32HandleInfoNV_init(PyVkImportMemoryWin32HandleInfoNV *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* handleType = NULL;
+PyObject* handle = NULL;static char *kwlist[] = {"sType","pNext","handleType","handle",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOO", kwlist, &sType, &pNext, &handleType, &handle)) return -1;return 0; }
             static PyTypeObject PyVkImportMemoryWin32HandleInfoNVType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkImportMemoryWin32HandleInfoNV", sizeof(PyVkImportMemoryWin32HandleInfoNV), 0,
@@ -17391,6 +18458,12 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "pNext", (getter)PyVkExportMemoryWin32HandleInfoNV_getpNext, (setter)PyVkExportMemoryWin32HandleInfoNV_setpNext, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkExportMemoryWin32HandleInfoNV_init(PyVkExportMemoryWin32HandleInfoNV *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* pAttributes = NULL;
+PyObject* dwAccess = NULL;static char *kwlist[] = {"sType","pNext","pAttributes","dwAccess",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOO", kwlist, &sType, &pNext, &pAttributes, &dwAccess)) return -1;return 0; }
             static PyTypeObject PyVkExportMemoryWin32HandleInfoNVType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkExportMemoryWin32HandleInfoNV", sizeof(PyVkExportMemoryWin32HandleInfoNV), 0,
@@ -17506,6 +18579,17 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
                     { "releaseCount", (getter)PyVkWin32KeyedMutexAcquireReleaseInfoNV_getreleaseCount, (setter)PyVkWin32KeyedMutexAcquireReleaseInfoNV_setreleaseCount, "", NULL},
                 {NULL}};
 
+            static int
+            PyVkWin32KeyedMutexAcquireReleaseInfoNV_init(PyVkWin32KeyedMutexAcquireReleaseInfoNV *self, PyObject *args, PyObject *kwds) {
+            PyObject* sType = NULL;
+PyObject* pNext = NULL;
+PyObject* acquireCount = NULL;
+PyObject* pAcquireSyncs = NULL;
+PyObject* pAcquireKeys = NULL;
+PyObject* pAcquireTimeoutMilliseconds = NULL;
+PyObject* releaseCount = NULL;
+PyObject* pReleaseSyncs = NULL;
+PyObject* pReleaseKeys = NULL;static char *kwlist[] = {"sType","pNext","acquireCount","pAcquireSyncs","pAcquireKeys","pAcquireTimeoutMilliseconds","releaseCount","pReleaseSyncs","pReleaseKeys",NULL};if(!PyArg_ParseTupleAndKeywords(args, kwds, "OOOOOOOOO", kwlist, &sType, &pNext, &acquireCount, &pAcquireSyncs, &pAcquireKeys, &pAcquireTimeoutMilliseconds, &releaseCount, &pReleaseSyncs, &pReleaseKeys)) return -1;return 0; }
             static PyTypeObject PyVkWin32KeyedMutexAcquireReleaseInfoNVType = {
                 PyVarObject_HEAD_INIT(NULL, 0)
                 "vulkan.VkWin32KeyedMutexAcquireReleaseInfoNV", sizeof(PyVkWin32KeyedMutexAcquireReleaseInfoNV), 0,
@@ -17518,36 +18602,36 @@ static PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
 
 static PyMethodDef VulkanMethods[] = {
 {"load_sdk", load_sdk, METH_NOARGS, "Load SDK"},
-{"VkDisplayKHR", PyHandle_VkDisplayKHR, METH_NOARGS, "Handle"},
-{"VkDisplayModeKHR", PyHandle_VkDisplayModeKHR, METH_NOARGS, "Handle"},
-{"VkQueryPool", PyHandle_VkQueryPool, METH_NOARGS, "Handle"},
-{"VkDebugReportCallbackEXT", PyHandle_VkDebugReportCallbackEXT, METH_NOARGS, "Handle"},
-{"VkPipelineCache", PyHandle_VkPipelineCache, METH_NOARGS, "Handle"},
-{"VkCommandBuffer", PyHandle_VkCommandBuffer, METH_NOARGS, "Handle"},
-{"VkPhysicalDevice", PyHandle_VkPhysicalDevice, METH_NOARGS, "Handle"},
-{"VkCommandPool", PyHandle_VkCommandPool, METH_NOARGS, "Handle"},
+{"VkDescriptorSet", PyHandle_VkDescriptorSet, METH_NOARGS, "Handle"},
 {"VkPipelineLayout", PyHandle_VkPipelineLayout, METH_NOARGS, "Handle"},
+{"VkSwapchainKHR", PyHandle_VkSwapchainKHR, METH_NOARGS, "Handle"},
+{"VkRenderPass", PyHandle_VkRenderPass, METH_NOARGS, "Handle"},
+{"VkCommandBuffer", PyHandle_VkCommandBuffer, METH_NOARGS, "Handle"},
+{"VkShaderModule", PyHandle_VkShaderModule, METH_NOARGS, "Handle"},
+{"VkQueryPool", PyHandle_VkQueryPool, METH_NOARGS, "Handle"},
+{"VkPhysicalDevice", PyHandle_VkPhysicalDevice, METH_NOARGS, "Handle"},
+{"VkDescriptorSetLayout", PyHandle_VkDescriptorSetLayout, METH_NOARGS, "Handle"},
+{"VkBufferView", PyHandle_VkBufferView, METH_NOARGS, "Handle"},
+{"VkDisplayKHR", PyHandle_VkDisplayKHR, METH_NOARGS, "Handle"},
+{"VkDevice", PyHandle_VkDevice, METH_NOARGS, "Handle"},
+{"VkImageView", PyHandle_VkImageView, METH_NOARGS, "Handle"},
+{"VkDisplayModeKHR", PyHandle_VkDisplayModeKHR, METH_NOARGS, "Handle"},
+{"VkBuffer", PyHandle_VkBuffer, METH_NOARGS, "Handle"},
+{"VkDeviceMemory", PyHandle_VkDeviceMemory, METH_NOARGS, "Handle"},
+{"VkPipeline", PyHandle_VkPipeline, METH_NOARGS, "Handle"},
+{"VkPipelineCache", PyHandle_VkPipelineCache, METH_NOARGS, "Handle"},
+{"VkCommandPool", PyHandle_VkCommandPool, METH_NOARGS, "Handle"},
+{"VkFence", PyHandle_VkFence, METH_NOARGS, "Handle"},
+{"VkEvent", PyHandle_VkEvent, METH_NOARGS, "Handle"},
+{"VkImage", PyHandle_VkImage, METH_NOARGS, "Handle"},
+{"VkSampler", PyHandle_VkSampler, METH_NOARGS, "Handle"},
+{"VkFramebuffer", PyHandle_VkFramebuffer, METH_NOARGS, "Handle"},
+{"VkSemaphore", PyHandle_VkSemaphore, METH_NOARGS, "Handle"},
+{"VkQueue", PyHandle_VkQueue, METH_NOARGS, "Handle"},
+{"VkDescriptorPool", PyHandle_VkDescriptorPool, METH_NOARGS, "Handle"},
 {"VkSurfaceKHR", PyHandle_VkSurfaceKHR, METH_NOARGS, "Handle"},
 {"VkInstance", PyHandle_VkInstance, METH_NOARGS, "Handle"},
-{"VkDeviceMemory", PyHandle_VkDeviceMemory, METH_NOARGS, "Handle"},
-{"VkSwapchainKHR", PyHandle_VkSwapchainKHR, METH_NOARGS, "Handle"},
-{"VkImageView", PyHandle_VkImageView, METH_NOARGS, "Handle"},
-{"VkBufferView", PyHandle_VkBufferView, METH_NOARGS, "Handle"},
-{"VkDescriptorPool", PyHandle_VkDescriptorPool, METH_NOARGS, "Handle"},
-{"VkSampler", PyHandle_VkSampler, METH_NOARGS, "Handle"},
-{"VkQueue", PyHandle_VkQueue, METH_NOARGS, "Handle"},
-{"VkShaderModule", PyHandle_VkShaderModule, METH_NOARGS, "Handle"},
-{"VkRenderPass", PyHandle_VkRenderPass, METH_NOARGS, "Handle"},
-{"VkFramebuffer", PyHandle_VkFramebuffer, METH_NOARGS, "Handle"},
-{"VkImage", PyHandle_VkImage, METH_NOARGS, "Handle"},
-{"VkDescriptorSet", PyHandle_VkDescriptorSet, METH_NOARGS, "Handle"},
-{"VkFence", PyHandle_VkFence, METH_NOARGS, "Handle"},
-{"VkBuffer", PyHandle_VkBuffer, METH_NOARGS, "Handle"},
-{"VkDescriptorSetLayout", PyHandle_VkDescriptorSetLayout, METH_NOARGS, "Handle"},
-{"VkDevice", PyHandle_VkDevice, METH_NOARGS, "Handle"},
-{"VkSemaphore", PyHandle_VkSemaphore, METH_NOARGS, "Handle"},
-{"VkPipeline", PyHandle_VkPipeline, METH_NOARGS, "Handle"},
-{"VkEvent", PyHandle_VkEvent, METH_NOARGS, "Handle"},
+{"VkDebugReportCallbackEXT", PyHandle_VkDebugReportCallbackEXT, METH_NOARGS, "Handle"},
 
 {NULL, NULL, 0, NULL} };
 
