@@ -1,4 +1,5 @@
 from contextlib import contextmanager
+import random
 import requests
 import xmltodict
 
@@ -61,6 +62,8 @@ return_structs = None
 create_structs = None
 structs = None
 handles = None
+unions = None
+commands = None
 out = None
 
 
@@ -75,6 +78,8 @@ def main():
     global out
     global structs
     global handles
+    global unions
+    global commands
 
     vulkan_plateform = requests.get(VULKAN_PLATEFORM_URL).text
     vulkan_h = clean_vulkan_h(requests.get(VULKAN_H_URL).text)
@@ -85,6 +90,8 @@ def main():
     return_structs = get_structs_returned_only()
     create_structs = get_create_structs()
     handles = get_handles()
+    unions = get_unions()
+    commands = get_commands()
 
     out = open(OUT_FILE, 'w')
 
@@ -95,6 +102,7 @@ def main():
     add_initsdk()
     add_pyhandles()
     add_pyobject()
+    add_pyvk_functions()
     add_pymethod()
     add_pymodule()
     add_pyinit()
@@ -149,6 +157,15 @@ def get_handles():
                if s.get('@category', None) == 'handle'])
 
 
+def get_unions():
+    return [u for u in vk_xml['registry']['types']['type']
+            if u.get('@category', None) == 'union']
+
+
+def get_commands():
+    return [c for c in vk_xml['registry']['commands']['command']]
+
+
 def get_structs_returned_only():
     return set([s['@name'] for s in structs
                if '@returnedonly' in s and s['@returnedonly'] == 'true'])
@@ -197,7 +214,7 @@ def add_pyhandles():
 
 
 def add_object_in_init():
-    for struct in structs:
+    for struct in structs + unions:
         with check_struct_extension(struct):
             out.write('''
                 if (PyType_Ready(&Py{0}Type) < 0)
@@ -226,49 +243,47 @@ def get_signatures():
 
 
 def pyobject_to_val(member):
-    constchar_convert = '''
-        PyObject * ascii_str = PyUnicode_AsASCIIString(value);
-        char* tmp = PyBytes_AsString(ascii_str);
-        (self->base)->{1} = strdup(tmp);
-        Py_DECREF(ascii_str);
-        '''
+    def rand_name():
+        return 'tmp' + str(random.randrange(99999999))
+
     arraychar_convert = '''
-        PyObject * ascii_str = PyUnicode_AsASCIIString(value);
-        char* tmp = PyBytes_AsString(ascii_str);
-        strcpy((self->base)->{1}, tmp);
-        Py_DECREF(ascii_str);
-        '''
+        PyObject * {0} = PyUnicode_AsASCIIString({{member}});
+        char* {1} = PyBytes_AsString({0});
+        strcpy({{member_struct}}, {1});
+        Py_DECREF({0});
+        '''.format(rand_name(), rand_name())
 
     listchar_convert = '''
-        int nb = PyList_Size(value);
-        char** tmp = malloc(sizeof(char*)*nb + 1);
-        int i;
-        for (i = 0; i < nb; i++) {{
+        int {0} = PyList_Size({{member}});
+        char** {1} = malloc(sizeof(char*)*{0} + 1);
+        int {2};
+        for ({2} = 0; {2} < {0}; {2}++) {{{{
             PyObject* ascii_str = PyUnicode_AsASCIIString(
-            PyList_GetItem(value, i));
+            PyList_GetItem({{member}}, {2}));
             char* tmp2 = PyBytes_AsString(ascii_str);
-            tmp[i] = strdup(tmp2);
+            {1}[{2}] = strdup(tmp2);
             Py_DECREF(ascii_str);
-        }}
-        tmp[i] = NULL; // sentinel
-        (self->base)->{1} = tmp;
-        '''
+        }}}}
+        {1}[{2}] = NULL; // sentinel
+        {{member_struct}} = {1};
+        '''.format(rand_name(), rand_name(), rand_name())
 
     listfloat_convert = '''
-        int nb = PyList_Size(value);
-        int i;
-        for (i = 0; i < nb; i++) {{
-            float tmp = (float) PyFloat_AsDouble(PyList_GetItem(value, i));
-            ((self->base)->{1})[i] = tmp;
-        }}
-        '''
+        int {0} = PyList_Size({{member}});
+        int {1};
+        for ({1} = 0; {1} < {0}; {1}++) {{{{
+            float tmp = (float) PyFloat_AsDouble(
+            PyList_GetItem({{member}}, {1}));
+            ({{member_struct}})[{1}] = tmp;
+        }}}}
+        '''.format(rand_name(), rand_name())
 
     pointerfloat_convert = '''
-        float tmp = (float) PyFloat_AsDouble(value);
-        float *t = malloc(sizeof(float));
-        memcpy(t, &tmp, sizeof(float));
-        (self->base)->{1} = t;
-        '''
+        float {0} = (float) PyFloat_AsDouble({{member}});
+        float *{1} = malloc(sizeof(float));
+        memcpy({1}, &{0}, sizeof(float));
+        {{member_struct}} = {1};
+        '''.format(rand_name(), rand_name())
 
     listuint32_convert = (
         listfloat_convert
@@ -284,52 +299,78 @@ def pyobject_to_val(member):
 
     mapping = {
         'uint32_t':
-        '(self->base)->{1} = (uint32_t) PyLong_AsLong(value);',
+        '{member_struct} = (uint32_t) PyLong_AsLong({member});',
         'float':
-        '(self->base)->{1} = (float) PyFloat_AsDouble(value);',
+        '{member_struct} = (float) PyFloat_AsDouble({member});',
         'int32_t':
-        '(self->base)->{1} = (int32_t) PyLong_AsLong(value);',
+        '{member_struct} = (int32_t) PyLong_AsLong({member});',
         'char []': arraychar_convert,
-        'char const *': constchar_convert,
+        'char const *': arraychar_convert,
         'char const * const*': listchar_convert,
         'float [2]': listfloat_convert,
         'float [4]': listfloat_convert,
         'float const *': pointerfloat_convert,
         'size_t':
-        '(self->base)->{1} = (size_t) PyLong_AsLong(value);',
+        '{member_struct} = (size_t) PyLong_AsLong({member});',
         'uint32_t [2]': listuint32_convert,
         'uint32_t [3]': listuint32_convert,
         'uint32_t const *': pointeruint32_convert,
         'uint64_t':
-        '(self->base)->{1} = (uint64_t) PyLong_AsLong(value);',
+        '{member_struct} = (uint64_t) PyLong_AsLong({member});',
         'uint8_t []': listuint8_convert,
-        'void const *': '(self->base)->{1} = NULL;',
-        'void *': '(self->base)->{1} = NULL;',
+        'void const *': '{member_struct} = NULL;',
+        'void *': '{member_struct} = NULL;',
         'Window':
-        '(self->base)->{1} = (XID) PyLong_AsLong(value);',
+        '{member_struct} = (XID) PyLong_AsLong({member});',
         'Display *':
-        '(self->base)->{1} = (Display *) PyLong_AsLong(value);'
+        '{member_struct} = (Display *) PyLong_AsLong({member});'
     }
 
-    signatures = [s for s in get_signatures() if s.startswith('VK')]
+    signatures = [s for s in get_signatures() if s.startswith('Vk')]
 
     for signature in signatures:
         vkname = signature.split()[0]
+        is_struct = vkname in [s['@name'] for s in structs]
+        is_union = vkname in [s['@name'] for s in unions]
+        is_handle = vkname in [s for s in handles]
 
-        # pointer
-        if signature.endswith('*'):
-            pass
+        if is_struct or is_union:
+            # pointer
+            if signature.endswith('*'):
+                mapping[signature] = '''
+                    {member_struct} = (((Py%s*){member})->base);
+                ''' % vkname
+            # array
+            elif signature.endswith(']'):
+                convert = '''
+                    int {0} = PyList_Size({{member}});
+                    int {1};
+                    for ({1} = 0; {1} < {0}; {1}++) {{{{
+                        PyObject* tmp = PyList_GetItem({{member}}, {1});
+                        ({{member_struct}})[{1}] = *(((Py{2}*)tmp)->base);
+                    }}}}
+                    '''.format(rand_name(), rand_name(), vkname)
+                mapping[signature] = convert
+            # base
+            else:
+                mapping[signature] = '''
+                    {member_struct} = *(((Py%s*){member})->base);
+                ''' % vkname
+        elif is_handle:
             mapping[signature] = '''
-                '(->base)->{1} = (value->base)
-            '''
-        # array
-        elif signature.endswith(']'):
-            pass
-        # base
+                {member_struct} = PyCapsule_GetPointer({member}, "%s");
+            ''' % vkname
+        # int type
         else:
-            mapping[signature] = '''
-                '(->base)->{1} = *(value->base)
-            '''
+            if signature.endswith('*'):
+                mapping[signature] = '''
+                    %s tmp = PyLong_AsLong({member});
+                    {member_struct} = &tmp;
+                ''' % vkname
+            else:
+                mapping[signature] = '''
+                    {member_struct} = PyLong_AsLong({member});
+                '''
 
     name = get_member_type_name(member)
     return mapping.get(name, None)
@@ -427,6 +468,34 @@ def val_to_pyobject(member):
     return None
 
 
+def extracts_vars(members, optional=True, return_error='-1'):
+    final_result = ''
+    result = []
+    for member in members:
+        result.append('PyObject* %s = NULL;' % member)
+
+    final_result += '\n'.join(result) + '\n'
+
+    result = 'static char *kwlist[] = {'
+    for member in members:
+        result += '"{}",'.format(member)
+    result += 'NULL};'
+
+    final_result += result + '\n'
+
+    result = 'PyArg_ParseTupleAndKeywords(args, kwds, "'
+    if optional:
+        result += '|'
+    result += 'O' * len(members)
+    result += '", kwlist'
+    for member in members:
+        result += ', &{}'.format(member)
+    result += ')'
+
+    final_result += 'if(!%s) return %s;' % (result, return_error) + '\n'
+    return final_result
+
+
 def add_pyobject():
     def add_struct(s):
         definition = '''
@@ -464,66 +533,53 @@ def add_pyobject():
         out.write(definition.format(s['@name']))
 
     def add_init(s):
+        is_union = s['@name'] in [u['@name'] for u in unions]
+
         definition = '''
             static int
             Py{0}_init(Py{0} *self, PyObject *args, PyObject *kwds) {{
             '''.format(s['@name'])
 
         if s['@name'] not in return_structs:
-            definition += add_init_vars(s['member'])
-            definition += add_init_kwlist(s['member'])
-            definition += add_init_parse(s['member'])
+            m = s['member']
+            definition += extracts_vars([t['name'] for t in m])
+            if is_union:
+                definition += add_init_check_union(m) + '\n'
+            definition += add_init_py_to_val(m) + '\n'
 
         definition += 'return 0; }'
 
         out.write(definition)
 
-    def add_init_vars(members):
-        result = []
+    def add_init_check_union(members):
+        result = '\nint nb_union_arg = 0;\n'
         for member in members:
-            result.append('PyObject* %s = NULL;' % member['name'])
-        return '\n'.join(result)
-
-    def add_init_kwlist(members):
-        result = 'static char *kwlist[] = {'
-        for member in members:
-            result += '"{}",'.format(member['name'])
-        result += 'NULL};'
+            result += '''
+                if ({0} != NULL && {0} != Py_None) nb_union_arg++;
+                '''.format(member['name'])
+        result += '''
+            if (nb_union_arg > 1) {
+                PyErr_SetString(PyExc_TypeError, "Only one argument allowed");
+                return -1;
+            }'''
         return result
 
-    def add_init_parse(members):
-        result = 'PyArg_ParseTupleAndKeywords(args, kwds, "'
-        result += 'O' * len(members)
-        result += '", kwlist'
+    def add_init_py_to_val(members):
+        result = ''
         for member in members:
-            result += ', &{}'.format(member['name'])
-        result += ')'
-        return 'if(!%s) return -1;' % result
+            val = pyobject_to_val(member)
+            if not val:
+                continue
+            result += '''
+                if ({0} != NULL && {0} != Py_None) {{
+                '''.format(member['name'])
+            result += val.format(
+                member=member['name'],
+                member_struct='(self->base)->%s' % member['name'])
+            result += '\n } \n'
+        return result
 
-    def add_setters(s):
-        def add_setter(member):
-            definition = '''
-            static int Py{0}_set{1}(Py{0} *self, PyObject *value,
-                                    void *closure) {{
-                if (value == NULL) {{
-                    PyErr_SetString(PyExc_TypeError, "Error with {1}");
-                    return -1;
-                }}
-            '''
-
-            convert = pyobject_to_val(member)
-
-            if convert:
-                definition += convert
-            else:
-                return
-
-            definition += '''
-                return 0;
-            }}
-            '''
-            out.write(definition.format(s['@name'], member['name']))
-
+    def add_getters(s):
         def add_getter(member):
             definition = '''
             static PyObject * Py{0}_get{1}(Py{0} *self, void *closure){{
@@ -553,7 +609,7 @@ def add_pyobject():
                 sname = s['@name']
                 mname = member['name']
                 getter = '(getter)Py{0}_get{1}'.format(sname, mname)
-                setter = '(setter)Py{0}_set{1}'.format(sname, mname)
+                setter = 'NULL'
 
                 out.write('''
                     {{ "{}", {}, {}, "", NULL}},
@@ -562,7 +618,6 @@ def add_pyobject():
             out.write('{NULL}};\n')
 
         for member in s['member']:
-            add_setter(member)
             add_getter(member)
         add_getter_setter(s)
 
@@ -574,12 +629,16 @@ def add_pyobject():
                 (destructor)Py{0}_del,
                 0,0,0,0,0,0,0,0,0,0,0,0,0,0,Py_TPFLAGS_DEFAULT,
                 "{0} object",0,0,0,0,0,0,0,0,
-                Py{0}_getsetters,0,0,0,0,0,0,0,Py{0}_new,}};
+                Py{0}_getsetters,0,0,0,0,0,(initproc)Py{0}_init,0,Py{0}_new,}};
         '''.format(s['@name']))
 
-    for struct in structs:
+    for struct in structs + unions:
         with check_struct_extension(struct):
-            for fun in (add_struct, add_del, add_new, add_setters,
+            add_struct(struct)
+
+    for struct in structs + unions:
+        with check_struct_extension(struct):
+            for fun in (add_del, add_new, add_getters,
                         add_init, add_type):
                 fun(struct)
 
@@ -689,6 +748,44 @@ def add_initsdk():
     ''')
 
 
+def add_pyvk_functions():
+    def normalize_param(command):
+        if not isinstance(command['param'], list):
+            command['param'] = [command['param']]
+        return command
+
+    def get_count_param(command):
+        for param in command['param']:
+            if param['type'] + param.get('#text', '') == 'uint32_t*':
+                return param
+        return None
+
+    allocate_prefix = ('vkCreate', 'vkGet', 'vkEnumerate', 'vkAllocate',
+                       'vkMap')
+    custom_commands = ('vkGetInstanceProcAddr', 'vkGetDeviceProcAddr')
+
+    for command in commands:
+        cname = command['proto']['name']
+        if cname in custom_commands:
+            continue
+
+        command = normalize_param(command)
+        count_param = get_count_param(command)
+
+        is_allocate = any([cname.startswith(a) for a in allocate_prefix])
+        is_count = is_allocate and count_param is not None
+
+        out.write('''
+            static PyObject* Py%s(PyObject *self, PyObject *args,
+                                  PyObject *kwds) {
+            ''' % cname)
+        out.write(extracts_vars([p['name'] for p in command['param']],
+                                optional=False, return_error='NULL'))
+        out.write('''
+            return Py_None; }
+            ''')
+
+
 def add_pymethod():
     functions = []
 
@@ -704,6 +801,17 @@ def add_pymethod():
                           'value': 'PyHandle_' + handle,
                           'arg': 'METH_NOARGS',
                           'doc': '"Handle"'})
+
+    # Add vk command
+    custom_commands = ('vkGetInstanceProcAddr', 'vkGetDeviceProcAddr')
+    for command in commands:
+        if command['proto']['name'] in custom_commands:
+            continue
+        functions.append({'name': command['proto']['name'],
+                          'value': ('(PyCFunction) Py' +
+                                    command['proto']['name']),
+                          'arg': 'METH_VARARGS | METH_KEYWORDS',
+                          'doc': '""'})
 
     out.write('\nstatic PyMethodDef VulkanMethods[] = {\n')
 
