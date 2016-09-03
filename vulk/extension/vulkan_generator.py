@@ -225,6 +225,7 @@ def add_object_in_init():
 
 
 def get_member_type_name(member):
+    '''Member of a struct'''
     name = member['type']
     if '#text' in member:
         name += ' ' + member['#text']
@@ -242,7 +243,7 @@ def get_signatures():
     return names
 
 
-def pyobject_to_val(member):
+def pyobject_to_val():
     def rand_name():
         return 'tmp' + str(random.randrange(99999999))
 
@@ -372,8 +373,7 @@ def pyobject_to_val(member):
                     {member_struct} = PyLong_AsLong({member});
                 '''
 
-    name = get_member_type_name(member)
-    return mapping.get(name, None)
+    return mapping
 
 
 def val_to_pyobject(member):
@@ -567,7 +567,8 @@ def add_pyobject():
     def add_init_py_to_val(members):
         result = ''
         for member in members:
-            val = pyobject_to_val(member)
+            name = get_member_type_name(member)
+            val = pyobject_to_val().get(name, None)
             if not val:
                 continue
             result += '''
@@ -760,6 +761,21 @@ def add_pyvk_functions():
                 return param
         return None
 
+    def add_py_to_val(members):
+        result = ''
+        for member in members:
+            name = get_member_type_name(member)
+            val = pyobject_to_val().get(name, None)
+            if not val:
+                continue
+            #TODO here!!
+            # le format n'est pas bon, il faut créer des variables du bon type
+            result += val.format(
+                member=member['name'],
+                member_struct='(self->base)->%s' % member['name'])
+            result += '\n } \n'
+        return result
+
     allocate_prefix = ('vkCreate', 'vkGet', 'vkEnumerate', 'vkAllocate',
                        'vkMap')
     custom_commands = ('vkGetInstanceProcAddr', 'vkGetDeviceProcAddr')
@@ -775,15 +791,18 @@ def add_pyvk_functions():
         is_allocate = any([cname.startswith(a) for a in allocate_prefix])
         is_count = is_allocate and count_param is not None
 
-        out.write('''
+        definition = ('''
             static PyObject* Py%s(PyObject *self, PyObject *args,
                                   PyObject *kwds) {
             ''' % cname)
-        out.write(extracts_vars([p['name'] for p in command['param']],
-                                optional=False, return_error='NULL'))
-        out.write('''
+        definition += extracts_vars([p['name'] for p in command['param']],
+                                    optional=False, return_error='NULL')
+        definition += add_py_to_val(command['param'])
+        definition += '''
             return Py_None; }
-            ''')
+            '''
+
+        out.write(definition)
 
 
 def add_pymethod():
