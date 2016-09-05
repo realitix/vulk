@@ -38,7 +38,7 @@ DEFINE_HEADER = '''
 #endif
 '''
 
-# Struct which need to be surrounded by #define
+# Struct and command which need to be surrounded by #define
 MAPPING_EXTENSION_DEFINE = {
     'VkAndroidSurfaceCreateInfoKHR': 'VK_USE_PLATFORM_ANDROID_KHR',
     'VkMirSurfaceCreateInfoKHR': 'VK_USE_PLATFORM_MIR_KHR',
@@ -49,7 +49,17 @@ MAPPING_EXTENSION_DEFINE = {
     'VkWin32KeyedMutexAcquireReleaseInfoNV': 'VK_USE_PLATFORM_WIN32_KHR',
     'VkXcbSurfaceCreateInfoKHR': 'VK_USE_PLATFORM_XCB_KHR',
     'VkXlibSurfaceCreateInfoKHR': 'VK_USE_PLATFORM_XLIB_KHR',
-    'VkRect3D': 'hackdefine'  # VkRect3D is not used
+    'VkRect3D': 'hackdefine',  # VkRect3D is not used
+    'vkCreateAndroidSurfaceKHR': 'VK_USE_PLATFORM_ANDROID_KHR',
+    'vkCreateMirSurfaceKHR': 'VK_USE_PLATFORM_MIR_KHR',
+    'vkGetPhysicalDeviceMirPresentationSupportKHR': 'VK_USE_PLATFORM_MIR_KHR',
+    'vkCreateWaylandSurfaceKHR': 'VK_USE_PLATFORM_WAYLAND_KHR',
+    'vkGetPhysicalDeviceWaylandPresentationSupportKHR':
+    'VK_USE_PLATFORM_WAYLAND_KHR',
+    'vkCreateWin32SurfaceKHR': 'VK_USE_PLATFORM_WIN32_KHR',
+    'vkCreateXcbSurfaceKHR': 'VK_USE_PLATFORM_XCB_KHR',
+    'vkGetPhysicalDeviceXcbPresentationSupportKHR': 'VK_USE_PLATFORM_XCB_KHR',
+    'vkGetMemoryWin32HandleNV': 'VK_USE_PLATFORM_WIN32_KHR'
 }
 
 
@@ -215,7 +225,7 @@ def add_pyhandles():
 
 def add_object_in_init():
     for struct in structs + unions:
-        with check_struct_extension(struct):
+        with check_extension(struct['@name']):
             out.write('''
                 if (PyType_Ready(&Py{0}Type) < 0)
                     return NULL;
@@ -250,9 +260,10 @@ def pyobject_to_val():
     arraychar_convert = '''
         PyObject * {0} = PyUnicode_AsASCIIString({{member}});
         char* {1} = PyBytes_AsString({0});
-        strcpy({{member_struct}}, {1});
+        char* {2} = strdup({1});
+        {{member_struct}} = {2};
         Py_DECREF({0});
-        '''.format(rand_name(), rand_name())
+        '''.format(rand_name(), rand_name(), rand_name())
 
     listchar_convert = '''
         int {0} = PyList_Size({{member}});
@@ -634,26 +645,26 @@ def add_pyobject():
         '''.format(s['@name']))
 
     for struct in structs + unions:
-        with check_struct_extension(struct):
+        with check_extension(struct['@name']):
             add_struct(struct)
 
     for struct in structs + unions:
-        with check_struct_extension(struct):
+        with check_extension(struct['@name']):
             for fun in (add_del, add_new, add_getters,
                         add_init, add_type):
                 fun(struct)
 
 
 @contextmanager
-def check_struct_extension(struct):
+def check_extension(name):
     mapping = MAPPING_EXTENSION_DEFINE
     try:
-        if struct['@name'] in mapping:
+        if name in mapping:
             out.write('\n#ifdef {}\n'
-                      .format(mapping[struct['@name']]))
+                      .format(mapping[name]))
         yield
     finally:
-        if struct['@name'] in mapping:
+        if name in mapping:
             out.write('\n#endif\n')
 
 
@@ -761,6 +772,18 @@ def add_pyvk_functions():
                 return param
         return None
 
+    def add_return_struct(members):
+        """Create a struct inside the function
+
+        The struct handle values converted from PyObject
+        """
+        result = '\nstruct {\n'
+        for m in members:
+            result += '\n{}{} {};\n'.format(
+                m['type'], '*' if m.get('#text', False) else '', m['name'])
+        result += '\n} return_struct = {};\n'
+        return result
+
     def add_py_to_val(members):
         result = ''
         for member in members:
@@ -768,21 +791,20 @@ def add_pyvk_functions():
             val = pyobject_to_val().get(name, None)
             if not val:
                 continue
-            #TODO here!!
-            # le format n'est pas bon, il faut créer des variables du bon type
             result += val.format(
                 member=member['name'],
-                member_struct='(self->base)->%s' % member['name'])
-            result += '\n } \n'
+                member_struct='return_struct.%s' % member['name'])
         return result
 
     allocate_prefix = ('vkCreate', 'vkGet', 'vkEnumerate', 'vkAllocate',
                        'vkMap')
+    allocate_exception = ('vkGetFenceStatus', 'vkGetEventStatus',
+                          'vkGetQueryPoolResults')
     custom_commands = ('vkGetInstanceProcAddr', 'vkGetDeviceProcAddr')
 
     for command in commands:
         cname = command['proto']['name']
-        if cname in custom_commands:
+        if cname in custom_commands or cname in vk_extension_functions:
             continue
 
         command = normalize_param(command)
@@ -791,18 +813,124 @@ def add_pyvk_functions():
         is_allocate = any([cname.startswith(a) for a in allocate_prefix])
         is_count = is_allocate and count_param is not None
 
+        if cname in allocate_exception:
+            is_allocate = is_count = False
+
         definition = ('''
             static PyObject* Py%s(PyObject *self, PyObject *args,
                                   PyObject *kwds) {
             ''' % cname)
         definition += extracts_vars([p['name'] for p in command['param']],
                                     optional=False, return_error='NULL')
+        definition += add_return_struct(command['param'])
         definition += add_py_to_val(command['param'])
-        definition += '''
-            return Py_None; }
+
+        if cname == 'vkMapMemory':
+            definition += '''
+                void* value;
+                vkMapMemory(return_struct.device, return_struct.memory,
+                            return_struct.offset, return_struct.size,
+                            return_struct.flags, &value);
+                PyObject* return_value = PyMemoryView_FromMemory(value,
+                    return_struct.size, PyBUF_WRITE);
+            '''
+        elif cname == 'vkGetPipelineCacheData':
+            definition += '''
+                void* value = NULL;
+                size_t* data_size = NULL;
+                vkGetPipelineCacheData(
+                    return_struct.device, return_struct.pipelineCache,
+                    data_size, value);
+                PyObject* return_value = PyMemoryView_FromMemory(value,
+                    *data_size, PyBUF_WRITE);
+            '''
+        elif is_count:
+            return_object = command['param'][-1]
+            param_func = ['return_struct.' + p['name']
+                          for p in command['param'][:-2]]
+
+            # first call which count
+            definition += '\nuint32_t count;'
+            definition += '\n%s(' % cname
+            definition += ','.join(param_func) + ',' if param_func else ''
+            definition += '&count, NULL);'
+
+            # create array of object
+            definition += '''
+                {0} *values = malloc(count*sizeof({0}));
+                '''.format(return_object['type'])
+
+            # call with array
+            definition += '\n%s(' % cname
+            definition += ','.join(param_func) + ',' if param_func else ''
+            definition += '&count, values);'
+            definition += '''
+                PyObject* return_value = PyList_New(0);
+                uint32_t i;
+                for (i=0; i<count; i++) {
+                '''
+
+            if return_object['type'] in handles:
+                definition += '''
+                    PyObject* pyreturn = PyCapsule_New(values + i*sizeof({0})
+                    , "{0}", NULL);
+                '''.format(return_object['type'])
+            else:
+                definition += '''
+                    PyObject* pyreturn = PyObject_Call((PyObject *)&Py{0}Type,
+                                                       NULL, NULL);
+                    memcpy(((Py{0}*)pyreturn)->base,
+                           values + i*sizeof({0}), sizeof({0}));
+                '''.format(return_object['type'])
+
+            definition += '''
+                    PyList_Append(return_value, pyreturn);
+                }
             '''
 
-        out.write(definition)
+        elif is_allocate:
+            return_object = command['param'][-1]
+            param_func = ['return_struct.' + p['name']
+                          for p in command['param'][:-1]]
+
+            # create object
+            definition += '\n{0} *value = malloc(sizeof({0}));\n'.format(
+                return_object['type'])
+            # call
+            definition += '\n%s(' % cname
+            definition += ','.join(param_func) + ',' if param_func else ''
+            definition += 'value);'
+
+            if return_object['type'] in handles:
+                definition += '''
+                    PyObject* return_value = PyCapsule_New(value, "{}", NULL);
+                '''.format(return_object['type'])
+            elif return_object['type'] in [s['@name'] for s in structs]:
+                definition += '''
+                    PyObject* return_value =
+                    PyObject_Call((PyObject *)&Py{0}Type,NULL, NULL);
+                    memcpy(((Py{0}*)return_value)->base,
+                           value, sizeof({0}));
+                '''.format(return_object['type'])
+            else:
+                definition += '''
+                    PyObject* return_value = PyLong_FromLong(*value);
+                    '''
+
+        else:
+            definition += '\n%s(' % cname
+            param_func = ['return_struct.' + p['name']
+                          for p in command['param']]
+            definition += ','.join(param_func)
+            definition += ');\n'
+            definition += 'PyObject* return_value = Py_None;\n'
+
+        definition += '''
+            return return_value; }
+            '''
+
+        with check_extension(cname):
+            out.write(definition)
 
 
 def add_pymethod():
@@ -824,7 +952,8 @@ def add_pymethod():
     # Add vk command
     custom_commands = ('vkGetInstanceProcAddr', 'vkGetDeviceProcAddr')
     for command in commands:
-        if command['proto']['name'] in custom_commands:
+        cname = command['proto']['name']
+        if cname in custom_commands or cname in vk_extension_functions:
             continue
         functions.append({'name': command['proto']['name'],
                           'value': ('(PyCFunction) Py' +
@@ -835,8 +964,9 @@ def add_pymethod():
     out.write('\nstatic PyMethodDef VulkanMethods[] = {\n')
 
     for fun in functions:
-        out.write('{{"{}", {}, {}, {}}},\n'.format(
-            fun['name'], fun['value'], fun['arg'], fun['doc']))
+        with check_extension(fun['name']):
+            out.write('{{"{}", {}, {}, {}}},\n'.format(
+                fun['name'], fun['value'], fun['arg'], fun['doc']))
 
     out.write('\n{NULL, NULL, 0, NULL} };\n')
 
