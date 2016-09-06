@@ -1,6 +1,7 @@
 from contextlib import contextmanager
 import random
 import requests
+from subprocess import call
 import xmltodict
 
 
@@ -74,6 +75,7 @@ structs = None
 handles = None
 unions = None
 commands = None
+exceptions = None
 out = None
 
 
@@ -90,12 +92,14 @@ def main():
     global handles
     global unions
     global commands
+    global exceptions
 
     vulkan_plateform = requests.get(VULKAN_PLATEFORM_URL).text
     vulkan_h = clean_vulkan_h(requests.get(VULKAN_H_URL).text)
     vk_xml = xmltodict.parse(requests.get(VK_XML_URL).text)
     vk_extension_functions = get_vk_extension_functions()
     vk_all_functions = get_all_vk_functions()
+    exceptions = get_exceptions()
     structs = get_structs()
     return_structs = get_structs_returned_only()
     create_structs = get_create_structs()
@@ -108,6 +112,7 @@ def main():
     add_header()
     add_vk_plateform()
     add_vk_h()
+    add_vk_exception_signatures()
     add_vulkan_function_prototypes()
     add_initsdk()
     add_pyhandles()
@@ -118,6 +123,9 @@ def main():
     add_pyinit()
 
     out.close()
+
+    call(['astyle', OUT_FILE])
+    call(['rm', OUT_FILE+'.orig'])
 
 
 def clean_vulkan_h(vulkan_h):
@@ -150,6 +158,20 @@ def get_vk_extension_functions():
 def get_all_vk_functions():
     return set([c['proto']['name']
                for c in vk_xml['registry']['commands']['command']])
+
+
+def get_exceptions():
+    vk_result = next(x for x in vk_xml['registry']['enums']
+                     if x['@name'] == 'VkResult')
+    mapping = {}
+    for enum in vk_result['enum']:
+        if enum['@name'] == 'VK_SUCCESS':
+            continue
+
+        camel_name = ''.join(x for x in enum['@name'].title()
+                             if x != '_')
+        mapping[camel_name] = enum['@value']
+    return mapping
 
 
 def get_structs():
@@ -203,11 +225,26 @@ def add_vk_h():
     out.write("// END VULKAN H\n")
 
 
+def add_vk_exception_signatures():
+    out.write('\nstatic PyObject *VulkanError;')
+    for exception in exceptions:
+        out.write('\nstatic PyObject *%s;' % exception)
+
+    # raise exception function
+    out.write('\nint raise(int value) { switch(value) {\n')
+    for key, value in exceptions.items():
+        out.write('''
+            case {}: PyErr_SetString({}, ""); return 1;
+            '''.format(value, key))
+    out.write('} return 0;}\n')
+
+
 def add_pyinit():
     out.write("\n\nPyMODINIT_FUNC PyInit_vulkan(void) {\n")
     create_module()
     add_constants()
     add_object_in_init()
+    add_exceptions_in_init()
     out.write("return module;\n}\n")
 
 
@@ -234,6 +271,20 @@ def add_object_in_init():
             '''.format(struct['@name']))
 
 
+def add_exceptions_in_init():
+    out.write('''
+        VulkanError = PyErr_NewException("vulkan.VulkanError", NULL, NULL);
+        Py_INCREF(VulkanError);
+        PyModule_AddObject(module, "VulkanError", VulkanError);
+        ''')
+    for exception in exceptions:
+        out.write('''
+            {0} = PyErr_NewException("vulkan.{0}", VulkanError, NULL);
+            Py_INCREF({0});
+            PyModule_AddObject(module, "{0}", {0});
+            '''.format(exception))
+
+
 def get_member_type_name(member):
     '''Member of a struct'''
     name = member['type']
@@ -249,6 +300,14 @@ def get_signatures():
             name = m['type']
             if '#text' in m:
                 name += ' ' + m['#text']
+            names.add(name)
+    for f in vk_xml['registry']['commands']['command']:
+        if type(f['param']) is not list:
+            f['param'] = [f['param']]
+        for p in f['param']:
+            name = p['type']
+            if '#text' in p:
+                name += ' ' + p['#text']
             names.add(name)
     return names
 
@@ -480,6 +539,9 @@ def val_to_pyobject(member):
 
 
 def extracts_vars(members, optional=True, return_error='-1'):
+    if not members:
+        return ''
+
     final_result = ''
     result = []
     for member in members:
@@ -777,6 +839,9 @@ def add_pyvk_functions():
 
         The struct handle values converted from PyObject
         """
+        if not members:
+            return ''
+
         result = '\nstruct {\n'
         for m in members:
             result += '\n{}{} {};\n'.format(
@@ -786,6 +851,10 @@ def add_pyvk_functions():
 
     def add_py_to_val(members):
         result = ''
+
+        if not members:
+            return result
+
         for member in members:
             name = get_member_type_name(member)
             val = pyobject_to_val().get(name, None)
@@ -804,6 +873,7 @@ def add_pyvk_functions():
 
     for command in commands:
         cname = command['proto']['name']
+        ctype = command['proto']['type']
         if cname in custom_commands or cname in vk_extension_functions:
             continue
 
@@ -816,21 +886,30 @@ def add_pyvk_functions():
         if cname in allocate_exception:
             is_allocate = is_count = False
 
+        num_param = None
+        if is_allocate:
+            num_param = -1
+        if is_count:
+            num_param = -2
+
         definition = ('''
             static PyObject* Py%s(PyObject *self, PyObject *args,
                                   PyObject *kwds) {
             ''' % cname)
-        definition += extracts_vars([p['name'] for p in command['param']],
-                                    optional=False, return_error='NULL')
-        definition += add_return_struct(command['param'])
-        definition += add_py_to_val(command['param'])
+        var_names = [p['name'] for p in command['param']][:num_param]
+        definition += extracts_vars(var_names, optional=False,
+                                    return_error='NULL')
+        definition += add_return_struct(command['param'][:num_param])
+        definition += add_py_to_val(command['param'][:num_param])
 
         if cname == 'vkMapMemory':
             definition += '''
                 void* value;
+                if (raise(
                 vkMapMemory(return_struct.device, return_struct.memory,
                             return_struct.offset, return_struct.size,
-                            return_struct.flags, &value);
+                            return_struct.flags, &value)
+                )) return NULL;
                 PyObject* return_value = PyMemoryView_FromMemory(value,
                     return_struct.size, PyBUF_WRITE);
             '''
@@ -838,9 +917,11 @@ def add_pyvk_functions():
             definition += '''
                 void* value = NULL;
                 size_t* data_size = NULL;
+                if (raise(
                 vkGetPipelineCacheData(
                     return_struct.device, return_struct.pipelineCache,
-                    data_size, value);
+                    data_size, value)
+                )) return NULL;
                 PyObject* return_value = PyMemoryView_FromMemory(value,
                     *data_size, PyBUF_WRITE);
             '''
@@ -851,9 +932,13 @@ def add_pyvk_functions():
 
             # first call which count
             definition += '\nuint32_t count;'
-            definition += '\n%s(' % cname
-            definition += ','.join(param_func) + ',' if param_func else ''
-            definition += '&count, NULL);'
+            func_str_call = '\n%s(' % cname
+            func_str_call += ','.join(param_func) + ',' if param_func else ''
+            func_str_call += '&count, NULL)'
+            if ctype == 'VkResult':
+                definition += 'if (raise(%s)) return NULL;' % func_str_call
+            else:
+                definition += func_str_call + ';'
 
             # create array of object
             definition += '''
@@ -861,9 +946,14 @@ def add_pyvk_functions():
                 '''.format(return_object['type'])
 
             # call with array
-            definition += '\n%s(' % cname
-            definition += ','.join(param_func) + ',' if param_func else ''
-            definition += '&count, values);'
+            func_str_call = '\n%s(' % cname
+            func_str_call += ','.join(param_func) + ',' if param_func else ''
+            func_str_call += '&count, values)'
+            if ctype == 'VkResult':
+                definition += 'if (raise(%s)) return NULL;' % func_str_call
+            else:
+                definition += func_str_call + ';'
+
             definition += '''
                 PyObject* return_value = PyList_New(0);
                 uint32_t i;
@@ -897,9 +987,13 @@ def add_pyvk_functions():
             definition += '\n{0} *value = malloc(sizeof({0}));\n'.format(
                 return_object['type'])
             # call
-            definition += '\n%s(' % cname
-            definition += ','.join(param_func) + ',' if param_func else ''
-            definition += 'value);'
+            func_str_call = '\n%s(' % cname
+            func_str_call += ','.join(param_func) + ',' if param_func else ''
+            func_str_call += 'value)'
+            if ctype == 'VkResult':
+                definition += 'if (raise(%s)) return NULL;' % func_str_call
+            else:
+                definition += func_str_call + ';'
 
             if return_object['type'] in handles:
                 definition += '''
