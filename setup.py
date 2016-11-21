@@ -2,8 +2,6 @@ from setuptools import setup, find_packages, Extension
 
 import vulk
 
-vulkanmodule = Extension('vulkan',
-                         sources=['vulk/extension/vulkanmodule.c'])
 setup(
     name="vulk",
     version=vulk.__version__,
@@ -12,7 +10,7 @@ setup(
     author_email="realitix@gmail.com",
     description="Vulk: Advanced 3D engine",
     long_description=open("README.md").read(),
-    install_requires=["numpy"],
+    install_requires=["numpy", "cvulkan"],
     setup_requires=["pytest-runner"],
     tests_require=["pytest"],
     include_package_data=True,
@@ -25,7 +23,5 @@ setup(
         "Programming Language :: Python :: 3.5",
         "Topic :: Multimedia :: Graphics :: 3D Rendering"
     ],
-    license="Apache",
-    entry_points={'console_scripts': ['vulk = vulk.cli:main']},
-    ext_modules=[vulkanmodule]
+    license="MIT",
 )
