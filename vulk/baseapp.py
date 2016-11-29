@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+from collections import namedtuple
+import logging
 
 from vulk.utils import millis, time_since_millis
 from vulk.context import VulkWindow, VulkContext
@@ -41,8 +43,26 @@ class BaseApp(ABC):
                   height to 0 to use the native resolution, otherwise the
                   fullscreen resolution will be set to width/height.
         '''
-        self.configuration = {k: v for k, v in locals().items() if k != 'self'}
+        c = {k: v for k, v in locals().items() if k != 'self'}
+        self.configuration = namedtuple('AppConfiguration', c.keys())(**c)
+
         self.last_time = millis()
+        self._init_logger()
+
+    def _init_logger(self):
+        logger = logging.getLogger()
+
+        if self.configuration.debug:
+            logger.setLevel(logging.DEBUG)
+        else:
+            logger.setLevel(logging.WARNING)
+
+        formatter = logging.Formatter('%(asctime)s :: %(levelname)s '
+                                      ':: %(message)s')
+        steam_handler = logging.StreamHandler()
+        steam_handler.setFormatter(formatter)
+        steam_handler.setLevel(logging.DEBUG)
+        logger.addHandler(steam_handler)
 
     def __enter__(self):
         '''Create window and Vulkan context'''

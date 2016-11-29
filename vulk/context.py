@@ -58,11 +58,15 @@ class VulkWindow():
             logger.critical(msg)
             raise SDL2Error(msg)
 
+        logger.debug("SDL2 window opened with configuration: %s"
+                     % (configuration,))
+
         self.info = sdl2.SDL_SysWMinfo()
         sdl2.SDL_VERSION(self.info.version)
         sdl2.SDL_GetWindowWMInfo(self.window, ctypes.byref(self.info))
 
     def close(self):
+        logger.debug("SDL2 window closed")
         sdl2.SDL_DestroyWindow(self.window)
         sdl2.SDL_Quit()
 
@@ -116,7 +120,10 @@ class VulkContext():
 
         # Get available extensions
         available_extensions = [
-            e.name for e in vk.vkEnumerateInstanceExtensionProperties(None)]
+            e.extensionName
+            for e in vk.vkEnumerateInstanceExtensionProperties(None)]
+        logger.debug("Available instance extensions: %s" %
+                     available_extensions)
 
         # Compute needed extensions
         extension_mapping = {
@@ -133,13 +140,14 @@ class VulkContext():
             raise VulkError(msg)
 
         # Select extension
-        enabled_extensions = set()
-        enabled_extensions.add(vk.VK_KHR_SURFACE_EXTENSION_NAME)
-        enabled_extensions.add(extension_mapping[sdl_subsystem])
+        enabled_extensions = []
+        enabled_extensions.append(vk.VK_KHR_SURFACE_EXTENSION_NAME)
+        enabled_extensions.append(extension_mapping[sdl_subsystem])
 
         if configuration.debug:
             if vk.VK_EXT_DEBUG_REPORT_EXTENSION_NAME in available_extensions:
-                enabled_extensions.add(vk.VK_EXT_DEBUG_REPORT_EXTENSION_NAME)
+                enabled_extensions.append(
+                    vk.VK_EXT_DEBUG_REPORT_EXTENSION_NAME)
             else:
                 configuration.debug = False
                 logger.warning("Vulkan debug extension not present and debug"
@@ -165,12 +173,13 @@ class VulkContext():
 
         # Get available extensions
         available_extensions = [
-            e.name for e in vk.vkEnumerateDeviceExtensionProperties(
+            e.extensionName for e in vk.vkEnumerateDeviceExtensionProperties(
                 physical_device, None)]
+        logger.debug("Available device extensions: %s" % available_extensions)
 
         # Select extensions
-        enabled_extensions = set()
-        enabled_extensions.add(vk.VK_KHR_SWAPCHAIN_EXTENSION_NAME)
+        enabled_extensions = []
+        enabled_extensions.append(vk.VK_KHR_SWAPCHAIN_EXTENSION_NAME)
 
         # Check extensions availability
         if not all(e in available_extensions for e in enabled_extensions):
@@ -195,8 +204,11 @@ class VulkContext():
         if not configuration.debug:
             return []
 
-        layers = vk.vkEnumerateInstanceLayerProperties(None)
-        return [l.layerName for l in layers]
+        layers = [l.layerName for l in
+                  vk.vkEnumerateInstanceLayerProperties(None)]
+        logger.debug("Available layers: %s" % layers)
+
+        return layers
 
     @staticmethod
     def _get_queue_families(physical_device, surface, pfn):
@@ -236,10 +248,13 @@ class VulkContext():
 
         return graphic_index, present_index
 
-    def _get_pfn(self):
+    def _get_pfn(self, configuration):
         '''Get extension function pointers
 
-        Get only functions used in VulkContext, vulkan instance must exists
+        Get only functions used in VulkContext, vulkan instance must exist
+
+        :param configuration: Configuration from Application
+        :type configuration: dict
         '''
 
         if not self.instance:
@@ -247,16 +262,35 @@ class VulkContext():
             logger.critical(msg)
             raise VulkError(msg)
 
-        for name in {
-            'vkCreateDebugReportCallbackEXT',
-            'vkDestroyDebugReportCallbackEXT',
+        def add_pfn(name):
+            try:
+                self.pfn[name] = vk.vkGetInstanceProcAddr(self.instance, name)
+            except ImportError:
+                msg = "Can't get address of %s extension function" % name
+                logger.critical(msg)
+                raise VulkError(msg)
+
+        extension_functions = {
             'vkDestroySurfaceKHR',
             'vkGetPhysicalDeviceSurfaceSupportKHR',
             'vkGetPhysicalDeviceSurfaceCapabilitiesKHR',
             'vkGetPhysicalDeviceSurfaceFormatsKHR',
-            'vkGetPhysicalDeviceSurfacePresentModesKHR'
-        }:
-            self.pfn[name] = vk.vkGetInstanceProcAddr(self.instance, name)
+            'vkGetPhysicalDeviceSurfacePresentModesKHR',
+            'vkCreateSwapchainKHR',
+            'vkGetSwapchainImagesKHR'
+        }
+
+        debug_extension_functions = {
+            'vkCreateDebugReportCallbackEXT',
+            'vkDestroyDebugReportCallbackEXT',
+        }
+
+        if configuration.debug:
+            extension_functions.update(debug_extension_functions)
+
+        for name in extension_functions:
+            add_pfn(name)
+
 
     def _create_instance(self, window, configuration):
         '''Create Vulkan instance
@@ -392,6 +426,9 @@ class VulkContext():
         properties = [vk.vkGetPhysicalDeviceProperties(p)
                       for p in physical_devices]
 
+        logger.debug("Available physical devices: %s" %
+                     [p.deviceName for p in properties])
+
         # Select best physical device based on properties ans features
         selected_index = 0
         best_score = 0
@@ -416,10 +453,19 @@ class VulkContext():
                 best_score = score
                 selected_index = i
 
+        # No available physical device
+        if best_score == 0:
+            msg = "No available physical device"
+            logger.critical(msg)
+            raise VulkError(msg)
+
         # The best device is now selected_index
         self.physical_device = physical_devices[selected_index]
         self.physical_device_properties = properties[selected_index]
         self.physical_device_features = features[selected_index]
+
+        logger.debug("%s device selected"
+                     % self.physical_device_properties.deviceName)
 
     def _create_device(self, window, configuration):
         '''Create Vulkan logical device
@@ -429,7 +475,7 @@ class VulkContext():
         :type window: VulkWindow
         :type configuration: dict
         '''
-        extensions = VulkContext._get_device_extensions()
+        extensions = VulkContext._get_device_extensions(self.physical_device)
         layers = VulkContext._get_layers(configuration)
 
         graphic_index, present_index = VulkContext._get_queue_families(
@@ -519,12 +565,23 @@ class VulkContext():
 
         # Finally create swapchain
         swapchain_create = vk.VkSwapchainCreateInfoKHR(
-            vk.VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR, 0, self.surface,
-            image_count, surface_format.format, surface_format.colorSpace,
-            extent, 1, vk.VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, sharing_mode,
-            len(queue_family_indices), queue_family_indices,
-            vk.VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR, present_mode, vk.VK_TRUE,
-            None, surface_capabilities.currentTransform)
+            sType=vk.VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
+            flags=0,
+            surface=self.surface,
+            minImageCount=image_count,
+            imageFormat=surface_format.format,
+            imageColorSpace=surface_format.colorSpace,
+            imageExtent=extent,
+            imageArrayLayers=1,
+            imageUsage=vk.VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+            imageSharingMode=sharing_mode,
+            queueFamilyIndexCount=len(queue_family_indices),
+            pQueueFamilyIndices=queue_family_indices,
+            compositeAlpha=vk.VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
+            presentMode=present_mode,
+            clipped=vk.VK_TRUE,
+            oldSwapchain=None,
+            preTransform=surface_capabilities.currentTransform)
 
         self.swapchain = self.pfn['vkCreateSwapchainKHR'](
             self.device, swapchain_create)
@@ -532,6 +589,9 @@ class VulkContext():
             self.device, self.swapchain)
         self.swapchain_extent = extent
         self.swapchain_format = surface_format.format
+
+        logger.debug("Swapchain created with %s images",
+                     len(self.swapchain_images))
 
     def _create_swapchain_images_views(self):
         '''Create all views of swapchain images
@@ -564,11 +624,10 @@ class VulkContext():
         self._create_instance(window, configuration)
 
         # Next functions need extension pointers
-        self._get_pfn()
+        self._get_pfn(configuration)
         self._create_debug_callback(configuration)
         self._create_surface(window.info)
         self._create_physical_device()
         self._create_device(window, configuration)
         self._create_swapchain(configuration)
-        self._create_swapchain_image_views()
         self._create_swapchain_images_views()
