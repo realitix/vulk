@@ -31,3 +31,33 @@ To build the API (in vulk-api folder), execute the following commands:
 pip install -r requirements.txt
 python setup.py api
 ```
+
+#### API convention
+To make a beautiful API documentation, we must respect conventions.
+The documentation must be in markdown and respect the following syntax:
+
+```markdown
+'''
+Description of the function
+
+*Parameters:*
+
+- `parameter 1`: Parameters is a list and must be quoted with ` `
+- `parameter 2`: The description should be precise and can be on
+                 several lines (keep the indentation)
+
+*Returns:*
+
+Here we describe the return value
+
+*Exemple:*
+
+[3 backticks]
+Here you can put your code
+[3 backticks]
+
+**Note: You can add informations at the end of the docstring,
+        The name must be inside the following values:
+        [Note|Seealso|Warning|Todo]
+'''
+```

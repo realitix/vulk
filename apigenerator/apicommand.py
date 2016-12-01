@@ -11,6 +11,7 @@ import codecs
 
 
 OUT_FOLDER = 'vulk-api'
+HERE = path.dirname(path.realpath(__file__))
 
 
 class APICommand(Command):
@@ -58,6 +59,9 @@ class APICommand(Command):
 
     def run(self):
         with self.mock_import():
+            self.pdoc.tpl_lookup.directories.insert(
+                0, path.join(HERE, 'templates'))
+
             module = self.pdoc.Module(
                 self.pdoc.import_module('vulk'),
                 docfilter=None,

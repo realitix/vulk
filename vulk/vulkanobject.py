@@ -59,14 +59,17 @@ class ShaderModule():
     '''
 
     def __init__(self, context, code):
-        '''Initialize the module
+        '''
+        Initialize the module
 
-        :param context: The Vulkan context
-        :param code: Binary Spir-V loaded file
-        :type context: VulkContext
-        :type code: bytes
-        :return The shader module
-        :rtype ShaderModule
+        *Parameters:*
+
+        - `context`: The `VulkContext` object
+        - `code`: Binary Spir-V loaded file (bytes)
+
+        *Returns:*
+
+        The created `ShaderModule`
         '''
         if not isinstance(code, bytes):
             logger.info("Type of code is not 'bytes', it may be an error")
