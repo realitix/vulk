@@ -2,7 +2,7 @@
 
 ## Project status
 
-[![Build Status](https://travis-ci.org/js78/vulk.svg?branch=master)](https://travis-ci.org/js78/vulk)
+[![Build Status](https://travis-ci.org/realitix/vulk.svg?branch=master)](https://travis-ci.org/js78/vulk)
 [![Code Climate](https://codeclimate.com/github/js78/vulk/badges/gpa.svg)](https://codeclimate.com/github/js78/vulk)
 [![Test Coverage](https://codeclimate.com/github/js78/vulk/badges/coverage.svg)](https://codeclimate.com/github/js78/vulk/coverage)
 [![Issue Count](https://codeclimate.com/github/js78/vulk/badges/issue_count.svg)](https://codeclimate.com/github/js78/vulk)
