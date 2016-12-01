@@ -18,3 +18,9 @@ It is written in Python with C binding and is based on SDL2.
 - Modular: every single part of the api must be modular.
 - Full: you shouldn't need to customize core code, it should suits everyone needs.
 
+## Documentation
+
+### API
+The API documentation is generated after each commit by Travis CI servers
+into the dedicated repo vulk-api. You can check it here:
+[https://cdn.rawgit.com/realitix/vulk-api/master/vulk/index.html](API documentation)
