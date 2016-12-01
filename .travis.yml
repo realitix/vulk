@@ -9,10 +9,10 @@ git:
 install:
 - pip install -r requirements.txt
 
-script:
-- py.test .
-- flake8 vulk
-- pylint vulk
+#script:
+#- py.test .
+#- flake8 vulk
+#- pylint vulk
 
 deploy:
 - apigenerator/travis_deploy.sh
