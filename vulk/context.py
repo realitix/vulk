@@ -291,7 +291,6 @@ class VulkContext():
         for name in extension_functions:
             add_pfn(name)
 
-
     def _create_instance(self, window, configuration):
         '''Create Vulkan instance
 

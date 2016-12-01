@@ -152,5 +152,5 @@ class Matrix4(Matrix):
             tmp.values[key] = (ma[m[k0]] * mb[m[k1]] +
                                ma[m[k0 + 1]] * mb[m[k1 + 10]] +
                                ma[m[k0 + 2]] * mb[m[k1 + 20]] +
-                               ma[m[k0 + 3]] * mb[m[k1 + 30]] +
+                               ma[m[k0 + 3]] * mb[m[k1 + 30]])
         return self.set(tmp)

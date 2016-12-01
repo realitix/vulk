@@ -136,6 +136,7 @@ class Vector2(Vector):
         values = self._check_value(value)
         return self.x * values[1] - self.y * values[0]
 
+
 Vector2.X = Vector2(1, 0)
 Vector2.Y = Vector2(0, 1)
 Vector2.Zero = Vector2(0, 0)
@@ -204,6 +205,7 @@ class Vector3(Vector):
                   z * c[Matrix4.M22] + c[Matrix4.M23]) * w
 
         return self
+
 
 Vector3.X = Vector3(1, 0, 0)
 Vector3.Y = Vector3(0, 1, 0)
