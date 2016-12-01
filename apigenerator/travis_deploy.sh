@@ -8,5 +8,5 @@ git clone https://$API_USER:$API_PASS@github.com/realitix/vulk-api.git vulk-api 
 rm -rf vulk-api/*
 python setup.py api
 git --git-dir=vulk-api/.git --work-tree=vulk-api add -A
-git --git-dir=vulk-api/.git --work-tree=vulk-api commit -m "$TRAVIS_COMMIT"
+git --git-dir=vulk-api/.git --work-tree=vulk-api commit -m "$TRAVIS_COMMIT" --author="realitix Travis User <realitix@gmail.com>"
 git --git-dir=vulk-api/.git --work-tree=vulk-api push origin master > /dev/null 2>&1
