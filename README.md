@@ -24,3 +24,10 @@ It is written in Python with C binding and is based on SDL2.
 The API documentation is generated after each commit by Travis CI servers
 into the dedicated repo vulk-api. You can check it here:
 [API documentation](https://cdn.rawgit.com/realitix/vulk-api/master/vulk/index.html)
+
+To build the API (in vulk-api folder), execute the following commands:
+
+```bash
+pip install -r requirements.txt
+python setup.py api
+```

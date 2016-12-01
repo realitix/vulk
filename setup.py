@@ -12,8 +12,8 @@ setup(
     description="Vulk: Advanced 3D engine",
     long_description=open("README.md").read(),
     install_requires=[],
-    setup_requires=['pdoc', 'mock-import'],
-    tests_require=["pytest"],
+    setup_requires=[],
+    tests_require=[],
     include_package_data=True,
     url="http://github.com/realitix/vulk",
     classifiers=[
