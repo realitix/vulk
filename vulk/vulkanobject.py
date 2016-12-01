@@ -88,38 +88,30 @@ AttachmentDescription = namedtuple('AttachmentDescription',
                                    ['format', 'samples', 'load', 'store',
                                     'stencil_load', 'stencil_store',
                                     'initial_layout', 'final_layout'])
-AttachmentDescription.__doc__ = '''AttachmentDescription object
+AttachmentDescription.__doc__ = '''
+    AttachmentDescription describes the attachment.
 
-    AttachmentDescription describe the attachment.
+    *Parameters:*
 
-    :param format: VkFormat vulkan constant
-    :param samples: VkSampleCountFlagBits vulkan constant
-    :param load: VkAttachmentLoadOp vulkan constant
-    :param store: VkAttachmentStoreOp vulkan constant
-    :param stencil_load: VkAttachmentLoadOp vulkan constant
-    :param stencil_store: VkAttachmentStoreOp vulkan constant
-    :param initial_layout: VkImageLayout vulkan constant
-    :param final_layout: VkImageLayout vulkan constant
-    :type format: VkFormat
-    :type samples: VkSampleCountFlagBits
-    :type load: VkAttachmentLoadOp
-    :type store: VkAttachmentStoreOp
-    :type stencil_load: VkAttachmentLoadOp
-    :type stencil_store: VkAttachmentStoreOp
-    :type initial_layout: VkImageLayout
-    :type final_layout: VkImageLayout
+    - `format`: VkFormat vulkan constant
+    - `samples`: VkSampleCountFlagBits vulkan constant
+    - `load`: VkAttachmentLoadOp vulkan constant
+    - `store`: VkAttachmentStoreOp vulkan constant
+    - `stencil_load`: VkAttachmentLoadOp vulkan constant
+    - `stencil_store`: VkAttachmentStoreOp vulkan constant
+    - `initial_layout`: VkImageLayout vulkan constant
+    - `final_layout`: VkImageLayout vulkan constant
     '''
 
 
 AttachmentReference = namedtuple('AttachmentReference', ['index', 'layout'])
-AttachmentReference.__doc__ = '''AttachmentReference object
-
+AttachmentReference.__doc__ = '''
     AttachmentReference links an attachment index with a layout.
 
-    :param index: Index of attachment description
-    :param layout: VkImageLayout vulkan constant
-    :type index: int
-    :type layout: VkImageLayout
+    *Parameters:*
+
+    - `index`: Index of attachment description
+    - `layout`: VkImageLayout vulkan constant
     '''
 
 
@@ -128,22 +120,20 @@ SubpassDescription = namedtuple('SubpassDescription',
                                  'preserves', 'depth_stencil'])
 SubpassDescription.__new__.__defaults__ = \
         ([],) * len(SubpassDescription._fields)
-SubpassDescription.__doc__ = '''SubpassDescription object
-SubpassDescription describes all attachments in the subpass.
+SubpassDescription.__doc__ = '''
+    SubpassDescription describes all attachments in the subpass.
     All parameters are of type AttachmentReference. The order of
     If you don't want an attachment, don't set it, its default
     value is an empty list.
 
-    :param colors: colors attachments
-    :param inputs: inputs attachments
-    :param resolves: resolves attachments (must be the same size as inputs)
-    :param preserves: preserves attachments
-    :param depth_stencil: list containing only one attachment
-    :type colors: list
-    :type inputs: list
-    :type resolves: list
-    :type preserves: list
-    :type depth_stencil: list
+    *Parameters:*
+
+    - `colors`: list of colors attachments
+    - `inputs`: list of inputs attachments
+    - `resolves`: list of resolves attachments (must be the same
+                  size as inputs)
+    - `preserves`: list of preserves attachments
+    - `depth_stencil`: list containing only one attachment
     '''
 
 
