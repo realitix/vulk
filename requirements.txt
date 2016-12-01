@@ -6,3 +6,6 @@ pylint
 pysdl2
 pytest
 cvulkan
+pdoc
+Pygments
+mock-import

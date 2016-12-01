@@ -1,5 +1,6 @@
-from setuptools import setup, find_packages, Extension
+from setuptools import setup, find_packages
 
+from apigenerator.apicommand import APICommand
 import vulk
 
 setup(
@@ -11,7 +12,7 @@ setup(
     description="Vulk: Advanced 3D engine",
     long_description=open("README.md").read(),
     install_requires=[],
-    setup_requires=[],
+    setup_requires=['pdoc', 'mock-import'],
     tests_require=["pytest"],
     include_package_data=True,
     url="http://github.com/realitix/vulk",
@@ -24,4 +25,5 @@ setup(
         "Topic :: Multimedia :: Graphics :: 3D Rendering"
     ],
     license="MIT",
+    cmdclass={'api': APICommand}
 )
