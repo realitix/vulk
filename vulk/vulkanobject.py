@@ -1,6 +1,6 @@
 '''Vulkan objects modules
 
-This module contains the "High" level Vulkan object. It's not that "high"
+This module contains the *High* level Vulkan object. It's not that *high*"
 level, you need to understand fully Vulkan to use theses objects.
 This module must be use by Vulkan expert and is very complicated to work with.
 You will see a lot of namedtuple here, they are used to better document the
@@ -140,22 +140,17 @@ SubpassDescription.__doc__ = '''
 SubpassDependency = namedtuple('SubpassDependency',
                                ['src_subpass', 'src_stage', 'src_access',
                                 'dst_subpass', 'dst_stage', 'dst_access'])
-SubpassDependency.__doc__ = '''SubpassDependency object
-
+SubpassDependency.__doc__ = '''
     SubpassDependency describes all dependencies of the subpass.
 
-    :param src_subpass: Source subpass
-    :param src_stage: Source stage
-    :param src_access: Source access
-    :param dst_subpass: Destination subpass
-    :param dst_stage: Destination stage
-    :param dst_access: Destination access
-    :type src_subpass: int
-    :type src_stage: VkPipelineStageFlagBits
-    :type src_access: VkAccessFlagBits
-    :type dst_subpass: int
-    :type dst_stage: VkPipelineStageFlagBits
-    :type dst_access: VkAccessFlagBits
+    *Parameters:*
+
+    - `src_subpass`: Source subpass (int)
+    - `src_stage`: Source stage (VkPipelineStageFlagBits)
+    - `src_access`: Source access (VkAccessFlagBits)
+    - `dst_subpass`: Destination subpass (int)
+    - `dst_stage`: Destination stage (VkPipelineStageFlagBits-
+    - `dst_access`: Destination access (VkAccessFlagBits)
     '''
 
 
@@ -173,19 +168,15 @@ class Renderpass():
     def __init__(self, context, attachments, subpasses, dependencies):
         '''Renderpass constructor
 
-        :param context: The Vulkan context
-        :param attachments: List of AttachmentDescription
-        :param subpasses: List of SubpassDescription
-        :param dependencies: List of SubpassDependency
-        :type context: VulkContext
-        :type attachments: list
-        :type subpasses: list
-        :type dependencies: list
-        :return A renderpass object
-        :rtype RenderPass
+        *Parameters:*
 
-        .. warning:: Arguments ar not checked, you must kwnow what you  are
-                     doing.
+        - `context`: The `VulkContext`
+        - `attachments`: List of `AttachmentDescription`
+        - `subpasses`: List of `SubpassDescription`
+        - `dependencies`: List of `SubpassDependency`
+
+        **Warning: Arguments ar not checked, you must kwnow
+                   what you are doing.**
         '''
 
         vk_attachments = []
@@ -281,45 +272,47 @@ class Renderpass():
 
 #  Objects used in Pipeline
 PipelineShaderStage = namedtuple('PipelineShaderStage', ['module', 'stage'])
-PipelineShaderStage.__doc__ = '''PipelineShaderStage object
-    :param module: The shader module to bind
-    :param stage: Stage in ['vertex', 'fragment', 'geometry',
-                  'tesselation_control', 'tesselation_evaluation',
-                  'compute']
-    :type module: ShaderModule
-    :type stage: str
+PipelineShaderStage.__doc__ = '''
+    *Parameters:*
+
+    - `module`: The `ShaderModule` to bind
+    - `stage`: Stage name in ['vertex', 'fragment', 'geometry', 'compute',
+               'tesselation_control', 'tesselation_evaluation']
     '''
 
 PipelineVertexInputState = namedtuple('PipelineVertexInputState',
                                       ['bindings', 'attributes'])
 PipelineVertexInputState.__new__.__defaults__ = \
         ([],) * len(PipelineVertexInputState._fields)
-PipelineVertexInputState.__doc__ = '''PipelineVertexInputState object
-    :param bindings: The vertice bindings
-    :param attributes: The vertice attributes
-    :type bindings: list
-    :type attributes: list
+PipelineVertexInputState.__doc__ = '''
+    *Parameters*:
+
+    - `bindings`: List of vertice bindings
+    - `attributes`: List of vertice attributes
     '''
 
 PipelineInputAssemblyState = namedtuple('PipelineInputAssemblyState',
                                         'topology')
-PipelineInputAssemblyState.__doc__ = '''PipelineInputAssemblyState object
-    :param topology: The topology to use when drawing
-    :type topoloy: str or VkPrimitiveTopology
+PipelineInputAssemblyState.__doc__ = '''
+    *Parameters:*
+
+    - `topology`: The `VkPrimitiveTopology` to use when drawing
     '''
 
 PipelineViewportState = namedtuple('PipelineViewportState',
                                    ['viewports', 'scissors'])
-PipelineViewportState.__doc__ = '''PipelineViewportState object
-    Contains viewports and scissors.
+PipelineViewportState.__doc__ = '''
+    The PipelineViewportState object contains viewports and scissors.
 
-    .. warning:: The viewports and scissors are real Vulkan objects
-                 (vk.VkRect2D) and not Vulk objects.
+    *Parameters:*
 
-    :param viewports: List of viewport
-    :param scissors: List of scissor
-    :type viewports: list
-    :type scissors: list
+    - `viewports`: List of viewport
+    - `scissors`: List of scissor
+
+    **Warning:: The viewports and scissors are real Vulkan objects
+                (`vk.VkRect2D`) and not Vulk objects.**
+
+    **Todo: Viewport and scissor should not be real Vulkan objects**
     '''
 
 PipelineRasterizationState = namedtuple(
@@ -328,35 +321,28 @@ PipelineRasterizationState = namedtuple(
      'front_face', 'depth_bias_constant', 'depth_bias_clamp',
      'depth_bias_slope']
 )
-PipelineRasterizationState.__doc__ = '''PipelineRasterizationState object
-    :param depth_clamp_enable: Whether to enable depth clamping
-    :param polygon_mode: Which polygon mode to use
-    :param line_width: Width of line
-    :param cull_mode: The way of culling
-    :param front_face: Front face
-    :param depth_bias_constant: Constant to add to depth
-    :param depth_bias_clamp: Max depth bias
-    :param depth_bias_slope: Factor to slope
-    :type depth_clamp_enable: boolean
-    :type polygon_mode: VkPolygonMode
-    :type line_width: float
-    :type cull_mode: VkCullModeFlagBits
-    :type front_face: VkFrontFace
-    :type depth_bias_constant: float
-    :type depth_bias_clamp: float
-    :type depth_bias_slope: float
+PipelineRasterizationState.__doc__ = '''
+    *Parameters:*
+
+    - `depth_clamp_enable`: Whether to enable depth clamping (`boolean`)
+    - `polygon_mode`: Which `VkPolygonMode` to use
+    - `line_width`: Width of line (`float`)
+    - `cull_mode`: The way of culling (`VkCullModeFlagBits`)
+    - `front_face`: `VkFrontFace`
+    - `depth_bias_constant`: Constant to add to depth (`float`)
+    - `depth_bias_clamp`: Max depth bias (`float`)
+    - `depth_bias_slope`: Factor to slope (`float`)
     '''
 
 PipelineMultisampleState = namedtuple('PipelineMultisampleState',
                                       ['shading_enable', 'samples',
                                        'min_sample_shading'])
-PipelineMultisampleState.__doc__ = '''PipelineMultisampleState
-    :param shading_enable: Enable multisampling
-    :param samples: Number of samples
-    :param min_sample_shading: Minimum of sample
-    :type shading_enable: boolean
-    :type samples: VkSampleCountFlagBits
-    :type min_sample_shading: float
+PipelineMultisampleState.__doc__ = '''
+    *Parameters:*
+
+    - `shading_enable`: Enable multisampling (`boolean`)
+    - `samples`: Number of samples (`VkSampleCountFlagBits`)
+    - `min_sample_shading`: Minimum of sample (`float`)
     '''
 
 PipelineDepthStencilState = namedtuple(
@@ -364,25 +350,18 @@ PipelineDepthStencilState = namedtuple(
     ['depth_test_enable', 'depth_write_enable', 'depth_bounds_test_enable',
      'depth_compare', 'stencil_test_enable', 'front', 'back', 'min', 'max']
 )
-PipelineDepthStencilState.__doc__ = '''PipelineDepthStencilState
-    :param depth_test_enable: Enable depth test
-    :param depth_write_enable: Enable depth write
-    :param depth_bounds_test_enable: Enable bounds test
-    :param depth_compare: Condition to overwrite depth
-    :param stencil_test_enable: Enable stencil test
-    :param front: Control stencil parameter (the real vulkan object)
-    :param back: Control stencil parameter (the real vulkan object)
-    :param min: Define the min value in depth bound test
-    :param max: Define the max value in depth bound test
-    :type depth_test_enable: boolean
-    :type depth_write_enable: boolean
-    :type depth_bounds_test_enable: boolean
-    :type depth_compare: VkCompareOp
-    :type stencil_test_enable: boolean
-    :type front: VkStencilOpState
-    :type back: VkStencilOpState
-    :type min: float
-    :type max: float
+PipelineDepthStencilState.__doc__ = '''
+    *Parameters:*
+
+    - `depth_test_enable`: Enable depth test
+    - `depth_write_enable`: Enable depth write
+    - `depth_bounds_test_enable`: Enable bounds test
+    - `depth_compare`: Condition to overwrite depth (`VkCompareOp`)
+    - `stencil_test_enable`: Enable stencil test
+    - `front`: Control stencil parameter (`VkStencilOpState`)
+    - `back`: Control stencil parameter (`VkStencilOpState`)
+    - `min`: Define the min value in depth bound test (`float`)
+    - `max`: Define the max value in depth bound test (`float`)
     '''
 
 PipelineColorBlendAttachmentState = namedtuple(
@@ -390,44 +369,35 @@ PipelineColorBlendAttachmentState = namedtuple(
     ['enable', 'src_color', 'dst_color', 'color_op',
      'src_alpha', 'dst_alpha', 'alpha_op', 'color_mask']
 )
-PipelineColorBlendAttachmentState.__doc__ = '''PipelineColorBlendAttachmentState
-    :param enable: Enable blending
-    :param src_color: Blending factor for source color
-    :param dst_color: Blending factor for destination color
-    :param color_op: Operation on color
-    :param src_alpha: Blending factor for source alpha
-    :param dst_alpha: Blending factor for destination alpha
-    :param alpha_op: Operation on alpha
-    :param color_mask: Bitmask selecting which of the R, G, B, and/or A
-                       components are enabled for writing
-    :type enable: boolean
-    :type src_color: VkBlendFactor
-    :type dst_color: VkBlendFactor
-    :type color_op: VkBlendOp
-    :type src_alpha: VkBlendFactor
-    :type dst_alpha: VkBlendFactor
-    :type alpha_op: VkBlendOp
-    :type color_mask: VkColorComponentFlags
+PipelineColorBlendAttachmentState.__doc__ = '''
+    *Parameters:*
+
+    - `enable`: Enable blending
+    - `src_color`: Blending factor for source color (`VkBlendFactor`)
+    - `dst_color`: Blending factor for destination color (`VkBlendFactor`)
+    - `color_op`: Operation on color (`VkBlendOp`)
+    - `src_alpha`: Blending factor for source alpha (`VkBlendFactor`)
+    - `dst_alpha`: Blending factor for destination alpha (`VkBlendFactor`)
+    - `alpha_op`: Operation on alpha (`VkBlendOp`)
+    - `color_mask`: Bitmask selecting which of the R, G, B, and A components
+                    are enabled for writing (`VkColorComponentFlags`)
     '''
 
 PipelineColorBlendState = namedtuple('PipelineColorBlendState',
                                      ['op_enable', 'op', 'attachments',
                                       'constants'])
-PipelineColorBlendState.__doc__ = '''PipelineColorBlendState
-    :param op_enable: Enable bitwise combination
-    :param op: Operation to perform
-    :param attachments: List of blend attachments for each framebuffer
-    :param constants: Constants depending on blend factor (list of 4 float)
-    :type op_enable: boolean
-    :type op: VkLogicOp
-    :type attachments: list
-    :type constants: list
+PipelineColorBlendState.__doc__ = '''
+    *Parameters*:
+
+    - `op_enable`: Enable bitwise combination
+    - `op`: Operation to perform (`VlLogicOp`)
+    - `attachments`: List of blend attachments for each framebuffer
+    - `constants`: Constants depending on blend factor (`list` of 4 `float`)
     '''
 
 PipelineDynamicState = namedtuple('PipelineDynamicState', 'states')
-PipelineDynamicState.__doc__ = '''PipelineDynamicState
-    :param states: Array of VkDynamicState
-    :type states: list
+PipelineDynamicState.__doc__ = '''
+    - `states`: List of `VkDynamicState`
     '''
 
 
@@ -437,46 +407,35 @@ class Pipeline():
     The graphics pipeline is the sequence of operations that take the
     vertices and textures of your meshes all the way to the pixels in
     the render targets. The pipeline combines the following elements:
-        * Shader stages: the shader modules that define the functionality of
-            the programmable stages of the graphics pipeline
-        * Fixed-function state: all of the structures that define the
-            fixed-function stages of the pipeline, like input assembly,
-            rasterizer, viewport and color blending
-        * Pipeline layout: the uniform and push values referenced by the
-            shader that can be updated at draw time
-        * Render pass: the attachments referenced by the pipeline stages
-                       and their usage
+
+      - Shader stages: the shader modules that define the functionality of
+                       the programmable stages of the graphics pipeline
+      - Fixed-function state: all of the structures that define the
+                              fixed-function stages of the pipeline, like
+                              input assembly, rasterizer, viewport and
+                              color blending
+      - Pipeline layout: the uniform and push values referenced by the
+                         shader that can be updated at draw time
+      - Render pass: the attachments referenced by the pipeline stages
+                     and their usage
     '''
 
     def __init__(self, context, stages, vertex_input, input_assembly,
                  viewport, rasterization, multisample, depth, blend, dynamic,
                  renderpass):
-        '''RenderPass constructor
+        '''
 
-        :param context: The Vulkan context
-        :param stages: List of PipelineShaderStage
-        :param vertex_input: Define how to handle vertice
-        :param input_assembly: Define how to draw vertice
-        :param viewport: The pipeline viewport
-        :param rasterization: The pipeline rasterization
-        :param multisample: The pipeline multisample configuration
-        :param depth: The pipeline depth configuration (may be None)
-        :param blend: The pipeline blending configuration
-        :param dynamic: Set some pipeline parts dynamic (may be None)
-        :param renderpass: The renderpass of this pipeline
-        :type context: VulkContext
-        :type stages: list
-        :type vertex_input: PipelineVertexInputState
-        :type input_assembly: PipelineInputAssemblyState
-        :type viewport: PipelineViewportState
-        :type rasterization: PipelineRasterizationState
-        :type multisample: PipelineMultisampleState
-        :type depth: PipelineDepthStencilState
-        :type blend: PipelineColorBlendState
-        :type dynamic: PipelineDynamicState
-        :type renderpass: Renderpass
-        :return A Pipeline object
-        :rtype Pipeline
+        - `context`: The `VulkContext`
+        - `stages`: List of `PipelineShaderStage`
+        - `vertex_input`: `PipelineVertexInputState`
+        - `input_assembly`: `PipelineInputAssemblyState`
+        - `viewport`: `PipelineViewportState`
+        - `rasterization`: `PipelineRasterizationState`
+        - `multisample`: `PipelineMultisampleState`
+        - `depth`: `PipelineDepthStencilState` (can be `None`)
+        - `blend`: `PipelineColorBlendState`
+        - `dynamic`: `PipelineDynamicState` (may be `None`)
+        - `renderpass`: The `Renderpass` of this pipeline
         '''
 
         vk_stages = []
@@ -640,11 +599,11 @@ class Pipeline():
 
 
 class Image():
-    '''Image object
-
+    '''
     Image can be initialized in two ways:
-        - In the classic ways passing all the properties
-        - Directly by passing a real vulkan image
+
+      - In the classic ways passing all the properties
+      - Directly by passing a real vulkan image
 
     This is useful because image can be created by swapchain and can be
     converted to vulk Image object.
@@ -665,29 +624,23 @@ class Image():
 
 
 class Framebuffer():
-    '''Framebuffer object
-
-    In Vulkan, a Framebuffer references all of the `VkImageView` objects that
-    represent the attachments of a Renderpass.
+    '''
+    In Vulkan, a `Framebuffer` references all of the `VkImageView` objects that
+    represent the attachments of a `Renderpass`.
     '''
 
     def __init__(self, context, renderpass, attachments,
                  width, height, layers):
-        '''Initialize the Framebuffer
+        '''
 
-        :param context: The Vulkan context
-        :param renderpass: The renderpass which framebuffer needs
-                           to be compatible
-        :param attachments: List of ImageView
-        :param width: Width of the Framebuffer
-        :param height: Height of the Framebuffer
-        :param layers: Number of layers in the Framebuffer
-        :type context: VulkContext
-        :type renderpass: Renderpass
-        :type attachments: list
-        :type width: int
-        :type height: int
-        :type layers: int
+        *Parameters*:
+
+        - `context`: The `VulkContext`
+        - `renderpass`: The compatible `Renderpass` of this `Framebuffer`
+        - `attachments`: List of `ImageView`
+        - `width`: Width (`int`)
+        - `height`: Height (`int`)
+        - `layers`: Number of layers (`int`)
         '''
         framebuffer_create = vk.VkFramebufferCreateInfo(
             sType=vk.VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
