@@ -471,11 +471,23 @@
       <a href="https://github.com/BurntSushi/pdoc">pdoc ${pdoc.__version__}</a>
     </p>
 
-    <p>pdoc is in the public domain with the
-      <a href="http://unlicense.org">UNLICENSE</a></p>
-
-    <p>Design by <a href="http://nadh.in">Kailash Nadh</a></p>
   </footer>
 </div>
+
+<script type="text/javascript">
+    var em = document.querySelectorAll("em");
+    var underline = ["Parameters:", "Returns:", "Exemple:"];
+
+    for (var i = 0; i < em.length; ++i) {
+        var item = em[i];
+        for (var j = 0; j < underline.length; j++) {
+            var search = underline[j];
+            if (item.textContent == search) {
+                item.style.textDecorationLine = "underline";
+            }
+        }
+    }
+</script>
+
 </body>
 </html>

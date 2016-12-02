@@ -87,10 +87,6 @@
     font-family: "Ubuntu Mono", "Cousine", "DejaVu Sans Mono", monospace;
   }
 
-  em {
-    text-decoration-line: underline;
-  }
-
   .title .name {
     font-weight: bold;
   }

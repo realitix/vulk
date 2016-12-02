@@ -1,6 +1,6 @@
 '''Vulkan objects modules
 
-This module contains the *High* level Vulkan object. It's not that *high*"
+This module contains the *High* level Vulkan object. It's not that *high*
 level, you need to understand fully Vulkan to use theses objects.
 This module must be use by Vulkan expert and is very complicated to work with.
 You will see a lot of namedtuple here, they are used to better document the
@@ -8,6 +8,10 @@ object arguments. Instead of passing a dict whith unknow keys, you pass a
 documented namedtuple, I think it's better.
 If you want to understand internal Vulkan functions, you can hack around this
 module.
+
+**Note: In this module, when it's needed, the parameter type is indicated. If
+        the type begins with Vk..., it means a real Vulkan object and not an
+        object in this module.**
 '''
 
 from collections import namedtuple
@@ -285,7 +289,7 @@ PipelineVertexInputState = namedtuple('PipelineVertexInputState',
 PipelineVertexInputState.__new__.__defaults__ = \
         ([],) * len(PipelineVertexInputState._fields)
 PipelineVertexInputState.__doc__ = '''
-    *Parameters*:
+    *Parameters:*
 
     - `bindings`: List of vertice bindings
     - `attributes`: List of vertice attributes
@@ -387,7 +391,7 @@ PipelineColorBlendState = namedtuple('PipelineColorBlendState',
                                      ['op_enable', 'op', 'attachments',
                                       'constants'])
 PipelineColorBlendState.__doc__ = '''
-    *Parameters*:
+    *Parameters:*
 
     - `op_enable`: Enable bitwise combination
     - `op`: Operation to perform (`VlLogicOp`)
@@ -633,7 +637,7 @@ class Framebuffer():
                  width, height, layers):
         '''
 
-        *Parameters*:
+        *Parameters:*
 
         - `context`: The `VulkContext`
         - `renderpass`: The compatible `Renderpass` of this `Framebuffer`
