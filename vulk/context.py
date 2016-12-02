@@ -28,8 +28,9 @@ class VulkWindow():
     def open(self, configuration):
         '''Open the SDL2 Window
 
-        :param configuration: Configurations parameters from Application
-        :type confiuration: dict
+        *Parameters:*
+
+        - `configuration`: Configurations parameters from Application
         '''
         if sdl2.SDL_Init(sdl2.SDL_INIT_VIDEO) != 0:
             msg = "Can't open window: %s" % sdl2.SDL_GetError()
@@ -110,12 +111,14 @@ class VulkContext():
     def _get_instance_extensions(window, configuration):
         '''Get extensions which depend on the window and configuration
 
-        :param window: The VulkWindow
-        :param configuration: Configuration from App
-        :type window: VulkWindow
-        :type configuration: dict
-        :return: Extensions list
-        :rtype: list
+        *Parameters:*
+
+        - `window`: The `VulkWindow`
+        - `configuration`: Configuration from App
+
+        *Returns:*
+
+        Extension list
         '''
 
         # Get available extensions
@@ -165,10 +168,13 @@ class VulkContext():
     def _get_device_extensions(physical_device):
         '''Get device extensions
 
-        :param physical_device: The device to check
-        :type physical_device: VkPhysicalDevice
-        :return: Extensions list
-        :rtype: list
+        *Parameters:*
+
+        - `physical_device`: The VkPhysicalDevice to check
+
+        *Returns:*
+
+        Extension list
         '''
 
         # Get available extensions
@@ -195,10 +201,13 @@ class VulkContext():
 
         Simple algorythm: return everything in debug mode else nothing
 
-        :param configuration: configuration from App
-        :type configuration: dict
-        :return: All enabled layers
-        :rtype: list
+        *Parameters:*
+
+        - configuration: configuration from App
+
+        *Returns:*
+
+        List of all enabled layers
         '''
 
         if not configuration.debug:
@@ -216,14 +225,15 @@ class VulkContext():
 
         Check for graphic and presentation queue families.
 
-        :param physical_device: The physical device to check for
-        :param surface: The surface to present
-        :param pfn: Function vkGetPhysicalDeviceSurfaceSupportKHR callable
-        :type physical_device: VkPhysicalDevice
-        :type surface: VkSurfaceKHR
-        :type pfn: function
-        :return: a tuple with graphic index and present index or None
-        :rtype: tuple
+        *Parameters:*
+
+        - `physical_device`: The `VkPhysicalDevice` to check for
+        - `surface`: The `VkSurfaceKHR` to present
+        - `pfn`: Function `vkGetPhysicalDeviceSurfaceSupportKHR` callable
+
+        *Returns:*
+
+        A tuple with graphic index and present index or None
         '''
         queue_families = vk.vkGetPhysicalDeviceQueueFamilyProperties(physical_device) # noqa
 
@@ -251,10 +261,11 @@ class VulkContext():
     def _get_pfn(self, configuration):
         '''Get extension function pointers
 
-        Get only functions used in VulkContext, vulkan instance must exist
+        Get only functions used in `VulkContext`, vulkan instance must exist
 
-        :param configuration: Configuration from Application
-        :type configuration: dict
+        *Parameters:*
+
+        - `configuration`: Configuration from Application
         '''
 
         if not self.instance:
@@ -294,10 +305,10 @@ class VulkContext():
     def _create_instance(self, window, configuration):
         '''Create Vulkan instance
 
-        :param window: The window for Vulkan
-        :param configuration: Configuration from Application
-        :type window: VulkWindow
-        :type configuration: dict
+        *Parameters:*
+
+        - `window`: The window for Vulkan
+        - `configuration`: Configuration from Application
         '''
 
         extensions = VulkContext._get_instance_extensions(window,
@@ -327,8 +338,10 @@ class VulkContext():
         '''Create debug callback
 
         It works only on debug mode
-        :param configuration: Configuration from Application
-        :type configuration: dict
+
+        *Parameters:*
+
+        - `configuration`: Configuration from Application
         '''
         if not configuration.debug:
             return
@@ -350,8 +363,9 @@ class VulkContext():
     def _create_surface(self, info):
         '''Create Vulkan surface
 
-        :param info: The window information for Vulkan
-        :type window: SDL_SysWMinfo from pySDL2
+        *Parameters:*
+
+        - `info`: The window information for Vulkan
         '''
         def call_platform(name, surface_create):
             f = vk.vkGetInstanceProcAddr(self.instance, name)
@@ -469,10 +483,10 @@ class VulkContext():
     def _create_device(self, window, configuration):
         '''Create Vulkan logical device
 
-        :param window: The window for Vulkan
-        :param configuration: Configuration from Application
-        :type window: VulkWindow
-        :type configuration: dict
+        *Parameters:*
+
+        - `window`: The window for Vulkan
+        - `configuration`: Configuration from Application
         '''
         extensions = VulkContext._get_device_extensions(self.physical_device)
         layers = VulkContext._get_layers(configuration)
@@ -501,8 +515,9 @@ class VulkContext():
     def _create_swapchain(self, configuration):
         '''Create Vulkan swapchain
 
-        :param configuration: Configuration from Application
-        :type configuration: dict
+        *Parameters:*
+
+        - `configuration`: Configuration from Application
         '''
         surface_capabilities = self.pfn['vkGetPhysicalDeviceSurfaceCapabilitiesKHR'](self.physical_device, self.surface) # noqa
         surface_formats = self.pfn['vkGetPhysicalDeviceSurfaceFormatsKHR'](self.physical_device, self.surface) # noqa
@@ -615,10 +630,10 @@ class VulkContext():
     def create(self, window, configuration):
         '''Create Vulkan context
 
-        :param window: The window for Vulkan
-        :param configuration: Configuration from Application
-        :type window: VulkWindow
-        :type configuration: dict
+        *Parameters:*
+
+        - `window`: The `VulkWindow`
+        - `configuration`: Configuration from Application
         '''
         self._create_instance(window, configuration)
 

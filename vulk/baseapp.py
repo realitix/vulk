@@ -18,30 +18,22 @@ class BaseApp(ABC):
                  highdpi=False, debug=False):
         '''Set initial configuration
 
-        :param name: Name of the application
-        :param x: X position of the window
-        :param y: Y position of the window
-        :param width: Width of the window
-        :param height: Height of the window
-        :param fullscreen: Should the window be in fullscreen mode
-        :param resizable: Should the window be resizable
-        :param decorated: Should the window be decorated (button close)
-        :param highdpi: Enable highdpi mode if supported
-        :param debug: Enable debug mode (for development only)
-        :type name: string
-        :type x: int
-        :type y: int
-        :type width: int
-        :type height: int
-        :type fullscreen: boolean
-        :type resizable: boolean
-        :type decorated: boolean
-        :type highdpi: boolean
-        :type debug: boolean
+        *Parameters:*
 
-        .. note:: When full screen mode is enabled, you can set width and
-                  height to 0 to use the native resolution, otherwise the
-                  fullscreen resolution will be set to width/height.
+        - `name`: Name of the application
+        - `x`: X position of the window
+        - `y`: Y position of the window
+        - `width`: Width of the window
+        - `height`: Height of the window
+        - `fullscreen`: Should the window be in fullscreen mode
+        - `resizable`: Should the window be resizable
+        - `decorated`: Should the window be decorated (button close)
+        - `highdpi`: Enable highdpi mode if supported
+        - `debug`: Enable debug mode (for development only)
+
+        **Note: When full screen mode is enabled, you can set width and
+                height to 0 to use the native resolution, otherwise the
+                fullscreen resolution will be set to width/height.**
         '''
         c = {k: v for k, v in locals().items() if k != 'self'}
         self.configuration = namedtuple('AppConfiguration', c.keys())(**c)
@@ -70,10 +62,12 @@ class BaseApp(ABC):
         self.window.open(self.configuration)
         self.context = VulkContext()
         self.context.create(self.window, self.configuration)
+        self.start()
         return self
 
     def __exit__(self, *args):
         '''Clean Vulkan resource'''
+        self.end()
         self.window.close()
         pass
 
@@ -85,4 +79,22 @@ class BaseApp(ABC):
 
     @abstractmethod
     def render(self, delta):
+        '''Here your game loop.
+
+        In this function, all your game is playing.
+
+        *Parameters:*
+
+        - delta: The delta time since the last frame in milliseconds
+        '''
+        return
+
+    @abstractmethod
+    def start(self):
+        '''This function is called when your App starts'''
+        return
+
+    @abstractmethod
+    def end(self):
+        '''This function is called when your App ends'''
         return
