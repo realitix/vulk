@@ -61,3 +61,9 @@ Here you can put your code
         [Note|Seealso|Warning|Todo]
 '''
 ```
+
+### Stay in touch
+
+You can contact me by opening issue (bug or interesting discussion about
+the project). If you want a fast and pleasant talk, join the irc channel:
+`#vulk`. I'm connected from 9AM to 8AM (France).
