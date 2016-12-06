@@ -244,11 +244,11 @@
 
   % if 'http_server' in context.keys() and http_server:
     <p id="nav">
-      <a href="/">All packages</a>
+      <a href="/vulk-api/vulk/">All packages</a>
       <% parts = module.name.split('.')[:-1] %>
       % for i, m in enumerate(parts):
         <% parent = '.'.join(parts[:i+1]) %>
-        :: <a href="/${parent.replace('.', '/')}">${parent}</a>
+        :: <a href="/vulk-api/vulk/${parent.replace('.', '/')}">${parent}</a>
       % endfor
     </p>
   % endif
