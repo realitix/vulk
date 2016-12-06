@@ -18,8 +18,11 @@ script:
   - flake8 vulk
 #- pylint vulk
 
-after_success:
-  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash ./apigenerator/travis_deploy.sh; fi'
+deploy:
+  provider: script
+  script: 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash ./apigenerator/travis_deploy.sh; fi'
+  on:
+    python: '3.5'
 
 env:
   global:
