@@ -9,6 +9,9 @@ python:
 git:
   depth: 3
 
+before_install:
+  - "export TRAVIS_COMMIT_MSG=\"$(git log --format=%f --no-merges -n 1)\""
+
 install:
   - pip install -r requirements.txt
   - python setup.py install

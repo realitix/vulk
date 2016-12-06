@@ -10,5 +10,5 @@ python setup.py api
 git --git-dir=vulk-api/.git --work-tree=vulk-api config user.name "realitix Travis User"
 git --git-dir=vulk-api/.git --work-tree=vulk-api config user.email "realitix@gmail.com"
 git --git-dir=vulk-api/.git --work-tree=vulk-api add -A
-git --git-dir=vulk-api/.git --work-tree=vulk-api commit -m "$TRAVIS_COMMIT" > /dev/null 2>&1
+git --git-dir=vulk-api/.git --work-tree=vulk-api commit -m "$TRAVIS_COMMIT_MSG" > /dev/null 2>&1
 git --git-dir=vulk-api/.git --work-tree=vulk-api push origin master > /dev/null 2>&1
