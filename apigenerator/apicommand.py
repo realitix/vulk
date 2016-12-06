@@ -34,7 +34,7 @@ class APICommand(Command):
             os.makedirs(dirpath)
         try:
             with codecs.open(f, 'w+', 'utf-8') as w:
-                out = m.html(external_links=True,
+                out = m.html(external_links=False,
                              link_prefix='',
                              http_server=True,
                              source=True)
