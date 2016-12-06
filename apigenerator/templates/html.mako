@@ -248,7 +248,7 @@
       <% parts = module.name.split('.')[:-1] %>
       % for i, m in enumerate(parts):
         <% parent = '.'.join(parts[:i+1]) %>
-        :: <a href="/vulk-api/vulk/${parent.replace('.', '/')}">${parent}</a>
+        :: <a href="/vulk-api/${parent.replace('.', '/')}">${parent}</a>
       % endfor
     </p>
   % endif

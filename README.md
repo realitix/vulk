@@ -66,4 +66,4 @@ Here you can put your code
 
 You can contact me by opening issue (bug or interesting discussion about
 the project). If you want a fast and pleasant talk, join the irc channel:
-`#vulk`. I'm connected from 9AM to 8AM (France).
+`#vulk`. I'm connected from 9AM to 6PM (France).
