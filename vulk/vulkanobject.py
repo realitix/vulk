@@ -15,10 +15,12 @@ module.
 '''
 
 from collections import namedtuple
+from contextlib import contextmanager
 import logging
 import vulkan as vk
 
 from vulk.exception import VulkError
+from vulk import vulkanconstant
 
 logger = logging.getLogger()
 
@@ -52,6 +54,44 @@ def vk_const(v):
 def btov(b):
     '''Convert boolean to Vulkan boolean'''
     return vk.VK_TRUE if b else vk.VK_FALSE
+
+
+def find_memory_type(context, type_filter, properties):
+    '''
+    Graphics cards can offer different types of memory to allocate from.
+    Each type of memory varies in terms of allowed operations and performance
+    characteristics. We need to combine the requirements of the memory and our
+    own application requirements to find the right type of memory to use.
+
+    *Parameters:*
+
+    - `context`: The `VulkContext`
+    - `type_filter`: Bit field of the memory types that are suitable
+                     for the memory (int)
+    - `properties`: `VkMemoryPropertyFlags` Vulkan constant, type of
+                    memory we want
+
+    **Todo: I made a bitwise comparaison with `type_filter`, I have to test
+            it to be sure it's working**
+    '''
+    if not find_memory_type.cache_properties:
+        find_memory_type.properties = vk.vkGetPhysicalDeviceMemoryProperties(
+            context.physical_device)
+
+    for i, memory_type in enumerate(find_memory_type.properties.memoryTypes):
+        # TODO: Test type_filter
+        if (type_filter & (1 << i)) and \
+           (memory_type.propertyFlags & properties) == properties:
+            return i
+
+    msg = "Can't find suitable memory type"
+    logger.critical(msg)
+    raise VulkError(msg)
+
+
+# Set physical device memory properties in cache since it depends
+# only on the physical device
+find_memory_type.cache_properties = None
 
 
 class ShaderModule():
@@ -602,6 +642,16 @@ class Pipeline():
                                                      1, pipeline_create)
 
 
+Extent3D = namedtuple('Extent3D', ['width', 'height', 'depth'])
+Extent3D.__doc__ = '''
+    *Parameters:*
+
+    - `width`: Width
+    - `height`: Height
+    - `depth`: Depth
+    '''
+
+
 class Image():
     '''
     Image can be initialized in two ways:
@@ -610,21 +660,223 @@ class Image():
       - Directly by passing a real vulkan image
 
     This is useful because image can be created by swapchain and can be
-    converted to vulk Image object.
+    converted to vulk Image object. If the Image is created from VkImage,
+    `staging_image`, `staging_memory` and `memory` are set to `None`.
     '''
     def __init__(self, *args, **kwargs):
-        '''If only one non-named arg, we create from vkImage,
+        '''If only one non-named arg, we create from `VkImage`,
         else from parameters
         '''
-        self.image = args[0] if args else self._create_image(**kwargs)
+        self.staging_image = None
+        self.image = None
+        self.staging_memory = None
+        self.memory = None
+        self.extent = None
 
-    def _create_image(image_type, ):
+        if args:
+            self.image = args[0]
+        else:
+            self._init_image(**kwargs)
+
+    def _init_image(self, **kwargs):
+        '''
+        To get the maximum performance, we are going to create two `VkImage`,
+        a staging image which memory can be updated (with our texture) and
+        a final image with very fast memory that we will use in shaders.
+        When we create an image, we first upload the pixels in the staging
+        image and the copy the memory in the final image. Of course, both of
+        the image have the same properties.
+
+        This method takes the same arguments as `_create_image` minus the
+        `memory_properties` parameter.
+        '''
+        p0 = vk.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT # noqa
+        p1 = vk.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
+
+        # Create the staging image
+        self.staging_image, self.staging_memory = self._create_image(
+            **kwargs,
+            memory_properties=p0
+        )
+
+        # Create the final image
+        self.image, self.memory = self._create_image(
+            **kwargs,
+            memory_properties=p1
+        )
+
+        # Set others properties
+        self.extent = kwargs['extent']
+        self.format = vk_const(kwargs['format'])
+
+    def _create_image(self, context, image_type, format, extent, mip_level,
+                      layers, samples, tiling, usage, sharing_mode,
+                      queue_families, layout, memory_properties):
         '''Create a new image
 
-        :param image_type: Type of image (1D, 2D, 3D)
-        :type image_type: VkImageType
+        Creating an image is made of several steps:
+
+        - Create the staging image
+        - Allocate the staging memory
+        - Create the final image
+        - Allocate the final memory
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        - `image_type`: Type of image 1D/2D/3D (`VkImageType`)
+        - `format`: `VkFormat` of the image
+        - `extent`: `Extent3D`
+        - `mip_level`: Level of mip (`int`)
+        - `layers`: Number of layers (`int`)
+        - `samples`: This `VkSampleCountFlagBits` flag is related
+                     to multisampling
+        - `tiling`: `VkImageTiling`
+        - `usage`: `VkImageUsageFlags`
+        - `sharing_mode`: `VkSharingMode`
+        - `queue_families`: List of queue families accessing this image
+                            (ignored if sharingMode is not
+                            `VK_SHARING_MODE_CONCURRENT`) (can be [])
+        - `layout`: `VkImageLayout`
+        - `memory_properties`: `VkMemoryPropertyFlags` Vulkan constant
         '''
-        pass
+
+        # Create the VkImage
+        vk_extent = vk.VkExtent3D(width=extent.width,
+                                  height=extent.height,
+                                  depth=extent.depth)
+
+        image_create = vk.VkImageCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
+            flags=0,
+            imageType=vk_const(image_type),
+            format=vk_const(format),
+            extent=vk_extent,
+            mipLevels=mip_level,
+            arrayLayers=layers,
+            samples=vk_const(samples),
+            tiling=vk_const(tiling),
+            usage=vk_const(usage),
+            sharingMode=vk_const(sharing_mode),
+            queueFamilyIndexCount=len(queue_families),
+            pQueueFamilyIndices=queue_families if queue_families else None,
+            initialLayout=vk_const(layout)
+        )
+
+        image = vk.vkCreateImage(context.device, image_create)
+
+        # Get memory requirements
+        requirements = vk.vkGetImageMemoryRequirements(context.device, image)
+
+        alloc_info = vk.VkMemoryAllocateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
+            allocationSize=requirements.size,
+            memoryTypeIndex=find_memory_type(
+                context,
+                requirements.memoryTypeBits,
+                vk_const(memory_properties)
+            )
+        )
+
+        memory = vk.vkAllocateMemory(context.device, alloc_info)
+
+        # Bind device memory to the image
+        vk.vkBindImageMemory(context.device, image, memory, 0)
+
+        return image, memory
+
+    @contextmanager
+    def map(self, context):
+        '''
+        Map this image to upload data in it.
+        This function is a context manager and must be called with `with`.
+        It return a python buffer and let you do what you want with it,
+        be careful!
+
+        *Parameters:*
+
+        - `context`: The `VulkContext`
+        '''
+        if not self.staging_memory:
+            msg = "Can't map this image, no staging memory"
+            logger.error(msg)
+            raise VulkError(msg)
+
+        format_size = vulkanconstant.VK_FORMAT_SIZE[self.format] / 8
+        image_size = (self.extent.width * self.extent.height *
+                      self.extent.depth * format_size)
+
+        try:
+            data = vk.vkMapMemory(context.device, self.staging_memory, 0,
+                                  image_size, 0)
+            yield data
+        finally:
+            vk.vkUnmapMemory(context.device, self.staging_memory)
+
+
+ImageSubresourceRange = namedtuple('ImageSubresourceRange',
+                                   ['aspect', 'base_miplevel', 'level_count',
+                                    'base_layer', 'layer_count'])
+ImageSubresourceRange.__doc__ = '''
+    `ImageSubresourceRange` object describes what the image's purpose is and
+    which part of the image should be accessed.
+
+    *Parameters:*
+
+    - `aspect`: `VkImageAspectFlags` indicating which aspect(s) of the
+                image are included in the view
+    - `base_miplevel`: The first mipmap level accessible to the view
+    - `level_count`: Number of mipmap levels (starting from base_miplevel)
+                     accessible to the view
+    - `base_layer`: First array layer accessible to the view
+    - `layer_count`: Number of array layers (starting from base_layer)
+                     accessible to the view
+    '''
+
+
+class ImageView():
+    '''
+    An image view is quite literally a view into an image.
+    It describes how to access the image and which part of the image
+    to access, for example if it should be treated as a 2D texture depth
+    texture without any mipmapping levels.
+    '''
+
+    def __init__(self, context, image, view_type, format, subresource_range,
+                 swizzle_r='VK_COMPONENT_SWIZZLE_IDENTITY',
+                 swizzle_g='VK_COMPONENT_SWIZZLE_IDENTITY',
+                 swizzle_b='VK_COMPONENT_SWIZZLE_IDENTITY',
+                 swizzle_a='VK_COMPONENT_SWIZZLE_IDENTITY'):
+        '''Create ImageView
+
+        *Parameters:*
+
+        - `context`: The `VulkContext`
+        - `image`: The `Image` to work on
+        - `view_type`: `VkImageViewType` Vulkan constant
+        - `format`: `VkFormat` Vulkan constant
+        - `subresource_range`: The `ImageSubresourceRange` to use
+        - `swizzle_r`: Swizzle of the red color channel
+        - `swizzle_g`: Swizzle of the green color channel
+        - `swizzle_b`: Swizzle of the blue color channel
+        - `swizzle_a`: Swizzle of the alpha color channel
+        '''
+        components = vk.VkComponentMapping(
+            r=vk_const(swizzle_r), g=vk_const(swizzle_g),
+            b=vk_const(swizzle_b), a=vk_const(swizzle_a)
+        )
+
+        imageview_create = vk.VkImageViewCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+            flags=0,
+            image=image,
+            viewType=view_type,
+            format=format,
+            components=components,
+            subresourceRange=subresource_range
+        )
+
+        self.imageview = vk.vkCreateImageView(context.device, imageview_create)
 
 
 class Framebuffer():
