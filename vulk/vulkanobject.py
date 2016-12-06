@@ -663,6 +663,7 @@ class Image():
     converted to vulk Image object. If the Image is created from VkImage,
     `staging_image`, `staging_memory` and `memory` are set to `None`.
     '''
+
     def __init__(self, *args, **kwargs):
         '''If only one non-named arg, we create from `VkImage`,
         else from parameters
@@ -888,7 +889,6 @@ class Framebuffer():
     def __init__(self, context, renderpass, attachments,
                  width, height, layers):
         '''
-
         *Parameters:*
 
         - `context`: The `VulkContext`
@@ -911,3 +911,104 @@ class Framebuffer():
 
         self.framebuffer = vk.vkCreateFramebuffer(context.device,
                                                   framebuffer_create)
+
+
+class CommandPool():
+    '''
+    Command pools manage the memory that is used to store the buffers and
+    command buffers are allocated from them.
+    '''
+
+    def __init__(self, context, queue_family_index, flags):
+        '''
+        *Parameters:*
+
+        - `context`: The `VulkContext`
+        - `queue_family_index`: Index of the queue family to use
+        - `flags`: `VkCommandPoolCreateFlags` Vulkan constant
+        '''
+        commandpool_create = vk.VkCommandPoolCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+            queueFamilyIndex=queue_family_index,
+            flags=vk_const(flags)
+        )
+
+        self.commandpool = vk.vkCreateCommandPool(context.device,
+                                                  commandpool_create)
+
+        def allocate_buffers(self, context, level, count):
+            '''
+            Allocate list of `CommandBuffer` from pool.
+
+            *Parameters:*
+
+            - `context`: The `VulkContext`
+            - `commandpool`: The source `CommandPool`
+            - `level`: `VkCommandBufferLevel` Vulkan constant
+            - `count`: Number of buffer to create
+
+            *Returns:*
+
+            `list` of `CommandBuffer`
+            '''
+            commandbuffers_create = vk.VkCommandBufferAllocateInfo(
+                sType=vk.VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+                commandPool=self.commandpool,
+                level=vk_const(level),
+                commandBufferCount=count
+            )
+
+            commandbuffers = vk.vkAllocateCommandBuffers(
+                self.device,
+                commandbuffers_create)
+
+            return [CommandBuffer(cb) for cb in commandbuffers]
+
+
+class CommandBuffer():
+    '''
+    Commands in Vulkan, like drawing operations and memory transfers, are not
+    executed directly using function calls. You have to record all of the
+    operations you want to perform in command buffer objects. The advantage of
+    this is that all of the hard work of setting up the drawing commands can
+    be done in advance and in multiple threads. After that, you just have to
+    tell Vulkan to execute the commands in the main loop.
+    '''
+
+    def __init__(self, commandbuffer):
+        '''
+        This object must be initialized with an existing `VkCommandBuffer`
+        because it is generated from `CommandPool`.
+
+        *Parameters:*
+
+        - `commandbuffer`: The `VkCommadBuffer`
+        '''
+        self.commandbuffer = commandbuffer
+        self.mapped = False
+
+    @contextmanager
+    def map(self, flags):
+        '''
+        Map this buffer to register command
+
+        *Parameters:*
+
+        - `flags`: `VkCommandBufferUsageFlags` Vulkan constant
+
+        **Todo: `pInheritanceInfo` must be implemented**
+        '''
+        commandbuffer_begin_create = vk.VkCommandBufferBeginInfo(
+            sType=vk.VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+            flags=vk_const(flags),
+            pInheritanceInfo=None
+        )
+        try:
+            vk.vkBeginCommandBuffer(
+                self.commandbuffer,
+                commandbuffer_begin_create)
+            self.mapped = True
+            yield self
+        finally:
+            vk.vkEndCommandBuffer(self.commandbuffer)
+            self.mapped = False
