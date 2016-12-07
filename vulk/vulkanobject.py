@@ -16,6 +16,7 @@ module.
 
 from collections import namedtuple
 from contextlib import contextmanager
+from functools import wraps
 import logging
 import vulkan as vk
 
@@ -642,6 +643,24 @@ class Pipeline():
                                                      1, pipeline_create)
 
 
+Offset2D = namedtuple('Offset2D', ['x', 'y'])
+Offset2D.__doc__ = '''
+    *Parameters:*
+
+    - `x`: x offset
+    - `y`: y offset
+    '''
+
+
+Extent2D = namedtuple('Extent2D', ['width', 'height'])
+Extent2D.__doc__ = '''
+    *Parameters:*
+
+    - `width`: Width
+    - `height`: Height
+    '''
+
+
 Extent3D = namedtuple('Extent3D', ['width', 'height', 'depth'])
 Extent3D.__doc__ = '''
     *Parameters:*
@@ -787,7 +806,7 @@ class Image():
         return image, memory
 
     @contextmanager
-    def map(self, context):
+    def bind(self, context):
         '''
         Map this image to upload data in it.
         This function is a context manager and must be called with `with`.
@@ -965,6 +984,29 @@ class CommandPool():
             return [CommandBuffer(cb) for cb in commandbuffers]
 
 
+def binded(f):
+    '''Decorator that check that self.binded is True'''
+    @wraps(f)
+    def wrapper(self, *args, **kwargs):
+        if not self.binded:
+            msg = "Command buffer must be binded to execute a command"
+            logger.error(msg)
+            raise VulkError(msg)
+        f(self, *args, **kwargs)
+    return wrapper
+
+
+Rect2D = namedtuple('Rect2d', ['offset', 'extent'])
+Rect2D.__doc__ = '''
+    2D surface with offset.
+
+    *Parameters:*
+
+    - `offset`: `Offset2D` object
+    - `extent`: `Extent2D` object
+    '''
+
+
 class CommandBuffer():
     '''
     Commands in Vulkan, like drawing operations and memory transfers, are not
@@ -973,6 +1015,9 @@ class CommandBuffer():
     this is that all of the hard work of setting up the drawing commands can
     be done in advance and in multiple threads. After that, you just have to
     tell Vulkan to execute the commands in the main loop.
+
+    Commands are executed directly from this class. The naming convention is
+    simple: `vkCmd[CommandName]` becomes `commandName`
     '''
 
     def __init__(self, commandbuffer):
@@ -985,12 +1030,12 @@ class CommandBuffer():
         - `commandbuffer`: The `VkCommadBuffer`
         '''
         self.commandbuffer = commandbuffer
-        self.mapped = False
+        self.binded = False
 
     @contextmanager
-    def map(self, flags):
+    def bind(self, flags):
         '''
-        Map this buffer to register command
+        Bind this buffer to register command.
 
         *Parameters:*
 
@@ -1007,8 +1052,111 @@ class CommandBuffer():
             vk.vkBeginCommandBuffer(
                 self.commandbuffer,
                 commandbuffer_begin_create)
-            self.mapped = True
+            self.binded = True
             yield self
         finally:
             vk.vkEndCommandBuffer(self.commandbuffer)
-            self.mapped = False
+            self.binded = False
+
+    @binded
+    def beginRenderPass(self, renderpass, framebuffer, renderarea,
+                        clears, contents):
+        '''
+        Begin a new renderpass
+
+        *Parameters:*
+
+        - `renderpass`: The `RenderPass` to begin an instance of
+        - `framebuffer`: The `Framebuffer` containing the attachments that
+                         are used with the render pass
+        - `renderarea`: `Rect2D` size to render
+        - `clears`:  `list` of `ClearValue` for each `Framebuffer`
+        - `contents`: `VkSubpassContents` Vulkan constant
+        '''
+        vk_renderarea = vk.VkRect2D(
+            offset=vk.VkOffset2D(
+                x=renderarea.offset.x,
+                y=renderarea.offset.y),
+            extent=vk.VkExtent2D(
+                width=renderarea.extent.width,
+                height=renderarea.extent.height)
+        )
+
+        renderpass_begin = vk.VkRenderPassBeginInfo(
+            sType=vk.VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+            renderPass=renderpass.renderpass,
+            framebuffer=framebuffer.framebuffer,
+            renderArea=vk_renderarea,
+            clearValueCount=len(clears),
+            pClearValues=clears
+        )
+
+        vk.vkCmdBeginRenderPass(self.commandbuffer, renderpass_begin,
+                                vk_const(contents))
+
+    @binded
+    def bindPipeline(self, pipeline,
+                     bind_point='VK_PIPELINE_BIND_POINT_GRAPHICS'):
+        '''
+        Bind the pipeline to this `CommandBuffer`.
+
+        *Parameters:*
+
+        - `pipeline`: The `Pipeline` to bind
+        - `bind_point`: `VkPipelineBindPoint` Vulkan constant
+                        (default to graphic)
+        '''
+        vk.vkCmdBindPipeline(self.commandbuffer, vk_const(bind_point),
+                             pipeline)
+
+    @binded
+    def draw(self, vertex_count, first_vertex,
+             instance_count=1, first_instance=0):
+        '''
+        Draw the vertice buffer.
+
+        When the command is executed, primitives are assembled using the
+        current primitive topology and vertexCount consecutive vertex indices
+        with the first vertexIndex value equal to firstVertex. The primitives
+        are drawn instanceCount times with instanceIndex starting with
+        firstInstance and increasing sequentially for each instance.
+        The assembled primitives execute the currently bound graphics pipeline.
+
+        *Parameters:*
+
+        - `vertex_count`: Number of vertices to draw
+        - `first_vertex`: Index of the first vertex to draw
+        - `instance_count`: Number of instance to draw (default: 1)
+        - `first_instance`: First instance to draw (default: 0)
+        '''
+        vk.vkCmdDraw(self.commandbuffer, vertex_count, instance_count,
+                     first_vertex, first_instance)
+
+    @binded
+    def endRenderPass(self):
+        '''End the current render pass'''
+        vk.vkCmdEndRenderPass(self.commandbuffer)
+
+
+class Semaphore():
+    '''
+    Semaphores are a synchronization primitive that can be used to insert a
+    dependency between batches submitted to queues. Semaphores have two
+    states - signaled and unsignaled. The state of a semaphore can be signaled
+    after execution of a batch of commands is completed. A batch can wait for
+    a semaphore to become signaled before it begins execution, and the
+    semaphore is also unsignaled before the batch begins execution.
+    '''
+
+    def __init__(self, context):
+        '''
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
+        semaphore_create = vk.VkSemaphoreCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
+            flags=0
+        )
+
+        self.semaphore = vk.vkCreateSemaphore(context.device, semaphore_create)
