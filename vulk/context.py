@@ -3,6 +3,12 @@
 This module contains class to create the SDL2 window and the Vulkan
 logical device and queues.
 The context will be then passed to the Application to use it.
+
+Vulk uses a specific way to interact with Vulkan that allow a good
+abstraction. Instead of performing the final drawing operation
+directly on the swapchain's images, Vulk performs all operations on
+custom images and framebuffer and finally just copy the result in the
+swapchain's image.
 """
 import ctypes
 import logging
@@ -627,6 +633,36 @@ class VulkContext():
             self.swapchain_images_views.append(
                  vk.vkCreateImageView(self.device, img_create))
 
+    def _create_commandbuffer(self):
+        '''Create the command buffer use to copy image'''
+        # Create pool
+        commandpool_create = vk.VkCommandPoolCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+            flags=0,
+            queueFamilyIndex=self.queue_family_indices['graphic']
+        )
+        commandpool = vk.vkCreateCommandPool(self.device, commandpool_create)
+
+        # Create one commend buffer
+        commandbuffer_create = vk.VkCommandBufferAllocateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+            commandPool=commandpool,
+            level=vk.VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+            commandBufferCount=1
+        )
+        self.commandbuffer = vk.vkAllocateCommandBuffers(
+            self.device, commandbuffer_create)[0]
+
+        # Register command buffer
+        commandbuffer_begin_create = vk.VkCommandBufferBeginInfo(
+            sType=vk.VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+            flags=0,
+            pInheritanceInfo=None
+        )
+        vk.vkBeginCommandBuffer(self.commandbuffer, commandbuffer_begin_create)
+        # TODO
+        vk.vkEndCommandBuffer(self.commandbuffer)
+
     def create(self, window, configuration):
         '''Create Vulkan context
 
@@ -645,3 +681,17 @@ class VulkContext():
         self._create_device(window, configuration)
         self._create_swapchain(configuration)
         self._create_swapchain_images_views()
+        self._create_commandbuffer()
+
+    def acquire_image(self, semaphore):
+        '''Return the index of the acquired image in swapchain
+
+        *Parameters:*
+
+        - `semaphore`: The semaphore to signal when the image is ready
+
+        **Note: `semaphore` is of type `vulkanobject.Semaphore`,
+                not `VkSemaphore`**
+        '''
+        return vk.vkAcquireNextImageKHR(self.device, self.swapchain,
+                                        vk.UINT64_MAX, semaphore.semaphore)

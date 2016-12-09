@@ -16,7 +16,6 @@ module.
 
 from collections import namedtuple
 from contextlib import contextmanager
-from functools import wraps
 import logging
 import vulkan as vk
 
@@ -691,7 +690,9 @@ class Image():
         self.image = None
         self.staging_memory = None
         self.memory = None
-        self.extent = None
+        self.format = None
+        self.width = None
+        self.height = None
 
         if args:
             self.image = args[0]
@@ -708,30 +709,32 @@ class Image():
         the image have the same properties.
 
         This method takes the same arguments as `_create_image` minus the
-        `memory_properties` parameter.
+        `memory_properties`, `usage` and `tiling` parameters.
         '''
-        p0 = vk.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT # noqa
-        p1 = vk.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
-
         # Create the staging image
         self.staging_image, self.staging_memory = self._create_image(
             **kwargs,
-            memory_properties=p0
+            tiling=vk.VK_IMAGE_TILING_LINEAR,
+            usage=vk.VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
+            memory_properties=vk.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT # noqa
         )
 
         # Create the final image
         self.image, self.memory = self._create_image(
             **kwargs,
-            memory_properties=p1
+            tiling=vk.VK_IMAGE_TILING_OPTIMAL,
+            usage=vk.VK_IMAGE_USAGE_TRANSFER_DST_BIT | vk.VK_IMAGE_USAGE_SAMPLED_BIT, # noqa
+            memory_properties=vk.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
         )
 
         # Set others properties
-        self.extent = kwargs['extent']
+        self.width = kwargs['extent'].width
+        self.height = kwargs['extent'].height
         self.format = vk_const(kwargs['format'])
 
     def _create_image(self, context, image_type, format, extent, mip_level,
-                      layers, samples, tiling, usage, sharing_mode,
-                      queue_families, layout, memory_properties):
+                      layers, samples, sharing_mode, queue_families, layout,
+                      tiling, usage, memory_properties):
         '''Create a new image
 
         Creating an image is made of several steps:
@@ -751,13 +754,13 @@ class Image():
         - `layers`: Number of layers (`int`)
         - `samples`: This `VkSampleCountFlagBits` flag is related
                      to multisampling
-        - `tiling`: `VkImageTiling`
-        - `usage`: `VkImageUsageFlags`
         - `sharing_mode`: `VkSharingMode`
         - `queue_families`: List of queue families accessing this image
                             (ignored if sharingMode is not
                             `VK_SHARING_MODE_CONCURRENT`) (can be [])
         - `layout`: `VkImageLayout`
+        - `tiling`: `VkImageTiling`
+        - `usage`: `VkImageUsageFlags`
         - `memory_properties`: `VkMemoryPropertyFlags` Vulkan constant
         '''
 
@@ -805,6 +808,175 @@ class Image():
 
         return image, memory
 
+    def _transition_layout(self, commandbuffer, image, old_layout,
+                           new_layout):
+        '''
+        Update the image layout.
+
+        *Parameters:*
+
+        - `commandbuffer`: `CommandBuffer` used to register commands
+        - `image`: The `VkImage`
+        - `old_layout`: `VkImageLayout`
+        - `new_layout`: `VkImageLayout`
+        '''
+        old_layout = vk_const(old_layout)
+        new_layout = vk_const(new_layout)
+
+        # Set access masks
+        if (old_layout == vk.VK_IMAGE_LAYOUT_PREINITIALIZED and
+           new_layout == vk.VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL):
+            src_mask = vk.VK_ACCESS_HOST_WRITE_BIT
+            dst_mask = vk.VK_ACCESS_TRANSFER_READ_BIT
+        elif (old_layout == vk.VK_IMAGE_LAYOUT_PREINITIALIZED and
+              new_layout == vk.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL):
+            src_mask = vk.VK_ACCESS_HOST_WRITE_BIT
+            dst_mask = vk.VK_ACCESS_TRANSFER_WRITE_BIT
+        elif (old_layout == vk.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL and
+              new_layout == vk.VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL):
+            src_mask = vk.VK_ACCESS_TRANSFER_WRITE_BIT
+            dst_mask = vk.VK_ACCESS_SHADER_READ_BIT
+        else:
+            msg = "Unsupported layout transition"
+            logger.error(msg)
+            raise VulkError(msg)
+
+        flags = 'VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT'
+        with commandbuffer.bind(flags) as cmd:
+            subresource_range = vk.VkImageSubresourceRange(
+                aspectMask=vk.VK_IMAGE_ASPECT_COLOR_BIT,
+                baseMipLevel=0,
+                levelCount=1,
+                baseArrayLayer=0,
+                layerCount=1
+            )
+
+            barrier = vk.VkImageMemoryBarrier(
+                sType=vk.VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
+                srcAccessMask=src_mask,
+                dstAccessMask=dst_mask,
+                oldLayout=old_layout,
+                newLayout=new_layout,
+                srcQueueFamilyIndex=vk.VK_QUEUE_FAMILY_IGNORED,
+                dstQueueFamilyIndex=vk.VK_QUEUE_FAMILY_IGNORED,
+                image=image,
+                subresourceRange=subresource_range
+            )
+
+            cmd.pipeline_barrier('VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT',
+                                 'VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT',
+                                 0, 0, 0, [barrier])
+
+    def _copy_image(self, commandbuffer, src_image, dst_image):
+        '''
+        Copy the staging image into the final image
+
+        *Parameters:*
+
+        - `commandbuffer`: `CommandBuffer` used to register commands
+        - `src_image`: `VkImage` source
+        - `dst_image`: `VkImage` destination
+        - `width`: Images width
+        - `height`: Images height
+        '''
+        flags = 'VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT'
+        with commandbuffer.bind(flags) as cmd:
+            subresource = vk.VkImageSubresourceLayers(
+                aspectMask=vk.VK_IMAGE_ASPECT_COLOR_BIT,
+                baseArrayLayer=0,
+                mipLevel=0,
+                layerCount=1
+            )
+            extent = vk.VkExtent3D(width=self.width, height=self.height,
+                                   depth=1)
+            region = vk.VkImageCopy(
+                srcSubresource=subresource,
+                dstSubresource=subresource,
+                srcOffset=vk.VkOffset3D(x=0, y=0, z=0),
+                dstOffset=vk.VkOffset3D(x=0, y=0, z=0),
+                extent=extent
+            )
+
+            cmd.copy_image(src_image, 'VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL',
+                           dst_image, 'VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL',
+                           [region])
+
+    def _finalize(self, context):
+        '''
+        Prepare and copy the staging image to the final image.
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
+        commandpool = CommandPool(
+            context, context.queue_family_indices['graphic'], 0)
+
+        # Transition the staging image to optimal source transfert layout
+        with self._manage_commandbuffer(commandpool) as cb:
+            self._transition_layout(cb, self.staging_image,
+                                    'VK_IMAGE_LAYOUT_PREINITIALIZED',
+                                    'VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL')
+
+        # Transition the final image to optimal destination transfert layout
+        with self._manage_commandbuffer(commandpool) as cb:
+            self._transition_layout(cb, self.image,
+                                    'VK_IMAGE_LAYOUT_PREINITIALIZED',
+                                    'VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL')
+
+        # Copy staging image into final image
+        with self._manage_commandbuffer(commandpool) as cb:
+            self._copy_images(cb, self.staging_image, self.image)
+
+        # Set the best layout for the final image
+        with self._manage_commandbuffer(commandpool) as cb:
+            self._transition_layout(
+                cb, self.image, 'VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL',
+                'VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL')
+
+    @contextmanager
+    def _manage_commandbuffer(self, context, commandpool):
+        '''
+        Manage creation and destruction of commandbuffer
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        - `commandpool`: `CommandPool`
+        '''
+        try:
+            commandbuffers = commandpool.allocate_buffers(
+                context, 'VK_COMMAND_BUFFER_LEVEL_PRIMARY', 1)
+            yield commandbuffers[0]
+        finally:
+            self._submit_commandbuffers(context, commandpool, commandbuffers)
+
+    def _submit_commandbuffers(self, context, commandpool, commandbuffers):
+        '''
+        Submit and free the commandbuffer.
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        - `commandpool`: `CommandPool`
+        - `commandbuffers`: `list` of `CommandBuffer` to submit
+        '''
+        submit = vk.VkSubmitInfo(
+            sType=vk.VK_STRUCTURE_TYPE_SUBMIT_INFO,
+            waitSemaphoreCount=0,
+            pWaitSemaphores=None,
+            pWaitDstStageMask=None,
+            commandBufferCount=len(commandbuffers),
+            pCommandBuffers=commandbuffers,
+            signalSemaphoreCount=0,
+            pSignalSemaphores=None
+        )
+
+        # TODO: submit must be an array (cvulkan bug!)
+        vk.vkQueueSubmit(context.graphic_queue, 1, submit, None)
+        vk.vkQueueWaitIdle(context.graphic_queue)
+        commandpool.free_buffers(context, commandbuffers)
+
     @contextmanager
     def bind(self, context):
         '''
@@ -832,6 +1004,7 @@ class Image():
             yield data
         finally:
             vk.vkUnmapMemory(context.device, self.staging_memory)
+            self._finalize(context)
 
 
 ImageSubresourceRange = namedtuple('ImageSubresourceRange',
@@ -952,48 +1125,61 @@ class CommandPool():
             flags=vk_const(flags)
         )
 
+        # The Vulkan command pool
         self.commandpool = vk.vkCreateCommandPool(context.device,
                                                   commandpool_create)
+        # Command buffers allocated from this pool
+        self.commandbuffers = []
 
-        def allocate_buffers(self, context, level, count):
-            '''
-            Allocate list of `CommandBuffer` from pool.
+    def allocate_buffers(self, context, level, count):
+        '''
+        Allocate list of `CommandBuffer` from pool.
 
-            *Parameters:*
+        *Parameters:*
 
-            - `context`: The `VulkContext`
-            - `commandpool`: The source `CommandPool`
-            - `level`: `VkCommandBufferLevel` Vulkan constant
-            - `count`: Number of buffer to create
+        - `context`: The `VulkContext`
+        - `commandpool`: The source `CommandPool`
+        - `level`: `VkCommandBufferLevel` Vulkan constant
+        - `count`: Number of buffer to create
 
-            *Returns:*
+        *Returns:*
 
-            `list` of `CommandBuffer`
-            '''
-            commandbuffers_create = vk.VkCommandBufferAllocateInfo(
-                sType=vk.VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
-                commandPool=self.commandpool,
-                level=vk_const(level),
-                commandBufferCount=count
-            )
+        `list` of `CommandBuffer`
+        '''
+        commandbuffers_create = vk.VkCommandBufferAllocateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+            commandPool=self.commandpool,
+            level=vk_const(level),
+            commandBufferCount=count
+        )
 
-            commandbuffers = vk.vkAllocateCommandBuffers(
-                self.device,
-                commandbuffers_create)
+        vk_commandbuffers = vk.vkAllocateCommandBuffers(
+            context.device,
+            commandbuffers_create)
 
-            return [CommandBuffer(cb) for cb in commandbuffers]
+        commandbuffers = [CommandBuffer(cb) for cb in vk_commandbuffers]
+        self.commandbuffers.extend(commandbuffers)
 
+        return commandbuffers
 
-def binded(f):
-    '''Decorator that check that self.binded is True'''
-    @wraps(f)
-    def wrapper(self, *args, **kwargs):
-        if not self.binded:
-            msg = "Command buffer must be binded to execute a command"
+    def free_buffers(self, context, buffers):
+        '''
+        Free list of `CommandBuffer` allocated from this pool.
+
+        *Parameters:*
+
+        - `context`: The `VulkContext`
+        - `buffers`: `list` of `CommandBuffer` to free
+        '''
+        if any([b not in self.commandbuffers for b in buffers]):
+            msg = "Can't free a commandbuffer not allocated by this pool"
             logger.error(msg)
             raise VulkError(msg)
-        f(self, *args, **kwargs)
-    return wrapper
+
+        vk.vkFreeCommandBuffers(
+            context.device, self.commandpool, len(buffers),
+            [b.commandbuffer for b in buffers]
+        )
 
 
 Rect2D = namedtuple('Rect2d', ['offset', 'extent'])
@@ -1016,8 +1202,9 @@ class CommandBuffer():
     be done in advance and in multiple threads. After that, you just have to
     tell Vulkan to execute the commands in the main loop.
 
-    Commands are executed directly from this class. The naming convention is
-    simple: `vkCmd[CommandName]` becomes `commandName`
+    Commands are executed directly from the `CommandBufferRegister` subclass.
+    The naming convention is simple:
+    `vkCmd[CommandName]` becomes `command_name`
     '''
 
     def __init__(self, commandbuffer):
@@ -1030,7 +1217,6 @@ class CommandBuffer():
         - `commandbuffer`: The `VkCommadBuffer`
         '''
         self.commandbuffer = commandbuffer
-        self.binded = False
 
     @contextmanager
     def bind(self, flags):
@@ -1052,90 +1238,138 @@ class CommandBuffer():
             vk.vkBeginCommandBuffer(
                 self.commandbuffer,
                 commandbuffer_begin_create)
-            self.binded = True
-            yield self
+            yield CommandBuffer.CommandBufferRegister(self.commandbuffer)
         finally:
             vk.vkEndCommandBuffer(self.commandbuffer)
-            self.binded = False
 
-    @binded
-    def beginRenderPass(self, renderpass, framebuffer, renderarea,
-                        clears, contents):
-        '''
-        Begin a new renderpass
+    class CommandBufferRegister():
+        '''Allow to call command on command buffer when binding is done'''
+        def __init__(self, commandbuffer):
+            '''
+            *Parameters:*
 
-        *Parameters:*
+            - `commandbuffer`: The `VkCommandBuffer`
+            '''
+            self.commandbuffer = commandbuffer
 
-        - `renderpass`: The `RenderPass` to begin an instance of
-        - `framebuffer`: The `Framebuffer` containing the attachments that
-                         are used with the render pass
-        - `renderarea`: `Rect2D` size to render
-        - `clears`:  `list` of `ClearValue` for each `Framebuffer`
-        - `contents`: `VkSubpassContents` Vulkan constant
-        '''
-        vk_renderarea = vk.VkRect2D(
-            offset=vk.VkOffset2D(
-                x=renderarea.offset.x,
-                y=renderarea.offset.y),
-            extent=vk.VkExtent2D(
-                width=renderarea.extent.width,
-                height=renderarea.extent.height)
-        )
+        def begin_renderpass(self, renderpass, framebuffer, renderarea,
+                             clears, contents):
+            '''
+            Begin a new renderpass
 
-        renderpass_begin = vk.VkRenderPassBeginInfo(
-            sType=vk.VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
-            renderPass=renderpass.renderpass,
-            framebuffer=framebuffer.framebuffer,
-            renderArea=vk_renderarea,
-            clearValueCount=len(clears),
-            pClearValues=clears
-        )
+            *Parameters:*
 
-        vk.vkCmdBeginRenderPass(self.commandbuffer, renderpass_begin,
-                                vk_const(contents))
+            - `renderpass`: The `RenderPass` to begin an instance of
+            - `framebuffer`: The `Framebuffer` containing the attachments that
+                             are used with the render pass
+            - `renderarea`: `Rect2D` size to render
+            - `clears`:  `list` of `ClearValue` for each `Framebuffer`
+            - `contents`: `VkSubpassContents` Vulkan constant
+            '''
+            vk_renderarea = vk.VkRect2D(
+                offset=vk.VkOffset2D(
+                    x=renderarea.offset.x,
+                    y=renderarea.offset.y),
+                extent=vk.VkExtent2D(
+                    width=renderarea.extent.width,
+                    height=renderarea.extent.height)
+            )
 
-    @binded
-    def bindPipeline(self, pipeline,
-                     bind_point='VK_PIPELINE_BIND_POINT_GRAPHICS'):
-        '''
-        Bind the pipeline to this `CommandBuffer`.
+            renderpass_begin = vk.VkRenderPassBeginInfo(
+                sType=vk.VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+                renderPass=renderpass.renderpass,
+                framebuffer=framebuffer.framebuffer,
+                renderArea=vk_renderarea,
+                clearValueCount=len(clears),
+                pClearValues=clears
+            )
 
-        *Parameters:*
+            vk.vkCmdBeginRenderPass(self.commandbuffer, renderpass_begin,
+                                    vk_const(contents))
 
-        - `pipeline`: The `Pipeline` to bind
-        - `bind_point`: `VkPipelineBindPoint` Vulkan constant
-                        (default to graphic)
-        '''
-        vk.vkCmdBindPipeline(self.commandbuffer, vk_const(bind_point),
-                             pipeline)
+        def bind_pipeline(self, pipeline,
+                          bind_point='VK_PIPELINE_BIND_POINT_GRAPHICS'):
+            '''
+            Bind the pipeline to this `CommandBuffer`.
 
-    @binded
-    def draw(self, vertex_count, first_vertex,
-             instance_count=1, first_instance=0):
-        '''
-        Draw the vertice buffer.
+            *Parameters:*
 
-        When the command is executed, primitives are assembled using the
-        current primitive topology and vertexCount consecutive vertex indices
-        with the first vertexIndex value equal to firstVertex. The primitives
-        are drawn instanceCount times with instanceIndex starting with
-        firstInstance and increasing sequentially for each instance.
-        The assembled primitives execute the currently bound graphics pipeline.
+            - `pipeline`: The `Pipeline` to bind
+            - `bind_point`: `VkPipelineBindPoint` Vulkan constant
+                            (default to graphic)
+            '''
+            vk.vkCmdBindPipeline(self.commandbuffer, vk_const(bind_point),
+                                 pipeline)
 
-        *Parameters:*
+        def draw(self, vertex_count, first_vertex,
+                 instance_count=1, first_instance=0):
+            '''
+            Draw the vertice buffer.
 
-        - `vertex_count`: Number of vertices to draw
-        - `first_vertex`: Index of the first vertex to draw
-        - `instance_count`: Number of instance to draw (default: 1)
-        - `first_instance`: First instance to draw (default: 0)
-        '''
-        vk.vkCmdDraw(self.commandbuffer, vertex_count, instance_count,
-                     first_vertex, first_instance)
+            When the command is executed, primitives are assembled using the
+            current primitive topology and vertexCount consecutive vertex
+            indices with the first vertexIndex value equal to firstVertex.
+            The primitives are drawn instanceCount times with instanceIndex
+            starting with firstInstance and increasing sequentially for each
+            instance. The assembled primitives execute the currently bound
+            graphics pipeline.
 
-    @binded
-    def endRenderPass(self):
-        '''End the current render pass'''
-        vk.vkCmdEndRenderPass(self.commandbuffer)
+            *Parameters:*
+
+            - `vertex_count`: Number of vertices to draw
+            - `first_vertex`: Index of the first vertex to draw
+            - `instance_count`: Number of instance to draw (default: 1)
+            - `first_instance`: First instance to draw (default: 0)
+            '''
+            vk.vkCmdDraw(self.commandbuffer, vertex_count, instance_count,
+                         first_vertex, first_instance)
+
+        def pipeline_barrier(self, src_stage, dst_stage, dependency, memories,
+                             buffers, images):
+            '''
+            Insert a memory dependency
+
+            *Parameters:*
+
+            - `src_stage`: `VkPipelineStageFlags` Vulkan constant
+            - `dst_stage`: `VkPipelineStageFlags` Vulkan constant
+            - `dependency`: `VkDependencyFlags` Vulkan constant
+            - `memories`: `list` of `VkMemoryBarrier` Vulkan objects
+            - `buffers`: `list` of `VkBufferMemoryBarrier` Vulkan objects
+            - `images`: `list` of `VkImageMemoryBarrier` Vulkan objects
+            '''
+            vk_memories = memories if memories else None
+            vk_buffers = buffers if buffers else None
+            vk_images = images if images else None
+            vk.vkCmdPipelineBarrier(
+                self.commandbuffer, vk_const(src_stage), vk_const(dst_stage),
+                vk_const(dependency), len(memories), vk_memories,
+                len(buffers), vk_buffers, len(images), vk_images
+            )
+
+        def copy_image(self, src_image, src_layout, dst_image,
+                       dst_layout, regions):
+            '''
+            Copy data between images
+
+            *Parameters:*
+
+            - `src_image`: `VkImage`
+            - `src_layout`: `VkImageLayout`
+            - `dst_image`: `VkImage`
+            - `dst_layout`: `VkImageLayout`
+            - `regions`: `list` of `VkImageCopy`
+
+            **Note: `VkImage` is raw Vulkan object, not vulk `Image`**
+            '''
+            vk.vkCmdCopyImage(
+                self.commandbuffer, src_image, vk_const(src_layout), dst_image,
+                vk_const(dst_layout), len(regions), regions
+            )
+
+        def end_renderpass(self):
+            '''End the current render pass'''
+            vk.vkCmdEndRenderPass(self.commandbuffer)
 
 
 class Semaphore():
