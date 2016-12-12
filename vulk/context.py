@@ -486,12 +486,11 @@ class VulkContext():
         logger.debug("%s device selected"
                      % self.physical_device_properties.deviceName)
 
-    def _create_device(self, window, configuration):
+    def _create_device(self, configuration):
         '''Create Vulkan logical device
 
         *Parameters:*
 
-        - `window`: The window for Vulkan
         - `configuration`: Configuration from Application
         '''
         extensions = VulkContext._get_device_extensions(self.physical_device)
@@ -678,7 +677,7 @@ class VulkContext():
         self._create_debug_callback(configuration)
         self._create_surface(window.info)
         self._create_physical_device()
-        self._create_device(window, configuration)
+        self._create_device(configuration)
         self._create_swapchain(configuration)
         self._create_swapchain_images_views()
         self._create_commandbuffer()
