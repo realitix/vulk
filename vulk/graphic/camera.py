@@ -35,7 +35,6 @@ class PerspectiveCamera(Camera):
         aspect = self.viewport_width / self.viewport_height
         self.projection.to_projection(abs(self.near), abs(self.far),
                                       self.fov, aspect)
-        self.view.to_look_at(self.position,
-                             Vector3().set(self.position).add(self.direction),
+        self.view.to_look_at(Vector3().set(self.position).add(self.direction),
                              self.up)
         self.combined.set(self.projection).mul(self.view)
