@@ -128,7 +128,7 @@ class Matrix4(Matrix):
         self.to_look_at(tmp_v, up)
 
         tmp_m = Matrix4()
-        tmp_m.to_translation(-position.x, -position.y, -position.z)
+        tmp_m.to_translation(Vector3(-position.x, -position.y, -position.z))
         return self.mul(tmp_m)
 
     def to_translation(self, vector):
