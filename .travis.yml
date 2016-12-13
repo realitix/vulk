@@ -19,7 +19,7 @@ install:
 script:
 #- py.test .
   - flake8 vulk
-#- pylint vulk
+  - pylint vulk
 
 deploy:
   provider: script
