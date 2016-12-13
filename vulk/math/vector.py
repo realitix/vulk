@@ -119,6 +119,9 @@ class Vector():
         self.coordinates = value
         return self
 
+    def add(self, value):
+        return self.__add__(value)
+
     def sub(self, value):
         return self.__sub__(value)
 
