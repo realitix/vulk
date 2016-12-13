@@ -615,7 +615,9 @@ class VulkContext():
 
     def _create_commandbuffers(self):
         '''Create the command buffers used to copy image'''
-        commandpool = CommandPool(self, self.queue_family_indices['graphic'])
+        commandpool = CommandPool(self,
+                                  self.queue_family_indices['graphic'],
+                                  0)
         self.commandbuffers = commandpool.allocate_buffers(
             self, 'VK_COMMAND_BUFFER_LEVEL_PRIMARY',
             len(self.swapchain_images))
