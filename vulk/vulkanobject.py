@@ -931,21 +931,21 @@ class HighPerformanceImage():
             context, context.queue_family_indices['graphic'], 0)
 
         # Transition the staging image to optimal source transfert layout
-        with self._manage_commandbuffer(commandpool) as cb:
+        with self._manage_commandbuffer(context, commandpool) as cb:
             self.staging_image.update_layout(
                 cb, 'VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL')
 
         # Transition the final image to optimal destination transfert layout
-        with self._manage_commandbuffer(commandpool) as cb:
+        with self._manage_commandbuffer(context, commandpool) as cb:
             self.texture_image.update_layout(
                 cb, 'VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL')
 
         # Copy staging image into final image
-        with self._manage_commandbuffer(commandpool) as cb:
+        with self._manage_commandbuffer(context, commandpool) as cb:
             self.staging_image.copy_to(cb, self.texture_image)
 
         # Set the best layout for the final image
-        with self._manage_commandbuffer(commandpool) as cb:
+        with self._manage_commandbuffer(context, commandpool) as cb:
             self.texture_image.update_layout(
                 cb, 'VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL')
 
