@@ -146,7 +146,7 @@ class Matrix4(Matrix):
         mb = matrix.values
         m = Matrix4.M
 
-        for key in Matrix4.M.viewkeys():
+        for key in Matrix4.M.keys():
             k0 = key // 10
             k1 = key % 10
             tmp.values[key] = (ma[m[k0]] * mb[m[k1]] +
