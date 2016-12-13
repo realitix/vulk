@@ -757,19 +757,25 @@ class Image():
         # Bind device memory to the image
         vk.vkBindImageMemory(context.device, self.image, self.memory, 0)
 
-    def update_layout(self, commandbuffer, new_layout):
+    def update_layout(self, cmd, new_layout):
         '''
         Update the image layout.
         Command to update layout are registered in the commandbuffer
-        but it's up to you to submit the command buffer to the execution
-        queue. You should use buffer specifically created for this function.
+        but it's up to you to start and submit the command buffer to
+        the execution queue.
 
         *Parameters:*
 
-        - `commandbuffer`: `CommandBuffer` used to register commands
+        - `cmd`: `CommandBufferRegister` used to register commands
         - `new_layout`: `VkImageLayout`
         '''
         new_layout = vk_const(new_layout)
+
+        if new_layout == self.layout:
+            msg = ("Don't need to update layout, old layout is the "
+                   "same as the new layout")
+            logger.info(msg)
+            return
 
         # Set access masks
         if (self.layout == vk.VK_IMAGE_LAYOUT_PREINITIALIZED and
@@ -789,44 +795,41 @@ class Image():
             logger.error(msg)
             raise VulkError(msg)
 
-        flags = 'VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT'
-        with commandbuffer.bind(flags) as cmd:
-            subresource_range = vk.VkImageSubresourceRange(
-                aspectMask=vk.VK_IMAGE_ASPECT_COLOR_BIT,
-                baseMipLevel=0,
-                levelCount=1,
-                baseArrayLayer=0,
-                layerCount=1
-            )
+        subresource_range = vk.VkImageSubresourceRange(
+            aspectMask=vk.VK_IMAGE_ASPECT_COLOR_BIT,
+            baseMipLevel=0,
+            levelCount=1,
+            baseArrayLayer=0,
+            layerCount=1
+        )
 
-            barrier = vk.VkImageMemoryBarrier(
-                sType=vk.VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
-                srcAccessMask=src_mask,
-                dstAccessMask=dst_mask,
-                oldLayout=self.layout,
-                newLayout=new_layout,
-                srcQueueFamilyIndex=vk.VK_QUEUE_FAMILY_IGNORED,
-                dstQueueFamilyIndex=vk.VK_QUEUE_FAMILY_IGNORED,
-                image=self.image,
-                subresourceRange=subresource_range
-            )
+        barrier = vk.VkImageMemoryBarrier(
+            sType=vk.VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
+            srcAccessMask=src_mask,
+            dstAccessMask=dst_mask,
+            oldLayout=self.layout,
+            newLayout=new_layout,
+            srcQueueFamilyIndex=vk.VK_QUEUE_FAMILY_IGNORED,
+            dstQueueFamilyIndex=vk.VK_QUEUE_FAMILY_IGNORED,
+            image=self.image,
+            subresourceRange=subresource_range
+        )
 
-            cmd.pipeline_barrier('VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT',
-                                 'VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT',
-                                 0, 0, 0, [barrier])
+        cmd.pipeline_barrier('VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT',
+                             'VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT',
+                             0, 0, 0, [barrier])
 
         self.layout = new_layout
 
-    def copy_to(self, commandbuffer, dst_image):
+    def copy_to(self, cmd, dst_image):
         '''
         Copy this image to the destination image.
         Commands to copy are registered in the commandbuffer but it's up to
-        you to submit the command buffer to the execution queue.
-        You should use buffer specifically created for this function.
+        you to start and submit the command buffer to the execution queue.
 
         *Parameters:*
 
-        - `commandbuffer`: `CommandBuffer` used to register commands
+        - `cmd`: `CommandBufferRegister` used to register commands
         - `dst_image`: Destination `Image`
 
         **Note: Layout of source image should be `TRANSFERT_SRC_OPTIMAL` and
@@ -834,26 +837,24 @@ class Image():
 
         **Warning: Format of both images must be compatible**
         '''
-        flags = 'VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT'
-        with commandbuffer.bind(flags) as cmd:
-            subresource = vk.VkImageSubresourceLayers(
-                aspectMask=vk.VK_IMAGE_ASPECT_COLOR_BIT,
-                baseArrayLayer=0,
-                mipLevel=0,
-                layerCount=1
-            )
-            extent = vk.VkExtent3D(width=self.width, height=self.height,
-                                   depth=self.depth)
-            region = vk.VkImageCopy(
-                srcSubresource=subresource,
-                dstSubresource=subresource,
-                srcOffset=vk.VkOffset3D(x=0, y=0, z=0),
-                dstOffset=vk.VkOffset3D(x=0, y=0, z=0),
-                extent=extent
-            )
+        subresource = vk.VkImageSubresourceLayers(
+            aspectMask=vk.VK_IMAGE_ASPECT_COLOR_BIT,
+            baseArrayLayer=0,
+            mipLevel=0,
+            layerCount=1
+        )
+        extent = vk.VkExtent3D(width=self.width, height=self.height,
+                               depth=self.depth)
+        region = vk.VkImageCopy(
+            srcSubresource=subresource,
+            dstSubresource=subresource,
+            srcOffset=vk.VkOffset3D(x=0, y=0, z=0),
+            dstOffset=vk.VkOffset3D(x=0, y=0, z=0),
+            extent=extent
+        )
 
-            cmd.copy_image(self.image, self.layout, dst_image.image,
-                           dst_image.layout, [region])
+        cmd.copy_image(self.image, self.layout, dst_image.image,
+                       dst_image.layout, [region])
 
     @contextmanager
     def bind(self, context):
@@ -904,6 +905,25 @@ class HighPerformanceImage():
     def __init__(self, context, image_type, format, width, height,
                  depth, mip_level, layers, samples, sharing_mode,
                  queue_families):
+        '''Create a high performance image
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        - `image_type`: Type of image 1D/2D/3D (`VkImageType`)
+        - `format`: `VkFormat` of the image
+        - `width`: Image width
+        - `heigth`: Image height
+        - `depth`: Image depth
+        - `mip_level`: Level of mip (`int`)
+        - `layers`: Number of layers (`int`)
+        - `samples`: This `VkSampleCountFlagBits` flag is related
+                     to multisampling
+        - `sharing_mode`: `VkSharingMode`
+        - `queue_families`: List of queue families accessing this image
+                            (ignored if sharingMode is not
+                            `VK_SHARING_MODE_CONCURRENT`) (can be [])
+        '''
         self.staging_image = Image(
             context, image_type, format, width, height, depth, mip_level,
             layers, samples, sharing_mode, queue_families,
@@ -931,23 +951,23 @@ class HighPerformanceImage():
             context, context.queue_family_indices['graphic'], 0)
 
         # Transition the staging image to optimal source transfert layout
-        with self._manage_commandbuffer(context, commandpool) as cb:
+        with self._manage_commandbuffer(context, commandpool) as cmd:
             self.staging_image.update_layout(
-                cb, 'VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL')
+                cmd, 'VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL')
 
         # Transition the final image to optimal destination transfert layout
-        with self._manage_commandbuffer(context, commandpool) as cb:
+        with self._manage_commandbuffer(context, commandpool) as cmd:
             self.texture_image.update_layout(
-                cb, 'VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL')
+                cmd, 'VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL')
 
         # Copy staging image into final image
-        with self._manage_commandbuffer(context, commandpool) as cb:
-            self.staging_image.copy_to(cb, self.texture_image)
+        with self._manage_commandbuffer(context, commandpool) as cmd:
+            self.staging_image.copy_to(cmd, self.texture_image)
 
         # Set the best layout for the final image
-        with self._manage_commandbuffer(context, commandpool) as cb:
+        with self._manage_commandbuffer(context, commandpool) as cmd:
             self.texture_image.update_layout(
-                cb, 'VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL')
+                cmd, 'VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL')
 
     @contextmanager
     def _manage_commandbuffer(self, context, commandpool):
@@ -962,7 +982,9 @@ class HighPerformanceImage():
         try:
             commandbuffers = commandpool.allocate_buffers(
                 context, 'VK_COMMAND_BUFFER_LEVEL_PRIMARY', 1)
-            yield commandbuffers[0]
+            flags = 'VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT'
+            with commandbuffers[0].bind(flags) as cmd:
+                yield cmd
         finally:
             submit = vk.VkSubmitInfo(
                 sType=vk.VK_STRUCTURE_TYPE_SUBMIT_INFO,
@@ -982,8 +1004,17 @@ class HighPerformanceImage():
 
     @contextmanager
     def bind(self, context):
+        '''Bind image for writing
+
+        It calls `bind` method of the staging image and copy the image
+        when the contextmanager is released. Must be used with `with`.
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
         try:
-            with super().bind(context) as b:
+            with self.staging_image.bind(context) as b:
                 yield b
         finally:
             self._finalize(context)

@@ -17,6 +17,7 @@ import sdl2.ext
 import vulkan as vk
 
 from vulk.exception import VulkError
+from vulk.vulkanobject import CommandPool, Image
 
 logger = logging.getLogger()
 ENGINE_NAME = "Vulk 3D Engine"
@@ -110,8 +111,8 @@ class VulkContext():
         self.swapchain_extent = None
         # Swapchain format
         self.swapchain_format = None
-        # Swapchain image views
-        self.swapchain_images_views = None
+        # Final image which is copied into swapchain image
+        self.final_image = None
 
     @staticmethod
     def _get_instance_extensions(window, configuration):
@@ -592,7 +593,7 @@ class VulkContext():
             imageColorSpace=surface_format.colorSpace,
             imageExtent=extent,
             imageArrayLayers=1,
-            imageUsage=vk.VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+            imageUsage=vk.VK_IMAGE_USAGE_TRANSFER_DST_BIT,
             imageSharingMode=sharing_mode,
             queueFamilyIndexCount=len(queue_family_indices),
             pQueueFamilyIndices=queue_family_indices,
@@ -612,55 +613,56 @@ class VulkContext():
         logger.debug("Swapchain created with %s images",
                      len(self.swapchain_images))
 
-    def _create_swapchain_images_views(self):
-        '''Create all views of swapchain images
-        '''
-        self.swapchain_images_views = []
-        for img in self.swapchain_images:
-            subresource_range = vk.VkImageSubresourceRange(
-                vk.VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1)
-            components = vk.VkComponentMapping(
-                vk.VK_COMPONENT_SWIZZLE_IDENTITY,
-                vk.VK_COMPONENT_SWIZZLE_IDENTITY,
-                vk.VK_COMPONENT_SWIZZLE_IDENTITY,
-                vk.VK_COMPONENT_SWIZZLE_IDENTITY)
-            img_create = vk.VkImageViewCreateInfo(
-                vk.VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO, 0, img,
-                vk.VK_IMAGE_VIEW_TYPE_2D, self.swapchain_format, components,
-                subresource_range)
+    def _create_commandbuffers(self):
+        '''Create the command buffers used to copy image'''
+        commandpool = CommandPool(self, self.queue_family_indices['graphic'])
+        self.commandbuffers = commandpool.allocate_buffers(
+            self, 'VK_COMMAND_BUFFER_LEVEL_PRIMARY',
+            len(self.swapchain_images))
 
-            self.swapchain_images_views.append(
-                 vk.vkCreateImageView(self.device, img_create))
-
-    def _create_commandbuffer(self):
-        '''Create the command buffer use to copy image'''
-        # Create pool
-        commandpool_create = vk.VkCommandPoolCreateInfo(
-            sType=vk.VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
-            flags=0,
-            queueFamilyIndex=self.queue_family_indices['graphic']
+        # Parameters for copy command
+        subresource = vk.VkImageSubresourceLayers(
+            aspectMask=vk.VK_IMAGE_ASPECT_COLOR_BIT,
+            baseArrayLayer=0,
+            mipLevel=0,
+            layerCount=1
         )
-        commandpool = vk.vkCreateCommandPool(self.device, commandpool_create)
-
-        # Create one commend buffer
-        commandbuffer_create = vk.VkCommandBufferAllocateInfo(
-            sType=vk.VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
-            commandPool=commandpool,
-            level=vk.VK_COMMAND_BUFFER_LEVEL_PRIMARY,
-            commandBufferCount=1
+        extent = vk.VkExtent3D(width=self.width, height=self.height,
+                               depth=1)
+        region = vk.VkImageCopy(
+            srcSubresource=subresource,
+            dstSubresource=subresource,
+            srcOffset=vk.VkOffset3D(x=0, y=0, z=0),
+            dstOffset=vk.VkOffset3D(x=0, y=0, z=0),
+            extent=extent
         )
-        self.commandbuffer = vk.vkAllocateCommandBuffers(
-            self.device, commandbuffer_create)[0]
 
-        # Register command buffer
-        commandbuffer_begin_create = vk.VkCommandBufferBeginInfo(
-            sType=vk.VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
-            flags=0,
-            pInheritanceInfo=None
+        for i, commandbuffer in enumerate(self.commandbuffers):
+            with commandbuffer as cmd:
+                self.final_image.update_layout(
+                    cmd, 'VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL')
+
+                cmd.copy_image(
+                    self.final_image.image,
+                    'VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL',
+                    self.swapchain_images[i],
+                    'VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL',
+                    [region]
+                )
+
+                self.final_image.update_layout(
+                    cmd, 'VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL')
+
+    def _create_final_image(self):
+        usage = 'VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT', # noqa
+        self.final_image = Image(
+            self, 'VK_IMAGE_TYPE_2D', self.swapchain_format,
+            self.swapchain_extent.width, self.swapchain_extent.height,
+            self.swapchain_extent.depth, 1, 1, 'VK_SAMPLE_COUNT_1_BIT',
+            'VK_SHARING_MODE_EXCLUSIVE', [], 'VK_IMAGE_LAYOUT_UNDEFINED',
+            'VK_IMAGE_TILING_OPTIMAL', usage,
+            'VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT'
         )
-        vk.vkBeginCommandBuffer(self.commandbuffer, commandbuffer_begin_create)
-        # TODO
-        vk.vkEndCommandBuffer(self.commandbuffer)
 
     def create(self, window, configuration):
         '''Create Vulkan context
@@ -679,18 +681,46 @@ class VulkContext():
         self._create_physical_device()
         self._create_device(configuration)
         self._create_swapchain(configuration)
-        self._create_swapchain_images_views()
-        self._create_commandbuffer()
+        self._create_final_image()
+        self._create_commandbuffers()
 
-    def acquire_image(self, semaphore):
-        '''Return the index of the acquired image in swapchain
+    def swap(self):
+        '''Display final image on screen.
 
-        *Parameters:*
+        This function makes all the rendering work.
+        To proceed, it copies the `final_image` into the current swapchain
+        image previously acquired.
 
-        - `semaphore`: The semaphore to signal when the image is ready
-
-        **Note: `semaphore` is of type `vulkanobject.Semaphore`,
-                not `VkSemaphore`**
+        **Note: The final_image layout is automatically updated.
+                You need to use the final image as color attachment**
         '''
-        return vk.vkAcquireNextImageKHR(self.device, self.swapchain,
-                                        vk.UINT64_MAX, semaphore.semaphore)
+        # Acquire image
+        index = vk.vkAcquireNextImageKHR(
+            self.device, self.swapchain, vk.UINT64_MAX,
+            self._semaphore_available, None)
+
+        # Transfer final image to swapchain image
+        submit = vk.VkSubmitInfo(
+            sType=vk.VK_STRUCTURE_TYPE_SUBMIT_INFO,
+            waitSemaphoreCount=1,
+            pWaitSemaphores=[self._semaphore_available],
+            pWaitDstStageMask=[vk.VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT], # noqa
+            commandBufferCount=1,
+            pCommandBuffers=[self.commandbuffers[index]],
+            signalSemaphoreCount=1,
+            pSignalSemaphores=[self._semaphore_copied]
+        )
+        # TODO: submit should be an array
+        vk.vkQueueSubmit(self.graphic_queue, 1, submit, None)
+
+        # Present swapchain image on scree
+        present = vk.VkPresentInfoKHR(
+            sType=vk.VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+            waitSemaphoreCount=1,
+            pWaitSemaphores=[self._semaphore_copied],
+            swapchainCount=1,
+            pSwapchains=[self.swapchain],
+            pImageIndices=[index],
+            pResults=None
+        )
+        vk.vkQueuePresentKHR(self.present_queue, present)
