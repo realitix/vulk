@@ -134,9 +134,9 @@ class Matrix4(Matrix):
     def to_translation(self, vector):
         self.idt()
 
-        self.values[Matrix4.M03] = vector.x
-        self.values[Matrix4.M13] = vector.y
-        self.values[Matrix4.M23] = vector.z
+        self.values[Matrix4.M[3]] = vector.x
+        self.values[Matrix4.M[13]] = vector.y
+        self.values[Matrix4.M[23]] = vector.z
 
         return self
 

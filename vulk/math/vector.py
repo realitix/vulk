@@ -194,15 +194,15 @@ class Vector3(Vector):
         x = self.x
         y = self.y
         z = self.z
-        w = 1 / (x * c[Matrix4.M30] + y * c[Matrix4.M31] +
-                 z * c[Matrix4.M32] + c[Matrix4.M33])
+        w = 1 / (x * c[Matrix4.M[30]] + y * c[Matrix4.M[31]] +
+                 z * c[Matrix4.M[32]] + c[Matrix4.M[33]])
 
-        self.x = (x * c[Matrix4.M00] + y * c[Matrix4.M01] +
-                  z * c[Matrix4.M02] + c[Matrix4.M03]) * w
-        self.y = (x * c[Matrix4.M10] + y * c[Matrix4.M11] +
-                  z * c[Matrix4.M12] + c[Matrix4.M13]) * w
-        self.z = (x * c[Matrix4.M20] + y * c[Matrix4.M21] +
-                  z * c[Matrix4.M22] + c[Matrix4.M23]) * w
+        self.x = (x * c[Matrix4.M[0]] + y * c[Matrix4.M[1]] +
+                  z * c[Matrix4.M[2]] + c[Matrix4.M[3]]) * w
+        self.y = (x * c[Matrix4.M[10]] + y * c[Matrix4.M[11]] +
+                  z * c[Matrix4.M[12]] + c[Matrix4.M[13]]) * w
+        self.z = (x * c[Matrix4.M[20]] + y * c[Matrix4.M[21]] +
+                  z * c[Matrix4.M[22]] + c[Matrix4.M[23]]) * w
 
         return self
 
