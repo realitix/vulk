@@ -67,8 +67,8 @@ class VulkWindow():
             logger.critical(msg)
             raise SDL2Error(msg)
 
-        logger.debug("SDL2 window opened with configuration: %s"
-                     % (configuration,))
+        logger.debug("SDL2 window opened with configuration: %s",
+                     (configuration,))
 
         self.info = sdl2.SDL_SysWMinfo()
         sdl2.SDL_VERSION(self.info.version)
@@ -140,7 +140,7 @@ class VulkContext():
         available_extensions = [
             e.extensionName
             for e in vk.vkEnumerateInstanceExtensionProperties(None)]
-        logger.debug("Available instance extensions: %s" %
+        logger.debug("Available instance extensions: %s",
                      available_extensions)
 
         # Compute needed extensions
@@ -196,7 +196,7 @@ class VulkContext():
         available_extensions = [
             e.extensionName for e in vk.vkEnumerateDeviceExtensionProperties(
                 physical_device, None)]
-        logger.debug("Available device extensions: %s" % available_extensions)
+        logger.debug("Available device extensions: %s", available_extensions)
 
         # Select extensions
         enabled_extensions = []
@@ -230,7 +230,7 @@ class VulkContext():
 
         layers = [l.layerName for l in
                   vk.vkEnumerateInstanceLayerProperties(None)]
-        logger.debug("Available layers: %s" % layers)
+        logger.debug("Available layers: %s", layers)
 
         # Standard validation is a meta layer containing the others
         standard = 'VK_LAYER_LUNARG_standard_validation'
@@ -378,7 +378,7 @@ class VulkContext():
         }
 
         def debug_function(*args):
-            logger.log(vulkan_debug_mapping[args[0]], "VULKAN: %s" % args[6])
+            logger.log(vulkan_debug_mapping[args[0]], "VULKAN: %s", args[6])
 
         flags = (vk.VK_DEBUG_REPORT_ERROR_BIT_EXT |
                  vk.VK_DEBUG_REPORT_WARNING_BIT_EXT |
@@ -474,7 +474,7 @@ class VulkContext():
         properties = [vk.vkGetPhysicalDeviceProperties(p)
                       for p in physical_devices]
 
-        logger.debug("Available physical devices: %s" %
+        logger.debug("Available physical devices: %s",
                      [p.deviceName for p in properties])
 
         # Select best physical device based on properties ans features
@@ -512,8 +512,8 @@ class VulkContext():
         self.physical_device_properties = properties[selected_index]
         self.physical_device_features = features[selected_index]
 
-        logger.debug("%s device selected"
-                     % self.physical_device_properties.deviceName)
+        logger.debug("%s device selected",
+                     self.physical_device_properties.deviceName)
 
     def _create_device(self, configuration):
         '''Create Vulkan logical device
