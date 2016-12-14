@@ -1,7 +1,7 @@
 '''
 This module contains useful mapping or constants
 '''
-import vulkan as vk
+import vulkan as vk  # pylint: disable=import-error
 
 
 # Wow! That was long to do!

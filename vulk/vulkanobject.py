@@ -17,7 +17,7 @@ module.
 from collections import namedtuple
 from contextlib import contextmanager
 import logging
-import vulkan as vk
+import vulkan as vk  # pylint: disable=import-error
 
 from vulk.exception import VulkError
 from vulk import vulkanconstant

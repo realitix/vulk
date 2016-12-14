@@ -14,7 +14,7 @@ import ctypes
 import logging
 import sdl2
 import sdl2.ext
-import vulkan as vk
+import vulkan as vk  # pylint: disable=import-error
 
 from vulk.exception import VulkError
 from vulk.vulkanobject import CommandPool, Image, ImageView, \
