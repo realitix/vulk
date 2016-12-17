@@ -17,7 +17,8 @@ import sdl2.ext
 import vulkan as vk
 
 from vulk.exception import VulkError
-from vulk.vulkanobject import CommandPool, Image
+from vulk.vulkanobject import CommandPool, Image, ImageView, \
+        ImageSubresourceRange, Semaphore, immediate_buffer
 
 logger = logging.getLogger()
 ENGINE_NAME = "Vulk 3D Engine"
@@ -105,14 +106,21 @@ class VulkContext():
         self.queue_family_indices = None
         # Swapchain
         self.swapchain = None
-        # Images in swapchain
+        # Swapchain images (vulkanobject.Image type)
         self.swapchain_images = None
-        # Swapchain extent
-        self.swapchain_extent = None
         # Swapchain format
         self.swapchain_format = None
+        # Width of the window
+        self.width = 0
+        # Height of the window
+        self.height = 0
         # Final image which is copied into swapchain image
         self.final_image = None
+        # Image view of the final image
+        self.final_image_view = None
+        # Internal semaphores
+        self._semaphore_available = None
+        self._semaphore_copied = None
 
     @staticmethod
     def _get_instance_extensions(window, configuration):
@@ -224,6 +232,12 @@ class VulkContext():
                   vk.vkEnumerateInstanceLayerProperties(None)]
         logger.debug("Available layers: %s" % layers)
 
+        # Standard validation is a meta layer containing the others
+        standard = 'VK_LAYER_LUNARG_standard_validation'
+        if standard in layers:
+            logger.debug("Selecting only %s" % standard)
+            layers = [standard]
+
         return layers
 
     @staticmethod
@@ -295,7 +309,9 @@ class VulkContext():
             'vkGetPhysicalDeviceSurfaceFormatsKHR',
             'vkGetPhysicalDeviceSurfacePresentModesKHR',
             'vkCreateSwapchainKHR',
-            'vkGetSwapchainImagesKHR'
+            'vkGetSwapchainImagesKHR',
+            'vkAcquireNextImageKHR',
+            'vkQueuePresentKHR'
         }
 
         debug_extension_functions = {
@@ -353,11 +369,23 @@ class VulkContext():
         if not configuration.debug:
             return
 
+        vulkan_debug_mapping = {
+            vk.VK_DEBUG_REPORT_DEBUG_BIT_EXT: logging.DEBUG,
+            vk.VK_DEBUG_REPORT_WARNING_BIT_EXT: logging.WARNING,
+            vk.VK_DEBUG_REPORT_ERROR_BIT_EXT: logging.ERROR,
+            vk.VK_DEBUG_REPORT_INFORMATION_BIT_EXT: logging.INFO,
+            vk.VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT: logging.WARNING
+        }
+
         def debug_function(*args):
-            logger.warning("VULKAN WARNING: %s" % args)
+            logger.log(vulkan_debug_mapping[args[0]], "VULKAN: %s" % args[6])
 
         flags = (vk.VK_DEBUG_REPORT_ERROR_BIT_EXT |
-                 vk.VK_DEBUG_REPORT_WARNING_BIT_EXT)
+                 vk.VK_DEBUG_REPORT_WARNING_BIT_EXT |
+                 # vk.VK_DEBUG_REPORT_INFORMATION_BIT_EXT |
+                 # vk.VK_DEBUG_REPORT_DEBUG_BIT_EXT |
+                 vk.VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT)
+
         debug_create_info = vk.VkDebugReportCallbackCreateInfoEXT(
             sType=vk.VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT,
             flags=flags,
@@ -605,66 +633,92 @@ class VulkContext():
 
         self.swapchain = self.pfn['vkCreateSwapchainKHR'](
             self.device, swapchain_create)
-        self.swapchain_images = self.pfn['vkGetSwapchainImagesKHR'](
-            self.device, self.swapchain)
-        self.swapchain_extent = extent
+        self.width = extent.width
+        self.height = extent.height
         self.swapchain_format = surface_format.format
+
+        swapchain_raw_images = self.pfn['vkGetSwapchainImagesKHR'](
+            self.device, self.swapchain)
+
+        self.swapchain_images = []
+        for raw_image in swapchain_raw_images:
+            # Put swapchain image in Image
+            # It's a bad practice but for this specific use case, it's good
+            img = Image.__new__(Image)
+            img.image = raw_image
+            img.format = surface_format.format
+            img.width = self.width
+            img.height = self.height
+            img.depth = 1
+            self.swapchain_images.append(img)
+
+        # Update layout of all swapchain images to dst transfert
+        for image in self.swapchain_images:
+            with immediate_buffer(self) as cmd:
+                image.update_layout(
+                    cmd, 'VK_IMAGE_LAYOUT_UNDEFINED',
+                    'VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL',
+                    'VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT',
+                    'VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT',
+                    0, 'VK_ACCESS_TRANSFER_WRITE_BIT'
+                )
 
         logger.debug("Swapchain created with %s images",
                      len(self.swapchain_images))
 
+    def _create_final_image(self):
+        usage = 'VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT' # noqa
+        self.final_image = Image(
+            self, 'VK_IMAGE_TYPE_2D', self.swapchain_format,
+            self.width, self.height, 1, 1,
+            1, 'VK_SAMPLE_COUNT_1_BIT', 'VK_SHARING_MODE_EXCLUSIVE', [],
+            'VK_IMAGE_LAYOUT_UNDEFINED', 'VK_IMAGE_TILING_OPTIMAL', usage,
+            'VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT'
+        )
+
+        subresource_range = ImageSubresourceRange(
+            aspect='VK_IMAGE_ASPECT_COLOR_BIT',
+            base_miplevel=0,
+            level_count=1,
+            base_layer=0,
+            layer_count=1
+        )
+
+        self.final_image_view = ImageView(
+            self, self.final_image.image, 'VK_IMAGE_VIEW_TYPE_2D',
+            self.swapchain_format, subresource_range)
+
     def _create_commandbuffers(self):
         '''Create the command buffers used to copy image'''
-        commandpool = CommandPool(self,
-                                  self.queue_family_indices['graphic'],
-                                  0)
+        commandpool = CommandPool(self, self.queue_family_indices['graphic'])
         self.commandbuffers = commandpool.allocate_buffers(
             self, 'VK_COMMAND_BUFFER_LEVEL_PRIMARY',
             len(self.swapchain_images))
 
-        # Parameters for copy command
-        subresource = vk.VkImageSubresourceLayers(
-            aspectMask=vk.VK_IMAGE_ASPECT_COLOR_BIT,
-            baseArrayLayer=0,
-            mipLevel=0,
-            layerCount=1
-        )
-        extent = vk.VkExtent3D(width=self.width, height=self.height,
-                               depth=1)
-        region = vk.VkImageCopy(
-            srcSubresource=subresource,
-            dstSubresource=subresource,
-            srcOffset=vk.VkOffset3D(x=0, y=0, z=0),
-            dstOffset=vk.VkOffset3D(x=0, y=0, z=0),
-            extent=extent
-        )
-
         for i, commandbuffer in enumerate(self.commandbuffers):
-            with commandbuffer as cmd:
-                self.final_image.update_layout(
-                    cmd, 'VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL')
-
-                cmd.copy_image(
-                    self.final_image.image,
-                    'VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL',
-                    self.swapchain_images[i],
+            with commandbuffer.bind() as cmd:
+                self.swapchain_images[i].update_layout(
+                    cmd, 'VK_IMAGE_LAYOUT_PRESENT_SRC_KHR',
                     'VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL',
-                    [region]
+                    'VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT',
+                    'VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT',
+                    'VK_ACCESS_MEMORY_READ_BIT',
+                    'VK_ACCESS_TRANSFER_WRITE_BIT'
+                )
+                self.final_image.copy_to(cmd, self.swapchain_images[i])
+                self.swapchain_images[i].update_layout(
+                    cmd, 'VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL',
+                    'VK_IMAGE_LAYOUT_PRESENT_SRC_KHR',
+                    'VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT',
+                    'VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT',
+                    'VK_ACCESS_TRANSFER_WRITE_BIT',
+                    'VK_ACCESS_MEMORY_READ_BIT'
                 )
 
-                self.final_image.update_layout(
-                    cmd, 'VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL')
-
-    def _create_final_image(self):
-        usage = 'VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT', # noqa
-        self.final_image = Image(
-            self, 'VK_IMAGE_TYPE_2D', self.swapchain_format,
-            self.swapchain_extent.width, self.swapchain_extent.height,
-            self.swapchain_extent.depth, 1, 1, 'VK_SAMPLE_COUNT_1_BIT',
-            'VK_SHARING_MODE_EXCLUSIVE', [], 'VK_IMAGE_LAYOUT_UNDEFINED',
-            'VK_IMAGE_TILING_OPTIMAL', usage,
-            'VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT'
-        )
+    def _create_semaphores(self):
+        '''Create semaphores used during image swaping'''
+        self._semaphore_available = Semaphore(self)
+        self._semaphore_copied = Semaphore(self)
 
     def create(self, window, configuration):
         '''Create Vulkan context
@@ -685,44 +739,61 @@ class VulkContext():
         self._create_swapchain(configuration)
         self._create_final_image()
         self._create_commandbuffers()
+        self._create_semaphores()
 
-    def swap(self):
+    def swap(self, semaphores=[]):
         '''Display final image on screen.
 
-        This function makes all the rendering work.
-        To proceed, it copies the `final_image` into the current swapchain
-        image previously acquired.
+        This function makes all the rendering work. To proceed, it copies the
+        `final_image` into the current swapchain image previously acquired.
+        You can pass custom semaphores (and you should) to synchronize the
+        command.
 
-        **Note: The final_image layout is automatically updated.
-                You need to use the final image as color attachment**
+        *Parameters:*
+
+        - `semaphore`: A `list` of `Semaphore` to wait on
+
+        **Note: The `final_image` layout must be set to
+                VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL before calling `swap`.
+                `VulkContext` never update the `final_image` layout**
         '''
         # Acquire image
-        index = vk.vkAcquireNextImageKHR(
+        index = self.pfn['vkAcquireNextImageKHR'](
             self.device, self.swapchain, vk.UINT64_MAX,
-            self._semaphore_available, None)
+            self._semaphore_available.semaphore, None)
+
+        wait_semaphores = [self._semaphore_available]
+        wait_semaphores.extend(semaphores)
+
+        wait_masks = [vk.VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT]
+        wait_masks *= len(wait_semaphores)
+
+        copied_semaphores = [self._semaphore_copied.semaphore]
 
         # Transfer final image to swapchain image
         submit = vk.VkSubmitInfo(
             sType=vk.VK_STRUCTURE_TYPE_SUBMIT_INFO,
-            waitSemaphoreCount=1,
-            pWaitSemaphores=[self._semaphore_available],
-            pWaitDstStageMask=[vk.VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT], # noqa
+            waitSemaphoreCount=len(wait_semaphores),
+            pWaitSemaphores=[s.semaphore for s in wait_semaphores],
+            pWaitDstStageMask=wait_masks,
             commandBufferCount=1,
-            pCommandBuffers=[self.commandbuffers[index]],
-            signalSemaphoreCount=1,
-            pSignalSemaphores=[self._semaphore_copied]
+            pCommandBuffers=[self.commandbuffers[index].commandbuffer],
+            signalSemaphoreCount=len(copied_semaphores),
+            pSignalSemaphores=copied_semaphores
         )
         # TODO: submit should be an array
         vk.vkQueueSubmit(self.graphic_queue, 1, submit, None)
 
-        # Present swapchain image on scree
+        # Present swapchain image on screen
         present = vk.VkPresentInfoKHR(
             sType=vk.VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
-            waitSemaphoreCount=1,
-            pWaitSemaphores=[self._semaphore_copied],
+            waitSemaphoreCount=len(copied_semaphores),
+            pWaitSemaphores=copied_semaphores,
             swapchainCount=1,
             pSwapchains=[self.swapchain],
             pImageIndices=[index],
             pResults=None
         )
-        vk.vkQueuePresentKHR(self.present_queue, present)
+        self.pfn['vkQueuePresentKHR'](self.present_queue, present)
+
+        vk.vkDeviceWaitIdle(self.device)
