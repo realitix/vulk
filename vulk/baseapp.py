@@ -40,6 +40,8 @@ class BaseApp(ABC):
 
         self.last_time = millis()
         self._init_logger()
+        self.context = None
+        self.window = None
 
     def _init_logger(self):
         logger = logging.getLogger()

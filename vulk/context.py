@@ -121,6 +121,8 @@ class VulkContext():
         # Internal semaphores
         self._semaphore_available = None
         self._semaphore_copied = None
+        # Command buffers
+        self.commandbuffers = None
 
     @staticmethod
     def _get_instance_extensions(window, configuration):
