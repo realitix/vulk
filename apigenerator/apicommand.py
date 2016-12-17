@@ -57,6 +57,14 @@ class APICommand(Command):
     def finalize_options(self):
         pass
 
+    def write_readme(self):
+        with open(os.path.join(OUT_FOLDER, 'README.md'), 'w') as f:
+            f.write('# Vulk API documentation\n\n')
+            f.write('[LINK TO API DOCUMENTATION]')
+            f.write('(https://realitix.github.io/vulk-api/vulk/)\n\n')
+            f.write('[LINK TO VULK ENGINE]')
+            f.write('(https://github.com/realitix/vulk)')
+
     def run(self):
         with self.mock_import():
             self.pdoc.tpl_lookup.directories.insert(
@@ -68,3 +76,4 @@ class APICommand(Command):
                 allsubmodules=False
             )
             self.html_out(module, True)
+        self.write_readme()
