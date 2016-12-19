@@ -19,7 +19,7 @@ install:
 script:
 #- py.test .
   - flake8 vulk
-  - pylint vulk
+  - pylint --rcfile=.pylintrc-travis vulk
 
 deploy:
   provider: script

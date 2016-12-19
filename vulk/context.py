@@ -237,7 +237,7 @@ class VulkContext():
         # Standard validation is a meta layer containing the others
         standard = 'VK_LAYER_LUNARG_standard_validation'
         if standard in layers:
-            logger.debug("Selecting only %s" % standard)
+            logger.debug("Selecting only %s", standard)
             layers = [standard]
 
         return layers
@@ -743,7 +743,7 @@ class VulkContext():
         self._create_commandbuffers()
         self._create_semaphores()
 
-    def swap(self, semaphores=[]):
+    def swap(self, semaphores=None):
         '''Display final image on screen.
 
         This function makes all the rendering work. To proceed, it copies the
@@ -765,7 +765,8 @@ class VulkContext():
             self._semaphore_available.semaphore, None)
 
         wait_semaphores = [self._semaphore_available]
-        wait_semaphores.extend(semaphores)
+        if semaphores:
+            wait_semaphores.extend(semaphores)
 
         wait_masks = [vk.VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT]
         wait_masks *= len(wait_semaphores)

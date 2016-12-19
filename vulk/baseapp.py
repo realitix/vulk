@@ -16,6 +16,7 @@ class BaseApp(ABC):
     def __init__(self, name='Vulk', x=-1, y=-1, width=640, height=480,
                  fullscreen=False, resizable=True, decorated=True,
                  highdpi=False, debug=False):
+        # pylint: disable=W0612,W0613
         '''Set initial configuration
 
         *Parameters:*
@@ -71,7 +72,6 @@ class BaseApp(ABC):
         '''Clean Vulkan resource'''
         self.end()
         self.window.close()
-        pass
 
     def run(self):
         '''Start the game loop'''

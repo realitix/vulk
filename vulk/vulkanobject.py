@@ -737,7 +737,7 @@ class Image():
     `Image` is a wrapper around a `VkImage` and a `VkMemory`
     '''
 
-    def __init__(self, context, image_type, format, width, height, depth,
+    def __init__(self, context, image_type, image_format, width, height, depth,
                  mip_level, layers, samples, sharing_mode, queue_families,
                  layout, tiling, usage, memory_properties):
         '''Create a new image
@@ -752,7 +752,7 @@ class Image():
 
         - `context`: `VulkContext`
         - `image_type`: Type of image 1D/2D/3D (`VkImageType`)
-        - `format`: `VkFormat` of the image
+        - `image_format`: `VkFormat` of the image
         - `width`: Image width
         - `heigth`: Image height
         - `depth`: Image depth
@@ -772,7 +772,7 @@ class Image():
         self.width = width
         self.height = height
         self.depth = depth
-        self.format = vk_const(format)
+        self.format = vk_const(image_format)
         self.memory_properties = vk_const(memory_properties)
 
         # Create the VkImage
@@ -945,7 +945,7 @@ class HighPerformanceImage():
     the image have the same properties.
     '''
 
-    def __init__(self, context, image_type, format, width, height,
+    def __init__(self, context, image_type, image_format, width, height,
                  depth, mip_level, layers, samples, sharing_mode,
                  queue_families):
         '''Create a high performance image
@@ -954,7 +954,7 @@ class HighPerformanceImage():
 
         - `context`: `VulkContext`
         - `image_type`: Type of image 1D/2D/3D (`VkImageType`)
-        - `format`: `VkFormat` of the image
+        - `image_format`: `VkFormat` of the image
         - `width`: Image width
         - `heigth`: Image height
         - `depth`: Image depth
@@ -968,14 +968,14 @@ class HighPerformanceImage():
                             `VK_SHARING_MODE_CONCURRENT`) (can be [])
         '''
         self.staging_image = Image(
-            context, image_type, format, width, height, depth, mip_level,
+            context, image_type, image_format, width, height, depth, mip_level,
             layers, samples, sharing_mode, queue_families,
             vk.VK_IMAGE_LAYOUT_PREINITIALIZED, vk.VK_IMAGE_TILING_LINEAR,
             vk.VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
             vk.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT # noqa
         )
         self.texture_image = Image(
-            context, image_type, format, width, height, depth, mip_level,
+            context, image_type, image_format, width, height, depth, mip_level,
             layers, samples, sharing_mode, queue_families,
             vk.VK_IMAGE_LAYOUT_PREINITIALIZED, vk.VK_IMAGE_TILING_OPTIMAL,
             vk.VK_IMAGE_USAGE_TRANSFER_DST_BIT | vk.VK_IMAGE_USAGE_SAMPLED_BIT,
@@ -996,14 +996,24 @@ class HighPerformanceImage():
         # Transition the staging image to optimal source transfert layout
         with immediate_buffer(context, commandpool) as cmd:
             self.staging_image.update_layout(
-                cmd, 'VK_IMAGE_LAYOUT_PREINITIALIZED',
-                'VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL')
+                cmd, vk.VK_IMAGE_LAYOUT_PREINITIALIZED,
+                vk.VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                vk.VK_ACCESS_HOST_WRITE_BIT,
+                vk.VK_ACCESS_TRANSFER_READ_BIT
+            )
 
         # Transition the final image to optimal destination transfert layout
         with immediate_buffer(context, commandpool) as cmd:
             self.texture_image.update_layout(
-                cmd, 'VK_IMAGE_LAYOUT_PREINITIALIZED',
-                'VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL')
+                cmd, vk.VK_IMAGE_LAYOUT_PREINITIALIZED,
+                vk.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                vk.VK_ACCESS_HOST_WRITE_BIT,
+                vk.VK_ACCESS_TRANSFER_WRITE_BIT
+            )
 
         # Copy staging image into final image
         with immediate_buffer(context, commandpool) as cmd:
@@ -1012,13 +1022,24 @@ class HighPerformanceImage():
         # Set the best layout for the final image
         with immediate_buffer(context, commandpool) as cmd:
             self.texture_image.update_layout(
-                cmd, 'VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL')
+                cmd, vk.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                vk.VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                vk.VK_ACCESS_TRANSFER_WRITE_BIT,
+                vk.VK_ACCESS_SHADER_READ_BIT
+            )
 
         # Set back the layout of staging image
         with immediate_buffer(context, commandpool) as cmd:
             self.staging_image.update_layout(
-                cmd, 'VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL',
-                'VK_IMAGE_LAYOUT_PREINITIALIZED')
+                cmd, vk.VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                vk.VK_IMAGE_LAYOUT_PREINITIALIZED,
+                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                vk.VK_ACCESS_TRANSFER_READ_BIT,
+                vk.VK_ACCESS_HOST_WRITE_BIT
+            )
 
     @contextmanager
     def bind(self, context):
@@ -1066,8 +1087,8 @@ class ImageView():
     texture without any mipmapping levels.
     '''
 
-    def __init__(self, context, image, view_type, format, subresource_range,
-                 swizzle_r='VK_COMPONENT_SWIZZLE_IDENTITY',
+    def __init__(self, context, image, view_type, image_format,
+                 subresource_range, swizzle_r='VK_COMPONENT_SWIZZLE_IDENTITY',
                  swizzle_g='VK_COMPONENT_SWIZZLE_IDENTITY',
                  swizzle_b='VK_COMPONENT_SWIZZLE_IDENTITY',
                  swizzle_a='VK_COMPONENT_SWIZZLE_IDENTITY'):
@@ -1078,7 +1099,7 @@ class ImageView():
         - `context`: The `VulkContext`
         - `image`: The `Image` to work on
         - `view_type`: `VkImageViewType` Vulkan constant
-        - `format`: `VkFormat` Vulkan constant
+        - `image_format`: `VkFormat` Vulkan constant
         - `subresource_range`: The `ImageSubresourceRange` to use
         - `swizzle_r`: Swizzle of the red color channel
         - `swizzle_g`: Swizzle of the green color channel
@@ -1103,7 +1124,7 @@ class ImageView():
             flags=0,
             image=image,
             viewType=vk_const(view_type),
-            format=format,
+            format=vk_const(image_format),
             components=components,
             subresourceRange=vk_subresource_range
         )
@@ -1265,7 +1286,7 @@ Viewport.__doc__ = '''
 class ClearColorValue():
     '''ClearValue for color clearing'''
 
-    def __init__(self, float32=[], uint32=[], int32=[]):
+    def __init__(self, float32=None, uint32=None, int32=None):
         '''
         Take only one value depending on the type you want.
         `list` must be of size 4.
@@ -1277,11 +1298,18 @@ class ClearColorValue():
         - `int32`: Type `int`
         '''
         t = (float32, uint32, int32)
+
+        # Set to list
+        for v in t:
+            v = [] if v is None else v
+
+        # Check that only one value is set
         if sum(1 for i in t if i) != 1:
             msg = "Only one value in [float32, uint32, int32] must be given"
             logger.error(msg)
             raise VulkError(msg)
 
+        # Check size of value (must be 4)
         if len(next(iter([v for v in t if t]))) != 4:
             msg = "Value must be a list of 4 elements"
             logger.error(msg)
