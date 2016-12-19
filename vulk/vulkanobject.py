@@ -129,8 +129,7 @@ def immediate_buffer(context, commandpool=None):
             pSignalSemaphores=None
         )
 
-        # TODO: submit must be an array (cvulkan bug!)
-        vk.vkQueueSubmit(context.graphic_queue, 1, submit, None)
+        vk.vkQueueSubmit(context.graphic_queue, 1, [submit], None)
         vk.vkQueueWaitIdle(context.graphic_queue)
         commandpool.free_buffers(context, commandbuffers)
 
@@ -701,7 +700,7 @@ class Pipeline():
         )
 
         self.pipeline = vk.vkCreateGraphicsPipelines(context.device, None,
-                                                     1, pipeline_create)
+                                                     1, [pipeline_create])
 
 
 Offset2D = namedtuple('Offset2D', ['x', 'y'])
@@ -1236,13 +1235,10 @@ class CommandPool():
             logger.error(msg)
             raise VulkError(msg)
 
-        # TODO: buffer must be an array, cvulkan bug
-        # vk.vkFreeCommandBuffers(
-        #     context.device, self.commandpool, len(buffers),
-        #     [b.commandbuffer for b in buffers]
-        # )
         vk.vkFreeCommandBuffers(
-            context.device, self.commandpool, 1, buffers[0].commandbuffer)
+            context.device, self.commandpool, len(buffers),
+            [b.commandbuffer for b in buffers]
+        )
 
     def free(self, context):
         '''
@@ -1510,16 +1506,10 @@ class CommandBufferRegister():
         vk_memories = memories if memories else None
         vk_buffers = buffers if buffers else None
         vk_images = images if images else None
-        # TODO: CVulkan bug, can't pass array barriers
-        # vk.vkCmdPipelineBarrier(
-        #     self.commandbuffer, vk_const(src_stage), vk_const(dst_stage),
-        #     vk_const(dependency), len(memories), vk_memories,
-        #     len(buffers), vk_buffers, len(images), vk_images
-        # )
         vk.vkCmdPipelineBarrier(
             self.commandbuffer, vk_const(src_stage), vk_const(dst_stage),
             vk_const(dependency), len(memories), vk_memories,
-            len(buffers), vk_buffers, 1, vk_images[0]
+            len(buffers), vk_buffers, len(images), vk_images
         )
 
     def copy_image(self, src_image, src_layout, dst_image,
@@ -1537,10 +1527,9 @@ class CommandBufferRegister():
 
         **Note: `VkImage` is raw Vulkan object, not vulk `Image`**
         '''
-        # TODO: CVULKAN BUG regions should be an array, fuck cvulkan
         vk.vkCmdCopyImage(
             self.commandbuffer, src_image, vk_const(src_layout), dst_image,
-            vk_const(dst_layout), len(regions), regions[0]
+            vk_const(dst_layout), len(regions), regions
         )
 
     def end_renderpass(self):
@@ -1623,8 +1612,7 @@ def submit_to_queue(queue, submits):
             pSignalSemaphores=signal_semaphores
         ))
 
-    # TODO: vk_submits must be an array (cvulkan bug)
-    vk.vkQueueSubmit(queue, 1, vk_submits[0], None)
+    vk.vkQueueSubmit(queue, 1, vk_submits, None)
 
 
 def submit_to_graphic_queue(context, submits):

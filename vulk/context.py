@@ -784,8 +784,7 @@ class VulkContext():
             signalSemaphoreCount=len(copied_semaphores),
             pSignalSemaphores=copied_semaphores
         )
-        # TODO: submit should be an array
-        vk.vkQueueSubmit(self.graphic_queue, 1, submit, None)
+        vk.vkQueueSubmit(self.graphic_queue, 1, [submit], None)
 
         # Present swapchain image on screen
         present = vk.VkPresentInfoKHR(
