@@ -654,15 +654,15 @@ class VulkContext():
             img.depth = 1
             self.swapchain_images.append(img)
 
-        # Update layout of all swapchain images to dst transfert
+        # Update layout of all swapchain images to present khr
         for image in self.swapchain_images:
             with immediate_buffer(self) as cmd:
                 image.update_layout(
                     cmd, 'VK_IMAGE_LAYOUT_UNDEFINED',
-                    'VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL',
+                    'VK_IMAGE_LAYOUT_PRESENT_SRC_KHR',
                     'VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT',
                     'VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT',
-                    0, 'VK_ACCESS_TRANSFER_WRITE_BIT'
+                    0, 'VK_ACCESS_MEMORY_READ_BIT'
                 )
 
         logger.debug("Swapchain created with %s images",
