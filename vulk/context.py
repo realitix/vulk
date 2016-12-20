@@ -410,6 +410,7 @@ class VulkContext():
 
         def xlib():
             logger.info("Create XLIB surface")
+            # pylint: disable=no-member
             surface_create = vk.VkXlibSurfaceCreateInfoKHR(
                 sType=vk.VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR,
                 dpy=info.info.x11.display,
@@ -419,6 +420,7 @@ class VulkContext():
 
         def mir():
             logger.info("Create MIR surface")
+            # pylint: disable=no-member
             surface_create = vk.VkMirSurfaceCreateInfoKHR(
                 sType=vk.VK_STRUCTURE_TYPE_MIR_SURFACE_CREATE_INFO_KHR,
                 connection=info.info.mir.connection,
@@ -428,6 +430,7 @@ class VulkContext():
 
         def wayland():
             logger.info("Create WAYLAND surface")
+            # pylint: disable=no-member
             surface_create = vk.VkWaylandSurfaceCreateInfoKHR(
                 sType=vk.VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR,
                 display=info.info.wl.display,
@@ -437,6 +440,7 @@ class VulkContext():
 
         def windows():
             logger.info("Create WINDOWS surface")
+            # pylint: disable=no-member
             surface_create = vk.VkWin32SurfaceCreateInfoKHR(
                 sType=vk.VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR,
                 hinstance=info.info.win.hinstance,

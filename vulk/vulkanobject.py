@@ -743,8 +743,8 @@ class Image():
 
         Creating an image is made of several steps:
 
-        - Create the staging image
-        - Allocate the staging memory
+        - Create the image
+        - Allocate the memory
         - Bind the memory to the image
 
         *Parameters:*
@@ -973,7 +973,7 @@ class HighPerformanceImage():
             vk.VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
             vk.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT # noqa
         )
-        self.texture_image = Image(
+        self.final_image = Image(
             context, image_type, image_format, width, height, depth, mip_level,
             layers, samples, sharing_mode, queue_families,
             vk.VK_IMAGE_LAYOUT_PREINITIALIZED, vk.VK_IMAGE_TILING_OPTIMAL,
@@ -1005,7 +1005,7 @@ class HighPerformanceImage():
 
         # Transition the final image to optimal destination transfert layout
         with immediate_buffer(context, commandpool) as cmd:
-            self.texture_image.update_layout(
+            self.final_image.update_layout(
                 cmd, vk.VK_IMAGE_LAYOUT_PREINITIALIZED,
                 vk.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                 vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
@@ -1016,11 +1016,11 @@ class HighPerformanceImage():
 
         # Copy staging image into final image
         with immediate_buffer(context, commandpool) as cmd:
-            self.staging_image.copy_to(cmd, self.texture_image)
+            self.staging_image.copy_to(cmd, self.final_image)
 
         # Set the best layout for the final image
         with immediate_buffer(context, commandpool) as cmd:
-            self.texture_image.update_layout(
+            self.final_image.update_layout(
                 cmd, vk.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                 vk.VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
                 vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
@@ -1129,6 +1129,192 @@ class ImageView():
         )
 
         self.imageview = vk.vkCreateImageView(context.device, imageview_create)
+
+
+class Buffer():
+    '''
+    `Buffer` wrap a `VkBuffer` and a `VkMemory`
+    '''
+
+    def __init__(self, context, flags, size, usage, sharing_mode,
+                 queue_families, memory_properties):
+        '''Create a new buffer
+
+        Creating a buffer is made of several steps:
+
+        - Create the buffer
+        - Allocate the memory
+        - Bind the memory to the buffer
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        - `flags`: `VkBufferCreateFlags`
+        - `size`: Buffer size in bytes
+        - `usage`: `VkBufferUsageFlags`
+        - `sharing_mode`: `VkSharingMode`
+        - `queue_families`: List of queue families accessing this image
+                            (ignored if sharingMode is not
+                            `VK_SHARING_MODE_CONCURRENT`) (can be [])
+        - `memory_properties`: `VkMemoryPropertyFlags` Vulkan constant
+        '''
+        self.memory_properties = vk_const(memory_properties)
+        self.size = size
+
+        # Create VkBuffer
+        buffer_create = vk.VkBufferCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+            flags=vk_const(flags),
+            size=self.size,
+            usage=vk_const(usage),
+            sharingMode=vk_const(sharing_mode),
+            queueFamilyIndexCount=len(queue_families),
+            pQueueFamilyIndices=queue_families if queue_families else None
+        )
+
+        self.buffer = vk.vkCreateBuffer(context.device, buffer_create)
+
+        # Get memory requirements
+        requirements = vk.vkGetBufferMemoryRequirements(context.device,
+                                                        self.buffer)
+
+        alloc_info = vk.VkMemoryAllocateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
+            allocationSize=requirements.size,
+            memoryTypeIndex=find_memory_type(
+                context,
+                requirements.memoryTypeBits,
+                self.memory_properties
+            )
+        )
+
+        # Create memory
+        self.memory = vk.vkAllocateMemory(context.device, alloc_info)
+
+        # Bind device memory to the buffer
+        vk.vkBindImageMemory(context.device, self.buffer, self.memory, 0)
+
+    def copy_to(self, cmd, dst_buffer):
+        '''
+        Copy this buffer to the destination buffer.
+        Commands to copy are registered in the commandbuffer but it's up to
+        you to start and submit the command buffer to the execution queue.
+
+        *Parameters:*
+
+        - `cmd`: `CommandBufferRegister` used to register commands
+        - `dst_buffer`: Destination `Buffer`
+
+        **Note: Buffers must have the same size**
+        '''
+        if self.size != dst_buffer.size:
+            msg = "Buffers must have the same size"
+            logger.error(msg)
+            raise VulkError(msg)
+
+        region = vk.VkBufferCopy(
+            srcOffset=0,
+            dstOffset=0,
+            size=self.size
+        )
+
+        cmd.copy_buffer(self.buffer, dst_buffer.buffer, [region])
+
+    @contextmanager
+    def bind(self, context):
+        '''
+        Map this buffer to upload data in it.
+        This function is a context manager and must be called with `with`.
+        It return a python buffer and let you do what you want with it,
+        be careful!
+
+        *Parameters:*
+
+        - `context`: The `VulkContext`
+
+        **Warning: Buffer memory must be host visible**
+        '''
+        compatible_memories = {vk.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+                               vk.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+                               vk.VK_MEMORY_PROPERTY_HOST_CACHED_BIT}
+        if not all([self.memory_properties & m for m in compatible_memories]):
+            msg = "Can't map this buffer, memory must be host visible"
+            logger.error(msg)
+            raise VulkError(msg)
+
+        try:
+            data = vk.vkMapMemory(context.device, self.memory, 0,
+                                  self.size, 0)
+            yield data
+        finally:
+            vk.vkUnmapMemory(context.device, self.memory)
+
+
+class HighPerformanceBuffer():
+    '''
+    `HighPerformanceBuffer` allows to use high performance buffer to be
+    accessed in your vertex stage.
+
+    To get the maximum performance, we are going to create two `Buffer`,
+    a staging buffer which memory can be updated and a final buffer with
+    very fast memory that we will use in pipeline.
+    When we create a buffer, we first upload data in the staging buffer
+    and then copy the memory in the final buffer. Of course, both of the
+    buffer have the same properties.
+    '''
+
+    def __init__(self, context, size, sharing_mode, queue_families):
+        '''Create a high performance buffer
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        - `size`: Buffer size in bytes
+        - `sharing_mode`: `VkSharingMode`
+        - `queue_families`: List of queue families accessing this image
+                            (ignored if sharingMode is not
+                            `VK_SHARING_MODE_CONCURRENT`) (can be [])
+        '''
+        self.staging_buffer = Buffer(
+            context, 0, size, vk.VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+            sharing_mode, queue_families,
+            vk.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT # noqa
+        )
+
+        self.final_buffer = Buffer(
+            context, 0, size,
+            vk.VK_BUFFER_USAGE_TRANSFER_DST_BIT | vk.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, # noqa
+            sharing_mode, queue_families,
+            vk.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
+        )
+
+    def _finalize(self, context):
+        '''
+        Copy the staging buffer to the final buffer.
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
+        with immediate_buffer(context) as cmd:
+            self.staging_buffer.copy_to(cmd, self.final_buffer)
+
+    @contextmanager
+    def bind(self, context):
+        '''Bind buffer for writing
+
+        It calls `bind` method of the staging buffer and copy the buffer
+        when the contextmanager is released. Must be used with `with`.
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
+        try:
+            with self.staging_buffer.bind(context) as b:
+                yield b
+        finally:
+            self._finalize(context)
 
 
 class Framebuffer():
