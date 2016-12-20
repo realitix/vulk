@@ -19,11 +19,12 @@ setup(
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: MIT License",
+        "License :: OSI Approved :: Apache Software License",
         "Natural Language :: English",
         "Programming Language :: Python :: 3.5",
+        'Programming Language :: Python :: Implementation :: CPython',
         "Topic :: Multimedia :: Graphics :: 3D Rendering"
     ],
-    license="MIT",
+    license="Apache 2.0",
     cmdclass={'api': APICommand}
 )
