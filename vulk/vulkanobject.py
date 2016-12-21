@@ -915,7 +915,7 @@ class Image():
         compatible_memories = {vk.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
                                vk.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
                                vk.VK_MEMORY_PROPERTY_HOST_CACHED_BIT}
-        if not all([self.memory_properties & m for m in compatible_memories]):
+        if not any([self.memory_properties & m for m in compatible_memories]):
             msg = "Can't map this image, memory must be host visible"
             logger.error(msg)
             raise VulkError(msg)
@@ -1192,7 +1192,7 @@ class Buffer():
         self.memory = vk.vkAllocateMemory(context.device, alloc_info)
 
         # Bind device memory to the buffer
-        vk.vkBindImageMemory(context.device, self.buffer, self.memory, 0)
+        vk.vkBindBufferMemory(context.device, self.buffer, self.memory, 0)
 
     def copy_to(self, cmd, dst_buffer):
         '''
@@ -1237,7 +1237,7 @@ class Buffer():
         compatible_memories = {vk.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
                                vk.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
                                vk.VK_MEMORY_PROPERTY_HOST_CACHED_BIT}
-        if not all([self.memory_properties & m for m in compatible_memories]):
+        if not any([self.memory_properties & m for m in compatible_memories]):
             msg = "Can't map this buffer, memory must be host visible"
             logger.error(msg)
             raise VulkError(msg)
@@ -1717,6 +1717,19 @@ class CommandBufferRegister():
             self.commandbuffer, src_image, vk_const(src_layout), dst_image,
             vk_const(dst_layout), len(regions), regions
         )
+
+    def copy_buffer(self, src_buffer, dst_buffer, regions):
+        '''
+        Copy data between buffers
+
+        *Parameters:*
+
+        - `src_buffer`: `VkBuffer`
+        - `dst_buffer`: `VkBuffer`
+        - `regions`: `list` of `VkBufferCopy`
+        '''
+        vk.vkCmdCopyBuffer(
+            self.commandbuffer, src_buffer, dst_buffer, len(regions), regions)
 
     def end_renderpass(self):
         '''End the current render pass'''
