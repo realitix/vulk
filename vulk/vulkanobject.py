@@ -9,6 +9,10 @@ documented namedtuple, I think it's better.
 If you want to understand internal Vulkan functions, you can hack around this
 module.
 
+
+**Note: All classes, functions, tuples of this module are sorted
+        alphabetically.**
+
 **Note: In this module, when it's needed, the parameter type is indicated. If
         the type begins with Vk..., it means a real Vulkan object and not an
         object in this module.**
@@ -34,22 +38,9 @@ STAGE_MAPPING = {
 }
 
 
-def vk_const(v):
-    '''Get constant
-
-    if v is str, we get the constant in vulkan
-    else we return it as is
-    '''
-    if isinstance(v, str):
-        if '|' in v:
-            result = 0
-            for attr in v.split('|'):
-                result |= vk_const(attr.strip())
-            return result
-        return getattr(vk, v)
-    return v
-
-
+# ----------
+# FUNCTIONS
+# ----------
 def btov(b):
     '''Convert boolean to Vulkan boolean'''
     return vk.VK_TRUE if b else vk.VK_FALSE
@@ -137,40 +128,74 @@ def immediate_buffer(context, commandpool=None):
             commandpool.free(context)
 
 
-class ShaderModule():
-    '''ShaderModule Vulkan object
-
-    A shader module is a Spir-V shader loaded into Vulkan.
-    After being created, it must be inserted in a pipeline stage.
-    The real Vulkan module can be accessed by the 'module' property.
+def submit_to_graphic_queue(context, submits):
     '''
+    Convenient function to submit commands to graphic queue
 
-    def __init__(self, context, code):
-        '''
-        Initialize the module
+    *Parameters:*
 
-        *Parameters:*
-
-        - `context`: The `VulkContext` object
-        - `code`: Binary Spir-V loaded file (bytes)
-
-        *Returns:*
-
-        The created `ShaderModule`
-        '''
-        if not isinstance(code, bytes):
-            logger.info("Type of code is not 'bytes', it may be an error")
-
-        self.code = code
-
-        # Create the shader module
-        shader_create = vk.VkShaderModuleCreateInfo(
-            sType=vk.VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
-            flags=0, codeSize=len(code), pCode=code)
-        self.module = vk.vkCreateShaderModule(context.device, shader_create)
+    - `context`: `VulkContext`
+    - `submits`: `list` of `SubmitInfo`
+    '''
+    submit_to_queue(context.graphic_queue, submits)
 
 
-#  Objects used in Renderpass
+def submit_to_queue(queue, submits):
+    '''
+    Submit commands to queue
+
+    *Parameters:*
+
+    - `queue`: `VkQueue`
+    - `submits`: `list` of `SubmitInfo`
+    '''
+    vk_submits = []
+    for s in submits:
+        wait_stages = None
+        if s.wait_stages:
+            wait_stages = [vk_const(st) for st in s.wait_stages]
+
+        wait_semaphores = None
+        if s.wait_semaphores:
+            wait_semaphores = [sem.semaphore for sem in s.wait_semaphores]
+
+        signal_semaphores = None
+        if s.signal_semaphores:
+            signal_semaphores = [sem.semaphore for sem in s.signal_semaphores]
+
+        vk_submits.append(vk.VkSubmitInfo(
+            sType=vk.VK_STRUCTURE_TYPE_SUBMIT_INFO,
+            waitSemaphoreCount=len(s.wait_semaphores),
+            pWaitSemaphores=wait_semaphores,
+            pWaitDstStageMask=wait_stages,
+            commandBufferCount=len(s.commandbuffers),
+            pCommandBuffers=[c.commandbuffer for c in s.commandbuffers],
+            signalSemaphoreCount=len(s.signal_semaphores),
+            pSignalSemaphores=signal_semaphores
+        ))
+
+    vk.vkQueueSubmit(queue, 1, vk_submits, None)
+
+
+def vk_const(v):
+    '''Get constant
+
+    if v is str, we get the constant in vulkan
+    else we return it as is
+    '''
+    if isinstance(v, str):
+        if '|' in v:
+            result = 0
+            for attr in v.split('|'):
+                result |= vk_const(attr.strip())
+            return result
+        return getattr(vk, v)
+    return v
+
+
+# ----------
+# NAMED TUPLES
+# ----------
 AttachmentDescription = namedtuple('AttachmentDescription',
                                    ['format', 'samples', 'load', 'store',
                                     'stencil_load', 'stencil_store',
@@ -202,257 +227,53 @@ AttachmentReference.__doc__ = '''
     '''
 
 
-SubpassDescription = namedtuple('SubpassDescription',
-                                ['colors', 'inputs', 'resolves',
-                                 'preserves', 'depth_stencil'])
-SubpassDescription.__new__.__defaults__ = \
-        ([],) * len(SubpassDescription._fields)
-SubpassDescription.__doc__ = '''
-    `SubpassDescription` describes all attachments in the subpass.
-    All parameters are of type `AttachmentReference`. If you don't want
-    an attachment, don't set it, its default value is an empty list.
+Extent2D = namedtuple('Extent2D', ['width', 'height'])
+Extent2D.__doc__ = '''
+    *Parameters:*
+
+    - `width`: Width
+    - `height`: Height
+    '''
+
+
+Extent3D = namedtuple('Extent3D', ['width', 'height', 'depth'])
+Extent3D.__doc__ = '''
+    *Parameters:*
+
+    - `width`: Width
+    - `height`: Height
+    - `depth`: Depth
+    '''
+
+
+ImageSubresourceRange = namedtuple('ImageSubresourceRange',
+                                   ['aspect', 'base_miplevel', 'level_count',
+                                    'base_layer', 'layer_count'])
+ImageSubresourceRange.__doc__ = '''
+    `ImageSubresourceRange` object describes what the image's purpose is and
+    which part of the image should be accessed.
 
     *Parameters:*
 
-    - `colors`: `list` of colors attachments
-    - `inputs`: `list` of inputs attachments
-    - `resolves`: `list` of resolves attachments (must be the same
-                  size as inputs)
-    - `preserves`: `list` of preserves attachments
-    - `depth_stencil`: `list` containing only one attachment
+    - `aspect`: `VkImageAspectFlags` indicating which aspect(s) of the
+                image are included in the view
+    - `base_miplevel`: The first mipmap level accessible to the view
+    - `level_count`: Number of mipmap levels (starting from base_miplevel)
+                     accessible to the view
+    - `base_layer`: First array layer accessible to the view
+    - `layer_count`: Number of array layers (starting from base_layer)
+                     accessible to the view
     '''
 
 
-SubpassDependency = namedtuple('SubpassDependency',
-                               ['src_subpass', 'src_stage', 'src_access',
-                                'dst_subpass', 'dst_stage', 'dst_access'])
-SubpassDependency.__doc__ = '''
-    SubpassDependency describes all dependencies of the subpass.
-
+Offset2D = namedtuple('Offset2D', ['x', 'y'])
+Offset2D.__doc__ = '''
     *Parameters:*
 
-    - `src_subpass`: Source subpass `int` or `VK_SUBPASS_EXTERNAL`
-    - `src_stage`: Source stage `VkPipelineStageFlagBits`
-    - `src_access`: Source access `VkAccessFlagBits`
-    - `dst_subpass`: Destination subpass `int` or `VK_SUBPASS_EXTERNAL`
-    - `dst_stage`: Destination stage `VkPipelineStageFlagBits`
-    - `dst_access`: Destination access `VkAccessFlagBits`
+    - `x`: x offset
+    - `y`: y offset
     '''
 
-
-class Renderpass():
-    '''Renderpass object
-
-    When creating the pipeline, we need to tell Vulkan about the
-    framebuffer attachments that will be used while rendering. We need to
-    specify how many color and depth buffers there will be, how many samples
-    to use for each of them and how their contents should be handled
-    throughout the rendering operations. All of this information is wrapped
-    in a RenderPass object
-    '''
-
-    def __init__(self, context, attachments, subpasses, dependencies):
-        '''Renderpass constructor
-
-        *Parameters:*
-
-        - `context`: The `VulkContext`
-        - `attachments`: `list` of `AttachmentDescription`
-        - `subpasses`: `list` of `SubpassDescription`
-        - `dependencies`: `list` of `SubpassDependency`
-
-        **Warning: Arguments ar not checked, you must know
-                   what you are doing.**
-        '''
-
-        vk_attachments = []
-        for a in attachments:
-            vk_attachments.append(vk.VkAttachmentDescription(
-                flags=0,
-                format=vk_const(a.format),
-                samples=vk_const(a.samples),
-                loadOp=vk_const(a.load),
-                storeOp=vk_const(a.store),
-                stencilLoadOp=vk_const(a.stencil_load),
-                stencilStoreOp=vk_const(a.stencil_store),
-                initialLayout=vk_const(a.initial_layout),
-                finalLayout=vk_const(a.final_layout)
-            ))
-
-        # Loop through the list of subpasses to create the reference
-        # reference key is index_layout
-        vk_references = {}
-        for s in subpasses:
-            for r in (s.colors + s.inputs + s.resolves +
-                      s.preserves + s.depth_stencil):
-                key = (r.index, r.layout)
-                if key not in vk_references:
-                    vk_references[key] = vk.VkAttachmentReference(
-                        attachment=r.index,
-                        layout=vk_const(r.layout)
-                    )
-
-        def ref(references):
-            '''
-            Convert a list of `AttachmentReference` to a list of
-            `VkAttachmentReference` by using the cached references in
-            `vk_references`
-            '''
-            if not references:
-                return []
-
-            return [vk_references[(r.index, r.layout)] for r in references]
-
-        # Create the subpasses using references
-        vk_subpasses = []
-        for s in subpasses:
-            leninputs = len(s.inputs)
-            lenpreserves = len(s.preserves)
-            lencolors = len(s.colors)
-            lenresolves = len(s.resolves)
-            inputs = ref(s.inputs) or None
-            preserves = ref(s.preserves) or None
-            colors = ref(s.colors) or None
-            resolves = ref(s.resolves) or None
-            depth_stencil = next(iter(ref(s.depth_stencil)), None)
-
-            if resolves and inputs and lenresolves != lencolors:
-                msg = "resolves and inputs list must be of the same size"
-                logger.error(msg)
-                raise VulkError(msg)
-
-            vk_subpasses.append(vk.VkSubpassDescription(
-                flags=0,
-                pipelineBindPoint=vk.VK_PIPELINE_BIND_POINT_GRAPHICS,
-                inputAttachmentCount=leninputs,
-                pInputAttachments=inputs,
-                colorAttachmentCount=lencolors,
-                pColorAttachments=colors,
-                pResolveAttachments=resolves,
-                preserveAttachmentCount=lenpreserves,
-                pPreserveAttachments=preserves,
-                pDepthStencilAttachment=depth_stencil
-            ))
-
-        # Create the dependancies
-        vk_dependencies = []
-        for d in dependencies:
-            vk_dependencies.append(vk.VkSubpassDependency(
-                dependencyFlags=0,
-                srcSubpass=vk_const(d.src_subpass),
-                dstSubpass=vk_const(d.dst_subpass),
-                srcStageMask=vk_const(d.src_stage),
-                dstStageMask=vk_const(d.dst_stage),
-                srcAccessMask=vk_const(d.src_access),
-                dstAccessMask=vk_const(d.dst_access)
-            ))
-
-        # Create the render pass
-        renderpass_create = vk.VkRenderPassCreateInfo(
-            flags=0,
-            sType=vk.VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,
-            attachmentCount=len(vk_attachments),
-            pAttachments=vk_attachments,
-            subpassCount=len(vk_subpasses),
-            pSubpasses=vk_subpasses,
-            dependencyCount=len(vk_dependencies),
-            pDependencies=vk_dependencies
-        )
-
-        self.renderpass = vk.vkCreateRenderPass(
-            context.device, renderpass_create)
-
-
-#  Objects used in Pipeline
-PipelineShaderStage = namedtuple('PipelineShaderStage', ['module', 'stage'])
-PipelineShaderStage.__doc__ = '''
-    *Parameters:*
-
-    - `module`: The `ShaderModule` to bind
-    - `stage`: Stage name in ['vertex', 'fragment', 'geometry', 'compute',
-               'tesselation_control', 'tesselation_evaluation']
-    '''
-
-PipelineVertexInputState = namedtuple('PipelineVertexInputState',
-                                      ['bindings', 'attributes'])
-PipelineVertexInputState.__new__.__defaults__ = \
-        ([],) * len(PipelineVertexInputState._fields)
-PipelineVertexInputState.__doc__ = '''
-    *Parameters:*
-
-    - `bindings`: List of vertice bindings
-    - `attributes`: List of vertice attributes
-
-    **Note: `bindings` and `attributes` can be empty `list`**
-    '''
-
-PipelineInputAssemblyState = namedtuple('PipelineInputAssemblyState',
-                                        'topology')
-PipelineInputAssemblyState.__doc__ = '''
-    *Parameters:*
-
-    - `topology`: The `VkPrimitiveTopology` to use when drawing
-    '''
-
-PipelineViewportState = namedtuple('PipelineViewportState',
-                                   ['viewports', 'scissors'])
-PipelineViewportState.__doc__ = '''
-    The PipelineViewportState object contains viewports and scissors.
-
-    *Parameters:*
-
-    - `viewports`: `list` of `Viewport`
-    - `scissors`: `list` of `Rect2D`
-    '''
-
-PipelineRasterizationState = namedtuple(
-    'PipelineRasterizationState',
-    ['depth_clamp_enable', 'polygon_mode', 'line_width', 'cull_mode',
-     'front_face', 'depth_bias_constant', 'depth_bias_clamp',
-     'depth_bias_slope']
-)
-PipelineRasterizationState.__doc__ = '''
-    *Parameters:*
-
-    - `depth_clamp_enable`: Whether to enable depth clamping (`boolean`)
-    - `polygon_mode`: Which `VkPolygonMode` to use
-    - `line_width`: Width of line (`float`)
-    - `cull_mode`: The way of culling (`VkCullModeFlagBits`)
-    - `front_face`: `VkFrontFace`
-    - `depth_bias_constant`: Constant to add to depth (`float`)
-    - `depth_bias_clamp`: Max depth bias (`float`)
-    - `depth_bias_slope`: Factor to slope (`float`)
-    '''
-
-PipelineMultisampleState = namedtuple('PipelineMultisampleState',
-                                      ['shading_enable', 'samples',
-                                       'min_sample_shading'])
-PipelineMultisampleState.__doc__ = '''
-    *Parameters:*
-
-    - `shading_enable`: Enable multisampling (`boolean`)
-    - `samples`: Number of samples (`VkSampleCountFlagBits`)
-    - `min_sample_shading`: Minimum of sample (`float`)
-    '''
-
-PipelineDepthStencilState = namedtuple(
-    'PipelineDepthStencilState',
-    ['depth_test_enable', 'depth_write_enable', 'depth_bounds_test_enable',
-     'depth_compare', 'stencil_test_enable', 'front', 'back', 'min', 'max']
-)
-PipelineDepthStencilState.__doc__ = '''
-    *Parameters:*
-
-    - `depth_test_enable`: Enable depth test
-    - `depth_write_enable`: Enable depth write
-    - `depth_bounds_test_enable`: Enable bounds test
-    - `depth_compare`: Condition to overwrite depth (`VkCompareOp`)
-    - `stencil_test_enable`: Enable stencil test
-    - `front`: Control stencil parameter (`VkStencilOpState`)
-    - `back`: Control stencil parameter (`VkStencilOpState`)
-    - `min`: Define the min value in depth bound test (`float`)
-    - `max`: Define the max value in depth bound test (`float`)
-    '''
 
 PipelineColorBlendAttachmentState = namedtuple(
     'PipelineColorBlendAttachmentState',
@@ -485,652 +306,196 @@ PipelineColorBlendState.__doc__ = '''
     - `constants`: Constants depending on blend factor (`list` of 4 `float`)
     '''
 
+
+PipelineDepthStencilState = namedtuple(
+    'PipelineDepthStencilState',
+    ['depth_test_enable', 'depth_write_enable', 'depth_bounds_test_enable',
+     'depth_compare', 'stencil_test_enable', 'front', 'back', 'min', 'max']
+)
+PipelineDepthStencilState.__doc__ = '''
+    *Parameters:*
+
+    - `depth_test_enable`: Enable depth test
+    - `depth_write_enable`: Enable depth write
+    - `depth_bounds_test_enable`: Enable bounds test
+    - `depth_compare`: Condition to overwrite depth (`VkCompareOp`)
+    - `stencil_test_enable`: Enable stencil test
+    - `front`: Control stencil parameter (`VkStencilOpState`)
+    - `back`: Control stencil parameter (`VkStencilOpState`)
+    - `min`: Define the min value in depth bound test (`float`)
+    - `max`: Define the max value in depth bound test (`float`)
+    '''
+
+
 PipelineDynamicState = namedtuple('PipelineDynamicState', 'states')
 PipelineDynamicState.__doc__ = '''
     - `states`: List of `VkDynamicState`
     '''
 
 
-class Pipeline():
-    '''Pipeline (graphic) object
-
-    The graphics pipeline is the sequence of operations that take the
-    vertices and textures of your meshes all the way to the pixels in
-    the render targets. The pipeline combines the following elements:
-
-      - Shader stages: the shader modules that define the functionality of
-                       the programmable stages of the graphics pipeline
-      - Fixed-function state: all of the structures that define the
-                              fixed-function stages of the pipeline, like
-                              input assembly, rasterizer, viewport and
-                              color blending
-      - Pipeline layout: the uniform and push values referenced by the
-                         shader that can be updated at draw time
-      - Render pass: the attachments referenced by the pipeline stages
-                     and their usage
-    '''
-
-    def __init__(self, context, stages, vertex_input, input_assembly,
-                 viewport_state, rasterization, multisample, depth, blend,
-                 dynamic, renderpass):
-        '''
-
-        - `context`: The `VulkContext`
-        - `stages`: List of `PipelineShaderStage`
-        - `vertex_input`: `PipelineVertexInputState`
-        - `input_assembly`: `PipelineInputAssemblyState`
-        - `viewport_state`: `PipelineViewportState`
-        - `rasterization`: `PipelineRasterizationState`
-        - `multisample`: `PipelineMultisampleState`
-        - `depth`: `PipelineDepthStencilState` (can be `None`)
-        - `blend`: `PipelineColorBlendState`
-        - `dynamic`: `PipelineDynamicState` (may be `None`)
-        - `renderpass`: The `Renderpass` of this pipeline
-        '''
-
-        vk_stages = []
-        for s in stages:
-            try:
-                vulkan_stage = STAGE_MAPPING[s.stage]
-            except KeyError:
-                msg = "Stage %s doesn't exist"
-                logger.error(msg)
-                raise TypeError(msg)
-
-            vk_stages.append(vk.VkPipelineShaderStageCreateInfo(
-                sType=vk.VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
-                flags=0,
-                stage=vulkan_stage,
-                module=s.module.module,
-                pSpecializationInfo=None,
-                pName='main'
-            ))
-
-        vk_vertex_input = vk.VkPipelineVertexInputStateCreateInfo(
-            sType=vk.VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
-            flags=0,
-            vertexBindingDescriptionCount=len(vertex_input.bindings),
-            pVertexBindingDescriptions=vertex_input.bindings or None,
-            vertexAttributeDescriptionCount=len(vertex_input.attributes),
-            pVertexAttributeDescriptions=vertex_input.attributes or None
-        )
-
-        vk_input_assembly = vk.VkPipelineInputAssemblyStateCreateInfo(
-            sType=vk.VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO, # noqa
-            flags=0,
-            topology=vk_const(input_assembly.topology),
-            primitiveRestartEnable=vk.VK_FALSE
-        )
-
-        vk_viewports = []
-        for v in viewport_state.viewports:
-            vk_viewports.append(vk.VkViewport(
-                x=v.x, y=v.y, width=v.width, height=v.height,
-                minDepth=v.min_depth, maxDepth=v.max_depth
-            ))
-
-        vk_scissors = []
-        for s in viewport_state.scissors:
-            vk_scissors.append(vk.VkRect2D(
-                offset=vk.VkOffset2D(x=s.offset.x, y=s.offset.y),
-                extent=vk.VkExtent2D(width=s.extent.width,
-                                     height=s.extent.height),
-            ))
-
-        vk_viewport_state = vk.VkPipelineViewportStateCreateInfo(
-            sType=vk.VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,
-            flags=0,
-            viewportCount=len(vk_viewports),
-            pViewports=vk_viewports,
-            scissorCount=len(vk_scissors),
-            pScissors=vk_scissors
-        )
-
-        dbe = vk.VK_FALSE
-        if (rasterization.depth_bias_constant or
-           rasterization.depth_bias_clamp or
-           rasterization.depth_bias_slope):
-            dbe = vk.VK_TRUE
-
-        vk_rasterization = vk.VkPipelineRasterizationStateCreateInfo(
-            sType=vk.VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO, # noqa
-            flags=0,
-            depthClampEnable=btov(rasterization.depth_clamp_enable),
-            rasterizerDiscardEnable=vk.VK_FALSE,
-            polygonMode=vk_const(rasterization.polygon_mode),
-            lineWidth=rasterization.line_width,
-            cullMode=vk_const(rasterization.cull_mode),
-            frontFace=vk_const(rasterization.front_face),
-            depthBiasEnable=dbe,
-            depthBiasConstantFactor=rasterization.depth_bias_constant,
-            depthBiasClamp=rasterization.depth_bias_clamp,
-            depthBiasSlopeFactor=rasterization.depth_bias_slope
-        )
-
-        vk_multisample = vk.VkPipelineMultisampleStateCreateInfo(
-            sType=vk.VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO,
-            flags=0,
-            sampleShadingEnable=btov(multisample.shading_enable),
-            rasterizationSamples=vk_const(multisample.samples),
-            minSampleShading=multisample.min_sample_shading,
-            pSampleMask=None,
-            alphaToCoverageEnable=vk.VK_FALSE,
-            alphaToOneEnable=vk.VK_FALSE
-        )
-
-        vk_depth = None
-        if depth:
-            vk_depth = vk.VkPipelineDepthStencilStateCreateInfo(
-                sType=vk.VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO, # noqa
-                flags=0,
-                depthTestEnable=btov(depth.depth_test_enable),
-                depthWriteEnable=btov(depth.depth_write_enable),
-                depthCompareOp=vk_const(depth.depth_compare),
-                depthBoundsTestEnable=btov(depth.depth_bounds_test_enable),
-                stencilTestEnable=btov(depth.stencil_test_enable),
-                front=depth.front,
-                back=depth.back,
-                minDepthBounds=depth.min,
-                maxDepthBounds=depth.max
-            )
-
-        vk_blend_attachments = []
-        for a in blend.attachments:
-            vk_a = vk.VkPipelineColorBlendAttachmentState(
-                colorWriteMask=vk_const(a.color_mask),
-                blendEnable=btov(a.enable),
-                srcColorBlendFactor=vk_const(a.src_color),
-                dstColorBlendFactor=vk_const(a.dst_color),
-                colorBlendOp=vk_const(a.color_op),
-                srcAlphaBlendFactor=vk_const(a.src_alpha),
-                dstAlphaBlendFactor=vk_const(a.dst_alpha),
-                alphaBlendOp=vk_const(a.alpha_op)
-            )
-            vk_blend_attachments.append(vk_a)
-
-        vk_blend = vk.VkPipelineColorBlendStateCreateInfo(
-            sType=vk.VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO,
-            flags=0,
-            logicOpEnable=btov(blend.op_enable),
-            logicOp=vk_const(blend.op),
-            attachmentCount=len(vk_blend_attachments),
-            pAttachments=vk_blend_attachments,
-            blendConstants=blend.constants
-        )
-
-        vk_dynamic = None
-        if dynamic:
-            vk_dynamic = vk.VkPipelineDynamicStateCreateInfo(
-                sType=vk.VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO,
-                flags=0,
-                dynamicStateCount=len(dynamic.states),
-                pDynamicStates=dynamic.states
-            )
-
-        # Currently layout is unusable, I have to try it
-        vk_layout_create = vk.VkPipelineLayoutCreateInfo(
-            sType=vk.VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
-            flags=0,
-            setLayoutCount=0,
-            pSetLayouts=None,
-            pushConstantRangeCount=0,
-            pPushConstantRanges=None
-        )
-        vk_layout = vk.vkCreatePipelineLayout(context.device, vk_layout_create)
-
-        pipeline_create = vk.VkGraphicsPipelineCreateInfo(
-            sType=vk.VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
-            flags=0,
-            stageCount=len(vk_stages),
-            pStages=vk_stages,
-            pVertexInputState=vk_vertex_input,
-            pInputAssemblyState=vk_input_assembly,
-            pTessellationState=None,
-            pViewportState=vk_viewport_state,
-            pRasterizationState=vk_rasterization,
-            pMultisampleState=vk_multisample,
-            pDepthStencilState=vk_depth,
-            pColorBlendState=vk_blend,
-            pDynamicState=vk_dynamic,
-            layout=vk_layout,
-            renderPass=renderpass.renderpass,
-            subpass=0,
-            basePipelineHandle=None,
-            basePipelineIndex=-1
-        )
-
-        self.pipeline = vk.vkCreateGraphicsPipelines(context.device, None,
-                                                     1, [pipeline_create])
-
-
-Offset2D = namedtuple('Offset2D', ['x', 'y'])
-Offset2D.__doc__ = '''
+PipelineInputAssemblyState = namedtuple('PipelineInputAssemblyState',
+                                        'topology')
+PipelineInputAssemblyState.__doc__ = '''
     *Parameters:*
 
-    - `x`: x offset
-    - `y`: y offset
+    - `topology`: The `VkPrimitiveTopology` to use when drawing
     '''
 
 
-Extent2D = namedtuple('Extent2D', ['width', 'height'])
-Extent2D.__doc__ = '''
+PipelineMultisampleState = namedtuple('PipelineMultisampleState',
+                                      ['shading_enable', 'samples',
+                                       'min_sample_shading'])
+PipelineMultisampleState.__doc__ = '''
     *Parameters:*
 
-    - `width`: Width
-    - `height`: Height
+    - `shading_enable`: Enable multisampling (`boolean`)
+    - `samples`: Number of samples (`VkSampleCountFlagBits`)
+    - `min_sample_shading`: Minimum of sample (`float`)
     '''
 
 
-Extent3D = namedtuple('Extent3D', ['width', 'height', 'depth'])
-Extent3D.__doc__ = '''
+PipelineRasterizationState = namedtuple(
+    'PipelineRasterizationState',
+    ['depth_clamp_enable', 'polygon_mode', 'line_width', 'cull_mode',
+     'front_face', 'depth_bias_constant', 'depth_bias_clamp',
+     'depth_bias_slope']
+)
+PipelineRasterizationState.__doc__ = '''
     *Parameters:*
 
-    - `width`: Width
-    - `height`: Height
-    - `depth`: Depth
+    - `depth_clamp_enable`: Whether to enable depth clamping (`boolean`)
+    - `polygon_mode`: Which `VkPolygonMode` to use
+    - `line_width`: Width of line (`float`)
+    - `cull_mode`: The way of culling (`VkCullModeFlagBits`)
+    - `front_face`: `VkFrontFace`
+    - `depth_bias_constant`: Constant to add to depth (`float`)
+    - `depth_bias_clamp`: Max depth bias (`float`)
+    - `depth_bias_slope`: Factor to slope (`float`)
     '''
 
 
-class Image():
-    '''
-    `Image` is a wrapper around a `VkImage` and a `VkMemory`
-    '''
+PipelineShaderStage = namedtuple('PipelineShaderStage', ['module', 'stage'])
+PipelineShaderStage.__doc__ = '''
+    *Parameters:*
 
-    def __init__(self, context, image_type, image_format, width, height, depth,
-                 mip_level, layers, samples, sharing_mode, queue_families,
-                 layout, tiling, usage, memory_properties):
-        '''Create a new image
-
-        Creating an image is made of several steps:
-
-        - Create the image
-        - Allocate the memory
-        - Bind the memory to the image
-
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        - `image_type`: Type of image 1D/2D/3D (`VkImageType`)
-        - `image_format`: `VkFormat` of the image
-        - `width`: Image width
-        - `heigth`: Image height
-        - `depth`: Image depth
-        - `mip_level`: Level of mip (`int`)
-        - `layers`: Number of layers (`int`)
-        - `samples`: This `VkSampleCountFlagBits` flag is related
-                     to multisampling
-        - `sharing_mode`: `VkSharingMode`
-        - `queue_families`: List of queue families accessing this image
-                            (ignored if sharingMode is not
-                            `VK_SHARING_MODE_CONCURRENT`) (can be [])
-        - `layout`: `VkImageLayout`
-        - `tiling`: `VkImageTiling`
-        - `usage`: `VkImageUsageFlags`
-        - `memory_properties`: `VkMemoryPropertyFlags` Vulkan constant
-        '''
-        self.width = width
-        self.height = height
-        self.depth = depth
-        self.format = vk_const(image_format)
-        self.memory_properties = vk_const(memory_properties)
-
-        # Create the VkImage
-        vk_extent = vk.VkExtent3D(width=width,
-                                  height=height,
-                                  depth=depth)
-
-        image_create = vk.VkImageCreateInfo(
-            sType=vk.VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
-            flags=0,
-            imageType=vk_const(image_type),
-            format=self.format,
-            extent=vk_extent,
-            mipLevels=mip_level,
-            arrayLayers=layers,
-            samples=vk_const(samples),
-            tiling=vk_const(tiling),
-            usage=vk_const(usage),
-            sharingMode=vk_const(sharing_mode),
-            queueFamilyIndexCount=len(queue_families),
-            pQueueFamilyIndices=queue_families if queue_families else None,
-            initialLayout=vk_const(layout)
-        )
-
-        self.image = vk.vkCreateImage(context.device, image_create)
-
-        # Get memory requirements
-        requirements = vk.vkGetImageMemoryRequirements(context.device,
-                                                       self.image)
-
-        alloc_info = vk.VkMemoryAllocateInfo(
-            sType=vk.VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
-            allocationSize=requirements.size,
-            memoryTypeIndex=find_memory_type(
-                context,
-                requirements.memoryTypeBits,
-                self.memory_properties
-            )
-        )
-
-        self.memory = vk.vkAllocateMemory(context.device, alloc_info)
-
-        # Bind device memory to the image
-        vk.vkBindImageMemory(context.device, self.image, self.memory, 0)
-
-    def update_layout(self, cmd, old_layout, new_layout, src_stage,
-                      dst_stage, src_access, dst_access):
-        '''
-        Update the image layout.
-        Command to update layout are registered in the commandbuffer
-        but it's up to you to start and submit the command buffer to
-        the execution queue.
-
-        *Parameters:*
-
-        - `cmd`: `CommandBufferRegister` used to register commands
-        - `old_layout`: `VkImageLayout`
-        - `new_layout`: `VkImageLayout`
-        - `src_stage`: `VkPipelineStageFlagBits`
-        - `dst_stage`: `VkPipelineStageFlagBits`
-        - `src_access`: `VkAccessFlagBits`
-        - `dst_access`: `VkAccessFlagBits`
-        '''
-        subresource_range = vk.VkImageSubresourceRange(
-            aspectMask=vk.VK_IMAGE_ASPECT_COLOR_BIT,
-            baseMipLevel=0,
-            levelCount=1,
-            baseArrayLayer=0,
-            layerCount=1
-        )
-
-        barrier = vk.VkImageMemoryBarrier(
-            sType=vk.VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
-            srcAccessMask=vk_const(src_access),
-            dstAccessMask=vk_const(dst_access),
-            oldLayout=vk_const(old_layout),
-            newLayout=vk_const(new_layout),
-            srcQueueFamilyIndex=vk.VK_QUEUE_FAMILY_IGNORED,
-            dstQueueFamilyIndex=vk.VK_QUEUE_FAMILY_IGNORED,
-            image=self.image,
-            subresourceRange=subresource_range
-        )
-
-        cmd.pipeline_barrier(vk_const(src_stage), vk_const(dst_stage), 0, [],
-                             [], [barrier])
-
-    def copy_to(self, cmd, dst_image):
-        '''
-        Copy this image to the destination image.
-        Commands to copy are registered in the commandbuffer but it's up to
-        you to start and submit the command buffer to the execution queue.
-
-        *Parameters:*
-
-        - `cmd`: `CommandBufferRegister` used to register commands
-        - `dst_image`: Destination `Image`
-
-        **Note: Layout of source image must be `TRANSFERT_SRC_OPTIMAL` and
-                layout of destination image must be `TRANSFERT_DST_OPTIMAL`.
-                It's up to you.**
-
-        **Warning: Format of both images must be compatible**
-        '''
-        # Copy image
-        subresource = vk.VkImageSubresourceLayers(
-            aspectMask=vk.VK_IMAGE_ASPECT_COLOR_BIT,
-            baseArrayLayer=0,
-            mipLevel=0,
-            layerCount=1
-        )
-        extent = vk.VkExtent3D(width=self.width, height=self.height,
-                               depth=self.depth)
-        region = vk.VkImageCopy(
-            srcSubresource=subresource,
-            dstSubresource=subresource,
-            srcOffset=vk.VkOffset3D(x=0, y=0, z=0),
-            dstOffset=vk.VkOffset3D(x=0, y=0, z=0),
-            extent=extent
-        )
-
-        src_layout = 'VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL'
-        dst_layout = 'VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'
-
-        cmd.copy_image(self.image, src_layout, dst_image.image,
-                       dst_layout, [region])
-
-    @contextmanager
-    def bind(self, context):
-        '''
-        Map this image to upload data in it.
-        This function is a context manager and must be called with `with`.
-        It return a python buffer and let you do what you want with it,
-        be careful!
-
-        *Parameters:*
-
-        - `context`: The `VulkContext`
-
-        **Warning: Image memory must be host visible**
-        '''
-        compatible_memories = {vk.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
-                               vk.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-                               vk.VK_MEMORY_PROPERTY_HOST_CACHED_BIT}
-        if not any([self.memory_properties & m for m in compatible_memories]):
-            msg = "Can't map this image, memory must be host visible"
-            logger.error(msg)
-            raise VulkError(msg)
-
-        format_size = vulkanconstant.VK_FORMAT_SIZE[self.format] / 8
-        image_size = (self.width * self.height * self.depth * format_size)
-
-        try:
-            data = vk.vkMapMemory(context.device, self.memory, 0,
-                                  image_size, 0)
-            yield data
-        finally:
-            vk.vkUnmapMemory(context.device, self.memory)
-
-
-class HighPerformanceImage():
-    '''
-    `HighPerformanceImage` allows to use high performance image to be
-    sampled in your shaders.
-
-    To get the maximum performance, we are going to create two `Image`,
-    a staging image which memory can be updated (with our texture) and
-    a final image with very fast memory that we will use in shaders.
-    When we create an image, we first upload the pixels in the staging
-    image and then copy the memory in the final image. Of course, both of
-    the image have the same properties.
+    - `module`: The `ShaderModule` to bind
+    - `stage`: Stage name in ['vertex', 'fragment', 'geometry', 'compute',
+               'tesselation_control', 'tesselation_evaluation']
     '''
 
-    def __init__(self, context, image_type, image_format, width, height,
-                 depth, mip_level, layers, samples, sharing_mode,
-                 queue_families):
-        '''Create a high performance image
+PipelineVertexInputState = namedtuple('PipelineVertexInputState',
+                                      ['bindings', 'attributes'])
+PipelineVertexInputState.__new__.__defaults__ = \
+        ([],) * len(PipelineVertexInputState._fields)
+PipelineVertexInputState.__doc__ = '''
+    *Parameters:*
 
-        *Parameters:*
+    - `bindings`: List of vertice bindings
+    - `attributes`: List of vertice attributes
 
-        - `context`: `VulkContext`
-        - `image_type`: Type of image 1D/2D/3D (`VkImageType`)
-        - `image_format`: `VkFormat` of the image
-        - `width`: Image width
-        - `heigth`: Image height
-        - `depth`: Image depth
-        - `mip_level`: Level of mip (`int`)
-        - `layers`: Number of layers (`int`)
-        - `samples`: This `VkSampleCountFlagBits` flag is related
-                     to multisampling
-        - `sharing_mode`: `VkSharingMode`
-        - `queue_families`: List of queue families accessing this image
-                            (ignored if sharingMode is not
-                            `VK_SHARING_MODE_CONCURRENT`) (can be [])
-        '''
-        self.staging_image = Image(
-            context, image_type, image_format, width, height, depth, mip_level,
-            layers, samples, sharing_mode, queue_families,
-            vk.VK_IMAGE_LAYOUT_PREINITIALIZED, vk.VK_IMAGE_TILING_LINEAR,
-            vk.VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
-            vk.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT # noqa
-        )
-        self.final_image = Image(
-            context, image_type, image_format, width, height, depth, mip_level,
-            layers, samples, sharing_mode, queue_families,
-            vk.VK_IMAGE_LAYOUT_PREINITIALIZED, vk.VK_IMAGE_TILING_OPTIMAL,
-            vk.VK_IMAGE_USAGE_TRANSFER_DST_BIT | vk.VK_IMAGE_USAGE_SAMPLED_BIT,
-            vk.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
-        )
-
-    def _finalize(self, context):
-        '''
-        Prepare and copy the staging image to the final image.
-
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        '''
-        commandpool = CommandPool(context,
-                                  context.queue_family_indices['graphic'])
-
-        # Transition the staging image to optimal source transfert layout
-        with immediate_buffer(context, commandpool) as cmd:
-            self.staging_image.update_layout(
-                cmd, vk.VK_IMAGE_LAYOUT_PREINITIALIZED,
-                vk.VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                vk.VK_ACCESS_HOST_WRITE_BIT,
-                vk.VK_ACCESS_TRANSFER_READ_BIT
-            )
-
-        # Transition the final image to optimal destination transfert layout
-        with immediate_buffer(context, commandpool) as cmd:
-            self.final_image.update_layout(
-                cmd, vk.VK_IMAGE_LAYOUT_PREINITIALIZED,
-                vk.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                vk.VK_ACCESS_HOST_WRITE_BIT,
-                vk.VK_ACCESS_TRANSFER_WRITE_BIT
-            )
-
-        # Copy staging image into final image
-        with immediate_buffer(context, commandpool) as cmd:
-            self.staging_image.copy_to(cmd, self.final_image)
-
-        # Set the best layout for the final image
-        with immediate_buffer(context, commandpool) as cmd:
-            self.final_image.update_layout(
-                cmd, vk.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                vk.VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                vk.VK_ACCESS_TRANSFER_WRITE_BIT,
-                vk.VK_ACCESS_SHADER_READ_BIT
-            )
-
-        # Set back the layout of staging image
-        with immediate_buffer(context, commandpool) as cmd:
-            self.staging_image.update_layout(
-                cmd, vk.VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-                vk.VK_IMAGE_LAYOUT_PREINITIALIZED,
-                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                vk.VK_ACCESS_TRANSFER_READ_BIT,
-                vk.VK_ACCESS_HOST_WRITE_BIT
-            )
-
-    @contextmanager
-    def bind(self, context):
-        '''Bind image for writing
-
-        It calls `bind` method of the staging image and copy the image
-        when the contextmanager is released. Must be used with `with`.
-
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        '''
-        try:
-            with self.staging_image.bind(context) as b:
-                yield b
-        finally:
-            self._finalize(context)
+    **Note: `bindings` and `attributes` can be empty `list`**
+    '''
 
 
-ImageSubresourceRange = namedtuple('ImageSubresourceRange',
-                                   ['aspect', 'base_miplevel', 'level_count',
-                                    'base_layer', 'layer_count'])
-ImageSubresourceRange.__doc__ = '''
-    `ImageSubresourceRange` object describes what the image's purpose is and
-    which part of the image should be accessed.
+PipelineViewportState = namedtuple('PipelineViewportState',
+                                   ['viewports', 'scissors'])
+PipelineViewportState.__doc__ = '''
+    The PipelineViewportState object contains viewports and scissors.
 
     *Parameters:*
 
-    - `aspect`: `VkImageAspectFlags` indicating which aspect(s) of the
-                image are included in the view
-    - `base_miplevel`: The first mipmap level accessible to the view
-    - `level_count`: Number of mipmap levels (starting from base_miplevel)
-                     accessible to the view
-    - `base_layer`: First array layer accessible to the view
-    - `layer_count`: Number of array layers (starting from base_layer)
-                     accessible to the view
+    - `viewports`: `list` of `Viewport`
+    - `scissors`: `list` of `Rect2D`
     '''
 
 
-class ImageView():
+Rect2D = namedtuple('Rect2d', ['offset', 'extent'])
+Rect2D.__doc__ = '''
+    2D surface with offset.
+
+    *Parameters:*
+
+    - `offset`: `Offset2D` object
+    - `extent`: `Extent2D` object
     '''
-    An image view is quite literally a view into an image.
-    It describes how to access the image and which part of the image
-    to access, for example if it should be treated as a 2D texture depth
-    texture without any mipmapping levels.
+
+
+SubmitInfo = namedtuple('SubmitInfo', ['wait_semaphores', 'wait_stages',
+                                       'signal_semaphores', 'commandbuffers'])
+SubmitInfo.__doc__ = '''
+    Submit information when submitting to queue
+
+    *Parameters:*
+
+    - `wait_semaphores`: `list` of `Semaphore` to wait on
+    - `wait_stages`: `list` of `VkPipelineStageFlagBits` at which each
+                     corresponding semaphore wait will occur. Must be the
+                     same size as `wait_semaphores`
+    - `signal_semaphores`: `list` of `Semaphore` to signal when commands
+                           are finished
+    - `commandbuffers`: `list` of `CommandBuffer` to execute
     '''
 
-    def __init__(self, context, image, view_type, image_format,
-                 subresource_range, swizzle_r='VK_COMPONENT_SWIZZLE_IDENTITY',
-                 swizzle_g='VK_COMPONENT_SWIZZLE_IDENTITY',
-                 swizzle_b='VK_COMPONENT_SWIZZLE_IDENTITY',
-                 swizzle_a='VK_COMPONENT_SWIZZLE_IDENTITY'):
-        '''Create ImageView
 
-        *Parameters:*
+SubpassDependency = namedtuple('SubpassDependency',
+                               ['src_subpass', 'src_stage', 'src_access',
+                                'dst_subpass', 'dst_stage', 'dst_access'])
+SubpassDependency.__doc__ = '''
+    SubpassDependency describes all dependencies of the subpass.
 
-        - `context`: The `VulkContext`
-        - `image`: The `Image` to work on
-        - `view_type`: `VkImageViewType` Vulkan constant
-        - `image_format`: `VkFormat` Vulkan constant
-        - `subresource_range`: The `ImageSubresourceRange` to use
-        - `swizzle_r`: Swizzle of the red color channel
-        - `swizzle_g`: Swizzle of the green color channel
-        - `swizzle_b`: Swizzle of the blue color channel
-        - `swizzle_a`: Swizzle of the alpha color channel
-        '''
-        components = vk.VkComponentMapping(
-            r=vk_const(swizzle_r), g=vk_const(swizzle_g),
-            b=vk_const(swizzle_b), a=vk_const(swizzle_a)
-        )
+    *Parameters:*
 
-        vk_subresource_range = vk.VkImageSubresourceRange(
-            aspectMask=vk_const(subresource_range.aspect),
-            baseMipLevel=subresource_range.base_miplevel,
-            levelCount=subresource_range.level_count,
-            baseArrayLayer=subresource_range.base_layer,
-            layerCount=subresource_range.layer_count
-        )
-
-        imageview_create = vk.VkImageViewCreateInfo(
-            sType=vk.VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
-            flags=0,
-            image=image,
-            viewType=vk_const(view_type),
-            format=vk_const(image_format),
-            components=components,
-            subresourceRange=vk_subresource_range
-        )
-
-        self.imageview = vk.vkCreateImageView(context.device, imageview_create)
+    - `src_subpass`: Source subpass `int` or `VK_SUBPASS_EXTERNAL`
+    - `src_stage`: Source stage `VkPipelineStageFlagBits`
+    - `src_access`: Source access `VkAccessFlagBits`
+    - `dst_subpass`: Destination subpass `int` or `VK_SUBPASS_EXTERNAL`
+    - `dst_stage`: Destination stage `VkPipelineStageFlagBits`
+    - `dst_access`: Destination access `VkAccessFlagBits`
+    '''
 
 
+SubpassDescription = namedtuple('SubpassDescription',
+                                ['colors', 'inputs', 'resolves',
+                                 'preserves', 'depth_stencil'])
+SubpassDescription.__new__.__defaults__ = \
+        ([],) * len(SubpassDescription._fields)
+SubpassDescription.__doc__ = '''
+    `SubpassDescription` describes all attachments in the subpass.
+    All parameters are of type `AttachmentReference`. If you don't want
+    an attachment, don't set it, its default value is an empty list.
+
+    *Parameters:*
+
+    - `colors`: `list` of colors attachments
+    - `inputs`: `list` of inputs attachments
+    - `resolves`: `list` of resolves attachments (must be the same
+                  size as inputs)
+    - `preserves`: `list` of preserves attachments
+    - `depth_stencil`: `list` containing only one attachment
+    '''
+
+
+Viewport = namedtuple('Viewport', ['x', 'y', 'width', 'height',
+                                   'min_depth', 'max_depth'])
+Viewport.__doc__ = '''
+    Structure specifying a viewport
+
+    *Parameters:*
+
+    - `x`: X upper left corner
+    - `y`: Y upper left corner
+    - `width`: Viewport width
+    - `height`: Viewport height
+    - `min_depth`: Depth range for the viewport
+    - `max_depth`: Depth range for the viewport
+
+    **Note: `min_depth` and `max_depth` must be between 0.0 and 1.0**
+    '''
+
+
+# ----------
+# CLASSES
+# ----------
 class Buffer():
     '''
     `Buffer` wrap a `VkBuffer` and a `VkMemory`
@@ -1248,221 +613,6 @@ class Buffer():
             yield data
         finally:
             vk.vkUnmapMemory(context.device, self.memory)
-
-
-class HighPerformanceBuffer():
-    '''
-    `HighPerformanceBuffer` allows to use high performance buffer to be
-    accessed in your vertex stage.
-
-    To get the maximum performance, we are going to create two `Buffer`,
-    a staging buffer which memory can be updated and a final buffer with
-    very fast memory that we will use in pipeline.
-    When we create a buffer, we first upload data in the staging buffer
-    and then copy the memory in the final buffer. Of course, both of the
-    buffer have the same properties.
-    '''
-
-    def __init__(self, context, size, sharing_mode, queue_families):
-        '''Create a high performance buffer
-
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        - `size`: Buffer size in bytes
-        - `sharing_mode`: `VkSharingMode`
-        - `queue_families`: List of queue families accessing this image
-                            (ignored if sharingMode is not
-                            `VK_SHARING_MODE_CONCURRENT`) (can be [])
-        '''
-        self.staging_buffer = Buffer(
-            context, 0, size, vk.VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-            sharing_mode, queue_families,
-            vk.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT # noqa
-        )
-
-        self.final_buffer = Buffer(
-            context, 0, size,
-            vk.VK_BUFFER_USAGE_TRANSFER_DST_BIT | vk.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, # noqa
-            sharing_mode, queue_families,
-            vk.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
-        )
-
-    def _finalize(self, context):
-        '''
-        Copy the staging buffer to the final buffer.
-
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        '''
-        with immediate_buffer(context) as cmd:
-            self.staging_buffer.copy_to(cmd, self.final_buffer)
-
-    @contextmanager
-    def bind(self, context):
-        '''Bind buffer for writing
-
-        It calls `bind` method of the staging buffer and copy the buffer
-        when the contextmanager is released. Must be used with `with`.
-
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        '''
-        try:
-            with self.staging_buffer.bind(context) as b:
-                yield b
-        finally:
-            self._finalize(context)
-
-
-class Framebuffer():
-    '''
-    In Vulkan, a `Framebuffer` references all of the `VkImageView` objects that
-    represent the attachments of a `Renderpass`.
-    '''
-
-    def __init__(self, context, renderpass, attachments,
-                 width, height, layers):
-        '''
-        *Parameters:*
-
-        - `context`: The `VulkContext`
-        - `renderpass`: The compatible `Renderpass` of this `Framebuffer`
-        - `attachments`: List of `ImageView`
-        - `width`: Width (`int`)
-        - `height`: Height (`int`)
-        - `layers`: Number of layers (`int`)
-        '''
-        framebuffer_create = vk.VkFramebufferCreateInfo(
-            sType=vk.VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
-            flags=0,
-            renderPass=renderpass.renderpass,
-            attachmentCount=len(attachments),
-            pAttachments=[a.imageview for a in attachments],
-            width=width,
-            height=height,
-            layers=layers
-        )
-
-        self.framebuffer = vk.vkCreateFramebuffer(context.device,
-                                                  framebuffer_create)
-
-
-class CommandPool():
-    '''
-    Command pools manage the memory that is used to store the buffers and
-    command buffers are allocated from them.
-    '''
-
-    def __init__(self, context, queue_family_index, flags=0):
-        '''
-        *Parameters:*
-
-        - `context`: The `VulkContext`
-        - `queue_family_index`: Index of the queue family to use
-        - `flags`: `VkCommandPoolCreateFlags` Vulkan constant, default to 0
-        '''
-        commandpool_create = vk.VkCommandPoolCreateInfo(
-            sType=vk.VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
-            queueFamilyIndex=queue_family_index,
-            flags=vk_const(flags)
-        )
-
-        # The Vulkan command pool
-        self.commandpool = vk.vkCreateCommandPool(context.device,
-                                                  commandpool_create)
-        # Command buffers allocated from this pool
-        self.commandbuffers = []
-
-    def allocate_buffers(self, context, level, count):
-        '''
-        Allocate list of `CommandBuffer` from pool.
-
-        *Parameters:*
-
-        - `context`: The `VulkContext`
-        - `commandpool`: The source `CommandPool`
-        - `level`: `VkCommandBufferLevel` Vulkan constant
-        - `count`: Number of buffer to create
-
-        *Returns:*
-
-        `list` of `CommandBuffer`
-        '''
-        commandbuffers_create = vk.VkCommandBufferAllocateInfo(
-            sType=vk.VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
-            commandPool=self.commandpool,
-            level=vk_const(level),
-            commandBufferCount=count
-        )
-
-        vk_commandbuffers = vk.vkAllocateCommandBuffers(
-            context.device,
-            commandbuffers_create)
-
-        commandbuffers = [CommandBuffer(cb) for cb in vk_commandbuffers]
-        self.commandbuffers.extend(commandbuffers)
-
-        return commandbuffers
-
-    def free_buffers(self, context, buffers):
-        '''
-        Free list of `CommandBuffer` allocated from this pool.
-
-        *Parameters:*
-
-        - `context`: The `VulkContext`
-        - `buffers`: `list` of `CommandBuffer` to free
-        '''
-        if any([b not in self.commandbuffers for b in buffers]):
-            msg = "Can't free a commandbuffer not allocated by this pool"
-            logger.error(msg)
-            raise VulkError(msg)
-
-        vk.vkFreeCommandBuffers(
-            context.device, self.commandpool, len(buffers),
-            [b.commandbuffer for b in buffers]
-        )
-
-    def free(self, context):
-        '''
-        Free this command pool
-
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        '''
-        vk.vkDestroyCommandPool(context.device, self.commandpool)
-
-
-Rect2D = namedtuple('Rect2d', ['offset', 'extent'])
-Rect2D.__doc__ = '''
-    2D surface with offset.
-
-    *Parameters:*
-
-    - `offset`: `Offset2D` object
-    - `extent`: `Extent2D` object
-    '''
-
-Viewport = namedtuple('Viewport', ['x', 'y', 'width', 'height',
-                                   'min_depth', 'max_depth'])
-Viewport.__doc__ = '''
-    Structure specifying a viewport
-
-    *Parameters:*
-
-    - `x`: X upper left corner
-    - `y`: Y upper left corner
-    - `width`: Viewport width
-    - `height`: Viewport height
-    - `min_depth`: Depth range for the viewport
-    - `max_depth`: Depth range for the viewport
-
-    **Note: `min_depth` and `max_depth` must be between 0.0 and 1.0**
-    '''
 
 
 class ClearColorValue():
@@ -1736,6 +886,908 @@ class CommandBufferRegister():
         vk.vkCmdEndRenderPass(self.commandbuffer)
 
 
+class CommandPool():
+    '''
+    Command pools manage the memory that is used to store the buffers and
+    command buffers are allocated from them.
+    '''
+
+    def __init__(self, context, queue_family_index, flags=0):
+        '''
+        *Parameters:*
+
+        - `context`: The `VulkContext`
+        - `queue_family_index`: Index of the queue family to use
+        - `flags`: `VkCommandPoolCreateFlags` Vulkan constant, default to 0
+        '''
+        commandpool_create = vk.VkCommandPoolCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+            queueFamilyIndex=queue_family_index,
+            flags=vk_const(flags)
+        )
+
+        # The Vulkan command pool
+        self.commandpool = vk.vkCreateCommandPool(context.device,
+                                                  commandpool_create)
+        # Command buffers allocated from this pool
+        self.commandbuffers = []
+
+    def allocate_buffers(self, context, level, count):
+        '''
+        Allocate list of `CommandBuffer` from pool.
+
+        *Parameters:*
+
+        - `context`: The `VulkContext`
+        - `commandpool`: The source `CommandPool`
+        - `level`: `VkCommandBufferLevel` Vulkan constant
+        - `count`: Number of buffer to create
+
+        *Returns:*
+
+        `list` of `CommandBuffer`
+        '''
+        commandbuffers_create = vk.VkCommandBufferAllocateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+            commandPool=self.commandpool,
+            level=vk_const(level),
+            commandBufferCount=count
+        )
+
+        vk_commandbuffers = vk.vkAllocateCommandBuffers(
+            context.device,
+            commandbuffers_create)
+
+        commandbuffers = [CommandBuffer(cb) for cb in vk_commandbuffers]
+        self.commandbuffers.extend(commandbuffers)
+
+        return commandbuffers
+
+    def free_buffers(self, context, buffers):
+        '''
+        Free list of `CommandBuffer` allocated from this pool.
+
+        *Parameters:*
+
+        - `context`: The `VulkContext`
+        - `buffers`: `list` of `CommandBuffer` to free
+        '''
+        if any([b not in self.commandbuffers for b in buffers]):
+            msg = "Can't free a commandbuffer not allocated by this pool"
+            logger.error(msg)
+            raise VulkError(msg)
+
+        vk.vkFreeCommandBuffers(
+            context.device, self.commandpool, len(buffers),
+            [b.commandbuffer for b in buffers]
+        )
+
+    def free(self, context):
+        '''
+        Free this command pool
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
+        vk.vkDestroyCommandPool(context.device, self.commandpool)
+
+
+class Framebuffer():
+    '''
+    In Vulkan, a `Framebuffer` references all of the `VkImageView` objects that
+    represent the attachments of a `Renderpass`.
+    '''
+
+    def __init__(self, context, renderpass, attachments,
+                 width, height, layers):
+        '''
+        *Parameters:*
+
+        - `context`: The `VulkContext`
+        - `renderpass`: The compatible `Renderpass` of this `Framebuffer`
+        - `attachments`: List of `ImageView`
+        - `width`: Width (`int`)
+        - `height`: Height (`int`)
+        - `layers`: Number of layers (`int`)
+        '''
+        framebuffer_create = vk.VkFramebufferCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
+            flags=0,
+            renderPass=renderpass.renderpass,
+            attachmentCount=len(attachments),
+            pAttachments=[a.imageview for a in attachments],
+            width=width,
+            height=height,
+            layers=layers
+        )
+
+        self.framebuffer = vk.vkCreateFramebuffer(context.device,
+                                                  framebuffer_create)
+
+
+class HighPerformanceBuffer():
+    '''
+    `HighPerformanceBuffer` allows to use high performance buffer to be
+    accessed in your vertex stage.
+
+    To get the maximum performance, we are going to create two `Buffer`,
+    a staging buffer which memory can be updated and a final buffer with
+    very fast memory that we will use in pipeline.
+    When we create a buffer, we first upload data in the staging buffer
+    and then copy the memory in the final buffer. Of course, both of the
+    buffer have the same properties.
+    '''
+
+    def __init__(self, context, size, sharing_mode, queue_families):
+        '''Create a high performance buffer
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        - `size`: Buffer size in bytes
+        - `sharing_mode`: `VkSharingMode`
+        - `queue_families`: List of queue families accessing this image
+                            (ignored if sharingMode is not
+                            `VK_SHARING_MODE_CONCURRENT`) (can be [])
+        '''
+        self.staging_buffer = Buffer(
+            context, 0, size, vk.VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+            sharing_mode, queue_families,
+            vk.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT # noqa
+        )
+
+        self.final_buffer = Buffer(
+            context, 0, size,
+            vk.VK_BUFFER_USAGE_TRANSFER_DST_BIT | vk.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, # noqa
+            sharing_mode, queue_families,
+            vk.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
+        )
+
+    def _finalize(self, context):
+        '''
+        Copy the staging buffer to the final buffer.
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
+        with immediate_buffer(context) as cmd:
+            self.staging_buffer.copy_to(cmd, self.final_buffer)
+
+    @contextmanager
+    def bind(self, context):
+        '''Bind buffer for writing
+
+        It calls `bind` method of the staging buffer and copy the buffer
+        when the contextmanager is released. Must be used with `with`.
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
+        try:
+            with self.staging_buffer.bind(context) as b:
+                yield b
+        finally:
+            self._finalize(context)
+
+
+class HighPerformanceImage():
+    '''
+    `HighPerformanceImage` allows to use high performance image to be
+    sampled in your shaders.
+
+    To get the maximum performance, we are going to create two `Image`,
+    a staging image which memory can be updated (with our texture) and
+    a final image with very fast memory that we will use in shaders.
+    When we create an image, we first upload the pixels in the staging
+    image and then copy the memory in the final image. Of course, both of
+    the image have the same properties.
+    '''
+
+    def __init__(self, context, image_type, image_format, width, height,
+                 depth, mip_level, layers, samples, sharing_mode,
+                 queue_families):
+        '''Create a high performance image
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        - `image_type`: Type of image 1D/2D/3D (`VkImageType`)
+        - `image_format`: `VkFormat` of the image
+        - `width`: Image width
+        - `heigth`: Image height
+        - `depth`: Image depth
+        - `mip_level`: Level of mip (`int`)
+        - `layers`: Number of layers (`int`)
+        - `samples`: This `VkSampleCountFlagBits` flag is related
+                     to multisampling
+        - `sharing_mode`: `VkSharingMode`
+        - `queue_families`: List of queue families accessing this image
+                            (ignored if sharingMode is not
+                            `VK_SHARING_MODE_CONCURRENT`) (can be [])
+        '''
+        self.staging_image = Image(
+            context, image_type, image_format, width, height, depth, mip_level,
+            layers, samples, sharing_mode, queue_families,
+            vk.VK_IMAGE_LAYOUT_PREINITIALIZED, vk.VK_IMAGE_TILING_LINEAR,
+            vk.VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
+            vk.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT # noqa
+        )
+        self.final_image = Image(
+            context, image_type, image_format, width, height, depth, mip_level,
+            layers, samples, sharing_mode, queue_families,
+            vk.VK_IMAGE_LAYOUT_PREINITIALIZED, vk.VK_IMAGE_TILING_OPTIMAL,
+            vk.VK_IMAGE_USAGE_TRANSFER_DST_BIT | vk.VK_IMAGE_USAGE_SAMPLED_BIT,
+            vk.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
+        )
+
+    def _finalize(self, context):
+        '''
+        Prepare and copy the staging image to the final image.
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
+        commandpool = CommandPool(context,
+                                  context.queue_family_indices['graphic'])
+
+        # Transition the staging image to optimal source transfert layout
+        with immediate_buffer(context, commandpool) as cmd:
+            self.staging_image.update_layout(
+                cmd, vk.VK_IMAGE_LAYOUT_PREINITIALIZED,
+                vk.VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                vk.VK_ACCESS_HOST_WRITE_BIT,
+                vk.VK_ACCESS_TRANSFER_READ_BIT
+            )
+
+        # Transition the final image to optimal destination transfert layout
+        with immediate_buffer(context, commandpool) as cmd:
+            self.final_image.update_layout(
+                cmd, vk.VK_IMAGE_LAYOUT_PREINITIALIZED,
+                vk.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                vk.VK_ACCESS_HOST_WRITE_BIT,
+                vk.VK_ACCESS_TRANSFER_WRITE_BIT
+            )
+
+        # Copy staging image into final image
+        with immediate_buffer(context, commandpool) as cmd:
+            self.staging_image.copy_to(cmd, self.final_image)
+
+        # Set the best layout for the final image
+        with immediate_buffer(context, commandpool) as cmd:
+            self.final_image.update_layout(
+                cmd, vk.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                vk.VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                vk.VK_ACCESS_TRANSFER_WRITE_BIT,
+                vk.VK_ACCESS_SHADER_READ_BIT
+            )
+
+        # Set back the layout of staging image
+        with immediate_buffer(context, commandpool) as cmd:
+            self.staging_image.update_layout(
+                cmd, vk.VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                vk.VK_IMAGE_LAYOUT_PREINITIALIZED,
+                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                vk.VK_ACCESS_TRANSFER_READ_BIT,
+                vk.VK_ACCESS_HOST_WRITE_BIT
+            )
+
+    @contextmanager
+    def bind(self, context):
+        '''Bind image for writing
+
+        It calls `bind` method of the staging image and copy the image
+        when the contextmanager is released. Must be used with `with`.
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
+        try:
+            with self.staging_image.bind(context) as b:
+                yield b
+        finally:
+            self._finalize(context)
+
+
+class Image():
+    '''
+    `Image` is a wrapper around a `VkImage` and a `VkMemory`
+    '''
+
+    def __init__(self, context, image_type, image_format, width, height, depth,
+                 mip_level, layers, samples, sharing_mode, queue_families,
+                 layout, tiling, usage, memory_properties):
+        '''Create a new image
+
+        Creating an image is made of several steps:
+
+        - Create the image
+        - Allocate the memory
+        - Bind the memory to the image
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        - `image_type`: Type of image 1D/2D/3D (`VkImageType`)
+        - `image_format`: `VkFormat` of the image
+        - `width`: Image width
+        - `heigth`: Image height
+        - `depth`: Image depth
+        - `mip_level`: Level of mip (`int`)
+        - `layers`: Number of layers (`int`)
+        - `samples`: This `VkSampleCountFlagBits` flag is related
+                     to multisampling
+        - `sharing_mode`: `VkSharingMode`
+        - `queue_families`: List of queue families accessing this image
+                            (ignored if sharingMode is not
+                            `VK_SHARING_MODE_CONCURRENT`) (can be [])
+        - `layout`: `VkImageLayout`
+        - `tiling`: `VkImageTiling`
+        - `usage`: `VkImageUsageFlags`
+        - `memory_properties`: `VkMemoryPropertyFlags` Vulkan constant
+        '''
+        self.width = width
+        self.height = height
+        self.depth = depth
+        self.format = vk_const(image_format)
+        self.memory_properties = vk_const(memory_properties)
+
+        # Create the VkImage
+        vk_extent = vk.VkExtent3D(width=width,
+                                  height=height,
+                                  depth=depth)
+
+        image_create = vk.VkImageCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
+            flags=0,
+            imageType=vk_const(image_type),
+            format=self.format,
+            extent=vk_extent,
+            mipLevels=mip_level,
+            arrayLayers=layers,
+            samples=vk_const(samples),
+            tiling=vk_const(tiling),
+            usage=vk_const(usage),
+            sharingMode=vk_const(sharing_mode),
+            queueFamilyIndexCount=len(queue_families),
+            pQueueFamilyIndices=queue_families if queue_families else None,
+            initialLayout=vk_const(layout)
+        )
+
+        self.image = vk.vkCreateImage(context.device, image_create)
+
+        # Get memory requirements
+        requirements = vk.vkGetImageMemoryRequirements(context.device,
+                                                       self.image)
+
+        alloc_info = vk.VkMemoryAllocateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
+            allocationSize=requirements.size,
+            memoryTypeIndex=find_memory_type(
+                context,
+                requirements.memoryTypeBits,
+                self.memory_properties
+            )
+        )
+
+        self.memory = vk.vkAllocateMemory(context.device, alloc_info)
+
+        # Bind device memory to the image
+        vk.vkBindImageMemory(context.device, self.image, self.memory, 0)
+
+    def update_layout(self, cmd, old_layout, new_layout, src_stage,
+                      dst_stage, src_access, dst_access):
+        '''
+        Update the image layout.
+        Command to update layout are registered in the commandbuffer
+        but it's up to you to start and submit the command buffer to
+        the execution queue.
+
+        *Parameters:*
+
+        - `cmd`: `CommandBufferRegister` used to register commands
+        - `old_layout`: `VkImageLayout`
+        - `new_layout`: `VkImageLayout`
+        - `src_stage`: `VkPipelineStageFlagBits`
+        - `dst_stage`: `VkPipelineStageFlagBits`
+        - `src_access`: `VkAccessFlagBits`
+        - `dst_access`: `VkAccessFlagBits`
+        '''
+        subresource_range = vk.VkImageSubresourceRange(
+            aspectMask=vk.VK_IMAGE_ASPECT_COLOR_BIT,
+            baseMipLevel=0,
+            levelCount=1,
+            baseArrayLayer=0,
+            layerCount=1
+        )
+
+        barrier = vk.VkImageMemoryBarrier(
+            sType=vk.VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
+            srcAccessMask=vk_const(src_access),
+            dstAccessMask=vk_const(dst_access),
+            oldLayout=vk_const(old_layout),
+            newLayout=vk_const(new_layout),
+            srcQueueFamilyIndex=vk.VK_QUEUE_FAMILY_IGNORED,
+            dstQueueFamilyIndex=vk.VK_QUEUE_FAMILY_IGNORED,
+            image=self.image,
+            subresourceRange=subresource_range
+        )
+
+        cmd.pipeline_barrier(vk_const(src_stage), vk_const(dst_stage), 0, [],
+                             [], [barrier])
+
+    def copy_to(self, cmd, dst_image):
+        '''
+        Copy this image to the destination image.
+        Commands to copy are registered in the commandbuffer but it's up to
+        you to start and submit the command buffer to the execution queue.
+
+        *Parameters:*
+
+        - `cmd`: `CommandBufferRegister` used to register commands
+        - `dst_image`: Destination `Image`
+
+        **Note: Layout of source image must be `TRANSFERT_SRC_OPTIMAL` and
+                layout of destination image must be `TRANSFERT_DST_OPTIMAL`.
+                It's up to you.**
+
+        **Warning: Format of both images must be compatible**
+        '''
+        # Copy image
+        subresource = vk.VkImageSubresourceLayers(
+            aspectMask=vk.VK_IMAGE_ASPECT_COLOR_BIT,
+            baseArrayLayer=0,
+            mipLevel=0,
+            layerCount=1
+        )
+        extent = vk.VkExtent3D(width=self.width, height=self.height,
+                               depth=self.depth)
+        region = vk.VkImageCopy(
+            srcSubresource=subresource,
+            dstSubresource=subresource,
+            srcOffset=vk.VkOffset3D(x=0, y=0, z=0),
+            dstOffset=vk.VkOffset3D(x=0, y=0, z=0),
+            extent=extent
+        )
+
+        src_layout = 'VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL'
+        dst_layout = 'VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'
+
+        cmd.copy_image(self.image, src_layout, dst_image.image,
+                       dst_layout, [region])
+
+    @contextmanager
+    def bind(self, context):
+        '''
+        Map this image to upload data in it.
+        This function is a context manager and must be called with `with`.
+        It return a python buffer and let you do what you want with it,
+        be careful!
+
+        *Parameters:*
+
+        - `context`: The `VulkContext`
+
+        **Warning: Image memory must be host visible**
+        '''
+        compatible_memories = {vk.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+                               vk.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+                               vk.VK_MEMORY_PROPERTY_HOST_CACHED_BIT}
+        if not any([self.memory_properties & m for m in compatible_memories]):
+            msg = "Can't map this image, memory must be host visible"
+            logger.error(msg)
+            raise VulkError(msg)
+
+        format_size = vulkanconstant.VK_FORMAT_SIZE[self.format] / 8
+        image_size = (self.width * self.height * self.depth * format_size)
+
+        try:
+            data = vk.vkMapMemory(context.device, self.memory, 0,
+                                  image_size, 0)
+            yield data
+        finally:
+            vk.vkUnmapMemory(context.device, self.memory)
+
+
+class ImageView():
+    '''
+    An image view is quite literally a view into an image.
+    It describes how to access the image and which part of the image
+    to access, for example if it should be treated as a 2D texture depth
+    texture without any mipmapping levels.
+    '''
+
+    def __init__(self, context, image, view_type, image_format,
+                 subresource_range, swizzle_r='VK_COMPONENT_SWIZZLE_IDENTITY',
+                 swizzle_g='VK_COMPONENT_SWIZZLE_IDENTITY',
+                 swizzle_b='VK_COMPONENT_SWIZZLE_IDENTITY',
+                 swizzle_a='VK_COMPONENT_SWIZZLE_IDENTITY'):
+        '''Create ImageView
+
+        *Parameters:*
+
+        - `context`: The `VulkContext`
+        - `image`: The `Image` to work on
+        - `view_type`: `VkImageViewType` Vulkan constant
+        - `image_format`: `VkFormat` Vulkan constant
+        - `subresource_range`: The `ImageSubresourceRange` to use
+        - `swizzle_r`: Swizzle of the red color channel
+        - `swizzle_g`: Swizzle of the green color channel
+        - `swizzle_b`: Swizzle of the blue color channel
+        - `swizzle_a`: Swizzle of the alpha color channel
+        '''
+        components = vk.VkComponentMapping(
+            r=vk_const(swizzle_r), g=vk_const(swizzle_g),
+            b=vk_const(swizzle_b), a=vk_const(swizzle_a)
+        )
+
+        vk_subresource_range = vk.VkImageSubresourceRange(
+            aspectMask=vk_const(subresource_range.aspect),
+            baseMipLevel=subresource_range.base_miplevel,
+            levelCount=subresource_range.level_count,
+            baseArrayLayer=subresource_range.base_layer,
+            layerCount=subresource_range.layer_count
+        )
+
+        imageview_create = vk.VkImageViewCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+            flags=0,
+            image=image,
+            viewType=vk_const(view_type),
+            format=vk_const(image_format),
+            components=components,
+            subresourceRange=vk_subresource_range
+        )
+
+        self.imageview = vk.vkCreateImageView(context.device, imageview_create)
+
+
+class Pipeline():
+    '''Pipeline (graphic) object
+
+    The graphics pipeline is the sequence of operations that take the
+    vertices and textures of your meshes all the way to the pixels in
+    the render targets. The pipeline combines the following elements:
+
+      - Shader stages: the shader modules that define the functionality of
+                       the programmable stages of the graphics pipeline
+      - Fixed-function state: all of the structures that define the
+                              fixed-function stages of the pipeline, like
+                              input assembly, rasterizer, viewport and
+                              color blending
+      - Pipeline layout: the uniform and push values referenced by the
+                         shader that can be updated at draw time
+      - Render pass: the attachments referenced by the pipeline stages
+                     and their usage
+    '''
+
+    def __init__(self, context, stages, vertex_input, input_assembly,
+                 viewport_state, rasterization, multisample, depth, blend,
+                 dynamic, renderpass):
+        '''
+
+        - `context`: The `VulkContext`
+        - `stages`: List of `PipelineShaderStage`
+        - `vertex_input`: `PipelineVertexInputState`
+        - `input_assembly`: `PipelineInputAssemblyState`
+        - `viewport_state`: `PipelineViewportState`
+        - `rasterization`: `PipelineRasterizationState`
+        - `multisample`: `PipelineMultisampleState`
+        - `depth`: `PipelineDepthStencilState` (can be `None`)
+        - `blend`: `PipelineColorBlendState`
+        - `dynamic`: `PipelineDynamicState` (may be `None`)
+        - `renderpass`: The `Renderpass` of this pipeline
+        '''
+
+        vk_stages = []
+        for s in stages:
+            try:
+                vulkan_stage = STAGE_MAPPING[s.stage]
+            except KeyError:
+                msg = "Stage %s doesn't exist"
+                logger.error(msg)
+                raise TypeError(msg)
+
+            vk_stages.append(vk.VkPipelineShaderStageCreateInfo(
+                sType=vk.VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+                flags=0,
+                stage=vulkan_stage,
+                module=s.module.module,
+                pSpecializationInfo=None,
+                pName='main'
+            ))
+
+        vk_vertex_input = vk.VkPipelineVertexInputStateCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
+            flags=0,
+            vertexBindingDescriptionCount=len(vertex_input.bindings),
+            pVertexBindingDescriptions=vertex_input.bindings or None,
+            vertexAttributeDescriptionCount=len(vertex_input.attributes),
+            pVertexAttributeDescriptions=vertex_input.attributes or None
+        )
+
+        vk_input_assembly = vk.VkPipelineInputAssemblyStateCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO, # noqa
+            flags=0,
+            topology=vk_const(input_assembly.topology),
+            primitiveRestartEnable=vk.VK_FALSE
+        )
+
+        vk_viewports = []
+        for v in viewport_state.viewports:
+            vk_viewports.append(vk.VkViewport(
+                x=v.x, y=v.y, width=v.width, height=v.height,
+                minDepth=v.min_depth, maxDepth=v.max_depth
+            ))
+
+        vk_scissors = []
+        for s in viewport_state.scissors:
+            vk_scissors.append(vk.VkRect2D(
+                offset=vk.VkOffset2D(x=s.offset.x, y=s.offset.y),
+                extent=vk.VkExtent2D(width=s.extent.width,
+                                     height=s.extent.height),
+            ))
+
+        vk_viewport_state = vk.VkPipelineViewportStateCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,
+            flags=0,
+            viewportCount=len(vk_viewports),
+            pViewports=vk_viewports,
+            scissorCount=len(vk_scissors),
+            pScissors=vk_scissors
+        )
+
+        dbe = vk.VK_FALSE
+        if (rasterization.depth_bias_constant or
+           rasterization.depth_bias_clamp or
+           rasterization.depth_bias_slope):
+            dbe = vk.VK_TRUE
+
+        vk_rasterization = vk.VkPipelineRasterizationStateCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO, # noqa
+            flags=0,
+            depthClampEnable=btov(rasterization.depth_clamp_enable),
+            rasterizerDiscardEnable=vk.VK_FALSE,
+            polygonMode=vk_const(rasterization.polygon_mode),
+            lineWidth=rasterization.line_width,
+            cullMode=vk_const(rasterization.cull_mode),
+            frontFace=vk_const(rasterization.front_face),
+            depthBiasEnable=dbe,
+            depthBiasConstantFactor=rasterization.depth_bias_constant,
+            depthBiasClamp=rasterization.depth_bias_clamp,
+            depthBiasSlopeFactor=rasterization.depth_bias_slope
+        )
+
+        vk_multisample = vk.VkPipelineMultisampleStateCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO,
+            flags=0,
+            sampleShadingEnable=btov(multisample.shading_enable),
+            rasterizationSamples=vk_const(multisample.samples),
+            minSampleShading=multisample.min_sample_shading,
+            pSampleMask=None,
+            alphaToCoverageEnable=vk.VK_FALSE,
+            alphaToOneEnable=vk.VK_FALSE
+        )
+
+        vk_depth = None
+        if depth:
+            vk_depth = vk.VkPipelineDepthStencilStateCreateInfo(
+                sType=vk.VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO, # noqa
+                flags=0,
+                depthTestEnable=btov(depth.depth_test_enable),
+                depthWriteEnable=btov(depth.depth_write_enable),
+                depthCompareOp=vk_const(depth.depth_compare),
+                depthBoundsTestEnable=btov(depth.depth_bounds_test_enable),
+                stencilTestEnable=btov(depth.stencil_test_enable),
+                front=depth.front,
+                back=depth.back,
+                minDepthBounds=depth.min,
+                maxDepthBounds=depth.max
+            )
+
+        vk_blend_attachments = []
+        for a in blend.attachments:
+            vk_a = vk.VkPipelineColorBlendAttachmentState(
+                colorWriteMask=vk_const(a.color_mask),
+                blendEnable=btov(a.enable),
+                srcColorBlendFactor=vk_const(a.src_color),
+                dstColorBlendFactor=vk_const(a.dst_color),
+                colorBlendOp=vk_const(a.color_op),
+                srcAlphaBlendFactor=vk_const(a.src_alpha),
+                dstAlphaBlendFactor=vk_const(a.dst_alpha),
+                alphaBlendOp=vk_const(a.alpha_op)
+            )
+            vk_blend_attachments.append(vk_a)
+
+        vk_blend = vk.VkPipelineColorBlendStateCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO,
+            flags=0,
+            logicOpEnable=btov(blend.op_enable),
+            logicOp=vk_const(blend.op),
+            attachmentCount=len(vk_blend_attachments),
+            pAttachments=vk_blend_attachments,
+            blendConstants=blend.constants
+        )
+
+        vk_dynamic = None
+        if dynamic:
+            vk_dynamic = vk.VkPipelineDynamicStateCreateInfo(
+                sType=vk.VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO,
+                flags=0,
+                dynamicStateCount=len(dynamic.states),
+                pDynamicStates=dynamic.states
+            )
+
+        # Currently layout is unusable, I have to try it
+        vk_layout_create = vk.VkPipelineLayoutCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
+            flags=0,
+            setLayoutCount=0,
+            pSetLayouts=None,
+            pushConstantRangeCount=0,
+            pPushConstantRanges=None
+        )
+        vk_layout = vk.vkCreatePipelineLayout(context.device, vk_layout_create)
+
+        pipeline_create = vk.VkGraphicsPipelineCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
+            flags=0,
+            stageCount=len(vk_stages),
+            pStages=vk_stages,
+            pVertexInputState=vk_vertex_input,
+            pInputAssemblyState=vk_input_assembly,
+            pTessellationState=None,
+            pViewportState=vk_viewport_state,
+            pRasterizationState=vk_rasterization,
+            pMultisampleState=vk_multisample,
+            pDepthStencilState=vk_depth,
+            pColorBlendState=vk_blend,
+            pDynamicState=vk_dynamic,
+            layout=vk_layout,
+            renderPass=renderpass.renderpass,
+            subpass=0,
+            basePipelineHandle=None,
+            basePipelineIndex=-1
+        )
+
+        self.pipeline = vk.vkCreateGraphicsPipelines(context.device, None,
+                                                     1, [pipeline_create])
+
+
+class Renderpass():
+    '''Renderpass object
+
+    When creating the pipeline, we need to tell Vulkan about the
+    framebuffer attachments that will be used while rendering. We need to
+    specify how many color and depth buffers there will be, how many samples
+    to use for each of them and how their contents should be handled
+    throughout the rendering operations. All of this information is wrapped
+    in a RenderPass object
+    '''
+
+    def __init__(self, context, attachments, subpasses, dependencies):
+        '''Renderpass constructor
+
+        *Parameters:*
+
+        - `context`: The `VulkContext`
+        - `attachments`: `list` of `AttachmentDescription`
+        - `subpasses`: `list` of `SubpassDescription`
+        - `dependencies`: `list` of `SubpassDependency`
+
+        **Warning: Arguments ar not checked, you must know
+                   what you are doing.**
+        '''
+
+        vk_attachments = []
+        for a in attachments:
+            vk_attachments.append(vk.VkAttachmentDescription(
+                flags=0,
+                format=vk_const(a.format),
+                samples=vk_const(a.samples),
+                loadOp=vk_const(a.load),
+                storeOp=vk_const(a.store),
+                stencilLoadOp=vk_const(a.stencil_load),
+                stencilStoreOp=vk_const(a.stencil_store),
+                initialLayout=vk_const(a.initial_layout),
+                finalLayout=vk_const(a.final_layout)
+            ))
+
+        # Loop through the list of subpasses to create the reference
+        # reference key is index_layout
+        vk_references = {}
+        for s in subpasses:
+            for r in (s.colors + s.inputs + s.resolves +
+                      s.preserves + s.depth_stencil):
+                key = (r.index, r.layout)
+                if key not in vk_references:
+                    vk_references[key] = vk.VkAttachmentReference(
+                        attachment=r.index,
+                        layout=vk_const(r.layout)
+                    )
+
+        def ref(references):
+            '''
+            Convert a list of `AttachmentReference` to a list of
+            `VkAttachmentReference` by using the cached references in
+            `vk_references`
+            '''
+            if not references:
+                return []
+
+            return [vk_references[(r.index, r.layout)] for r in references]
+
+        # Create the subpasses using references
+        vk_subpasses = []
+        for s in subpasses:
+            leninputs = len(s.inputs)
+            lenpreserves = len(s.preserves)
+            lencolors = len(s.colors)
+            lenresolves = len(s.resolves)
+            inputs = ref(s.inputs) or None
+            preserves = ref(s.preserves) or None
+            colors = ref(s.colors) or None
+            resolves = ref(s.resolves) or None
+            depth_stencil = next(iter(ref(s.depth_stencil)), None)
+
+            if resolves and inputs and lenresolves != lencolors:
+                msg = "resolves and inputs list must be of the same size"
+                logger.error(msg)
+                raise VulkError(msg)
+
+            vk_subpasses.append(vk.VkSubpassDescription(
+                flags=0,
+                pipelineBindPoint=vk.VK_PIPELINE_BIND_POINT_GRAPHICS,
+                inputAttachmentCount=leninputs,
+                pInputAttachments=inputs,
+                colorAttachmentCount=lencolors,
+                pColorAttachments=colors,
+                pResolveAttachments=resolves,
+                preserveAttachmentCount=lenpreserves,
+                pPreserveAttachments=preserves,
+                pDepthStencilAttachment=depth_stencil
+            ))
+
+        # Create the dependancies
+        vk_dependencies = []
+        for d in dependencies:
+            vk_dependencies.append(vk.VkSubpassDependency(
+                dependencyFlags=0,
+                srcSubpass=vk_const(d.src_subpass),
+                dstSubpass=vk_const(d.dst_subpass),
+                srcStageMask=vk_const(d.src_stage),
+                dstStageMask=vk_const(d.dst_stage),
+                srcAccessMask=vk_const(d.src_access),
+                dstAccessMask=vk_const(d.dst_access)
+            ))
+
+        # Create the render pass
+        renderpass_create = vk.VkRenderPassCreateInfo(
+            flags=0,
+            sType=vk.VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,
+            attachmentCount=len(vk_attachments),
+            pAttachments=vk_attachments,
+            subpassCount=len(vk_subpasses),
+            pSubpasses=vk_subpasses,
+            dependencyCount=len(vk_dependencies),
+            pDependencies=vk_dependencies
+        )
+
+        self.renderpass = vk.vkCreateRenderPass(
+            context.device, renderpass_create)
+
+
 class Semaphore():
     '''
     Semaphores are a synchronization primitive that can be used to insert a
@@ -1760,67 +1812,34 @@ class Semaphore():
         self.semaphore = vk.vkCreateSemaphore(context.device, semaphore_create)
 
 
-SubmitInfo = namedtuple('SubmitInfo', ['wait_semaphores', 'wait_stages',
-                                       'signal_semaphores', 'commandbuffers'])
-SubmitInfo.__doc__ = '''
-    Submit information when submitting to queue
+class ShaderModule():
+    '''ShaderModule Vulkan object
 
-    *Parameters:*
-
-    - `wait_semaphores`: `list` of `Semaphore` to wait on
-    - `wait_stages`: `list` of `VkPipelineStageFlagBits` at which each
-                     corresponding semaphore wait will occur. Must be the
-                     same size as `wait_semaphores`
-    - `signal_semaphores`: `list` of `Semaphore` to signal when commands
-                           are finished
-    - `commandbuffers`: `list` of `CommandBuffer` to execute
+    A shader module is a Spir-V shader loaded into Vulkan.
+    After being created, it must be inserted in a pipeline stage.
+    The real Vulkan module can be accessed by the 'module' property.
     '''
 
+    def __init__(self, context, code):
+        '''
+        Initialize the module
 
-def submit_to_queue(queue, submits):
-    '''
-    Submit commands to queue
+        *Parameters:*
 
-    *Parameters:*
+        - `context`: The `VulkContext` object
+        - `code`: Binary Spir-V loaded file (bytes)
 
-    - `queue`: `VkQueue`
-    - `submits`: `list` of `SubmitInfo`
-    '''
-    vk_submits = []
-    for s in submits:
-        wait_stages = None
-        if s.wait_stages:
-            wait_stages = [vk_const(st) for st in s.wait_stages]
+        *Returns:*
 
-        wait_semaphores = None
-        if s.wait_semaphores:
-            wait_semaphores = [sem.semaphore for sem in s.wait_semaphores]
+        The created `ShaderModule`
+        '''
+        if not isinstance(code, bytes):
+            logger.info("Type of code is not 'bytes', it may be an error")
 
-        signal_semaphores = None
-        if s.signal_semaphores:
-            signal_semaphores = [sem.semaphore for sem in s.signal_semaphores]
+        self.code = code
 
-        vk_submits.append(vk.VkSubmitInfo(
-            sType=vk.VK_STRUCTURE_TYPE_SUBMIT_INFO,
-            waitSemaphoreCount=len(s.wait_semaphores),
-            pWaitSemaphores=wait_semaphores,
-            pWaitDstStageMask=wait_stages,
-            commandBufferCount=len(s.commandbuffers),
-            pCommandBuffers=[c.commandbuffer for c in s.commandbuffers],
-            signalSemaphoreCount=len(s.signal_semaphores),
-            pSignalSemaphores=signal_semaphores
-        ))
-
-    vk.vkQueueSubmit(queue, 1, vk_submits, None)
-
-
-def submit_to_graphic_queue(context, submits):
-    '''
-    Convenient function to submit commands to graphic queue
-
-    *Parameters:*
-
-    - `context`: `VulkContext`
-    - `submits`: `list` of `SubmitInfo`
-    '''
-    submit_to_queue(context.graphic_queue, submits)
+        # Create the shader module
+        shader_create = vk.VkShaderModuleCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
+            flags=0, codeSize=len(code), pCode=code)
+        self.module = vk.vkCreateShaderModule(context.device, shader_create)
