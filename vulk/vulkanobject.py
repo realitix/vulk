@@ -390,8 +390,8 @@ PipelineVertexInputState.__new__.__defaults__ = \
 PipelineVertexInputState.__doc__ = '''
     *Parameters:*
 
-    - `bindings`: List of vertice bindings
-    - `attributes`: List of vertice attributes
+    - `bindings`: List of `VertexInputBindingDescription`
+    - `attributes`: List of `VertexInputAttributeDescription`
 
     **Note: `bindings` and `attributes` can be empty `list`**
     '''
@@ -474,6 +474,35 @@ SubpassDescription.__doc__ = '''
     - `depth_stencil`: `list` containing only one attachment
     '''
 
+
+VertexInputAttributeDescription = namedtuple('VertexInputAttributeDescription',
+                                             ['location', 'binding', 'format',
+                                              'offset'])
+VertexInputAttributeDescription.__doc__ = '''
+     Structure specifying vertex input attribute description
+
+    *Parameters:*
+
+    - `location`: Shader binding location number for this attribute (`int`)
+    - `binding`: Binding number which this attribute takes its data from
+    - `format`: `VkFormat` of the vertex attribute data
+    - `offset`: Byte offset of this attribute relative to the start of an
+                element in the vertex input binding (`int`)
+    '''
+
+
+VertexInputBindingDescription = namedtuple('VertexInputBindingDescription',
+                                           ['binding', 'stride', 'rate'])
+VertexInputBindingDescription.__doc__ = '''
+    Structure specifying vertex input binding description
+
+    *Parameters:*
+
+    - `binding`: Binding number (`int`)
+    - `stride`: Distance in bytes between two consecutive elements within
+                the buffer (`int`)
+    - `rate`: `VkVertexInputRate`
+    '''
 
 Viewport = namedtuple('Viewport', ['x', 'y', 'width', 'height',
                                    'min_depth', 'max_depth'])
@@ -801,6 +830,25 @@ class CommandBufferRegister():
         '''
         vk.vkCmdBindPipeline(self.commandbuffer, vk_const(bind_point),
                              pipeline.pipeline)
+
+    def bind_vertex_buffers(self, first, count, buffers, offsets):
+        '''
+        Bind vertex buffers to a command buffer
+
+        *Parameters:*
+
+        - `first`: Index of the first vertex input binding
+        - `count`: Number of vertex input bindings
+        - `buffers`: `list` of `Buffer`
+        - `offsets`: `list` of offset (`int`)
+
+        **Note: I don't understand what is the point with offset but you
+                must pass an array of the same size as `buffers`.**
+
+        **Note: Generally, `count = len(buffers)` and `first = 0`**
+        '''
+        vk.vkCmdBindVertexBuffers(self.commandbuffer, first, count,
+                                  [b.buffer for b in buffers], offsets)
 
     def draw(self, vertex_count, first_vertex,
              instance_count=1, first_instance=0):
@@ -1508,13 +1556,30 @@ class Pipeline():
                 pName='main'
             ))
 
+        vk_vertex_bindings = []
+        for binding in vertex_input.bindings:
+            vk_vertex_bindings.append(vk.VkVertexInputBindingDescription(
+                binding=binding.binding,
+                stride=binding.stride,
+                inputRate=vk_const(binding.rate)
+            ))
+
+        vk_vertex_attributes = []
+        for attribute in vertex_input.attributes:
+            vk_vertex_attributes.append(vk.VkVertexInputAttributeDescription(
+                location=attribute.location,
+                binding=attribute.binding,
+                format=vk_const(attribute.format),
+                offset=attribute.offset
+            ))
+
         vk_vertex_input = vk.VkPipelineVertexInputStateCreateInfo(
             sType=vk.VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
             flags=0,
-            vertexBindingDescriptionCount=len(vertex_input.bindings),
-            pVertexBindingDescriptions=vertex_input.bindings or None,
-            vertexAttributeDescriptionCount=len(vertex_input.attributes),
-            pVertexAttributeDescriptions=vertex_input.attributes or None
+            vertexBindingDescriptionCount=len(vk_vertex_bindings),
+            pVertexBindingDescriptions=vk_vertex_bindings or None,
+            vertexAttributeDescriptionCount=len(vk_vertex_attributes),
+            pVertexAttributeDescriptions=vk_vertex_attributes or None
         )
 
         vk_input_assembly = vk.VkPipelineInputAssemblyStateCreateInfo(
