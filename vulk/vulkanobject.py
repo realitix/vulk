@@ -1126,7 +1126,8 @@ class HighPerformanceBuffer():
     }
 
     def __init__(self, context, size, buffer_type,
-                 sharing_mode='VK_SHARING_MODE_EXCLUSIVE', queue_families=[]):
+                 sharing_mode='VK_SHARING_MODE_EXCLUSIVE',
+                 queue_families=None):
         '''Create a high performance buffer
 
         *Parameters:*
@@ -1143,6 +1144,8 @@ class HighPerformanceBuffer():
             msg = "Buffer type must be in ['index', 'uniform', 'vertex']"
             logger.error(msg)
             raise VulkError(msg)
+
+        queue_families = queue_families if queue_families else []
 
         self.staging_buffer = Buffer(
             context, 0, size, vk.VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
