@@ -850,6 +850,19 @@ class CommandBufferRegister():
         vk.vkCmdBindVertexBuffers(self.commandbuffer, first, count,
                                   [b.buffer for b in buffers], offsets)
 
+    def bind_index_buffer(self, buffer, offset, index_type):
+        '''
+        Bind an index buffer to a command buffer
+
+        *Parameters:*
+
+        - `buffer`: Index `Buffer`
+        - `offset`: Offset (`int`)
+        - `index_type`: `VkIndexType`
+        '''
+        vk.vkCmdBindIndexBuffer(self.commandbuffer, buffer.buffer, offset,
+                                vk_const(index_type))
+
     def draw(self, vertex_count, first_vertex,
              instance_count=1, first_instance=0):
         '''
@@ -872,6 +885,45 @@ class CommandBufferRegister():
         '''
         vk.vkCmdDraw(self.commandbuffer, vertex_count, instance_count,
                      first_vertex, first_instance)
+
+    def draw_indexed(self, index_count, first_index, vertex_offset=0,
+                     instance_count=1, first_instance=0):
+        '''
+        Draw the index buffer.
+
+        When the command is executed, primitives are assembled using the
+        current primitive topology and indexCount vertices whose indices are
+        retrieved from the index buffer. The index buffer is treated as an
+        array of tightly packed unsigned integers of size defined by the
+        vkCmdBindIndexBuffer::indexType parameter with which the buffer
+        was bound.
+
+        The first vertex index is at an offset of
+        firstIndex * indexSize + offset within the currently bound index
+        buffer, where offset is the offset specified by vkCmdBindIndexBuffer
+        and indexSize is the byte size of the type specified by indexType.
+        Subsequent index values are retrieved from consecutive locations in
+        the index buffer. Indices are first compared to the primitive restart
+        value, then zero extended to 32 bits
+        (if the indexType is VK_INDEX_TYPE_UINT16) and have vertexOffset added
+        to them, before being supplied as the vertexIndex value.
+
+        The primitives are drawn instanceCount times with instanceIndex
+        starting with firstInstance and increasing sequentially for each
+        instance. The assembled primitives execute the currently bound
+        graphics pipeline.
+
+        *Parameters:*
+
+        - `index_count`: Number of vertices to draw
+        - `first_index`: Base index within the index buffer
+        - `vertex_offset`: Value added to the vertex index before indexing
+                           into the vertex buffer (default: 0)
+        - `instance_count`: Number of instance to draw (default: 1)
+        - `first_instance`: First instance to draw (default: 0)
+        '''
+        vk.vkCmdDrawIndexed(self.commandbuffer, index_count, instance_count,
+                            first_index, vertex_offset, first_instance)
 
     def pipeline_barrier(self, src_stage, dst_stage, dependency, memories,
                          buffers, images):
@@ -1067,18 +1119,31 @@ class HighPerformanceBuffer():
     buffer have the same properties.
     '''
 
-    def __init__(self, context, size, sharing_mode, queue_families):
+    USAGE_MAPPING = {
+        'index': vk.VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
+        'uniform': vk.VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+        'vertex': vk.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT
+    }
+
+    def __init__(self, context, size, buffer_type,
+                 sharing_mode='VK_SHARING_MODE_EXCLUSIVE', queue_families=[]):
         '''Create a high performance buffer
 
         *Parameters:*
 
         - `context`: `VulkContext`
         - `size`: Buffer size in bytes
+        - 'buffer_type': `str` in ['index', 'uniform', 'vertex']
         - `sharing_mode`: `VkSharingMode`
         - `queue_families`: List of queue families accessing this image
                             (ignored if sharingMode is not
                             `VK_SHARING_MODE_CONCURRENT`) (can be [])
         '''
+        if buffer_type not in ('index', 'uniform', 'vertex'):
+            msg = "Buffer type must be in ['index', 'uniform', 'vertex']"
+            logger.error(msg)
+            raise VulkError(msg)
+
         self.staging_buffer = Buffer(
             context, 0, size, vk.VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
             sharing_mode, queue_families,
@@ -1087,7 +1152,7 @@ class HighPerformanceBuffer():
 
         self.final_buffer = Buffer(
             context, 0, size,
-            vk.VK_BUFFER_USAGE_TRANSFER_DST_BIT | vk.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, # noqa
+            vk.VK_BUFFER_USAGE_TRANSFER_DST_BIT | HighPerformanceBuffer.USAGE_MAPPING[buffer_type], # noqa
             sharing_mode, queue_families,
             vk.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
         )
