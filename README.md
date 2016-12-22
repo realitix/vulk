@@ -7,6 +7,11 @@
 [![Test Coverage](https://codeclimate.com/github/realitix/vulk/badges/coverage.svg)](https://codeclimate.com/github/realitix/vulk/coverage)
 [![Issue Count](https://codeclimate.com/github/realitix/vulk/badges/issue_count.svg)](https://codeclimate.com/github/realitix/vulk)
 
+
+[API documentation](https://realitix.github.io/vulk-api/vulk/)
+
+[Example of use](https://realitix.github.io/vulk-demo/)
+
 ## What is it ?
 
 Vulk is a 3d engine aimed to provide the best graphical experience with Vulkan API.
