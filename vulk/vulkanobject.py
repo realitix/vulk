@@ -177,6 +177,66 @@ def submit_to_queue(queue, submits):
     vk.vkQueueSubmit(queue, 1, vk_submits, None)
 
 
+def update_descriptorsets(context, writes, copies):
+    '''
+    Update the contents of a descriptor set object
+
+    *Parameters:*
+
+    - `context`: `VulkContext`
+    - `writes`: `list` of `WriteDescriptorSet`
+    - `copies`: `list` of `CopyDescriptorSet`
+
+    **Todo: `copies` is unusable currently**
+    '''
+    def get_type(t, descriptors):
+        result = {'pImageInfo': None, 'pBufferInfo': None,
+                  'pTexelBufferView': None}
+        vk_descriptors = []
+
+        if t in (vk.VK_DESCRIPTOR_TYPE_SAMPLER,
+                 vk.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+                 vk.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
+                 vk.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE,
+                 vk.VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT):
+            raise VulkError('DescriptorImageInfo not handled')
+            result['pImageInfo'] = vk_descriptors
+
+        elif t in (vk.VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER,
+                   vk.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER):
+            raise VulkError('BufferView not handled')
+            result['pTexelBufferView'] = vk_descriptors
+
+        elif t in (vk.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                   vk.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+                   vk.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
+                   vk.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC):
+            for d in descriptors:
+                vk_descriptors.append(vk.VkDescriptorBufferInfo(
+                    buffer=d.buffer.buffer,
+                    offset=d.offset,
+                    range=d.range
+                ))
+            result['pBufferInfo'] = vk_descriptors
+
+        return result
+
+    vk_writes = []
+    for w in writes:
+        vk_writes.append(vk.VkWriteDescriptorSet(
+            sType=vk.VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+            dstSet=w.set.descriptorset,
+            dstBinding=w.binding,
+            dstArrayElement=w.set_offset,
+            descriptorCount=len(w.descriptors),
+            descriptorType=vk_const(w.type),
+            **get_type(vk_const(w.type), w.descriptors)
+        ))
+
+    vk.vkUpdateDescriptorSets(context.device, len(vk_writes),
+                              vk_writes, 0, None)
+
+
 def vk_const(v):
     '''Get constant
 
@@ -224,6 +284,50 @@ AttachmentReference.__doc__ = '''
 
     - `index`: Index of attachment description
     - `layout`: VkImageLayout vulkan constant
+    '''
+
+
+DescriptorBufferInfo = namedtuple('DescriptorBufferInfo',
+                                  ['buffer', 'offset', 'range'])
+DescriptorBufferInfo.__doc__ = '''
+    Structure specifying descriptor buffer info
+
+    *Parameters:*
+
+    - `buffer`: `Buffer` ressource
+    - `offset`: Offset in bytes from the start of buffer
+    - `range`: Size in bytes that is used for this descriptor update
+    '''
+
+
+DescriptorPoolSize = namedtuple('DescriptorPoolSize', ['type', 'count'])
+DescriptorPoolSize.__doc__ = '''
+    Structure specifying descriptor pool size.
+
+    *Parameters:*
+
+    - `type`: `VkDescriptorType`
+    - `couont`: Number of descriptors of that type to allocate
+    '''
+
+
+DescriptorSetLayoutBinding = namedtuple('DescriptorSetLayoutBinding',
+                                        ['binding', 'type', 'count',
+                                         'stage', 'immutable_samplers'])
+DescriptorSetLayoutBinding.__doc__ = '''
+    Structure specifying a descriptor set layout binding.
+
+    *Parameters:*
+
+    - `binding`: Binding number of this entry and corresponds to a resource
+                 of the same binding number in the shader stages
+    - `type`: `VkDescriptorType` specifying which type of resource descriptors
+              are used for this binding
+    - `count`:  Number of descriptors contained in the binding,
+                accessed in a shader as an array
+    - `stage`: `VkShaderStageFlagBits` specifying which pipeline shader stages
+               can access a resource for this binding
+    - `immutable_samplers`: Affects initialization of samplers (can be `None`)
     '''
 
 
@@ -522,6 +626,25 @@ Viewport.__doc__ = '''
     '''
 
 
+WriteDescriptorSet = namedtuple('WriteDescriptorSet',
+                                ['set', 'binding', 'set_offset',
+                                 'type', 'descriptors'])
+WriteDescriptorSet.__doc__ = '''
+    Structure specifying the parameters of a descriptor set write operation
+
+    *Parameters:*
+
+    - `set`: Destination `DescriptorSet` set to update
+    - `binding`: Descriptor binding within that set
+    - `set_offset`: Offset to start with in the descriptor
+    - `type`: Type of descriptor `VkDescriptorType`
+    - `descriptors`: `list` of `DescriptorBufferInfo` or `DescriptorImageInfo`
+                    or `BufferView` depending on `type`
+
+    **Note: The descriptor type must correspond to the `type` parameter**
+    '''
+
+
 # ----------
 # CLASSES
 # ----------
@@ -720,7 +843,7 @@ class CommandBuffer():
 
         *Parameters:*
 
-        - `commandbuffer`: The `VkCommadBuffer`
+        - `commandbuffer`: `VkCommandBuffer`
         '''
         self.commandbuffer = commandbuffer
 
@@ -816,6 +939,25 @@ class CommandBufferRegister():
 
         vk.vkCmdBeginRenderPass(self.commandbuffer, renderpass_begin,
                                 vk_const(contents))
+
+    def bind_descriptor_sets(self, layout, first, descriptors, offsets,
+                             bind_point='VK_PIPELINE_BIND_POINT_GRAPHICS'):
+        '''
+        Binds descriptor sets to this `CommandBuffer`
+
+        *Parameters:*
+
+        - `layout`: `PipelineLayout`
+        - `first`: Number of the first descriptor set to be bound
+        - `descriptors`: `list` of `DescriptorSet`
+        - `offsets`: `list` of dynamic offsets
+        - `bind_point`: `VkPipelineBindPoint`
+        '''
+        vk_descriptors = [d.descriptorset for d in descriptors]
+        vk.vkCmdBindDescriptorSets(
+            self.commandbuffer, vk_const(bind_point), layout.layout, first,
+            len(vk_descriptors), vk_descriptors, len(offsets),
+            offsets if offsets else None)
 
     def bind_pipeline(self, pipeline,
                       bind_point='VK_PIPELINE_BIND_POINT_GRAPHICS'):
@@ -1014,14 +1156,13 @@ class CommandPool():
 
     def allocate_buffers(self, context, level, count):
         '''
-        Allocate list of `CommandBuffer` from pool.
+        Allocate `list` of `CommandBuffer` from pool.
 
         *Parameters:*
 
         - `context`: The `VulkContext`
-        - `commandpool`: The source `CommandPool`
         - `level`: `VkCommandBufferLevel` Vulkan constant
-        - `count`: Number of buffer to create
+        - `count`: Number of `CommandBuffer` to create
 
         *Returns:*
 
@@ -1071,6 +1212,130 @@ class CommandPool():
         - `context`: `VulkContext`
         '''
         vk.vkDestroyCommandPool(context.device, self.commandpool)
+
+
+class DescriptorPool():
+    '''
+    A descriptor pool maintains a pool of descriptors, from which descriptor
+    sets are allocated. Descriptor pools are externally synchronized, meaning
+    that the application must not allocate and/or free descriptor sets from
+    the same pool in multiple threads simultaneously.
+    '''
+
+    def __init__(self, context, poolsizes, max_sets, flags=0):
+        '''
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        - `poolsizes`: `list` of `PoolSize`
+        - `max_sets`: Maximum number of descriptor sets that can be
+                      allocated from the pool
+        - `flags`: `VkDescriptorPoolCreateFlags` (default=0)
+        '''
+        vk_poolsizes = []
+        for p in poolsizes:
+            vk_poolsizes.append(vk.VkDescriptorPoolSize(
+                type=vk_const(p.type),
+                descriptorCount=p.count
+            ))
+
+        descriptorpool_create = vk.VkDescriptorPoolCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
+            flags=vk_const(flags),
+            maxSets=max_sets,
+            poolSizeCount=len(vk_poolsizes),
+            pPoolSizes=vk_poolsizes
+        )
+
+        self.descriptorpool = vk.vkCreateDescriptorPool(
+            context.device, descriptorpool_create)
+
+    def allocate_descriptorsets(self, context, count, layouts):
+        '''
+        Allocate `list` of `DescriptorSet` from pool.
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        - `count`: Number of `DescriptorSet` to create
+        - `layouts`: `list` of `DescriptorSetLayout`
+
+        *Returns:*
+
+        `list` of `DescriptorSet`
+
+        **Note: Size of `layouts` list must be equals to `count`**
+        '''
+        descriptorsets_create = vk.VkDescriptorSetAllocateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
+            descriptorPool=self.descriptorpool,
+            descriptorSetCount=count,
+            pSetLayouts=[d.descriptorsetlayout for d in layouts]
+        )
+
+        vk_descriptorsets = vk.vkAllocateDescriptorSets(
+            context.device, descriptorsets_create)
+
+        descriptorsets = [DescriptorSet(ds) for ds in vk_descriptorsets]
+        return descriptorsets
+
+
+class DescriptorSet():
+    '''
+    A *descriptor set* specifies the actual buffer or image resources that
+    will be bound to the descriptors, just like a framebuffer specifies the
+    actual image views to bind to render pass attachments. The descriptor set
+    is then bound for the drawing commands just like the vertex buffers
+    and framebuffer.
+    '''
+
+    def __init__(self, descriptorset):
+        '''
+        This object must be initialized with an existing `VkDescriptorSet`
+        because it is generated from `DescriptorPool`.
+
+        *Parameters:*
+
+        - `descriptorset`: `VkDescriptorSet`
+        '''
+        self.descriptorset = descriptorset
+
+
+class DescriptorSetLayout():
+    '''
+    A descriptor set layout object is defined by an array of zero or more
+    descriptor bindings. Each individual descriptor binding is specified by
+    a descriptor type, a count (array size) of the number of descriptors in
+    the binding, a set of shader stages that can access the binding,
+    and (if using immutable samplers) an array of sampler descriptors.
+    '''
+
+    def __init__(self, context, bindings):
+        '''
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        - `bindings`: `list` of `DescriptorSetLayoutBinding`
+        '''
+        vk_bindings = []
+        for b in bindings:
+            vk_bindings.append(vk.VkDescriptorSetLayoutBinding(
+                binding=b.binding,
+                descriptorType=vk_const(b.type),
+                descriptorCount=b.count,
+                stageFlags=vk_const(b.stage),
+                pImmutableSamplers=b.immutable_samplers
+            ))
+
+        layout_create = vk.VkDescriptorSetLayoutCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
+            flags=0,
+            bindingCount=len(vk_bindings),
+            pBindings=vk_bindings
+        )
+
+        self.descriptorsetlayout = vk.vkCreateDescriptorSetLayout(
+            context.device, layout_create)
 
 
 class Framebuffer():
@@ -1590,7 +1855,7 @@ class Pipeline():
 
     def __init__(self, context, stages, vertex_input, input_assembly,
                  viewport_state, rasterization, multisample, depth, blend,
-                 dynamic, renderpass):
+                 dynamic, layout, renderpass):
         '''
 
         - `context`: The `VulkContext`
@@ -1603,6 +1868,7 @@ class Pipeline():
         - `depth`: `PipelineDepthStencilState` (can be `None`)
         - `blend`: `PipelineColorBlendState`
         - `dynamic`: `PipelineDynamicState` (may be `None`)
+        - `layout`: `PipelineLayout`
         - `renderpass`: The `Renderpass` of this pipeline
         '''
 
@@ -1762,17 +2028,6 @@ class Pipeline():
                 pDynamicStates=dynamic.states
             )
 
-        # Currently layout is unusable, I have to try it
-        vk_layout_create = vk.VkPipelineLayoutCreateInfo(
-            sType=vk.VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
-            flags=0,
-            setLayoutCount=0,
-            pSetLayouts=None,
-            pushConstantRangeCount=0,
-            pPushConstantRanges=None
-        )
-        vk_layout = vk.vkCreatePipelineLayout(context.device, vk_layout_create)
-
         pipeline_create = vk.VkGraphicsPipelineCreateInfo(
             sType=vk.VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
             flags=0,
@@ -1787,7 +2042,7 @@ class Pipeline():
             pDepthStencilState=vk_depth,
             pColorBlendState=vk_blend,
             pDynamicState=vk_dynamic,
-            layout=vk_layout,
+            layout=layout.layout,
             renderPass=renderpass.renderpass,
             subpass=0,
             basePipelineHandle=None,
@@ -1796,6 +2051,44 @@ class Pipeline():
 
         self.pipeline = vk.vkCreateGraphicsPipelines(context.device, None,
                                                      1, [pipeline_create])
+
+
+class PipelineLayout():
+    '''Pipeline layout object
+
+    Access to descriptor sets from a pipeline is accomplished through a
+    pipeline layout. Zero or more descriptor set layouts and zero or more
+    push constant ranges are combined to form a pipeline layout object which
+    describes the complete set of resources that can be accessed by a
+    pipeline. The pipeline layout represents a sequence of descriptor sets
+    with each having a specific layout. This sequence of layouts is used to
+    determine the interface between shader stages and shader resources.
+    Each pipeline is created using a pipeline layout.
+    '''
+
+    def __init__(self, context, descriptors):
+        '''
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        - `descriptors`: `list` of `DescriptorSetLayout`
+
+        **Todo: push constant muse be implemented**
+        '''
+        vk_descriptors = []
+        for d in descriptors:
+            vk_descriptors.append(d.descriptorsetlayout)
+
+        layout_create = vk.VkPipelineLayoutCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
+            flags=0,
+            setLayoutCount=len(vk_descriptors),
+            pSetLayouts=vk_descriptors if vk_descriptors else None,
+            pushConstantRangeCount=0,
+            pPushConstantRanges=None
+        )
+        self.layout = vk.vkCreatePipelineLayout(context.device,
+                                                layout_create)
 
 
 class Renderpass():
