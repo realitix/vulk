@@ -188,6 +188,7 @@ def update_descriptorsets(context, writes, copies):
     - `copies`: `list` of `CopyDescriptorSet`
 
     **Todo: `copies` is unusable currently**
+    **Todo: Only `DescriptorBufferInfo` supported**
     '''
     def get_type(t, descriptors):
         result = {'pImageInfo': None, 'pBufferInfo': None,
@@ -199,13 +200,17 @@ def update_descriptorsets(context, writes, copies):
                  vk.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,
                  vk.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE,
                  vk.VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT):
-            raise VulkError('DescriptorImageInfo not handled')
+            for d in descriptors:
+                vk_descriptors.append(vk.VkDescriptorImageInfo(
+                    sampler=d.sampler.sampler,
+                    imageView=d.view.imageview,
+                    imageLayout=d.layout.layout
+                ))
             result['pImageInfo'] = vk_descriptors
 
         elif t in (vk.VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER,
                    vk.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER):
-            raise VulkError('BufferView not handled')
-            result['pTexelBufferView'] = vk_descriptors
+            result['pTexelBufferView'] = [d.view for d in descriptors]
 
         elif t in (vk.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
                    vk.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
@@ -233,8 +238,9 @@ def update_descriptorsets(context, writes, copies):
             **get_type(vk_const(w.type), w.descriptors)
         ))
 
+    # TODO: copies must be implemented
     vk.vkUpdateDescriptorSets(context.device, len(vk_writes),
-                              vk_writes, 0, None)
+                              vk_writes, len(copies), None)
 
 
 def vk_const(v):
@@ -297,6 +303,19 @@ DescriptorBufferInfo.__doc__ = '''
     - `buffer`: `Buffer` ressource
     - `offset`: Offset in bytes from the start of buffer
     - `range`: Size in bytes that is used for this descriptor update
+    '''
+
+
+DescriptorImageInfo = namedtuple('DescriptorImageInfo',
+                                 ['sampler', 'view', 'layout'])
+DescriptorImageInfo.__doc__ = '''
+    Structure specifying descriptor image info
+
+    *Parameters:*
+
+    - `sampler`: `Sampler` ressource
+    - `view`: `ImageView`
+    - `layout`: `ImageLayout`
     '''
 
 
