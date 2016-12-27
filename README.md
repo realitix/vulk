@@ -14,8 +14,9 @@
 
 ## What is it ?
 
-Vulk is a 3d engine aimed to provide the best graphical experience with Vulkan API.
-It is written in Python with C binding and is based on SDL2.
+Vulk is a 3D engine aimed to provide the best graphical experience with Vulkan API.
+It is written fully in Python. It depends on C modules for the communication with
+Vulkan.
 
 ## What is the project goal ?
 
@@ -67,7 +68,12 @@ Here you can put your code
 '''
 ```
 
-### Stay in touch
+## Dependancies
+
+- [CVulkan](https://realitix.github.io/cvulkan/): C module to communicate with Vulkan SDK
+- [VulkBare](https://realitix.github.io/vulk-bare/): C module providing helper functions
+
+## Stay in touch
 
 You can contact me by opening issue (bug or interesting discussion about
 the project). If you want a fast and pleasant talk, join the irc channel:
