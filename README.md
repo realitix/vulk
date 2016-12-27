@@ -10,7 +10,7 @@
 
 [API documentation](https://realitix.github.io/vulk-api/vulk/)
 
-[Example of use](https://realitix.github.io/vulk-demo/)
+[Example of use](https://github.com/realitix/vulk-demo)
 
 ## What is it ?
 
