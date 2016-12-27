@@ -691,7 +691,7 @@ class VulkContext():
         )
 
         self.final_image_view = ImageView(
-            self, self.final_image.image, 'VK_IMAGE_VIEW_TYPE_2D',
+            self, self.final_image, 'VK_IMAGE_VIEW_TYPE_2D',
             self.swapchain_format, subresource_range)
 
     def _create_commandbuffers(self):

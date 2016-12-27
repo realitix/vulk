@@ -204,7 +204,7 @@ def update_descriptorsets(context, writes, copies):
                 vk_descriptors.append(vk.VkDescriptorImageInfo(
                     sampler=d.sampler.sampler,
                     imageView=d.view.imageview,
-                    imageLayout=d.layout.layout
+                    imageLayout=vk_const(d.layout)
                 ))
             result['pImageInfo'] = vk_descriptors
 
@@ -315,7 +315,7 @@ DescriptorImageInfo.__doc__ = '''
 
     - `sampler`: `Sampler` ressource
     - `view`: `ImageView`
-    - `layout`: `ImageLayout`
+    - `layout`: `VkImageLayout`
     '''
 
 
@@ -1487,8 +1487,9 @@ class HighPerformanceImage():
     '''
 
     def __init__(self, context, image_type, image_format, width, height,
-                 depth, mip_level, layers, samples, sharing_mode,
-                 queue_families):
+                 depth, mip_level, layers, samples,
+                 sharing_mode='VK_SHARING_MODE_EXCLUSIVE',
+                 queue_families=None):
         '''Create a high performance image
 
         *Parameters:*
@@ -1508,6 +1509,9 @@ class HighPerformanceImage():
                             (ignored if sharingMode is not
                             `VK_SHARING_MODE_CONCURRENT`) (can be [])
         '''
+        if not queue_families:
+            queue_families = []
+
         self.staging_image = Image(
             context, image_type, image_format, width, height, depth, mip_level,
             layers, samples, sharing_mode, queue_families,
@@ -1571,17 +1575,6 @@ class HighPerformanceImage():
                 vk.VK_ACCESS_SHADER_READ_BIT
             )
 
-        # Set back the layout of staging image
-        with immediate_buffer(context, commandpool) as cmd:
-            self.staging_image.update_layout(
-                cmd, vk.VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-                vk.VK_IMAGE_LAYOUT_PREINITIALIZED,
-                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                vk.VK_ACCESS_TRANSFER_READ_BIT,
-                vk.VK_ACCESS_HOST_WRITE_BIT
-            )
-
     @contextmanager
     def bind(self, context):
         '''Bind image for writing
@@ -1642,6 +1635,19 @@ class Image():
         self.depth = depth
         self.format = vk_const(image_format)
         self.memory_properties = vk_const(memory_properties)
+        image_type = vk_const(image_type)
+        tiling = vk_const(tiling)
+        usage = vk_const(usage)
+        flags = 0
+
+        # Check that image can be created
+        try:
+            vk.vkGetPhysicalDeviceImageFormatProperties(
+                context.physical_device, self.format, image_type, tiling,
+                usage, flags)
+        except vk.VkErrorFormatNotSupported:
+            raise VulkError("Can't create image, format "
+                            "%s not supported" % image_format)
 
         # Create the VkImage
         vk_extent = vk.VkExtent3D(width=width,
@@ -1651,14 +1657,14 @@ class Image():
         image_create = vk.VkImageCreateInfo(
             sType=vk.VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
             flags=0,
-            imageType=vk_const(image_type),
+            imageType=image_type,
             format=self.format,
             extent=vk_extent,
             mipLevels=mip_level,
             arrayLayers=layers,
             samples=vk_const(samples),
-            tiling=vk_const(tiling),
-            usage=vk_const(usage),
+            tiling=tiling,
+            usage=usage,
             sharingMode=vk_const(sharing_mode),
             queueFamilyIndexCount=len(queue_families),
             pQueueFamilyIndices=queue_families if queue_families else None,
@@ -1843,7 +1849,7 @@ class ImageView():
         imageview_create = vk.VkImageViewCreateInfo(
             sType=vk.VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
             flags=0,
-            image=image,
+            image=image.image,
             viewType=vk_const(view_type),
             format=vk_const(image_format),
             components=components,
@@ -2231,6 +2237,65 @@ class Renderpass():
 
         self.renderpass = vk.vkCreateRenderPass(
             context.device, renderpass_create)
+
+
+class Sampler():
+    '''
+    `Sampler` objects represent the state of an image sampler which is used
+    by the implementation to read image data and apply filtering and other
+    transformations for the shader.
+    '''
+
+    def __init__(self, context, mag_filter, min_filter, mipmap_mode,
+                 address_mode_u, address_mode_v, address_mode_w, mip_lod_bias,
+                 anisotropy_enable, max_anisotropy, compare_enable,
+                 compare_op, min_lod, max_lod, border_color,
+                 unnormalized_coordinates):
+        '''
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        - `mag_filter`: Magnification filter to apply to lookups (`VkFilter`)`
+        - `min_filter`: Minification filter to apply to lookups (`VkFilter`)`
+        - `mipmap_mode`: `VkSamplerMipmapMode` mipmap filter to apply to
+                         lookups
+        - `address_mode_u: `VkSamplerAddressMode`
+        - `address_mode_v: `VkSamplerAddressMode`
+        - `address_mode_w: `VkSamplerAddressMode`
+        - `mip_lod_bias`: Bias to be added to mipmap LOD calculation
+        - `anisotropy_enable`: `True` to enable anisotropic filtering
+        - `max_anisotropy`: Anisotropy value clamp
+        - `compare_enable`: `True` to enable comparison against a reference
+                            value during lookups
+        - `compare_op`: `VkCompareOp` comparison function to apply to fetched
+                        data before filtering
+        - `min_lod`: Value used to clamp the computed level-of-detail value
+        - `max_lod`: Value used to clamp the computed level-of-detail value
+        - `border_color`: `VkBorderColor` predefined border color to use
+        - `unnormalized_coordinates`: `True` to use unnormalized texel
+                                      coordinates
+        '''
+        sampler_create = vk.VkSamplerCreateInfo(
+            sType=vk.VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
+            flags=0,
+            magFilter=vk_const(mag_filter),
+            minFilter=vk_const(min_filter),
+            mipmapMode=vk_const(mipmap_mode),
+            addressModeU=vk_const(address_mode_u),
+            addressModeV=vk_const(address_mode_v),
+            addressModeW=vk_const(address_mode_w),
+            mipLodBias=mip_lod_bias,
+            anisotropyEnable=btov(anisotropy_enable),
+            maxAnisotropy=max_anisotropy,
+            compareEnable=btov(compare_enable),
+            compareOp=vk_const(compare_op),
+            minLod=min_lod,
+            maxLod=max_lod,
+            borderColor=vk_const(border_color),
+            unnormalizedCoordinates=btov(unnormalized_coordinates)
+        )
+
+        self.sampler = vk.vkCreateSampler(context.device, sampler_create)
 
 
 class Semaphore():
