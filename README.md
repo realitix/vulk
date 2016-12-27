@@ -70,8 +70,8 @@ Here you can put your code
 
 ## Dependancies
 
-- [CVulkan](https://realitix.github.io/cvulkan/): C module to communicate with Vulkan SDK
-- [VulkBare](https://realitix.github.io/vulk-bare/): C module providing helper functions
+- [CVulkan](https://github.com/realitix/cvulkan): C module to communicate with Vulkan SDK
+- [VulkBare](https://github.com/realitix/vulk-bare): C module providing helper functions
 
 ## Stay in touch
 
