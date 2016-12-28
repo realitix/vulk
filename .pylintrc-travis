@@ -5,7 +5,7 @@ ignore=tests
 
 # Disable refactor and convention checks
 # Keep only warning and error checks
-disable=R,C,I
+disable=R,C,I,E1101
 
 # Disable warning on TODO
 notes=

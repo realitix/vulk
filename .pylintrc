@@ -4,7 +4,7 @@
 ignore=tests
 # Disable refactor and convention checks
 # Keep only warning and error checks
-disable=R,C,I
+disable=R,C,I,E1101
 
 # A comma-separated list of package or module names from where C extensions may
 # be loaded. Extensions are loading into the active Python interpreter and may
