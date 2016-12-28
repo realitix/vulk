@@ -61,8 +61,8 @@ setup(
     description="Vulk: Advanced 3D engine",
     long_description=open("README.rst").read(),
     install_requires=['vulkbare', 'docopt', 'numpy', 'pysdl2', 'cvulkan'],
-    setup_requires=[],
-    tests_require=[],
+    setup_requires=['pytest-runner'],
+    tests_require=['pytest'],
     include_package_data=True,
     url="http://github.com/realitix/vulk",
     classifiers=[
@@ -75,5 +75,6 @@ setup(
         "Topic :: Multimedia :: Graphics :: 3D Rendering"
     ],
     license="Apache 2.0",
-    cmdclass={'api': APICommand, 'doc': DocCommand, 'readme': ReadmeCommand}
+    cmdclass={'api': APICommand, 'doc': DocCommand, 'readme': ReadmeCommand},
+    test_suite='vulk.tests'
 )

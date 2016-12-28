@@ -70,6 +70,14 @@ Here you can put your code
 '''
 ```
 
+## Unit tests
+
+To run the unit tests, execute the following command:
+
+```bash
+python setup.py test
+```
+
 ## Dependancies
 
 - [CVulkan](https://github.com/realitix/cvulkan): C module to communicate with Vulkan SDK

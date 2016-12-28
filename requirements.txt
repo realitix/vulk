@@ -6,6 +6,7 @@ numpy
 pylint
 pysdl2
 pytest
+pytest-runner
 cvulkan
 pdoc
 Pygments

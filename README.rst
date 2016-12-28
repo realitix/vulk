@@ -74,6 +74,15 @@ documentation must be in markdown and respect the following syntax:
             [Note|Seealso|Warning|Todo]
     '''
 
+Unit tests
+----------
+
+To run the unit tests, execute the following command:
+
+.. code:: bash
+
+    python setup.py test
+
 Dependancies
 ------------
 
