@@ -24,18 +24,9 @@ import logging
 import vulkan as vk  # pylint: disable=import-error
 
 from vulk.exception import VulkError
-from vulk import vulkanconstant
+from vulk import vulkanconstant as vc
 
 logger = logging.getLogger()
-
-STAGE_MAPPING = {
-    'vertex': vk.VK_SHADER_STAGE_VERTEX_BIT,
-    'tessellation_control': vk.VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT, # noqa
-    'tessellation_evaluation': vk.VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT, # noqa
-    'geometry': vk.VK_SHADER_STAGE_GEOMETRY_BIT,
-    'fragment': vk.VK_SHADER_STAGE_FRAGMENT_BIT,
-    'compute': vk.VK_SHADER_STAGE_COMPUTE_BIT
-}
 
 
 # ----------
@@ -58,7 +49,7 @@ def find_memory_type(context, type_filter, properties):
     - `context`: The `VulkContext`
     - `type_filter`: Bit field of the memory types that are suitable
                      for the memory (int)
-    - `properties`: `VkMemoryPropertyFlags` Vulkan constant, type of
+    - `properties`: `MemoryProperty` Vulkan constant, type of
                     memory we want
 
     **Todo: I made a bitwise comparaison with `type_filter`, I have to test
@@ -99,13 +90,13 @@ def immediate_buffer(context, commandpool=None):
     if not commandpool:
         commandpool = CommandPool(
             context, context.queue_family_indices['graphic'],
-            'VK_COMMAND_POOL_CREATE_TRANSIENT_BIT')
+            vc.CommandPoolCreate.TRANSIENT)
         own_commandpool = True
 
     try:
         commandbuffers = commandpool.allocate_buffers(
-            context, 'VK_COMMAND_BUFFER_LEVEL_PRIMARY', 1)
-        flags = 'VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT'
+            context, vc.CommandBufferLevel.PRIMARY, 1)
+        flags = vc.CommandBufferUsage.ONE_TIME_SUBMIT
         with commandbuffers[0].bind(flags) as cmd:
             yield cmd
     finally:
@@ -153,7 +144,7 @@ def submit_to_queue(queue, submits):
     for s in submits:
         wait_stages = None
         if s.wait_stages:
-            wait_stages = [vk_const(st) for st in s.wait_stages]
+            wait_stages = [st.value for st in s.wait_stages]
 
         wait_semaphores = None
         if s.wait_semaphores:
@@ -204,7 +195,7 @@ def update_descriptorsets(context, writes, copies):
                 vk_descriptors.append(vk.VkDescriptorImageInfo(
                     sampler=d.sampler.sampler,
                     imageView=d.view.imageview,
-                    imageLayout=vk_const(d.layout)
+                    imageLayout=d.layout.value
                 ))
             result['pImageInfo'] = vk_descriptors
 
@@ -234,29 +225,13 @@ def update_descriptorsets(context, writes, copies):
             dstBinding=w.binding,
             dstArrayElement=w.set_offset,
             descriptorCount=len(w.descriptors),
-            descriptorType=vk_const(w.type),
-            **get_type(vk_const(w.type), w.descriptors)
+            descriptorType=w.type.value,
+            **get_type(w.type.value, w.descriptors)
         ))
 
     # TODO: copies must be implemented
     vk.vkUpdateDescriptorSets(context.device, len(vk_writes),
                               vk_writes, len(copies), None)
-
-
-def vk_const(v):
-    '''Get constant
-
-    if v is str, we get the constant in vulkan
-    else we return it as is
-    '''
-    if isinstance(v, str):
-        if '|' in v:
-            result = 0
-            for attr in v.split('|'):
-                result |= vk_const(attr.strip())
-            return result
-        return getattr(vk, v)
-    return v
 
 
 # ----------
@@ -271,14 +246,14 @@ AttachmentDescription.__doc__ = '''
 
     *Parameters:*
 
-    - `format`: `VkFormat` vulkan constant
-    - `samples`: `VkSampleCountFlagBits` vulkan constant
-    - `load`: `VkAttachmentLoadOp` vulkan constant
-    - `store`: `VkAttachmentStoreOp` vulkan constant
-    - `stencil_load`: `VkAttachmentLoadOp` vulkan constant
-    - `stencil_store`: `VkAttachmentStoreOp` vulkan constant
-    - `initial_layout`: `VkImageLayout` vulkan constant
-    - `final_layout`: `VkImageLayout` vulkan constant
+    - `format`: `Format` vulk constant
+    - `samples`: `SampleCount` vulk constant
+    - `load`: `AttachmentLoadOp` vulk constant
+    - `store`: `AttachmentStoreOp` vulk constant
+    - `stencil_load`: `AttachmentLoadOp` vulk constant
+    - `stencil_store`: `AttachmentStoreOp` vulk constant
+    - `initial_layout`: `ImageLayout` vulk constant
+    - `final_layout`: `ImageLayout` vulk constant
     '''
 
 
@@ -289,7 +264,7 @@ AttachmentReference.__doc__ = '''
     *Parameters:*
 
     - `index`: Index of attachment description
-    - `layout`: VkImageLayout vulkan constant
+    - `layout`: `ImageLayout` vulk constant
     '''
 
 
@@ -315,7 +290,7 @@ DescriptorImageInfo.__doc__ = '''
 
     - `sampler`: `Sampler` ressource
     - `view`: `ImageView`
-    - `layout`: `VkImageLayout`
+    - `layout`: `ImageLayout` vulk constant
     '''
 
 
@@ -325,8 +300,8 @@ DescriptorPoolSize.__doc__ = '''
 
     *Parameters:*
 
-    - `type`: `VkDescriptorType`
-    - `couont`: Number of descriptors of that type to allocate
+    - `type`: `DescriptorType` vulk constant
+    - `count`: Number of descriptors of that type to allocate
     '''
 
 
@@ -340,13 +315,13 @@ DescriptorSetLayoutBinding.__doc__ = '''
 
     - `binding`: Binding number of this entry and corresponds to a resource
                  of the same binding number in the shader stages
-    - `type`: `VkDescriptorType` specifying which type of resource descriptors
+    - `type`: `DescriptorType` specifying which type of resource descriptors
               are used for this binding
     - `count`:  Number of descriptors contained in the binding,
                 accessed in a shader as an array
-    - `stage`: `VkShaderStageFlagBits` specifying which pipeline shader stages
-               can access a resource for this binding
-    - `immutable_samplers`: Affects initialization of samplers (can be `None`)
+    - `stage`: `ShaderStage` vulk constant specifying which pipeline shader
+                stages can access a resource for this binding
+    - `immutable_samplers`: Immutable `Sampler` (can be `None`)
     '''
 
 
@@ -378,7 +353,7 @@ ImageSubresourceRange.__doc__ = '''
 
     *Parameters:*
 
-    - `aspect`: `VkImageAspectFlags` indicating which aspect(s) of the
+    - `aspect`: `ImageAspect` vulk constant indicating which aspect(s) of the
                 image are included in the view
     - `base_miplevel`: The first mipmap level accessible to the view
     - `level_count`: Number of mipmap levels (starting from base_miplevel)
@@ -407,14 +382,14 @@ PipelineColorBlendAttachmentState.__doc__ = '''
     *Parameters:*
 
     - `enable`: Enable blending
-    - `src_color`: Blending factor for source color (`VkBlendFactor`)
-    - `dst_color`: Blending factor for destination color (`VkBlendFactor`)
-    - `color_op`: Operation on color (`VkBlendOp`)
-    - `src_alpha`: Blending factor for source alpha (`VkBlendFactor`)
-    - `dst_alpha`: Blending factor for destination alpha (`VkBlendFactor`)
-    - `alpha_op`: Operation on alpha (`VkBlendOp`)
-    - `color_mask`: Bitmask selecting which of the R, G, B, and A components
-                    are enabled for writing (`VkColorComponentFlags`)
+    - `src_color`: `BlendFactor` vulk constant for source color
+    - `dst_color`: `BlendFactor` vulk constant for destination color
+    - `color_op`: `BlendOp` vulk constant Operation on color
+    - `src_alpha`: `BlendFactor` vulk constant for source alpha
+    - `dst_alpha`: `BlendFactor` vulk constant for destination alpha
+    - `alpha_op`: `BlendOp` vulk constant operation on alpha
+    - `color_mask`: `ColorComponent` vulk constant selecting which of the
+                    R, G, B, and A components are enabled for writing
     '''
 
 PipelineColorBlendState = namedtuple('PipelineColorBlendState',
@@ -424,7 +399,7 @@ PipelineColorBlendState.__doc__ = '''
     *Parameters:*
 
     - `op_enable`: Enable bitwise combination
-    - `op`: Operation to perform (`VkLogicOp`)
+    - `op`: `LogicOp` vulk constant operation to perform
     - `attachments`: List of blend attachments for each framebuffer
     - `constants`: Constants depending on blend factor (`list` of 4 `float`)
     '''
@@ -441,10 +416,10 @@ PipelineDepthStencilState.__doc__ = '''
     - `depth_test_enable`: Enable depth test
     - `depth_write_enable`: Enable depth write
     - `depth_bounds_test_enable`: Enable bounds test
-    - `depth_compare`: Condition to overwrite depth (`VkCompareOp`)
+    - `depth_compare`: `CompareOp` vulk constant condition to overwrite depth
     - `stencil_test_enable`: Enable stencil test
-    - `front`: Control stencil parameter (`VkStencilOpState`)
-    - `back`: Control stencil parameter (`VkStencilOpState`)
+    - `front`: Control stencil parameter (`StencilOpState`)
+    - `back`: Control stencil parameter (`StencilOpState`)
     - `min`: Define the min value in depth bound test (`float`)
     - `max`: Define the max value in depth bound test (`float`)
     '''
@@ -461,7 +436,7 @@ PipelineInputAssemblyState = namedtuple('PipelineInputAssemblyState',
 PipelineInputAssemblyState.__doc__ = '''
     *Parameters:*
 
-    - `topology`: The `VkPrimitiveTopology` to use when drawing
+    - `topology`: `PrimitiveTopology` vulk constant to use when drawing
     '''
 
 
@@ -472,7 +447,7 @@ PipelineMultisampleState.__doc__ = '''
     *Parameters:*
 
     - `shading_enable`: Enable multisampling (`boolean`)
-    - `samples`: Number of samples (`VkSampleCountFlagBits`)
+    - `samples`: Number of samples, `SampleCount` vulk constant
     - `min_sample_shading`: Minimum of sample (`float`)
     '''
 
@@ -487,10 +462,10 @@ PipelineRasterizationState.__doc__ = '''
     *Parameters:*
 
     - `depth_clamp_enable`: Whether to enable depth clamping (`boolean`)
-    - `polygon_mode`: Which `VkPolygonMode` to use
+    - `polygon_mode`: Which `PolygonMode` vulk constant to use
     - `line_width`: Width of line (`float`)
-    - `cull_mode`: The way of culling (`VkCullModeFlagBits`)
-    - `front_face`: `VkFrontFace`
+    - `cull_mode`: The way of culling, `CullMode` vulk constant
+    - `front_face`: `FrontFace` vulk constant
     - `depth_bias_constant`: Constant to add to depth (`float`)
     - `depth_bias_clamp`: Max depth bias (`float`)
     - `depth_bias_slope`: Factor to slope (`float`)
@@ -502,8 +477,7 @@ PipelineShaderStage.__doc__ = '''
     *Parameters:*
 
     - `module`: The `ShaderModule` to bind
-    - `stage`: Stage name in ['vertex', 'fragment', 'geometry', 'compute',
-               'tesselation_control', 'tesselation_evaluation']
+    - `stage`: `ShaderStage` vulk constant
     '''
 
 PipelineVertexInputState = namedtuple('PipelineVertexInputState',
@@ -551,7 +525,7 @@ SubmitInfo.__doc__ = '''
     *Parameters:*
 
     - `wait_semaphores`: `list` of `Semaphore` to wait on
-    - `wait_stages`: `list` of `VkPipelineStageFlagBits` at which each
+    - `wait_stages`: `list` of `PipelineStage` vulk constant at which each
                      corresponding semaphore wait will occur. Must be the
                      same size as `wait_semaphores`
     - `signal_semaphores`: `list` of `Semaphore` to signal when commands
@@ -568,12 +542,13 @@ SubpassDependency.__doc__ = '''
 
     *Parameters:*
 
-    - `src_subpass`: Source subpass `int` or `VK_SUBPASS_EXTERNAL`
-    - `src_stage`: Source stage `VkPipelineStageFlagBits`
-    - `src_access`: Source access `VkAccessFlagBits`
-    - `dst_subpass`: Destination subpass `int` or `VK_SUBPASS_EXTERNAL`
-    - `dst_stage`: Destination stage `VkPipelineStageFlagBits`
-    - `dst_access`: Destination access `VkAccessFlagBits`
+    - `src_subpass`: Source subpass `int` or `SUBPASS_EXTERNAL` vulk constant
+    - `src_stage`: Source stage `PipelineStage` vulk constant
+    - `src_access`: Source `Access` vulk constant
+    - `dst_subpass`: Destination subpass `int` or
+                     `SUBPASS_EXTERNAL` vulk constant
+    - `dst_stage`: Destination stage `PipelineStage` vulk constant
+    - `dst_access`: Destination `Access` vulk constant
     '''
 
 
@@ -608,7 +583,7 @@ VertexInputAttributeDescription.__doc__ = '''
 
     - `location`: Shader binding location number for this attribute (`int`)
     - `binding`: Binding number which this attribute takes its data from
-    - `format`: `VkFormat` of the vertex attribute data
+    - `format`: `Format` vulk constant of the vertex attribute data
     - `offset`: Byte offset of this attribute relative to the start of an
                 element in the vertex input binding (`int`)
     '''
@@ -624,7 +599,7 @@ VertexInputBindingDescription.__doc__ = '''
     - `binding`: Binding number (`int`)
     - `stride`: Distance in bytes between two consecutive elements within
                 the buffer (`int`)
-    - `rate`: `VkVertexInputRate`
+    - `rate`: `VertexInputRate` vulk constant
     '''
 
 Viewport = namedtuple('Viewport', ['x', 'y', 'width', 'height',
@@ -656,7 +631,7 @@ WriteDescriptorSet.__doc__ = '''
     - `set`: Destination `DescriptorSet` set to update
     - `binding`: Descriptor binding within that set
     - `set_offset`: Offset to start with in the descriptor
-    - `type`: Type of descriptor `VkDescriptorType`
+    - `type`: Type of descriptor `DescriptorType` vulk constant
     - `descriptors`: `list` of `DescriptorBufferInfo` or `DescriptorImageInfo`
                     or `BufferView` depending on `type`
 
@@ -685,25 +660,25 @@ class Buffer():
         *Parameters:*
 
         - `context`: `VulkContext`
-        - `flags`: `VkBufferCreateFlags`
+        - `flags`: `BufferCreate` vulk constant
         - `size`: Buffer size in bytes
-        - `usage`: `VkBufferUsageFlags`
-        - `sharing_mode`: `VkSharingMode`
+        - `usage`: `BufferUsage` vulk constant
+        - `sharing_mode`: `SharingMode` vulk constant
         - `queue_families`: List of queue families accessing this image
                             (ignored if sharingMode is not
-                            `VK_SHARING_MODE_CONCURRENT`) (can be [])
-        - `memory_properties`: `VkMemoryPropertyFlags` Vulkan constant
+                            `CONCURRENT`) (can be [])
+        - `memory_properties`: `MemoryProperty` vulk constant
         '''
-        self.memory_properties = vk_const(memory_properties)
+        self.memory_properties = memory_properties.value
         self.size = size
 
         # Create VkBuffer
         buffer_create = vk.VkBufferCreateInfo(
             sType=vk.VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
-            flags=vk_const(flags),
+            flags=flags.value,
             size=self.size,
-            usage=vk_const(usage),
-            sharingMode=vk_const(sharing_mode),
+            usage=usage.value,
+            sharingMode=sharing_mode.value,
             queueFamilyIndexCount=len(queue_families),
             pQueueFamilyIndices=queue_families if queue_families else None
         )
@@ -754,7 +729,7 @@ class Buffer():
             size=self.size
         )
 
-        cmd.copy_buffer(self.buffer, dst_buffer.buffer, [region])
+        cmd.copy_buffer(self, dst_buffer, [region])
 
     @contextmanager
     def bind(self, context):
@@ -867,13 +842,13 @@ class CommandBuffer():
         self.commandbuffer = commandbuffer
 
     @contextmanager
-    def bind(self, flags=0):
+    def bind(self, flags=vc.CommandBufferUsage.NONE):
         '''
         Bind this buffer to register command.
 
         *Parameters:*
 
-        - `flags`: `VkCommandBufferUsageFlags` Vulkan constant, default to 0
+        - `flags`: `CommandBufferUsage` vulk constant, default to 0
 
         *Returns:*
 
@@ -885,7 +860,7 @@ class CommandBuffer():
         '''
         commandbuffer_begin_create = vk.VkCommandBufferBeginInfo(
             sType=vk.VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
-            flags=vk_const(flags),
+            flags=flags.value,
             pInheritanceInfo=None
         )
         try:
@@ -913,7 +888,7 @@ class CommandBufferRegister():
         self.commandbuffer = commandbuffer
 
     def begin_renderpass(self, renderpass, framebuffer, renderarea,
-                         clears, contents='VK_SUBPASS_CONTENTS_INLINE'):
+                         clears, contents=vc.SubpassContents.INLINE):
         '''
         Begin a new renderpass
 
@@ -924,8 +899,7 @@ class CommandBufferRegister():
                          are used with the render pass
         - `renderarea`: `Rect2D` size to render
         - `clears`:  `list` of `ClearValue` for each `Framebuffer`
-        - `contents`: `VkSubpassContents` Vulkan constant,
-                      default: `VK_SUBPASS_CONTENTS_INLINE`
+        - `contents`: `SubpassContents` vulk constant (default: `INLINE`)
         '''
         vk_renderarea = vk.VkRect2D(
             offset=vk.VkOffset2D(
@@ -957,10 +931,10 @@ class CommandBufferRegister():
         )
 
         vk.vkCmdBeginRenderPass(self.commandbuffer, renderpass_begin,
-                                vk_const(contents))
+                                contents)
 
     def bind_descriptor_sets(self, layout, first, descriptors, offsets,
-                             bind_point='VK_PIPELINE_BIND_POINT_GRAPHICS'):
+                             bind_point=vc.PipelineBindPoint.GRAPHICS):
         '''
         Binds descriptor sets to this `CommandBuffer`
 
@@ -970,27 +944,25 @@ class CommandBufferRegister():
         - `first`: Number of the first descriptor set to be bound
         - `descriptors`: `list` of `DescriptorSet`
         - `offsets`: `list` of dynamic offsets
-        - `bind_point`: `VkPipelineBindPoint`
+        - `bind_point`: `PipelineBindPoint` vulk constant (default: GRAPHICS)
         '''
         vk_descriptors = [d.descriptorset for d in descriptors]
         vk.vkCmdBindDescriptorSets(
-            self.commandbuffer, vk_const(bind_point), layout.layout, first,
+            self.commandbuffer, bind_point, layout.layout, first,
             len(vk_descriptors), vk_descriptors, len(offsets),
             offsets if offsets else None)
 
     def bind_pipeline(self, pipeline,
-                      bind_point='VK_PIPELINE_BIND_POINT_GRAPHICS'):
+                      bind_point=vc.PipelineBindPoint.GRAPHICS):
         '''
         Bind the pipeline to this `CommandBuffer`.
 
         *Parameters:*
 
         - `pipeline`: The `Pipeline` to bind
-        - `bind_point`: `VkPipelineBindPoint` Vulkan constant
-                        (default to graphic)
+        - `bind_point`: `PipelineBindPoint` vulk constant (default: GRAPHICS)
         '''
-        vk.vkCmdBindPipeline(self.commandbuffer, vk_const(bind_point),
-                             pipeline.pipeline)
+        vk.vkCmdBindPipeline(self.commandbuffer, bind_point, pipeline.pipeline)
 
     def bind_vertex_buffers(self, first, count, buffers, offsets):
         '''
@@ -1019,10 +991,10 @@ class CommandBufferRegister():
 
         - `buffer`: Index `Buffer`
         - `offset`: Offset (`int`)
-        - `index_type`: `VkIndexType`
+        - `index_type`: `IndexType` vulk constant
         '''
         vk.vkCmdBindIndexBuffer(self.commandbuffer, buffer.buffer, offset,
-                                vk_const(index_type))
+                                index_type)
 
     def draw(self, vertex_count, first_vertex,
              instance_count=1, first_instance=0):
@@ -1093,9 +1065,9 @@ class CommandBufferRegister():
 
         *Parameters:*
 
-        - `src_stage`: `VkPipelineStageFlags` Vulkan constant
-        - `dst_stage`: `VkPipelineStageFlags` Vulkan constant
-        - `dependency`: `VkDependencyFlags` Vulkan constant
+        - `src_stage`: `PipelineStage` vulk constant
+        - `dst_stage`: `PipelineStage` vulk constant
+        - `dependency`: `Dependency` vulk constant
         - `memories`: `list` of `VkMemoryBarrier` Vulkan objects
         - `buffers`: `list` of `VkBufferMemoryBarrier` Vulkan objects
         - `images`: `list` of `VkImageMemoryBarrier` Vulkan objects
@@ -1104,9 +1076,9 @@ class CommandBufferRegister():
         vk_buffers = buffers if buffers else None
         vk_images = images if images else None
         vk.vkCmdPipelineBarrier(
-            self.commandbuffer, vk_const(src_stage), vk_const(dst_stage),
-            vk_const(dependency), len(memories), vk_memories,
-            len(buffers), vk_buffers, len(images), vk_images
+            self.commandbuffer, src_stage.value, dst_stage.value,
+            dependency.value, len(memories), vk_memories, len(buffers),
+            vk_buffers, len(images), vk_images
         )
 
     def copy_image(self, src_image, src_layout, dst_image,
@@ -1116,17 +1088,16 @@ class CommandBufferRegister():
 
         *Parameters:*
 
-        - `src_image`: `VkImage`
-        - `src_layout`: `VkImageLayout`
-        - `dst_image`: `VkImage`
-        - `dst_layout`: `VkImageLayout`
+        - `src_image`: `Image`
+        - `src_layout`: `ImageLayout` vulk constant
+        - `dst_image`: `Image`
+        - `dst_layout`: `ImageLayout` vulk constant
         - `regions`: `list` of `VkImageCopy`
 
-        **Note: `VkImage` is raw Vulkan object, not vulk `Image`**
         '''
         vk.vkCmdCopyImage(
-            self.commandbuffer, src_image, vk_const(src_layout), dst_image,
-            vk_const(dst_layout), len(regions), regions
+            self.commandbuffer, src_image.image, src_layout.value,
+            dst_image.image, dst_layout.value, len(regions), regions
         )
 
     def copy_buffer(self, src_buffer, dst_buffer, regions):
@@ -1135,12 +1106,12 @@ class CommandBufferRegister():
 
         *Parameters:*
 
-        - `src_buffer`: `VkBuffer`
-        - `dst_buffer`: `VkBuffer`
+        - `src_buffer`: `Buffer`
+        - `dst_buffer`: `Buffer`
         - `regions`: `list` of `VkBufferCopy`
         '''
-        vk.vkCmdCopyBuffer(
-            self.commandbuffer, src_buffer, dst_buffer, len(regions), regions)
+        vk.vkCmdCopyBuffer(self.commandbuffer, src_buffer.buffer,
+                           dst_buffer.buffer, len(regions), regions)
 
     def end_renderpass(self):
         '''End the current render pass'''
@@ -1153,18 +1124,19 @@ class CommandPool():
     command buffers are allocated from them.
     '''
 
-    def __init__(self, context, queue_family_index, flags=0):
+    def __init__(self, context, queue_family_index,
+                 flags=vc.CommandPoolCreate.NONE):
         '''
         *Parameters:*
 
         - `context`: The `VulkContext`
         - `queue_family_index`: Index of the queue family to use
-        - `flags`: `VkCommandPoolCreateFlags` Vulkan constant, default to 0
+        - `flags`: `CommandPoolCreate` vulk constant, default to 0
         '''
         commandpool_create = vk.VkCommandPoolCreateInfo(
             sType=vk.VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
             queueFamilyIndex=queue_family_index,
-            flags=vk_const(flags)
+            flags=flags.value
         )
 
         # The Vulkan command pool
@@ -1180,7 +1152,7 @@ class CommandPool():
         *Parameters:*
 
         - `context`: The `VulkContext`
-        - `level`: `VkCommandBufferLevel` Vulkan constant
+        - `level`: `CommandBufferLevel` vulk constant
         - `count`: Number of `CommandBuffer` to create
 
         *Returns:*
@@ -1190,7 +1162,7 @@ class CommandPool():
         commandbuffers_create = vk.VkCommandBufferAllocateInfo(
             sType=vk.VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
             commandPool=self.commandpool,
-            level=vk_const(level),
+            level=level.value,
             commandBufferCount=count
         )
 
@@ -1241,7 +1213,8 @@ class DescriptorPool():
     the same pool in multiple threads simultaneously.
     '''
 
-    def __init__(self, context, poolsizes, max_sets, flags=0):
+    def __init__(self, context, poolsizes, max_sets,
+                 flags=vc.DescriptorPoolCreate.NONE):
         '''
         *Parameters:*
 
@@ -1249,18 +1222,18 @@ class DescriptorPool():
         - `poolsizes`: `list` of `PoolSize`
         - `max_sets`: Maximum number of descriptor sets that can be
                       allocated from the pool
-        - `flags`: `VkDescriptorPoolCreateFlags` (default=0)
+        - `flags`: `DescriptorPoolCreate`  vulk constant (default=0)
         '''
         vk_poolsizes = []
         for p in poolsizes:
             vk_poolsizes.append(vk.VkDescriptorPoolSize(
-                type=vk_const(p.type),
+                type=p.type.value,
                 descriptorCount=p.count
             ))
 
         descriptorpool_create = vk.VkDescriptorPoolCreateInfo(
             sType=vk.VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
-            flags=vk_const(flags),
+            flags=flags.value,
             maxSets=max_sets,
             poolSizeCount=len(vk_poolsizes),
             pPoolSizes=vk_poolsizes
@@ -1340,9 +1313,9 @@ class DescriptorSetLayout():
         for b in bindings:
             vk_bindings.append(vk.VkDescriptorSetLayoutBinding(
                 binding=b.binding,
-                descriptorType=vk_const(b.type),
+                descriptorType=b.type.value,
                 descriptorCount=b.count,
-                stageFlags=vk_const(b.stage),
+                stageFlags=b.stage.value,
                 pImmutableSamplers=b.immutable_samplers
             ))
 
@@ -1403,14 +1376,8 @@ class HighPerformanceBuffer():
     buffer have the same properties.
     '''
 
-    USAGE_MAPPING = {
-        'index': vk.VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
-        'uniform': vk.VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-        'vertex': vk.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT
-    }
-
-    def __init__(self, context, size, buffer_type,
-                 sharing_mode='VK_SHARING_MODE_EXCLUSIVE',
+    def __init__(self, context, size, usage,
+                 sharing_mode=vc.SharingMode.EXCLUSIVE,
                  queue_families=None):
         '''Create a high performance buffer
 
@@ -1418,30 +1385,26 @@ class HighPerformanceBuffer():
 
         - `context`: `VulkContext`
         - `size`: Buffer size in bytes
+        - `usage`: `BufferUsage` vulk constant
         - 'buffer_type': `str` in ['index', 'uniform', 'vertex']
-        - `sharing_mode`: `VkSharingMode`
+        - `sharing_mode`: `SharingMode` vulk constant
         - `queue_families`: List of queue families accessing this image
-                            (ignored if sharingMode is not
-                            `VK_SHARING_MODE_CONCURRENT`) (can be [])
+                            (ignored if sharingMode is not CONCURRENT)
+                            (can be [])
         '''
-        if buffer_type not in ('index', 'uniform', 'vertex'):
-            msg = "Buffer type must be in ['index', 'uniform', 'vertex']"
-            logger.error(msg)
-            raise VulkError(msg)
-
         queue_families = queue_families if queue_families else []
 
         self.staging_buffer = Buffer(
-            context, 0, size, vk.VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+            context, vc.BufferCreate.NONE, size, vc.BufferUsage.TRANSFER_SRC,
             sharing_mode, queue_families,
-            vk.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT # noqa
+            vc.MemoryProperty.HOST_VISIBLE | vc.MemoryProperty.HOST_COHERENT
         )
 
         self.final_buffer = Buffer(
-            context, 0, size,
-            vk.VK_BUFFER_USAGE_TRANSFER_DST_BIT | HighPerformanceBuffer.USAGE_MAPPING[buffer_type], # noqa
+            context, vc.BufferCreate.NONE, size,
+            vc.BufferUsage.TRANSFER_DST | usage,
             sharing_mode, queue_families,
-            vk.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
+            vc.MemoryProperty.DEVICE_LOCAL
         )
 
     def _finalize(self, context):
@@ -1488,26 +1451,26 @@ class HighPerformanceImage():
 
     def __init__(self, context, image_type, image_format, width, height,
                  depth, mip_level, layers, samples,
-                 sharing_mode='VK_SHARING_MODE_EXCLUSIVE',
+                 sharing_mode=vc.SharingMode.EXCLUSIVE,
                  queue_families=None):
         '''Create a high performance image
 
         *Parameters:*
 
         - `context`: `VulkContext`
-        - `image_type`: Type of image 1D/2D/3D (`VkImageType`)
-        - `image_format`: `VkFormat` of the image
+        - `image_type`: `ImageType` vulk constant
+        - `image_format`: `Format` of the image
         - `width`: Image width
         - `heigth`: Image height
         - `depth`: Image depth
         - `mip_level`: Level of mip (`int`)
         - `layers`: Number of layers (`int`)
-        - `samples`: This `VkSampleCountFlagBits` flag is related
+        - `samples`: This `SampleCount` vulk constant is related
                      to multisampling
-        - `sharing_mode`: `VkSharingMode`
+        - `sharing_mode`: `SharingMode` vulk constant
         - `queue_families`: List of queue families accessing this image
-                            (ignored if sharingMode is not
-                            `VK_SHARING_MODE_CONCURRENT`) (can be [])
+                            (ignored if sharingMode is not `CONCURRENT`)
+                            (can be [])
         '''
         if not queue_families:
             queue_families = []
@@ -1515,16 +1478,16 @@ class HighPerformanceImage():
         self.staging_image = Image(
             context, image_type, image_format, width, height, depth, mip_level,
             layers, samples, sharing_mode, queue_families,
-            vk.VK_IMAGE_LAYOUT_PREINITIALIZED, vk.VK_IMAGE_TILING_LINEAR,
-            vk.VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
-            vk.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | vk.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT # noqa
+            vc.ImageLayout.PREINITIALIZED, vc.ImageTiling.LINEAR,
+            vc.ImageUsage.TRANSFER_SRC,
+            vc.MemoryProperty.HOST_VISIBLE | vc.MemoryProperty.HOST_COHERENT
         )
         self.final_image = Image(
             context, image_type, image_format, width, height, depth, mip_level,
             layers, samples, sharing_mode, queue_families,
-            vk.VK_IMAGE_LAYOUT_PREINITIALIZED, vk.VK_IMAGE_TILING_OPTIMAL,
-            vk.VK_IMAGE_USAGE_TRANSFER_DST_BIT | vk.VK_IMAGE_USAGE_SAMPLED_BIT,
-            vk.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
+            vc.ImageLayout.PREINITIALIZED, vc.ImageTiling.OPTIMAL,
+            vc.ImageUsage.TRANSFER_DST | vc.ImageUsage.SAMPLED,
+            vc.MemoryProperty.DEVICE_LOCAL
         )
 
     def _finalize(self, context):
@@ -1541,23 +1504,23 @@ class HighPerformanceImage():
         # Transition the staging image to optimal source transfert layout
         with immediate_buffer(context, commandpool) as cmd:
             self.staging_image.update_layout(
-                cmd, vk.VK_IMAGE_LAYOUT_PREINITIALIZED,
-                vk.VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                vk.VK_ACCESS_HOST_WRITE_BIT,
-                vk.VK_ACCESS_TRANSFER_READ_BIT
+                cmd, vc.ImageLayout.PREINITIALIZED,
+                vc.ImageLayout.TRANSFER_SRC_OPTIMAL,
+                vc.PipelineStage.TOP_OF_PIPE,
+                vc.PipelineStage.TOP_OF_PIPE,
+                vc.Access.HOST_WRITE,
+                vc.Access.TRANSFER_READ
             )
 
         # Transition the final image to optimal destination transfert layout
         with immediate_buffer(context, commandpool) as cmd:
             self.final_image.update_layout(
-                cmd, vk.VK_IMAGE_LAYOUT_PREINITIALIZED,
-                vk.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                vk.VK_ACCESS_HOST_WRITE_BIT,
-                vk.VK_ACCESS_TRANSFER_WRITE_BIT
+                cmd, vc.ImageLayout.PREINITIALIZED,
+                vc.ImageLayout.TRANSFER_DST_OPTIMAL,
+                vc.PipelineStage.TOP_OF_PIPE,
+                vc.PipelineStage.TOP_OF_PIPE,
+                vc.Access.HOST_WRITE,
+                vc.Access.TRANSFER_WRITE
             )
 
         # Copy staging image into final image
@@ -1567,12 +1530,12 @@ class HighPerformanceImage():
         # Set the best layout for the final image
         with immediate_buffer(context, commandpool) as cmd:
             self.final_image.update_layout(
-                cmd, vk.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                vk.VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                vk.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                vk.VK_ACCESS_TRANSFER_WRITE_BIT,
-                vk.VK_ACCESS_SHADER_READ_BIT
+                cmd, vc.ImageLayout.TRANSFER_DST_OPTIMAL,
+                vc.ImageLayout.SHADER_READ_ONLY_OPTIMAL,
+                vc.PipelineStage.TOP_OF_PIPE,
+                vc.PipelineStage.TOP_OF_PIPE,
+                vc.Access.TRANSFER_WRITE,
+                vc.Access.SHADER_READ
             )
 
     @contextmanager
@@ -1612,32 +1575,32 @@ class Image():
         *Parameters:*
 
         - `context`: `VulkContext`
-        - `image_type`: Type of image 1D/2D/3D (`VkImageType`)
-        - `image_format`: `VkFormat` of the image
+        - `image_type`: `ImageType` vulk constant
+        - `image_format`: `Format` vulk constant
         - `width`: Image width
         - `heigth`: Image height
         - `depth`: Image depth
         - `mip_level`: Level of mip (`int`)
         - `layers`: Number of layers (`int`)
-        - `samples`: This `VkSampleCountFlagBits` flag is related
+        - `samples`: This `SampleCount` vulk constant is related
                      to multisampling
-        - `sharing_mode`: `VkSharingMode`
+        - `sharing_mode`: `SharingMode` vulk constant
         - `queue_families`: List of queue families accessing this image
-                            (ignored if sharingMode is not
-                            `VK_SHARING_MODE_CONCURRENT`) (can be [])
-        - `layout`: `VkImageLayout`
-        - `tiling`: `VkImageTiling`
-        - `usage`: `VkImageUsageFlags`
-        - `memory_properties`: `VkMemoryPropertyFlags` Vulkan constant
+                            (ignored if sharingMode is not `CONCURRENT`)
+                            (can be [])
+        - `layout`: `ImageLayout` vulk constant
+        - `tiling`: `ImageTiling` vulk constant
+        - `usage`: `ImageUsage` vulk constant
+        - `memory_properties`: `MemoryProperty` vulk constant
         '''
         self.width = width
         self.height = height
         self.depth = depth
-        self.format = vk_const(image_format)
-        self.memory_properties = vk_const(memory_properties)
-        image_type = vk_const(image_type)
-        tiling = vk_const(tiling)
-        usage = vk_const(usage)
+        self.format = image_format
+        self.memory_properties = memory_properties
+        image_type = image_type.value
+        tiling = tiling.value
+        usage = usage.value
         flags = 0
 
         # Check that image can be created
@@ -1658,17 +1621,17 @@ class Image():
             sType=vk.VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
             flags=0,
             imageType=image_type,
-            format=self.format,
+            format=self.format.value,
             extent=vk_extent,
             mipLevels=mip_level,
             arrayLayers=layers,
-            samples=vk_const(samples),
+            samples=samples.value,
             tiling=tiling,
             usage=usage,
-            sharingMode=vk_const(sharing_mode),
+            sharingMode=sharing_mode.value,
             queueFamilyIndexCount=len(queue_families),
             pQueueFamilyIndices=queue_families if queue_families else None,
-            initialLayout=vk_const(layout)
+            initialLayout=layout.value
         )
 
         self.image = vk.vkCreateImage(context.device, image_create)
@@ -1703,15 +1666,15 @@ class Image():
         *Parameters:*
 
         - `cmd`: `CommandBufferRegister` used to register commands
-        - `old_layout`: `VkImageLayout`
-        - `new_layout`: `VkImageLayout`
-        - `src_stage`: `VkPipelineStageFlagBits`
-        - `dst_stage`: `VkPipelineStageFlagBits`
-        - `src_access`: `VkAccessFlagBits`
-        - `dst_access`: `VkAccessFlagBits`
+        - `old_layout`: `ImageLayout` vulk constant
+        - `new_layout`: `ImageLayout` vulk constant
+        - `src_stage`: `PipelineStage` vulk constant
+        - `dst_stage`: `PipelineStage` vulk constant
+        - `src_access`: `Access` vulk constant
+        - `dst_access`: `Access` vulk constant
         '''
         subresource_range = vk.VkImageSubresourceRange(
-            aspectMask=vk.VK_IMAGE_ASPECT_COLOR_BIT,
+            aspectMask=vc.ImageAspect.COLOR,
             baseMipLevel=0,
             levelCount=1,
             baseArrayLayer=0,
@@ -1720,18 +1683,18 @@ class Image():
 
         barrier = vk.VkImageMemoryBarrier(
             sType=vk.VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
-            srcAccessMask=vk_const(src_access),
-            dstAccessMask=vk_const(dst_access),
-            oldLayout=vk_const(old_layout),
-            newLayout=vk_const(new_layout),
-            srcQueueFamilyIndex=vk.VK_QUEUE_FAMILY_IGNORED,
-            dstQueueFamilyIndex=vk.VK_QUEUE_FAMILY_IGNORED,
+            srcAccessMask=src_access.value,
+            dstAccessMask=dst_access.value,
+            oldLayout=old_layout.value,
+            newLayout=new_layout.value,
+            srcQueueFamilyIndex=vc.QUEUE_FAMILY_IGNORED,
+            dstQueueFamilyIndex=vc.QUEUE_FAMILY_IGNORED,
             image=self.image,
             subresourceRange=subresource_range
         )
 
-        cmd.pipeline_barrier(vk_const(src_stage), vk_const(dst_stage), 0, [],
-                             [], [barrier])
+        cmd.pipeline_barrier(src_stage, dst_stage, vc.Dependency.NONE,
+                             [], [], [barrier])
 
     def copy_to(self, cmd, dst_image):
         '''
@@ -1752,7 +1715,7 @@ class Image():
         '''
         # Copy image
         subresource = vk.VkImageSubresourceLayers(
-            aspectMask=vk.VK_IMAGE_ASPECT_COLOR_BIT,
+            aspectMask=vc.ImageAspect.COLOR,
             baseArrayLayer=0,
             mipLevel=0,
             layerCount=1
@@ -1767,10 +1730,10 @@ class Image():
             extent=extent
         )
 
-        src_layout = 'VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL'
-        dst_layout = 'VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'
+        src_layout = vc.ImageLayout.TRANSFER_SRC_OPTIMAL
+        dst_layout = vc.ImageLayout.TRANSFER_DST_OPTIMAL
 
-        cmd.copy_image(self.image, src_layout, dst_image.image,
+        cmd.copy_image(self, src_layout, dst_image,
                        dst_layout, [region])
 
     @contextmanager
@@ -1787,15 +1750,16 @@ class Image():
 
         **Warning: Image memory must be host visible**
         '''
-        compatible_memories = {vk.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
-                               vk.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-                               vk.VK_MEMORY_PROPERTY_HOST_CACHED_BIT}
+        compatible_memories = {vc.MemoryProperty.HOST_VISIBLE,
+                               vc.MemoryProperty.HOST_COHERENT,
+                               vc.MemoryProperty.HOST_CACHED}
+        # TODO: To try, not sure it works
         if not any([self.memory_properties & m for m in compatible_memories]):
             msg = "Can't map this image, memory must be host visible"
             logger.error(msg)
             raise VulkError(msg)
 
-        format_size = vulkanconstant.VK_FORMAT_SIZE[self.format] / 8
+        format_size = vc.VK_FORMAT_SIZE[self.format] / 8
         image_size = (self.width * self.height * self.depth * format_size)
 
         try:
@@ -1815,31 +1779,31 @@ class ImageView():
     '''
 
     def __init__(self, context, image, view_type, image_format,
-                 subresource_range, swizzle_r='VK_COMPONENT_SWIZZLE_IDENTITY',
-                 swizzle_g='VK_COMPONENT_SWIZZLE_IDENTITY',
-                 swizzle_b='VK_COMPONENT_SWIZZLE_IDENTITY',
-                 swizzle_a='VK_COMPONENT_SWIZZLE_IDENTITY'):
+                 subresource_range, swizzle_r=vc.ComponentSwizzle.IDENTITY,
+                 swizzle_g=vc.ComponentSwizzle.IDENTITY,
+                 swizzle_b=vc.ComponentSwizzle.IDENTITY,
+                 swizzle_a=vc.ComponentSwizzle.IDENTITY):
         '''Create ImageView
 
         *Parameters:*
 
         - `context`: The `VulkContext`
         - `image`: The `Image` to work on
-        - `view_type`: `VkImageViewType` Vulkan constant
-        - `image_format`: `VkFormat` Vulkan constant
+        - `view_type`: `ImageViewType` vulk constant
+        - `image_format`: `Format` vulk constant
         - `subresource_range`: The `ImageSubresourceRange` to use
-        - `swizzle_r`: Swizzle of the red color channel
-        - `swizzle_g`: Swizzle of the green color channel
-        - `swizzle_b`: Swizzle of the blue color channel
-        - `swizzle_a`: Swizzle of the alpha color channel
+        - `swizzle_r`: `ComponentSwizzle` of the red color channel
+        - `swizzle_g`: `ComponentSwizzle` of the green color channel
+        - `swizzle_b`: `ComponentSwizzle` of the blue color channel
+        - `swizzle_a`: `ComponentSwizzle` of the alpha color channel
         '''
         components = vk.VkComponentMapping(
-            r=vk_const(swizzle_r), g=vk_const(swizzle_g),
-            b=vk_const(swizzle_b), a=vk_const(swizzle_a)
+            r=swizzle_r.value, g=swizzle_g.value, b=swizzle_b.value,
+            a=swizzle_a.value
         )
 
         vk_subresource_range = vk.VkImageSubresourceRange(
-            aspectMask=vk_const(subresource_range.aspect),
+            aspectMask=subresource_range.aspect.value,
             baseMipLevel=subresource_range.base_miplevel,
             levelCount=subresource_range.level_count,
             baseArrayLayer=subresource_range.base_layer,
@@ -1850,8 +1814,8 @@ class ImageView():
             sType=vk.VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
             flags=0,
             image=image.image,
-            viewType=vk_const(view_type),
-            format=vk_const(image_format),
+            viewType=view_type.value,
+            format=image_format.value,
             components=components,
             subresourceRange=vk_subresource_range
         )
@@ -1899,17 +1863,10 @@ class Pipeline():
 
         vk_stages = []
         for s in stages:
-            try:
-                vulkan_stage = STAGE_MAPPING[s.stage]
-            except KeyError:
-                msg = "Stage %s doesn't exist"
-                logger.error(msg)
-                raise TypeError(msg)
-
             vk_stages.append(vk.VkPipelineShaderStageCreateInfo(
                 sType=vk.VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
                 flags=0,
-                stage=vulkan_stage,
+                stage=s.stage.value,
                 module=s.module.module,
                 pSpecializationInfo=None,
                 pName='main'
@@ -1920,7 +1877,7 @@ class Pipeline():
             vk_vertex_bindings.append(vk.VkVertexInputBindingDescription(
                 binding=binding.binding,
                 stride=binding.stride,
-                inputRate=vk_const(binding.rate)
+                inputRate=binding.rate.value
             ))
 
         vk_vertex_attributes = []
@@ -1928,7 +1885,7 @@ class Pipeline():
             vk_vertex_attributes.append(vk.VkVertexInputAttributeDescription(
                 location=attribute.location,
                 binding=attribute.binding,
-                format=vk_const(attribute.format),
+                format=attribute.format.value,
                 offset=attribute.offset
             ))
 
@@ -1944,7 +1901,7 @@ class Pipeline():
         vk_input_assembly = vk.VkPipelineInputAssemblyStateCreateInfo(
             sType=vk.VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO, # noqa
             flags=0,
-            topology=vk_const(input_assembly.topology),
+            topology=input_assembly.topology.value,
             primitiveRestartEnable=vk.VK_FALSE
         )
 
@@ -1983,10 +1940,10 @@ class Pipeline():
             flags=0,
             depthClampEnable=btov(rasterization.depth_clamp_enable),
             rasterizerDiscardEnable=vk.VK_FALSE,
-            polygonMode=vk_const(rasterization.polygon_mode),
+            polygonMode=rasterization.polygon_mode.value,
             lineWidth=rasterization.line_width,
-            cullMode=vk_const(rasterization.cull_mode),
-            frontFace=vk_const(rasterization.front_face),
+            cullMode=rasterization.cull_mode.value,
+            frontFace=rasterization.front_face.value,
             depthBiasEnable=dbe,
             depthBiasConstantFactor=rasterization.depth_bias_constant,
             depthBiasClamp=rasterization.depth_bias_clamp,
@@ -1997,7 +1954,7 @@ class Pipeline():
             sType=vk.VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO,
             flags=0,
             sampleShadingEnable=btov(multisample.shading_enable),
-            rasterizationSamples=vk_const(multisample.samples),
+            rasterizationSamples=multisample.samples.value,
             minSampleShading=multisample.min_sample_shading,
             pSampleMask=None,
             alphaToCoverageEnable=vk.VK_FALSE,
@@ -2011,7 +1968,7 @@ class Pipeline():
                 flags=0,
                 depthTestEnable=btov(depth.depth_test_enable),
                 depthWriteEnable=btov(depth.depth_write_enable),
-                depthCompareOp=vk_const(depth.depth_compare),
+                depthCompareOp=depth.depth_compare.value,
                 depthBoundsTestEnable=btov(depth.depth_bounds_test_enable),
                 stencilTestEnable=btov(depth.stencil_test_enable),
                 front=depth.front,
@@ -2023,14 +1980,14 @@ class Pipeline():
         vk_blend_attachments = []
         for a in blend.attachments:
             vk_a = vk.VkPipelineColorBlendAttachmentState(
-                colorWriteMask=vk_const(a.color_mask),
+                colorWriteMask=a.color_mask.value,
                 blendEnable=btov(a.enable),
-                srcColorBlendFactor=vk_const(a.src_color),
-                dstColorBlendFactor=vk_const(a.dst_color),
-                colorBlendOp=vk_const(a.color_op),
-                srcAlphaBlendFactor=vk_const(a.src_alpha),
-                dstAlphaBlendFactor=vk_const(a.dst_alpha),
-                alphaBlendOp=vk_const(a.alpha_op)
+                srcColorBlendFactor=a.src_color.value,
+                dstColorBlendFactor=a.dst_color.value,
+                colorBlendOp=a.color_op.value,
+                srcAlphaBlendFactor=a.src_alpha.value,
+                dstAlphaBlendFactor=a.dst_alpha.value,
+                alphaBlendOp=a.alpha_op.value
             )
             vk_blend_attachments.append(vk_a)
 
@@ -2038,7 +1995,7 @@ class Pipeline():
             sType=vk.VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO,
             flags=0,
             logicOpEnable=btov(blend.op_enable),
-            logicOp=vk_const(blend.op),
+            logicOp=blend.op.value,
             attachmentCount=len(vk_blend_attachments),
             pAttachments=vk_blend_attachments,
             blendConstants=blend.constants
@@ -2145,14 +2102,14 @@ class Renderpass():
         for a in attachments:
             vk_attachments.append(vk.VkAttachmentDescription(
                 flags=0,
-                format=vk_const(a.format),
-                samples=vk_const(a.samples),
-                loadOp=vk_const(a.load),
-                storeOp=vk_const(a.store),
-                stencilLoadOp=vk_const(a.stencil_load),
-                stencilStoreOp=vk_const(a.stencil_store),
-                initialLayout=vk_const(a.initial_layout),
-                finalLayout=vk_const(a.final_layout)
+                format=a.format.value,
+                samples=a.samples.value,
+                loadOp=a.load.value,
+                storeOp=a.store.value,
+                stencilLoadOp=a.stencil_load.value,
+                stencilStoreOp=a.stencil_store.value,
+                initialLayout=a.initial_layout.value,
+                finalLayout=a.final_layout.value
             ))
 
         # Loop through the list of subpasses to create the reference
@@ -2165,7 +2122,7 @@ class Renderpass():
                 if key not in vk_references:
                     vk_references[key] = vk.VkAttachmentReference(
                         attachment=r.index,
-                        layout=vk_const(r.layout)
+                        layout=r.layout.value
                     )
 
         def ref(references):
@@ -2199,7 +2156,7 @@ class Renderpass():
 
             vk_subpasses.append(vk.VkSubpassDescription(
                 flags=0,
-                pipelineBindPoint=vk.VK_PIPELINE_BIND_POINT_GRAPHICS,
+                pipelineBindPoint=vc.PipelineBindPoint.GRAPHICS.value,
                 inputAttachmentCount=leninputs,
                 pInputAttachments=inputs,
                 colorAttachmentCount=lencolors,
@@ -2215,18 +2172,18 @@ class Renderpass():
         for d in dependencies:
             vk_dependencies.append(vk.VkSubpassDependency(
                 dependencyFlags=0,
-                srcSubpass=vk_const(d.src_subpass),
-                dstSubpass=vk_const(d.dst_subpass),
-                srcStageMask=vk_const(d.src_stage),
-                dstStageMask=vk_const(d.dst_stage),
-                srcAccessMask=vk_const(d.src_access),
-                dstAccessMask=vk_const(d.dst_access)
+                srcSubpass=d.src_subpass,
+                dstSubpass=d.dst_subpass,
+                srcStageMask=d.src_stage.value,
+                dstStageMask=d.dst_stage.value,
+                srcAccessMask=d.src_access.value,
+                dstAccessMask=d.dst_access.value
             ))
 
         # Create the render pass
         renderpass_create = vk.VkRenderPassCreateInfo(
-            flags=0,
             sType=vk.VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,
+            flags=0,
             attachmentCount=len(vk_attachments),
             pAttachments=vk_attachments,
             subpassCount=len(vk_subpasses),
@@ -2255,43 +2212,43 @@ class Sampler():
         *Parameters:*
 
         - `context`: `VulkContext`
-        - `mag_filter`: Magnification filter to apply to lookups (`VkFilter`)`
-        - `min_filter`: Minification filter to apply to lookups (`VkFilter`)`
-        - `mipmap_mode`: `VkSamplerMipmapMode` mipmap filter to apply to
+        - `mag_filter`: Magnification `Filter` to apply to lookups
+        - `min_filter`: Minification `Filter` to apply to lookups
+        - `mipmap_mode`: `SamplerMipmapMode` mipmap filter to apply to
                          lookups
-        - `address_mode_u: `VkSamplerAddressMode`
-        - `address_mode_v: `VkSamplerAddressMode`
-        - `address_mode_w: `VkSamplerAddressMode`
+        - `address_mode_u: `SamplerAddressMode` vulk constant
+        - `address_mode_v: `SamplerAddressMode` vulk contant
+        - `address_mode_w: `SamplerAddressMode` vulk contant
         - `mip_lod_bias`: Bias to be added to mipmap LOD calculation
         - `anisotropy_enable`: `True` to enable anisotropic filtering
         - `max_anisotropy`: Anisotropy value clamp
         - `compare_enable`: `True` to enable comparison against a reference
                             value during lookups
-        - `compare_op`: `VkCompareOp` comparison function to apply to fetched
-                        data before filtering
+        - `compare_op`: `CompareOp` vulk constant comparison function to apply
+                        to fetched data before filtering
         - `min_lod`: Value used to clamp the computed level-of-detail value
         - `max_lod`: Value used to clamp the computed level-of-detail value
-        - `border_color`: `VkBorderColor` predefined border color to use
+        - `border_color`: `BorderColor` predefined border color to use
         - `unnormalized_coordinates`: `True` to use unnormalized texel
                                       coordinates
         '''
         sampler_create = vk.VkSamplerCreateInfo(
             sType=vk.VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
             flags=0,
-            magFilter=vk_const(mag_filter),
-            minFilter=vk_const(min_filter),
-            mipmapMode=vk_const(mipmap_mode),
-            addressModeU=vk_const(address_mode_u),
-            addressModeV=vk_const(address_mode_v),
-            addressModeW=vk_const(address_mode_w),
+            magFilter=mag_filter.value,
+            minFilter=min_filter.value,
+            mipmapMode=mipmap_mode.value,
+            addressModeU=address_mode_u.value,
+            addressModeV=address_mode_v.value,
+            addressModeW=address_mode_w.value,
             mipLodBias=mip_lod_bias,
             anisotropyEnable=btov(anisotropy_enable),
             maxAnisotropy=max_anisotropy,
             compareEnable=btov(compare_enable),
-            compareOp=vk_const(compare_op),
+            compareOp=compare_op.value,
             minLod=min_lod,
             maxLod=max_lod,
-            borderColor=vk_const(border_color),
+            borderColor=border_color.value,
             unnormalizedCoordinates=btov(unnormalized_coordinates)
         )
 
