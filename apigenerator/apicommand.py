@@ -61,7 +61,7 @@ class APICommand(Command):
         with open(os.path.join(OUT_FOLDER, 'README.md'), 'w') as f:
             f.write('# Vulk API documentation\n\n')
             f.write('[LINK TO API DOCUMENTATION]')
-            f.write('(https://realitix.github.io/vulk-api/vulk/)\n\n')
+            f.write('(https://realitix.github.io/vulk-api/)\n\n')
             f.write('[LINK TO VULK ENGINE]')
             f.write('(https://github.com/realitix/vulk)')
 

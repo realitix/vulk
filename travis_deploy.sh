@@ -7,6 +7,8 @@
 git clone https://$API_USER:$API_PASS@github.com/realitix/vulk-api.git vulk-api > /dev/null 2>&1
 rm -rf vulk-api/*
 python setup.py api
+mv vulk-api/vulk/* vulk-api/
+rm -rf vulk-api/vulk
 git --git-dir=vulk-api/.git --work-tree=vulk-api config user.name "realitix Travis User"
 git --git-dir=vulk-api/.git --work-tree=vulk-api config user.email "realitix@fake.com"
 git --git-dir=vulk-api/.git --work-tree=vulk-api add -A
