@@ -1,5 +1,13 @@
 site_name: Vulk Documentation
 site_description: Documentation of Vulk
 site_author: "Jean-Sébastien Bevilacqua"
+site_url: 'https://realitix.github.io/vulk-doc'
 theme: material
 repo_url: https://github.com/realitix/vulk
+markdown_extensions:
+  - codehilite(css_class=code)
+  - admonition
+extra:
+  author:
+    github: realitix
+    twitter: realitix
