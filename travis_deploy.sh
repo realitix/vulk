@@ -20,6 +20,5 @@ python setup.py doc
 git --git-dir=vulk-doc/.git --work-tree=vulk-doc config user.name "realitix Travis User"
 git --git-dir=vulk-doc/.git --work-tree=vulk-doc config user.email "realitix@fake.com"
 git --git-dir=vulk-doc/.git --work-tree=vulk-doc add -A
-git --git-dir=vulk-doc/.git --work-tree=vulk-doc commit -m "$TRAVIS_COMMIT_MSG" > /dev/null 2>&1
-git --git-dir=vulk-doc/.git --work-tree=vulk-doc push origin master > /dev/null 2>&1
-
+git --git-dir=vulk-doc/.git --work-tree=vulk-doc commit -m "$TRAVIS_COMMIT_MSG"
+git --git-dir=vulk-doc/.git --work-tree=vulk-doc push origin master
