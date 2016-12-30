@@ -8,7 +8,9 @@
 [![Issue Count](https://codeclimate.com/github/realitix/vulk/badges/issue_count.svg)](https://codeclimate.com/github/realitix/vulk)
 
 
-[API documentation](https://realitix.github.io/vulk-api/vulk/)
+[Documentation](https://realitix.github.io/vulk-doc/)
+
+[API reference](https://realitix.github.io/vulk-api/vulk/)
 
 [Example of use](https://github.com/realitix/vulk-demo)
 
@@ -26,10 +28,10 @@ Vulkan.
 
 ## Documentation
 
-### API
+### API reference
 The API documentation is generated after each commit by Travis CI servers
 into the dedicated repo vulk-api. You can check it here:
-[API documentation](https://realitix.github.io/vulk-api/vulk/)
+[API reference](https://realitix.github.io/vulk-api/vulk/)
 
 To build the API (in vulk-api folder), execute the following commands:
 

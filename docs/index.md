@@ -1,17 +1,6 @@
-# Welcome to MkDocs
+# Welcome to Vulk documentation
 
-For full documentation visit [mkdocs.org](http://mkdocs.org).
+## Presentation
 
-## Commands
-
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs help` - Print this help message.
-
-## Project layout
-
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+Currently, there is no documentation. Vulk is a young project evolving fast.
+Come here later when the first release will be available.
