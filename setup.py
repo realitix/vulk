@@ -1,5 +1,6 @@
 from setuptools import setup, find_packages
 from distutils.cmd import Command
+from subprocess import call
 import os
 
 from apigenerator.apicommand import APICommand
@@ -27,6 +28,22 @@ class ReadmeCommand(Command):
                 'rst'))
 
 
+class DocCommand(Command):
+    '''Generate doc with mkdocs'''
+
+    description = "Generate documentation"
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        call(['mkdocs', 'build', '-q', '-d', 'vulk-doc'])
+
+
 setup(
     name="vulk",
     version=vulk.__version__,
@@ -50,5 +67,5 @@ setup(
         "Topic :: Multimedia :: Graphics :: 3D Rendering"
     ],
     license="Apache 2.0",
-    cmdclass={'api': APICommand, 'readme': ReadmeCommand}
+    cmdclass={'api': APICommand, 'doc': DocCommand, 'readme': ReadmeCommand}
 )

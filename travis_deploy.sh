@@ -12,3 +12,14 @@ git --git-dir=vulk-api/.git --work-tree=vulk-api config user.email "realitix@fak
 git --git-dir=vulk-api/.git --work-tree=vulk-api add -A
 git --git-dir=vulk-api/.git --work-tree=vulk-api commit -m "$TRAVIS_COMMIT_MSG" > /dev/null 2>&1
 git --git-dir=vulk-api/.git --work-tree=vulk-api push origin master > /dev/null 2>&1
+
+# Deploy documentation in vulk-doc
+git clone https://$API_USER:$API_PASS@github.com/realitix/vulk-doc.git vulk-doc > /dev/null 2>&1
+rm -rf vulk-doc/*
+python setup.py doc
+git --git-dir=vulk-doc/.git --work-tree=vulk-doc config user.name "realitix Travis User"
+git --git-dir=vulk-doc/.git --work-tree=vulk-doc config user.email "realitix@fake.com"
+git --git-dir=vulk-doc/.git --work-tree=vulk-doc add -A
+git --git-dir=vulk-doc/.git --work-tree=vulk-doc commit -m "$TRAVIS_COMMIT_MSG" > /dev/null 2>&1
+git --git-dir=vulk-doc/.git --work-tree=vulk-doc push origin master > /dev/null 2>&1
+

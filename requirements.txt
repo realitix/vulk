@@ -11,3 +11,5 @@ pdoc
 Pygments
 mock-import
 markdown2
+mkdocs
+mkdocs-material
