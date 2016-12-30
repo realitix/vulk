@@ -3,15 +3,8 @@
 ## Project status
 
 [![Build Status](https://travis-ci.org/realitix/vulk.svg?branch=master)](https://travis-ci.org/realitix/vulk)
-[![Code Climate](https://codeclimate.com/github/realitix/vulk/badges/gpa.svg)](https://codeclimate.com/github/realitix/vulk)
-[![Test Coverage](https://codeclimate.com/github/realitix/vulk/badges/coverage.svg)](https://codeclimate.com/github/realitix/vulk/coverage)
-[![Issue Count](https://codeclimate.com/github/realitix/vulk/badges/issue_count.svg)](https://codeclimate.com/github/realitix/vulk)
 
-
-[Documentation](https://realitix.github.io/vulk-doc/)
-
-[API reference](https://realitix.github.io/vulk-api/)
-
+[Documentation](https://realitix.github.io/vulk-doc/) | [API reference](https://realitix.github.io/vulk-api/) |
 [Example of use](https://github.com/realitix/vulk-demo)
 
 ## What is it ?
