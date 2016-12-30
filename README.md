@@ -21,7 +21,14 @@ Vulkan.
 
 ## Documentation
 
-### API reference
+Documentation is builded with `mkdocs` and the `material` theme.
+After each commit, Travis CI builds the documentation and pushes it in the
+`vulk-doc` repository. All the documentation is inside the `docs/` folder.
+You can easily contribute to it, it's markdown syntax.
+
+Check out the [mkdocs documentation](http://www.mkdocs.org/).
+
+## API reference
 The API documentation is generated after each commit by Travis CI servers
 into the dedicated repo vulk-api. You can check it here:
 [API reference](https://realitix.github.io/vulk-api/)
