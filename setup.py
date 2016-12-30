@@ -41,7 +41,15 @@ class DocCommand(Command):
         pass
 
     def run(self):
+        # Generate doc
         call(['mkdocs', 'build', '-q', '-d', 'vulk-doc'])
+        # Add readme
+        with open('vulk-doc/README.md', 'w') as f:
+            f.write('# Vulk Documentation\n\n')
+            f.write('[LINK TO DOCUMENTATION]')
+            f.write('(https://realitix.github.io/vulk-doc)\n\n')
+            f.write('[LINK TO VULK ENGINE]')
+            f.write('(https://github.com/realitix/vulk)')
 
 
 setup(
