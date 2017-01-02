@@ -5,8 +5,6 @@ This module contains all Vector class definition
 import numpy as np
 from numpy import linalg
 
-from vulk.math.matrix import Matrix4
-
 
 class Vector():
     '''Base class for Vector
@@ -65,17 +63,11 @@ class Vector():
     def __itruediv__(self, value):
         return self.__truediv__(value)
 
-    def __getitem__(self, key):
-        return self.coordinates[key]
-
-    def __setitem__(self, key, value):
-        self._values[key] = value
-
     def __str__(self):
         return str(self._values)
 
     def __eq__(self, other):
-        return all(self._values == other.coordinates)
+        return all(self._values == other.values)
 
     def __copy__(self):
         return self.__class__(self._values)
