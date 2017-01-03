@@ -1,6 +1,5 @@
 vulkbare
 codeclimate-test-reporter
-coveralls
 docopt
 flake8
 numpy
