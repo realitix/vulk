@@ -20,7 +20,7 @@ install:
 script:
   - python setup.py clean --all
   - py3clean .
-  - coverage run --source=vulk setup.py test
+  - coverage run --source=vulk --omit="vulk/tests*" setup.py test
   - flake8 vulk
   - pylint --rcfile=.pylintrc-travis vulk
 
