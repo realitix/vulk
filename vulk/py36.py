@@ -873,3 +873,11 @@ def _power_of_two(value):
     if value < 1:
         return False
     return value == 2 ** _high_bit(value)
+
+
+class AutoNumber(Enum):
+    def __new__(cls):
+        value = len(cls.__members__) + 1
+        obj = object.__new__(cls)
+        obj._value_ = value
+        return obj

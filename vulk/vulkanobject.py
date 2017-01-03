@@ -952,6 +952,21 @@ class CommandBufferRegister():
             len(vk_descriptors), vk_descriptors, len(offsets),
             offsets if offsets else None)
 
+    def bind_mesh(self, mesh):
+        '''
+        Binds vertices and indices buffer of `Mesh` to this `CommandBuffer`
+
+        *Parameters:*
+
+        - `mesh`: `Mesh`
+        '''
+        self.bind_vertex_buffers(
+            0, 1, [mesh.vertices_buffer.final_buffer], [0])
+
+        if mesh.has_indices:
+            self.bind_index_buffer(
+                mesh.indices_buffer.final_buffer, 0, mesh.index_type)
+
     def bind_pipeline(self, pipeline,
                       bind_point=vc.PipelineBindPoint.GRAPHICS):
         '''
@@ -1759,7 +1774,7 @@ class Image():
             logger.error(msg)
             raise VulkError(msg)
 
-        format_size = vc.VK_FORMAT_SIZE[self.format] / 8
+        _, _, format_size = vc.format_info(self.format)
         image_size = (self.width * self.height * self.depth * format_size)
 
         try:
