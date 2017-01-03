@@ -3,6 +3,7 @@
 ## Project status
 
 [![Build Status](https://travis-ci.org/realitix/vulk.svg?branch=master)](https://travis-ci.org/realitix/vulk)
+[![Coverage Status](https://coveralls.io/repos/github/realitix/vulk/badge.svg?branch=master)](https://coveralls.io/github/realitix/vulk?branch=master)
 
 [Documentation](https://realitix.github.io/vulk-doc/) | [API reference](https://realitix.github.io/vulk-api/) |
 [Example of use](https://github.com/realitix/vulk-demo)
