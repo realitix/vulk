@@ -952,21 +952,6 @@ class CommandBufferRegister():
             len(vk_descriptors), vk_descriptors, len(offsets),
             offsets if offsets else None)
 
-    def bind_mesh(self, mesh):
-        '''
-        Binds vertices and indices buffer of `Mesh` to this `CommandBuffer`
-
-        *Parameters:*
-
-        - `mesh`: `Mesh`
-        '''
-        self.bind_vertex_buffers(
-            0, 1, [mesh.vertices_buffer.final_buffer], [0])
-
-        if mesh.has_indices:
-            self.bind_index_buffer(
-                mesh.indices_buffer.final_buffer, 0, mesh.index_type)
-
     def bind_pipeline(self, pipeline,
                       bind_point=vc.PipelineBindPoint.GRAPHICS):
         '''
@@ -2325,3 +2310,27 @@ class ShaderModule():
             sType=vk.VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
             flags=0, codeSize=len(code), pCode=code)
         self.module = vk.vkCreateShaderModule(context.device, shader_create)
+
+
+class ShaderProgram():
+    '''ShaderProgram
+
+    A `ShaderProgram` embed all `ShaderModule` of a `Pipeline`.
+    '''
+
+    def __init__(self, context, modules):
+        '''
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        - `modules`: `dict` containing a mapping between `ShaderStage` and the
+                     actual shader. The shader must be a `bytes` object like
+                     obtained by open(path, 'rb').read()
+        '''
+        self.stages = []
+        for stage, spirv in modules.items():
+            if not isinstance(spirv, bytes):
+                raise TypeError("shader must be a bytes object")
+
+            module = ShaderModule(context, spirv)
+            self.stages.append(PipelineShaderStage(module, stage))
