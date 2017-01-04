@@ -2231,9 +2231,9 @@ class Sampler():
         - `min_filter`: Minification `Filter` to apply to lookups
         - `mipmap_mode`: `SamplerMipmapMode` mipmap filter to apply to
                          lookups
-        - `address_mode_u: `SamplerAddressMode` vulk constant
-        - `address_mode_v: `SamplerAddressMode` vulk contant
-        - `address_mode_w: `SamplerAddressMode` vulk contant
+        - `address_mode_u`: `SamplerAddressMode` vulk constant
+        - `address_mode_v`: `SamplerAddressMode` vulk contant
+        - `address_mode_w`: `SamplerAddressMode` vulk contant
         - `mip_lod_bias`: Bias to be added to mipmap LOD calculation
         - `anisotropy_enable`: `True` to enable anisotropic filtering
         - `max_anisotropy`: Anisotropy value clamp

@@ -31,9 +31,42 @@ class RawTexture():
             self.height, 1, 1, 1, vc.SampleCount.COUNT_1)
         self.bitmap = self.init_bitmap(*args, **kwargs)
 
+        # Init view and
+        self.view = None
+        self.sampler = None
+        self.init_view_sampler(context)
+
     def init_bitmap(self, *args, **kwargs):
         _, _, pixel_size = vc.format_info(self.format)
         return np.zeros(self.width*self.height*pixel_size, dtype=np.uint8)
+
+    def init_view_sampler(self, context):
+        self.set_view(context)
+        self.set_sampler(context)
+
+    def set_view(self, context):
+        '''
+        Allow to customize the texture view
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
+        texture_range = vo.ImageSubresourceRange(
+            vc.ImageAspect.COLOR, 0, 1, 0, 1)
+        self.view = vo.ImageView(
+            context, self.texture.final_image,
+            vc.ImageViewType.TYPE_2D, self.format, texture_range)
+
+    def set_sampler(self, context, mag_filter=vc.Filter.LINEAR,
+                    min_filter=vc.Filter.LINEAR,
+                    address_mode_u=vc.SamplerAddressMode.REPEAT,
+                    address_mode_v=vc.SamplerAddressMode.REPEAT):
+        self.sampler = vo.Sampler(
+            context, mag_filter, min_filter, vc.SamplerMipmapMode.LINEAR,
+            address_mode_u, address_mode_v, vc.SamplerAddressMode.REPEAT,
+            0, True, 16, False, vc.CompareOp.ALWAYS, 0, 0,
+            vc.BorderColor.INT_OPAQUE_BLACK, False)
 
     def upload(self, context):
         '''Upload bitmap into Vulkan memory'''
