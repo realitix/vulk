@@ -25,9 +25,15 @@ Vulkan.
 Documentation is builded with `mkdocs` and the `material` theme.
 After each commit, Travis CI builds the documentation and pushes it in the
 `vulk-doc` repository. All the documentation is inside the `docs/` folder.
-You can easily contribute to it, it's markdown syntax.
+You can easily contribute to it, it's markdown syntax. Check out the
+[mkdocs documentation](http://www.mkdocs.org/).
 
-Check out the [mkdocs documentation](http://www.mkdocs.org/).
+To build the html documentation (in vulk-doc folder), execute the following commands:
+
+```bash
+pip install -r requirements.txt
+python setup.py doc
+```
 
 ## API reference
 The API documentation is generated after each commit by Travis CI servers
