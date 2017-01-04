@@ -138,3 +138,23 @@ class Mesh():
         if self.has_indices:
             cmd.bind_index_buffer(
                 self.indices_buffer.final_buffer, 0, self.index_type)
+
+    def draw(self, cmd, offset=0, count=0):
+        '''Draw the mesh during command buffer registration
+
+        *Parameters:*
+
+        - `cmd`: `CommandBufferRegister`
+        - `offset`: Start drawing at `offset` vertices
+        - `count`: Draw `count` vertices
+
+        **Note: `offset` and `count` target indices if mesh is indexed**
+        '''
+        if self.has_indices:
+            if not count:
+                count = len(self.indices_array) - offset
+            cmd.draw_indexed(count, offset)
+        else:
+            if not count:
+                count = len(self.vertices_array) - offset
+            cmd.draw(count, offset)
