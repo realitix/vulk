@@ -21,6 +21,9 @@ class RawTexture():
         - `width`: Width of the texture
         - `height`: Height of the texture
         - `texture_format`: `Format` of the vulkan texture
+
+        **Note: You can use *args and **kwargs to pass data in `init_bitmap`
+                but you must subclass `RawTexture`**
         '''
 
         self.width = width
@@ -36,7 +39,7 @@ class RawTexture():
         self.sampler = None
         self.init_view_sampler(context)
 
-    def init_bitmap(self, *args, **kwargs):
+    def init_bitmap(self):
         _, _, pixel_size = vc.format_info(self.format)
         return np.zeros(self.width*self.height*pixel_size, dtype=np.uint8)
 
@@ -101,7 +104,7 @@ class Texture(RawTexture):
         # Upload data
         self.upload(context)
 
-    def init_bitmap(self, *args, **kwargs):
+    def init_bitmap(self, **kwargs):
         return np.array(kwargs['raw_bitmap'], copy=False)
 
     @staticmethod
