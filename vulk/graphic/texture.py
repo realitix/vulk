@@ -34,7 +34,7 @@ class RawTexture():
             self.height, 1, 1, 1, vc.SampleCount.COUNT_1)
         self.bitmap = self.init_bitmap(*args, **kwargs)
 
-        # Init view and
+        # Init view and sampler
         self.view = None
         self.sampler = None
         self.init_view_sampler(context)
@@ -79,13 +79,39 @@ class RawTexture():
                       casting='no')
 
 
-class Texture(RawTexture):
+class BinaryTexture(RawTexture):
+    '''
+    RawTexture with provided bitmap buffer.
+
+    **Warning: You are responsible of the bitmap buffer**
+    '''
+
+    def __init__(self, context, width, height, texture_format, raw_bitmap,
+                 *args, **kwargs):
+        '''
+        *Parameter:*
+
+        - `context`: `VulkContext`
+        - `raw_bitmap`: Buffer to a bitmap
+        '''
+        # Create all the components by calling parent init
+        super().__init__(context, width, height, texture_format,
+                         raw_bitmap=raw_bitmap, *args, **kwargs)
+
+        # Upload data
+        self.upload(context)
+
+    def init_bitmap(self, **kwargs):
+        return np.array(kwargs['raw_bitmap'], dtype=np.uint8, copy=False)
+
+
+class Texture(BinaryTexture):
     '''This class represent a texture.
 
     It handles a Vulkan buffer and a bitmap array (numpy array)
     '''
 
-    def __init__(self, context, path_file):
+    def __init__(self, context, path_file, *args, **kwargs):
         '''
         *Parameter:*
 
@@ -98,14 +124,8 @@ class Texture(RawTexture):
         texture_format = Texture.components_to_format(components)
 
         # Create all the components by calling parent init
-        super().__init__(context, width, height, texture_format,
-                         raw_bitmap=raw_bitmap)
-
-        # Upload data
-        self.upload(context)
-
-    def init_bitmap(self, **kwargs):
-        return np.array(kwargs['raw_bitmap'], copy=False)
+        super().__init__(context, width, height, texture_format, raw_bitmap,
+                         *args, **kwargs)
 
     @staticmethod
     def components_to_format(components):
