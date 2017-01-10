@@ -119,8 +119,8 @@ class Texture(BinaryTexture):
         - `path_file`: Path to the image to load
         '''
         # Load bitmap
-        raw_bitmap, width, height, components = load_image(
-            open(path_file, 'rb').read())
+        with open(path_file, 'rb') as f:
+            raw_bitmap, width, height, components = load_image(f.read())
         texture_format = Texture.components_to_format(components)
 
         # Create all the components by calling parent init
