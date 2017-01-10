@@ -8,7 +8,7 @@ There are two types of enumeration, `IntEnum` and `IntFlag`.
 the Vulkan enumeration that ends by '_BIT'. All enumerations have a
 specific field `NONE` which is equals to 0.
 '''
-from vulk.py36 import Enum, IntEnum, IntFlag, AutoNumber
+from enum import Enum, IntEnum, IntFlag, auto
 import vulkan as vk  # pylint: disable=import-error
 
 
@@ -175,24 +175,23 @@ class CullMode(IntFlag):
     FRONT_AND_BACK = vk.VK_CULL_MODE_FRONT_AND_BACK
 
 
-# TODO: Use auto with python 3.6
-class DataType(AutoNumber):
-    UINT8 = ()
-    SINT8 = ()
-    UINT16 = ()
-    SINT16 = ()
-    UINT32 = ()
-    SINT32 = ()
-    UFLOAT16 = ()
-    SFLOAT16 = ()
-    UFLOAT32 = ()
-    SFLOAT32 = ()
-    UNORM8 = ()
-    SNORM8 = ()
-    UNORM16 = ()
-    SNORM16 = ()
-    UNORM32 = ()
-    SNORM32 = ()
+class DataType(IntEnum):
+    UINT8 = auto()
+    SINT8 = auto()
+    UINT16 = auto()
+    SINT16 = auto()
+    UINT32 = auto()
+    SINT32 = auto()
+    UFLOAT16 = auto()
+    SFLOAT16 = auto()
+    UFLOAT32 = auto()
+    SFLOAT32 = auto()
+    UNORM8 = auto()
+    SNORM8 = auto()
+    UNORM16 = auto()
+    SNORM16 = auto()
+    UNORM32 = auto()
+    SNORM32 = auto()
 
 
 class Dependency(IntFlag):
