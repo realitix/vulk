@@ -63,8 +63,7 @@ class VertexAttributes():
 
 
 class Mesh():
-    def __init__(self, context, max_vertices, max_indices, attributes,
-                 index_type=vc.IndexType.UINT16):
+    def __init__(self, context, max_vertices, max_indices, attributes):
         '''
         *Parameters:*
 
@@ -72,8 +71,11 @@ class Mesh():
         - `max_indices`: Maximum number of indice for this mesh
         - `attributes`: `VertexAttributes`
         '''
+        self.index_type = vc.IndexType.UINT16
+        if max_vertices > 65535:
+            self.index_type = vc.IndexType.UINT32
+
         self.attributes = attributes
-        self.index_type = index_type
         self.has_indices = max_indices > 0
 
         # Create numpy type based of vertex attributes
@@ -92,7 +94,7 @@ class Mesh():
         if self.has_indices:
             self.indices_array = np.zeros(max_indices, dtype=np.uint16)
             self.indices_buffer = vo.HighPerformanceBuffer(
-                context, max_indices * vc.index_type_size(index_type),
+                context, max_indices * vc.index_type_size(self.index_type),
                 vc.BufferUsage.INDEX_BUFFER)
 
     def set_indices(self, indices, offset=0):
