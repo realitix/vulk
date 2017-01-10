@@ -1,8 +1,7 @@
 language: python
 
 python:
-  - '3.5'
-  - '3.5-dev' # 3.5 development branch
+  - '3.6'
   - '3.6-dev' # 3.6 development branch
   - 'nightly' # currently points to 3.7-dev
 
@@ -31,10 +30,9 @@ deploy:
   provider: script
   script: 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash ./travis_deploy.sh; fi'
   on:
-    python: '3.5'
+    python: '3.6'
 
 matrix:
   allow_failures:
-    - python: '3.5-dev'
     - python: '3.6-dev'
     - python: 'nightly'
