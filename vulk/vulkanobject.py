@@ -555,12 +555,10 @@ SubpassDependency.__doc__ = '''
 SubpassDescription = namedtuple('SubpassDescription',
                                 ['colors', 'inputs', 'resolves',
                                  'preserves', 'depth_stencil'])
-SubpassDescription.__new__.__defaults__ = \
-        ([],) * len(SubpassDescription._fields)
 SubpassDescription.__doc__ = '''
     `SubpassDescription` describes all attachments in the subpass.
     All parameters are of type `AttachmentReference`. If you don't want
-    an attachment, don't set it, its default value is an empty list.
+    an attachment, set it to an empty list.
 
     *Parameters:*
 
