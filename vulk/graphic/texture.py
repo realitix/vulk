@@ -134,3 +134,65 @@ class Texture(BinaryTexture):
 
         return [vc.Format.NONE, vc.Format.R8_UNORM, vc.Format.R8G8_UNORM,
                 vc.Format.R8G8B8_UNORM, vc.Format.R8G8B8A8_UNORM][components]
+
+
+class TextureRegion():
+    '''
+    Defines a rectangular area of a texture. The coordinate system used has
+    its origin in the upper left corner with the x-axis pointing to the
+    right and the y axis pointing downwards.
+    '''
+
+    def __init__(self, texture, u=0, u2=1, v=0, v2=1):
+        '''Initialize texture region
+
+        *Parameters:*
+
+        - `texture`: `RawTexture`
+        - `u`, `u2`: X coordinate relative to texture size
+        - `v`, `v2`: Y coordinate relative to texture size
+        '''
+        self.texture = texture
+        self.u = u
+        self.u2 = u2
+        self.v = v
+        self.v2 = v2
+
+    def set_texture(self, texture):
+        '''Set texture of `TextureRegion`
+
+        *Parameters:*
+
+        - `texture`: `RawTexture`
+        '''
+        self.texture = texture
+
+    def set_region(self, u, u2, v, v2):
+        '''Set coordinate relatively to texture size
+
+        *Parameters:*
+
+        - `u`, `u2`: X coordinate relative to texture size
+        - `v`, `v2`: Y coordinate relative to texture size
+        '''
+        self.u = u
+        self.u2 = u2
+        self.v = v
+        self.v2 = v2
+
+    def set_region2(self, x, y, width, height):
+        '''Set coordinate relatively to pixel size
+
+        *Parameters:*
+
+        - `x`: X coordinate of the texture
+        - `y`: Y coordinate of the texture
+        - `width`: Width of the region
+        - `height`: Height of the region
+        '''
+        inv_width = 1. / self.texture.width
+        inv_height = 1. / self.texture.height
+        self.set_region(
+            x * inv_width, y * inv_height,
+            (x + width) * inv_width, (y + height) * inv_height
+        )
