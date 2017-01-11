@@ -165,7 +165,7 @@ def submit_to_queue(queue, submits):
             pSignalSemaphores=signal_semaphores
         ))
 
-    vk.vkQueueSubmit(queue, 1, vk_submits, None)
+    vk.vkQueueSubmit(queue, len(vk_submits), vk_submits, None)
 
 
 def update_descriptorsets(context, writes, copies):
@@ -839,6 +839,16 @@ class CommandBuffer():
         '''
         self.commandbuffer = commandbuffer
 
+    def reset(self, flags=vc.CommandBufferReset.NONE):
+        '''
+        Reset the command buffer
+
+        *Parameters:*
+
+        - `flags`: `CommandBufferReset` vulk constant, default to 0
+        '''
+        vk.vkResetCommandBuffer(self.commandbuffer, flags)
+
     @contextmanager
     def bind(self, flags=vc.CommandBufferUsage.NONE):
         '''
@@ -851,8 +861,6 @@ class CommandBuffer():
         *Returns:*
 
         `CommandBufferRegister` object
-
-        ``
 
         **Todo: `pInheritanceInfo` must be implemented**
         '''
