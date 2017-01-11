@@ -18,8 +18,7 @@ import vulkan as vk  # pylint: disable=import-error
 
 from vulk.exception import VulkError
 from vulk import vulkanconstant as vc
-from vulk.vulkanobject import CommandPool, Image, ImageView, \
-        ImageSubresourceRange, Semaphore, immediate_buffer
+from vulk import vulkanobject as vo
 
 
 logger = logging.getLogger()
@@ -120,9 +119,11 @@ class VulkContext():
         self.final_image = None
         # Image view of the final image
         self.final_image_view = None
-        # Internal semaphores
+        # Semaphores used during presentation
         self._semaphore_available = None
         self._semaphore_copied = None
+        # Semaphores used for direct rendering
+        self._direct_semaphores = []
         # Command buffers
         self.commandbuffers = None
 
@@ -652,7 +653,7 @@ class VulkContext():
         for raw_image in swapchain_raw_images:
             # Put swapchain image in Image
             # It's a bad practice but for this specific use case, it's good
-            img = Image.__new__(Image)
+            img = vo.Image.__new__(vo.Image)
             img.image = raw_image
             img.format = surface_format.format
             img.width = self.width
@@ -662,7 +663,7 @@ class VulkContext():
 
         # Update layout of all swapchain images to present khr
         for image in self.swapchain_images:
-            with immediate_buffer(self) as cmd:
+            with vo.immediate_buffer(self) as cmd:
                 image.update_layout(
                     cmd, vc.ImageLayout.UNDEFINED,
                     vc.ImageLayout.PRESENT_SRC_KHR,
@@ -676,7 +677,7 @@ class VulkContext():
 
     def _create_final_image(self):
         usage = vc.ImageUsage.TRANSFER_SRC | vc.ImageUsage.COLOR_ATTACHMENT
-        self.final_image = Image(
+        self.final_image = vo.Image(
             self, vc.ImageType.TYPE_2D, vc.Format(self.swapchain_format),
             self.width, self.height, 1, 1,
             1, vc.SampleCount.COUNT_1, vc.SharingMode.EXCLUSIVE, [],
@@ -684,7 +685,18 @@ class VulkContext():
             vc.MemoryProperty.DEVICE_LOCAL
         )
 
-        subresource_range = ImageSubresourceRange(
+        # Put final image to color attachment layout
+        with vo.immediate_buffer(self) as cmd:
+            self.final_image.update_layout(
+                cmd, vc.ImageLayout.UNDEFINED,
+                vc.ImageLayout.COLOR_ATTACHMENT_OPTIMAL,
+                vc.PipelineStage.TOP_OF_PIPE,
+                vc.PipelineStage.TOP_OF_PIPE,
+                vc.Access.NONE, vc.Access.COLOR_ATTACHMENT_WRITE
+            )
+
+        # Create image view
+        subresource_range = vo.ImageSubresourceRange(
             aspect=vc.ImageAspect.COLOR,
             base_miplevel=0,
             level_count=1,
@@ -692,19 +704,28 @@ class VulkContext():
             layer_count=1
         )
 
-        self.final_image_view = ImageView(
+        self.final_image_view = vo.ImageView(
             self, self.final_image, vc.ImageViewType.TYPE_2D,
             vc.Format(self.swapchain_format), subresource_range)
 
     def _create_commandbuffers(self):
         '''Create the command buffers used to copy image'''
-        commandpool = CommandPool(self, self.queue_family_indices['graphic'])
+        commandpool = vo.CommandPool(
+            self, self.queue_family_indices['graphic'])
         self.commandbuffers = commandpool.allocate_buffers(
             self, vc.CommandBufferLevel.PRIMARY,
             len(self.swapchain_images))
 
         for i, commandbuffer in enumerate(self.commandbuffers):
             with commandbuffer.bind() as cmd:
+                self.final_image.update_layout(
+                    cmd, vc.ImageLayout.COLOR_ATTACHMENT_OPTIMAL,
+                    vc.ImageLayout.TRANSFER_SRC_OPTIMAL,
+                    vc.PipelineStage.TOP_OF_PIPE,
+                    vc.PipelineStage.TOP_OF_PIPE,
+                    vc.Access.COLOR_ATTACHMENT_WRITE,
+                    vc.Access.TRANSFER_READ
+                )
                 self.swapchain_images[i].update_layout(
                     cmd, vc.ImageLayout.PRESENT_SRC_KHR,
                     vc.ImageLayout.TRANSFER_DST_OPTIMAL,
@@ -722,11 +743,20 @@ class VulkContext():
                     vc.Access.TRANSFER_WRITE,
                     vc.Access.MEMORY_READ
                 )
+                self.final_image.update_layout(
+                    cmd, vc.ImageLayout.TRANSFER_SRC_OPTIMAL,
+                    vc.ImageLayout.COLOR_ATTACHMENT_OPTIMAL,
+                    vc.PipelineStage.BOTTOM_OF_PIPE,
+                    vc.PipelineStage.BOTTOM_OF_PIPE,
+                    vc.Access.TRANSFER_READ,
+                    vc.Access.COLOR_ATTACHMENT_WRITE
+                )
 
     def _create_semaphores(self):
         '''Create semaphores used during image swaping'''
-        self._semaphore_available = Semaphore(self)
-        self._semaphore_copied = Semaphore(self)
+        self._semaphore_available = vo.Semaphore(self)
+        self._semaphore_copied = vo.Semaphore(self)
+        self._direct_semaphores = [vo.Semaphore(self), vo.Semaphore(self)]
 
     def create(self, window, configuration):
         '''Create Vulkan context
@@ -761,9 +791,8 @@ class VulkContext():
 
         - `semaphore`: A `list` of `Semaphore` to wait on
 
-        **Note: The `final_image` layout must be set to
-                `TRANSFER_SRC_OPTIMAL` before calling `swap`.
-                `VulkContext` never update the `final_image` layout**
+        **Note: `final_image` layout is handled by `VulkContext`. You must
+                 let it to COLOR_ATTACHMENT_OPTIMAL**
         '''
         # Acquire image
         index = self.pfn['vkAcquireNextImageKHR'](
