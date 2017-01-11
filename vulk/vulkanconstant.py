@@ -132,6 +132,11 @@ class CommandBufferLevel(IntEnum):
     SCONDARY = vk.VK_COMMAND_BUFFER_LEVEL_SECONDARY
 
 
+class CommandBufferReset(IntFlag):
+    NONE = 0
+    RELEASE_RESOURCES = vk.VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT
+
+
 class CommandBufferUsage(IntFlag):
     NONE = 0
     ONE_TIME_SUBMIT = vk.VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT
