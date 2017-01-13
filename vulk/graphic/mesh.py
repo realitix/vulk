@@ -87,7 +87,7 @@ class Mesh():
         # Create vertices array and buffer
         self.vertices_array = np.zeros(max_vertices, dtype=numpy_types)
         self.vertices_buffer = vo.HighPerformanceBuffer(
-            context, max_vertices * attributes.size,
+            context, self.vertices_array.nbytes,
             vc.BufferUsage.VERTEX_BUFFER)
 
         # Create indices array and buffer
