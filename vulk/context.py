@@ -676,7 +676,7 @@ class VulkContext():
                      len(self.swapchain_images))
 
     def _create_final_image(self):
-        usage = vc.ImageUsage.TRANSFER_SRC | vc.ImageUsage.COLOR_ATTACHMENT
+        usage = vc.ImageUsage.TRANSFER_SRC | vc.ImageUsage.COLOR_ATTACHMENT | vc.ImageUsage.TRANSFER_DST  # noqa
         self.final_image = vo.Image(
             self, vc.ImageType.TYPE_2D, vc.Format(self.swapchain_format),
             self.width, self.height, 1, 1,
@@ -685,14 +685,26 @@ class VulkContext():
             vc.MemoryProperty.DEVICE_LOCAL
         )
 
-        # Put final image to color attachment layout
+        # Fill image memory and put it into color attachment layout
+        clear_color = vo.ClearColorValue(float32=[0, 0, 0, 1])
+        ranges = [vo.ImageSubresourceRange(vc.ImageAspect.COLOR, 0, 1, 0, 1)]
         with vo.immediate_buffer(self) as cmd:
             self.final_image.update_layout(
                 cmd, vc.ImageLayout.UNDEFINED,
+                vc.ImageLayout.TRANSFER_DST_OPTIMAL,
+                vc.PipelineStage.TOP_OF_PIPE,
+                vc.PipelineStage.TOP_OF_PIPE,
+                vc.Access.NONE, vc.Access.TRANSFER_WRITE
+            )
+            cmd.clear_color_image(
+                self.final_image, vc.ImageLayout.TRANSFER_DST_OPTIMAL,
+                clear_color, ranges)
+            self.final_image.update_layout(
+                cmd, vc.ImageLayout.TRANSFER_DST_OPTIMAL,
                 vc.ImageLayout.COLOR_ATTACHMENT_OPTIMAL,
-                vc.PipelineStage.TOP_OF_PIPE,
-                vc.PipelineStage.TOP_OF_PIPE,
-                vc.Access.NONE, vc.Access.COLOR_ATTACHMENT_WRITE
+                vc.PipelineStage.BOTTOM_OF_PIPE,
+                vc.PipelineStage.BOTTOM_OF_PIPE,
+                vc.Access.TRANSFER_WRITE, vc.Access.COLOR_ATTACHMENT_WRITE
             )
 
         # Create image view

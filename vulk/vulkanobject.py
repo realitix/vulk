@@ -1002,6 +1002,30 @@ class CommandBufferRegister():
         vk.vkCmdBindIndexBuffer(self.commandbuffer, buffer.buffer, offset,
                                 index_type)
 
+    def clear_color_image(self, image, layout, clear_color, ranges):
+        '''
+        Clear image with color values
+
+        *Parameters:*
+
+        - `image`: `Image` to clear
+        - `layout`: `ImageLayout` of `image`
+        - `clear_color`: `ClearColorValue`
+        - `ranges`: `list` of `ImageSubresourceRange`
+        '''
+        vk_ranges = []
+        for r in ranges:
+            vk_ranges.append(vk.VkImageSubresourceRange(
+                aspectMask=r.aspect.value,
+                baseMipLevel=r.base_miplevel,
+                levelCount=r.level_count,
+                baseArrayLayer=r.base_layer,
+                layerCount=r.layer_count
+            ))
+
+        vk.vkCmdClearColorImage(self.commandbuffer, image.image, layout,
+                                clear_color.clear, len(vk_ranges), vk_ranges)
+
     def draw(self, vertex_count, first_vertex,
              instance_count=1, first_instance=0):
         '''
