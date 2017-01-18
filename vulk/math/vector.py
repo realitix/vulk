@@ -140,6 +140,15 @@ class Vector3(Vector, XMixin, YMixin, ZMixin):
         else:
             raise ValueError("Vector3 needs 3 components")
 
+    def mul_matrix4(self, matrix):
+        # TODO: optimize this compute
+        tmp = np.ones(4, dtype=np.float32)
+        tmp[0:3] = self._values
+        # We load matrix in column order (default is row order)
+        mv = np.reshape(matrix.values, (4, 4), order='F')
+        result = np.dot(mv, tmp)
+        self._values[:] = result[0:3]
+
 
 # Vector2 constants
 Vector2.X = Vector2(1, 0)
