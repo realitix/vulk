@@ -8,7 +8,6 @@ from vulk import vulkanobject as vo
 from vulk.graphic import mesh as me
 from vulk.graphic import uniform
 from vulk.math.matrix import Matrix4
-from vulk.math.vector import Vector3
 
 
 class SpriteBatch():
