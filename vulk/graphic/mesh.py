@@ -5,23 +5,6 @@ import vulk.vulkanconstant as vc
 import vulk.vulkanobject as vo
 
 
-# Vulk DataType to numpy dtype
-datatype_mapping = {
-    vc.DataType.UINT8: np.uint8,
-    vc.DataType.SINT8: np.int8,
-    vc.DataType.UINT16: np.uint16,
-    vc.DataType.SINT16: np.int16,
-    vc.DataType.UINT32: np.uint32,
-    vc.DataType.SINT32: np.int32,
-    vc.DataType.UFLOAT16: np.float16,
-    vc.DataType.SFLOAT16: np.float16,
-    vc.DataType.UFLOAT32: np.float32,
-    vc.DataType.SFLOAT32: np.float32,
-    vc.DataType.UNORM8: np.uint8,
-    vc.DataType.SNORM8: np.int8
-}
-
-
 class VertexAttribute():
     def __init__(self, location, attribute_format):
         '''
@@ -67,6 +50,7 @@ class Mesh():
         '''
         *Parameters:*
 
+        - `context`: `VulkContext`
         - `max_vertices`: Maximum number of vertices for this mesh
         - `max_indices`: Maximum number of indice for this mesh
         - `attributes`: `VertexAttributes`
@@ -78,14 +62,14 @@ class Mesh():
         self.attributes = attributes
         self.has_indices = max_indices > 0
 
-        # Create numpy type based of vertex attributes
-        numpy_types = []
+        # Create numpy type based on vertex attributes
+        numpy_dtype = []
         for attr in attributes:
-            numpy_types.append(('', (datatype_mapping[attr.dtype],
-                                     attr.components)))
+            numpy_dtype.append(
+                ('', vc.DataTypeNumpy[attr.dtype],  attr.components))
 
         # Create vertices array and buffer
-        self.vertices_array = np.zeros(max_vertices, dtype=numpy_types)
+        self.vertices_array = np.zeros(max_vertices, dtype=numpy_dtype)
         self.vertices_buffer = vo.HighPerformanceBuffer(
             context, self.vertices_array.nbytes,
             vc.BufferUsage.VERTEX_BUFFER)
@@ -97,18 +81,28 @@ class Mesh():
                 context, max_indices * vc.index_type_size(self.index_type),
                 vc.BufferUsage.INDEX_BUFFER)
 
+        # Create othens attributes
+        self.dirty_indices = True
+        self.dirty_vertices = True
+
     def set_indices(self, indices, offset=0):
         if not self.has_indices:
             raise Exception('No index in this mesh')
 
         self.indices_array[offset:] = indices
+        self.dirty_indices = True
 
     def set_vertices(self, vertices, offset=0):
         self.vertices_array[offset:] = vertices
+        self.dirty_vertices = True
 
     def upload_indices(self, context):
         if not self.has_indices:
             raise Exception('No index in this mesh')
+
+        if not self.dirty_indices:
+            return
+        self.dirty_indices = False
 
         with self.indices_buffer.bind(context) as b:
             np.copyto(np.array(b, copy=False),
@@ -116,6 +110,10 @@ class Mesh():
                       casting='no')
 
     def upload_vertices(self, context):
+        if not self.dirty_vertices:
+            return
+        self.dirty_vertices = False
+
         with self.vertices_buffer.bind(context) as b:
             np.copyto(np.array(b, copy=False),
                       self.vertices_array.view(dtype=np.uint8),

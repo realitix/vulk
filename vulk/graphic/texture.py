@@ -32,6 +32,8 @@ class RawTexture():
         self.texture = vo.HighPerformanceImage(
             context, vc.ImageType.TYPE_2D, self.format, self.width,
             self.height, 1, 1, 1, vc.SampleCount.COUNT_1)
+
+        # Init bitmap
         self.bitmap = self.init_bitmap(*args, **kwargs)
 
         # Init view and sampler
