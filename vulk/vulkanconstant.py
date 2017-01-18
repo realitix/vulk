@@ -9,6 +9,7 @@ the Vulkan enumeration that ends by '_BIT'. All enumerations have a
 specific field `NONE` which is equals to 0.
 '''
 from enum import Enum, IntEnum, IntFlag, auto
+import numpy as np
 import vulkan as vk  # pylint: disable=import-error
 
 
@@ -187,9 +188,7 @@ class DataType(IntEnum):
     SINT16 = auto()
     UINT32 = auto()
     SINT32 = auto()
-    UFLOAT16 = auto()
     SFLOAT16 = auto()
-    UFLOAT32 = auto()
     SFLOAT32 = auto()
     UNORM8 = auto()
     SNORM8 = auto()
@@ -679,9 +678,7 @@ DataTypeByte = {
     DataType.SINT16: 2,
     DataType.UINT32: 4,
     DataType.SINT32: 4,
-    DataType.UFLOAT16: 2,
     DataType.SFLOAT16: 2,
-    DataType.UFLOAT32: 4,
     DataType.SFLOAT32: 4,
     DataType.UNORM8: 1,
     DataType.SNORM8: 1,
@@ -689,6 +686,20 @@ DataTypeByte = {
     DataType.SNORM16: 2,
     DataType.UNORM32: 4,
     DataType.SNORM32: 4
+}
+
+
+DataTypeNumpy = {
+    DataType.UINT8: np.uint8,
+    DataType.SINT8: np.int8,
+    DataType.UINT16: np.uint16,
+    DataType.SINT16: np.int16,
+    DataType.UINT32: np.uint32,
+    DataType.SINT32: np.int32,
+    DataType.SFLOAT16: np.float16,
+    DataType.SFLOAT32: np.float32,
+    DataType.UNORM8: np.uint8,
+    DataType.SNORM8: np.int8
 }
 
 
