@@ -19,7 +19,8 @@ class SpriteBatch():
     of draw calls.
     '''
 
-    def __init__(self, context, size=1000, shaderprogram=None):
+    def __init__(self, context, size=1000, shaderprogram=None,
+                 clear=None, out_view=None):
         '''Initialize SpriteBatch
 
         *Parameters:*
@@ -27,10 +28,22 @@ class SpriteBatch():
         - `context`: `VulkContext`
         - `size`: Max number of sprite in one batch
         - `shaderprogram`: Custom `ShaderProgram`
+        - `clear`: `list` of 4 `float` (r,g,b,a) or `None`
+        - `out_view`: Out `ImageView` to render into
+
+        **Note: By default, `SpriteBatch` doesn't clear `out_image`, you have
+                to fill `clear_color` to clear `out_image`**
+
+        **Note: By default, out image is the context `final_image`, you can
+                override this behavior with the `out_view` parameter**
         '''
         # ShaderProgram
         if not shaderprogram:
             self.shaderprogram = self.get_default_shaderprogram(context)
+
+        # Stored parameters
+        self.clear = clear
+        self.out_view = out_view if out_view else context.final_image_view
 
         # Init rendering attributes
         self.mesh = self.init_mesh(context, size)
@@ -120,9 +133,10 @@ class SpriteBatch():
 
         - `context`: `VulkContext`
         '''
+        vk_load = vc.AttachmentLoadOp.CLEAR if self.clear else vc.AttachmentLoadOp.LOAD # noqa
         attachment = vo.AttachmentDescription(
-            context.final_image.format, vc.SampleCount.COUNT_1,
-            vc.AttachmentLoadOp.LOAD, vc.AttachmentStoreOp.STORE,
+            self.out_view.image.format, vc.SampleCount.COUNT_1,
+            vk_load, vc.AttachmentStoreOp.STORE,
             vc.AttachmentLoadOp.DONT_CARE,
             vc.AttachmentStoreOp.DONT_CARE,
             vc.ImageLayout.COLOR_ATTACHMENT_OPTIMAL,
@@ -284,7 +298,7 @@ class SpriteBatch():
         - `context`: `VulkContext`
         '''
         return vo.Framebuffer(
-            context, self.renderpass, [context.final_image_view],
+            context, self.renderpass, [self.out_view],
             context.width, context.height, 1)
 
     def get_default_shaderprogram(self, context):
@@ -391,13 +405,15 @@ class SpriteBatch():
         # Register command
         flags = vc.CommandBufferUsage.ONE_TIME_SUBMIT
         with self.commandbuffer.bind(flags) as cmd:
+            vk_clear = []
+            if self.clear:
+                vk_clear.append(vo.ClearColorValue(float32=self.clear))
             cmd.begin_renderpass(
                 self.renderpass,
                 self.framebuffer,
                 vo.Rect2D(vo.Offset2D(0, 0),
                           vo.Extent2D(context.width, context.height)),
-                # [vo.ClearColorValue(float32=[0, 0, 0, 1])]
-                []
+                vk_clear
             )
             cmd.bind_pipeline(self.pipeline)
             self.mesh.bind(cmd)

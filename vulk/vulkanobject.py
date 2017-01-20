@@ -1850,6 +1850,7 @@ class ImageView():
             subresourceRange=vk_subresource_range
         )
 
+        self.image = image
         self.imageview = vk.vkCreateImageView(context.device, imageview_create)
 
 
