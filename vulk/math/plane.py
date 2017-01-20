@@ -8,7 +8,7 @@ class Plane():
 
     def __init__(self, normal=None, distance=0):
         if not normal:
-            normal = vector.Vector3(0, 0, 0)
+            normal = vector.Vector3([0, 0, 0])
 
         self.normal = normal
         self.distance = distance

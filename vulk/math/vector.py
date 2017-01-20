@@ -162,7 +162,7 @@ class Vector3(Vector, XMixin, YMixin, ZMixin):
     '''Vector2 class represents a Vector in 2D space.
     It has two components `x`, `y` and `z`.
     '''
-    def __init__(self, values):
+    def __init__(self, values = None):
         '''
         *Parameters:*
 
@@ -198,12 +198,12 @@ class Vector3(Vector, XMixin, YMixin, ZMixin):
 
 
 # Vector2 constants
-Vector2.X = Vector2(1, 0)
-Vector2.Y = Vector2(0, 1)
-Vector2.Zero = Vector2(0, 0)
+Vector2.X = Vector2([1, 0])
+Vector2.Y = Vector2([0, 1])
+Vector2.Zero = Vector2([0, 0])
 
 # Vector3 constants
-Vector3.X = Vector3(1, 0, 0)
-Vector3.Y = Vector3(0, 1, 0)
-Vector3.Z = Vector3(0, 0, 1)
-Vector3.Zero = Vector3(0, 0, 0)
+Vector3.X = Vector3([1, 0, 0])
+Vector3.Y = Vector3([0, 1, 0])
+Vector3.Z = Vector3([0, 0, 1])
+Vector3.Zero = Vector3([0, 0, 0])
