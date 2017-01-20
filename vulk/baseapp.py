@@ -4,6 +4,7 @@ import logging
 
 from vulk.utils import millis, time_since_millis
 from vulk.context import VulkWindow, VulkContext
+from vulk.event import QuitEventListener
 
 
 class BaseApp(ABC):
@@ -44,6 +45,7 @@ class BaseApp(ABC):
         self.context = None
         self.window = None
         self.event_listeners = []
+        self.request_quit = False
 
     def _init_logger(self):
         logger = logging.getLogger()
@@ -74,11 +76,17 @@ class BaseApp(ABC):
         self.end()
         self.window.close()
 
+    def quit(self):
+        '''Quit the App
+        This function must be called to quit App
+        '''
+        self.request_quit = True
+
     def run(self):
         '''Start the game loop'''
         self.last_time = millis()
 
-        while(True):
+        while not self.request_quit:
             events = self.context.get_events()
             for event in events:
                 for listener in self.event_listeners:
@@ -102,7 +110,7 @@ class BaseApp(ABC):
     @abstractmethod
     def start(self):
         '''This function is called when your App starts'''
-        return
+        self.event_listeners.append(QuitEventListener(self.quit))
 
     @abstractmethod
     def end(self):
