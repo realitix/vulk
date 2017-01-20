@@ -39,15 +39,13 @@ class RawTexture():
         # Init view and sampler
         self.view = None
         self.sampler = None
-        self.init_view_sampler(context)
-
-    def init_bitmap(self):
-        _, _, pixel_size = vc.format_info(self.format)
-        return np.zeros(self.width*self.height*pixel_size, dtype=np.uint8)
-
-    def init_view_sampler(self, context):
         self.set_view(context)
         self.set_sampler(context)
+
+    def init_bitmap(self):
+        '''Return the numpy array containing bitmap'''
+        _, _, pixel_size = vc.format_info(self.format)
+        return np.zeros(self.width*self.height*pixel_size, dtype=np.uint8)
 
     def set_view(self, context):
         '''
@@ -67,6 +65,17 @@ class RawTexture():
                     min_filter=vc.Filter.LINEAR,
                     address_mode_u=vc.SamplerAddressMode.REPEAT,
                     address_mode_v=vc.SamplerAddressMode.REPEAT):
+        '''
+        Allow to customize the texture sampler
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        - `mag_filter`: `Filter` vulk constant
+        - `min_filter`: `Filter` vulk constant
+        - `address_mode_u`: `SamplerAddressMode` vulk constant
+        - `address_mode_v`: `SamplerAddressMode` vulk constant
+        '''
         self.sampler = vo.Sampler(
             context, mag_filter, min_filter, vc.SamplerMipmapMode.LINEAR,
             address_mode_u, address_mode_v, vc.SamplerAddressMode.REPEAT,
@@ -74,7 +83,12 @@ class RawTexture():
             vc.BorderColor.INT_OPAQUE_BLACK, False)
 
     def upload(self, context):
-        '''Upload bitmap into Vulkan memory'''
+        '''Upload bitmap into Vulkan memory
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
         with self.texture.bind(context) as t:
             np.copyto(np.array(t, copy=False),
                       self.bitmap,
@@ -94,6 +108,9 @@ class BinaryTexture(RawTexture):
         *Parameter:*
 
         - `context`: `VulkContext`
+        - `width`: Width of the texture
+        - `height`: Height of the texture
+        - `texture_format`: `Format` of the vulkan texture
         - `raw_bitmap`: Buffer to a bitmap
         '''
         # Create all the components by calling parent init
@@ -104,13 +121,13 @@ class BinaryTexture(RawTexture):
         self.upload(context)
 
     def init_bitmap(self, **kwargs):
+        '''Initialize bitmap array with `raw_bitmap`'''
         return np.array(kwargs['raw_bitmap'], dtype=np.uint8, copy=False)
 
 
 class Texture(BinaryTexture):
-    '''This class represent a texture.
-
-    It handles a Vulkan buffer and a bitmap array (numpy array)
+    '''
+    BinaryTexture with file managing.
     '''
 
     def __init__(self, context, path_file, *args, **kwargs):
@@ -131,6 +148,12 @@ class Texture(BinaryTexture):
 
     @staticmethod
     def components_to_format(components):
+        '''Convert number of channel components in image to Vulkan format
+
+        *Parameters:*
+
+        - `components`: Number of components
+        '''
         if components < 1 or components > 4:
             raise ValueError("components must be between 0 and 4")
 
@@ -182,7 +205,7 @@ class TextureRegion():
         self.v = v
         self.v2 = v2
 
-    def set_region2(self, x, y, width, height):
+    def set_region_pixel(self, x, y, width, height):
         '''Set coordinate relatively to pixel size
 
         *Parameters:*

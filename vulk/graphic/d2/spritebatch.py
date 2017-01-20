@@ -1,4 +1,7 @@
 '''SpriteBatch module
+
+SpriteBatch is the pillar of 2D rendering. It has to be very performant
+and reliable.
 '''
 from os import path
 
@@ -57,6 +60,13 @@ class SpriteBatch():
         self.matrices_dirty = True
 
     def init_mesh(self, context, size):
+        '''Initialize the Mesh handling sprites
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        - `size`: Number of sprites to handle
+        '''
         vertex_attributes = me.VertexAttributes([
             # Position
             me.VertexAttribute(0, vc.Format.R32G32_SFLOAT),
@@ -69,6 +79,13 @@ class SpriteBatch():
         return me.Mesh(context, size * 4, size * 6, vertex_attributes)
 
     def init_indices(self, size):
+        '''Initialize mesh's indices.
+        It's done only at initialization for better performance.
+
+        *Parameters:*
+
+        - `size`: Number of sprite to handle
+        '''
         j = 0
         indices = self.mesh.indices_array
         for i in range(0, size * 6, 6):
@@ -81,6 +98,14 @@ class SpriteBatch():
             j += 4
 
     def init_uniform(self, context):
+        '''Initialize `SpriteBatch` uniforms.
+        It contains only the `combined_matrix` but you can extend it to add
+        uniforms.
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
         matrix_attribute = uniform.UniformAttribute(
             uniform.UniformShapeType.MATRIX4,
             vc.DataType.SFLOAT32)
@@ -89,6 +114,12 @@ class SpriteBatch():
         return uniform.UniformBlock(context, uniform_attributes)
 
     def init_renderpass(self, context):
+        '''Initialize `SpriteBatch` renderpass
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
         attachment = vo.AttachmentDescription(
             context.final_image.format, vc.SampleCount.COUNT_1,
             vc.AttachmentLoadOp.LOAD, vc.AttachmentStoreOp.STORE,
@@ -108,6 +139,12 @@ class SpriteBatch():
         return vo.Renderpass(context, [attachment], [subpass], [dependency])
 
     def init_descriptorlayout(self, context):
+        '''Initialize descriptor layout for one uniform and one texture
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
         ubo_descriptor = vo.DescriptorSetLayoutBinding(
             0, vc.DescriptorType.UNIFORM_BUFFER, 1,
             vc.ShaderStage.VERTEX, None)
@@ -118,6 +155,12 @@ class SpriteBatch():
         return vo.DescriptorSetLayout(context, layout_bindings)
 
     def init_descriptorpool(self, context):
+        '''Create the `SpriteBatch` descriptor pool
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
         pool_sizes = [
             vo.DescriptorPoolSize(vc.DescriptorType.UNIFORM_BUFFER, 1),
             vo.DescriptorPoolSize(vc.DescriptorType.COMBINED_IMAGE_SAMPLER, 1)
@@ -125,6 +168,12 @@ class SpriteBatch():
         return vo.DescriptorPool(context, pool_sizes, 1)
 
     def init_descriptorset(self, context):
+        '''Initialize descriptor set for uniform and texture
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
         descriptorset = self.descriptorpool.allocate_descriptorsets(
             context, 1, [self.descriptorlayout])[0]
 
@@ -140,9 +189,23 @@ class SpriteBatch():
         return descriptorset
 
     def init_pipelinelayout(self, context):
+        '''Initialize pipeline layout
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
         return vo.PipelineLayout(context, [self.descriptorlayout])
 
     def init_pipeline(self, context):
+        '''Initialize pipeline
+
+        Here we are to set the Vulkan pipeline.
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
         # Vertex attribute
         vertex_description = vo.VertexInputBindingDescription(
             0, self.mesh.attributes.size, vc.VertexInputRate.VERTEX)
@@ -192,20 +255,45 @@ class SpriteBatch():
             blend, dynamic, self.pipelinelayout, self.renderpass)
 
     def init_commandpool(self, context):
+        '''
+        Initialize command pool as `TRANSIENT` because we reset it each frame
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
         flags = vc.CommandPoolCreate.TRANSIENT | vc.CommandPoolCreate.RESET_COMMAND_BUFFER # noqa
         return vo.CommandPool(
             context, context.queue_family_indices['graphic'], flags)
 
     def init_commandbuffer(self, context):
+        '''Create the command buffer
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
         return self.commandpool.allocate_buffers(
             context, vc.CommandBufferLevel.PRIMARY, 1)[0]
 
     def init_framebuffer(self, context):
+        '''Create the framebuffer with the final_image (from context)
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
         return vo.Framebuffer(
             context, self.renderpass, [context.final_image_view],
             context.width, context.height, 1)
 
     def get_default_shaderprogram(self, context):
+        '''Generate a basic shader program if nono given
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
         vs = path.join(PATH_VULK_SHADER, "spritebatch.vs.spv")
         fs = path.join(PATH_VULK_SHADER, "spritebatch.fs.spv")
 
@@ -222,6 +310,13 @@ class SpriteBatch():
         return vo.ShaderProgram(context, shaders_mapping)
 
     def update_texture(self, context, texture):
+        '''Update descriptor set containing texture
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        - `texture`: `RawTexture` to update
+        '''
         descriptorimage_info = vo.DescriptorImageInfo(
             texture.sampler, texture.view,
             vc.ImageLayout.SHADER_READ_ONLY_OPTIMAL)
@@ -270,6 +365,13 @@ class SpriteBatch():
         return self.semaphore_out
 
     def flush(self, context):
+        '''Flush all draws to graphic card.
+        Currently, `flush` register and submit command.
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
         if not self.idx:
             return
 
@@ -314,6 +416,14 @@ class SpriteBatch():
         self.idx = 0
 
     def setup_matrices(self, context):
+        '''
+        Compute combined matrix from transform and projection matrix.
+        Then upload combined matrix.
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
         self.combined_matrix.to_matrix(self.projection_matrix)
         self.combined_matrix.mul(self.transform_matrix)
         self.uniformblock.set_uniform(0, self.combined_matrix.values)
@@ -321,14 +431,25 @@ class SpriteBatch():
         self.uniformblock.upload(context)
         self.matrices_dirty = False
 
-    def draw(self, texture, x, y):
+    def draw(self, texture, x, y, width, height):
+        '''
+        Draw `texture` at position x, y of size `width`, `height`
+
+        *Parameters:*
+
+        - `texture`: `RawTexture`
+        - `x`: X position
+        - `y`: Y position
+        - `width`: Width
+        - `heigth`: Height
+        '''
         if not self.drawing:
             raise Exception("Not currently drawing")
 
         self.last_texture = texture
 
-        x2 = x + texture.width
-        y2 = y + texture.height
+        x2 = x + width
+        y2 = y + height
         u = 0
         v = 0
         u2 = 1
@@ -338,10 +459,9 @@ class SpriteBatch():
         b = 1
         a = 1
 
-        vertices = self.mesh.vertices_array
         for val in [([x, y], [u, v], [r, g, b, a]),
                     ([x, y2], [u, v2], [r, g, b, a]),
                     ([x2, y2], [u2, v2], [r, g, b, a]),
                     ([x2, y], [u2, v], [r, g, b, a])]:
-            vertices[self.idx] = val
+            self.mesh.set_vertex(self.idx, val)
             self.idx += 1

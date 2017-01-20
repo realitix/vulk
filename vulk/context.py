@@ -846,3 +846,6 @@ class VulkContext():
         self.pfn['vkQueuePresentKHR'](self.present_queue, present)
 
         vk.vkDeviceWaitIdle(self.device)
+
+    def get_events(self):
+        return sdl2.ext.get_events()

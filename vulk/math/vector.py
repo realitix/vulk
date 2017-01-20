@@ -1,6 +1,7 @@
 '''Vector module
 
-This module contains all Vector class definition
+This module contains all Vector classes definition.
+Vector are a key of graphic computing.
 '''
 import numpy as np
 from numpy import linalg
@@ -21,6 +22,11 @@ class Vector():
             get directly the numpy array if you need more power**
     '''
     def __init__(self, values):
+        '''
+        *Parameters:*
+
+        - `values`: `list` of `float`
+        '''
         self._values = np.array(values, dtype=np.float32)
 
     def __iter__(self):
@@ -73,25 +79,36 @@ class Vector():
         return self.__class__(self._values)
 
     @property
-    def coordinates(self):
+    def values(self):
         return self._values
 
-    @coordinates.setter
-    def coordinates(self, value):
+    @values.setter
+    def values(self, value):
         self._values = value
 
     @property
     def size(self):
+        '''
+        Return the size of vector
+        '''
         return linalg.norm(self._values)
 
     def nor(self):
+        '''Normalize the vector and return it for chaining'''
         return self * (1 / self.size)
 
     def crs(self, value):
+        '''Return the croos product between the two vectors
+
+        *Parameters:*
+
+        - `value`: `Vector` of the same size
+        '''
         return np.cross(self._values, value)
 
 
 class XMixin():
+    '''Mixin adding `x` property to class'''
     @property
     def x(self):
         return self._values[0]
@@ -102,6 +119,7 @@ class XMixin():
 
 
 class YMixin():
+    '''Mixin adding `y` property to class'''
     @property
     def y(self):
         return self._values[1]
@@ -112,6 +130,7 @@ class YMixin():
 
 
 class ZMixin():
+    '''Mixin adding `z` property to class'''
     @property
     def z(self):
         return self._values[2]
@@ -122,32 +141,60 @@ class ZMixin():
 
 
 class Vector2(Vector, XMixin, YMixin):
-    def __init__(self, *args):
-        if not args:
-            super().__init__((0, 0))
-        elif len(args) == 2:
-            super().__init__(args)
+    '''Vector2 class represents a Vector in 2D space.
+    It has two components `x` and `y`.
+    '''
+    def __init__(self, values=None):
+        '''
+        *Parameters:*
+
+        - `values`: `list` of 2 `float`
+        '''
+        if not values:
+            super().__init__([0, 0])
+        elif len(values) == 2:
+            super().__init__(values)
         else:
             raise ValueError("Vector2 needs 2 components")
 
 
 class Vector3(Vector, XMixin, YMixin, ZMixin):
-    def __init__(self, *args):
-        if not args:
-            super().__init__((0, 0, 0))
-        elif len(args) == 3:
-            super().__init__(args)
+    '''Vector2 class represents a Vector in 2D space.
+    It has two components `x`, `y` and `z`.
+    '''
+    def __init__(self, values):
+        '''
+        *Parameters:*
+
+        - `values`: `list` of 3 `float`
+        '''
+        if not values:
+            super().__init__([0, 0, 0])
+        elif len(values) == 3:
+            super().__init__(values)
         else:
             raise ValueError("Vector3 needs 3 components")
 
+        # tmp properties used during computation
+        self.tmp = np.zeros(4, dtype=np.float32)
+        self.tmp1 = np.zeros(4, dtype=np.float32)
+
     def mul_matrix4(self, matrix):
-        # TODO: optimize this compute
-        tmp = np.ones(4, dtype=np.float32)
-        tmp[0:3] = self._values
-        # We load matrix in column order (default is row order)
+        '''Multiply this vector by a `Matrix4`
+
+        *Parameters:*
+
+        - `matrix`: `Matrix4`
+        '''
+        # prepare tmp
+        self.tmp[0:3] = self._values
+        self.tmp[3] = 1.
+
+        # load matrix in column order (default is row order)
+        # reshape returns a view (I hope!)
         mv = np.reshape(matrix.values, (4, 4), order='F')
-        result = np.dot(mv, tmp)
-        self._values[:] = result[0:3]
+        np.dot(mv, self.tmp, out=self.tmp1)
+        self._values[:] = self.tmp1[0:3]
 
 
 # Vector2 constants

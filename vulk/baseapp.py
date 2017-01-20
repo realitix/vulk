@@ -39,10 +39,11 @@ class BaseApp(ABC):
         c = {k: v for k, v in locals().items() if k != 'self'}
         self.configuration = namedtuple('AppConfiguration', c.keys())(**c)
 
-        self.last_time = millis()
+        self.last_time = 0
         self._init_logger()
         self.context = None
         self.window = None
+        self.event_listeners = []
 
     def _init_logger(self):
         logger = logging.getLogger()
@@ -75,7 +76,14 @@ class BaseApp(ABC):
 
     def run(self):
         '''Start the game loop'''
+        self.last_time = millis()
+
         while(True):
+            events = self.context.get_events()
+            for event in events:
+                for listener in self.event_listeners:
+                    listener.handle(event)
+
             self.render(time_since_millis(self.last_time))
             self.last_time = millis()
 

@@ -86,40 +86,107 @@ class Mesh():
         self.dirty_vertices = True
 
     def set_indices(self, indices, offset=0):
+        '''Set indices of mesh
+
+        *Parameters:*
+
+        - `indices`: `list` of `float`
+        - `offset`: Offset in mesh indices array
+
+        **Note: Mesh must be indexed**
+        '''
         if not self.has_indices:
             raise Exception('No index in this mesh')
 
         self.indices_array[offset:] = indices
         self.dirty_indices = True
 
+    def set_vertex(self, index, vertex):
+        '''Set one vertex of the mesh at position `index`
+
+        *Parameters:*
+
+        - `index`: Vertex index
+        - `vertex`: Vertex data (tuple format)
+
+        *Exemple:*
+
+        For a mesh with two attributes (2 components and 4 components):
+
+        ```
+        vertex = ([x, y], [r, g, b, a])
+        mesh.set_vertex(idx, vertex)
+        ```
+
+        **Note: Vertex data type depends on `VertexAttributes` of the mesh.
+                It must be a tuple containing an array for each attributes**
+
+        **Note: Once mesh vertices are updated, you need to `upload` the mesh
+                to take into account the changes.**
+        '''
+        self.vertices_array[index] = vertex
+        self.dirty_vertices = True
+
     def set_vertices(self, vertices, offset=0):
+        '''Set vertices of the mesh.
+        Report to `set_vertex`, it works the same but it waits for an array
+        of vertex.
+
+        *Parameters:*
+
+        - `vertices`: `list` of Vertex data (see `set_vertex`)
+        - `offset`: Offset in the mesh vertices array
+        '''
         self.vertices_array[offset:] = vertices
         self.dirty_vertices = True
 
     def upload_indices(self, context):
+        '''
+        Upload indices to graphic card
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+
+        **Note: Mesh must be indexed**
+        '''
         if not self.has_indices:
             raise Exception('No index in this mesh')
 
         if not self.dirty_indices:
             return
-        self.dirty_indices = False
 
+        self.dirty_indices = False
         with self.indices_buffer.bind(context) as b:
             np.copyto(np.array(b, copy=False),
                       self.indices_array.view(dtype=np.uint8),
                       casting='no')
 
     def upload_vertices(self, context):
+        '''
+        Upload vertices to graphic card
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
         if not self.dirty_vertices:
             return
-        self.dirty_vertices = False
 
+        self.dirty_vertices = False
         with self.vertices_buffer.bind(context) as b:
             np.copyto(np.array(b, copy=False),
                       self.vertices_array.view(dtype=np.uint8),
                       casting='no')
 
     def upload(self, context):
+        '''
+        Upload vertices and indices to graphic card
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
         self.upload_vertices(context)
 
         if self.has_indices:
