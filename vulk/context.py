@@ -791,6 +791,37 @@ class VulkContext():
         self._create_commandbuffers()
         self._create_semaphores()
 
+    def clear_final_image(self, colors):
+        '''
+        Clear the final image with `colors`
+
+        *Parameters:*
+
+        - `colors`: `list` of 4 `float` (rgba)
+        '''
+        clear_color = vo.ClearColorValue(float32=colors)
+        ranges = [vo.ImageSubresourceRange(vc.ImageAspect.COLOR, 0, 1, 0, 1)]
+        with vo.immediate_buffer(self) as cmd:
+            self.final_image.update_layout(
+                cmd,
+                vc.ImageLayout.COLOR_ATTACHMENT_OPTIMAL,
+                vc.ImageLayout.TRANSFER_DST_OPTIMAL,
+                vc.PipelineStage.TOP_OF_PIPE,
+                vc.PipelineStage.TOP_OF_PIPE,
+                vc.Access.COLOR_ATTACHMENT_WRITE,
+                vc.Access.TRANSFER_WRITE
+            )
+            cmd.clear_color_image(
+                self.final_image, vc.ImageLayout.TRANSFER_DST_OPTIMAL,
+                clear_color, ranges)
+            self.final_image.update_layout(
+                cmd, vc.ImageLayout.TRANSFER_DST_OPTIMAL,
+                vc.ImageLayout.COLOR_ATTACHMENT_OPTIMAL,
+                vc.PipelineStage.BOTTOM_OF_PIPE,
+                vc.PipelineStage.BOTTOM_OF_PIPE,
+                vc.Access.TRANSFER_WRITE, vc.Access.COLOR_ATTACHMENT_WRITE
+            )
+
     def swap(self, semaphores=None):
         '''Display final image on screen.
 

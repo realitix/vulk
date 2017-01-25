@@ -64,7 +64,8 @@ class RawTexture():
     def set_sampler(self, context, mag_filter=vc.Filter.LINEAR,
                     min_filter=vc.Filter.LINEAR,
                     address_mode_u=vc.SamplerAddressMode.REPEAT,
-                    address_mode_v=vc.SamplerAddressMode.REPEAT):
+                    address_mode_v=vc.SamplerAddressMode.REPEAT,
+                    anisotropy_enable=True, max_anisotropy=16):
         '''
         Allow to customize the texture sampler
 
@@ -79,8 +80,8 @@ class RawTexture():
         self.sampler = vo.Sampler(
             context, mag_filter, min_filter, vc.SamplerMipmapMode.LINEAR,
             address_mode_u, address_mode_v, vc.SamplerAddressMode.REPEAT,
-            0, True, 16, False, vc.CompareOp.ALWAYS, 0, 0,
-            vc.BorderColor.INT_OPAQUE_BLACK, False)
+            0, anisotropy_enable, max_anisotropy, False, vc.CompareOp.ALWAYS,
+            0, 0, vc.BorderColor.INT_OPAQUE_BLACK, False)
 
     def upload(self, context):
         '''Upload bitmap into Vulkan memory
