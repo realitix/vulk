@@ -8,9 +8,69 @@ from os import path
 from vulk import PATH_VULK_SHADER
 from vulk import vulkanconstant as vc
 from vulk import vulkanobject as vo
+from vulk import vulkanutil as vu
 from vulk.graphic import mesh as me
 from vulk.graphic import uniform
 from vulk.math.matrix import Matrix4
+
+
+class TextureDescriptorPool():
+    '''
+    Manage pool of descriptor sets dedicated to spritebatch textures.
+    Theses sets contain uniform buffer and texture.
+    '''
+
+    def __init__(self, context, size=8):
+        self.descriptorsets = []
+        self.descriptorset_id = -1
+        self.descriptorpool = self.init_descriptorpool(context, size=size)
+        self.descriptorlayout = self.init_descriptorlayout(context)
+
+    def init_descriptorpool(self, context, size):
+        '''Create the descriptor pool
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
+        type_uniform = vc.DescriptorType.UNIFORM_BUFFER
+        type_sampler = vc.DescriptorType.COMBINED_IMAGE_SAMPLER
+        pool_sizes = [
+            vo.DescriptorPoolSize(type_uniform, size),
+            vo.DescriptorPoolSize(type_sampler, size)
+        ]
+        return vo.DescriptorPool(context, pool_sizes, size)
+
+    def init_descriptorlayout(self, context):
+        '''Initialize descriptor layout for one uniform and one texture
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
+        ubo_descriptor = vo.DescriptorSetLayoutBinding(
+            0, vc.DescriptorType.UNIFORM_BUFFER, 1,
+            vc.ShaderStage.VERTEX, None)
+        texture_descriptor = vo.DescriptorSetLayoutBinding(
+            1, vc.DescriptorType.COMBINED_IMAGE_SAMPLER, 1,
+            vc.ShaderStage.FRAGMENT, None)
+        layout_bindings = [ubo_descriptor, texture_descriptor]
+        return vo.DescriptorSetLayout(context, layout_bindings)
+
+    def pull(self, context):
+        self.descriptorset_id += 1
+
+        try:
+            descriptorset = self.descriptorsets[self.descriptorset_id]
+        except IndexError:
+            descriptorset = self.descriptorpool.allocate_descriptorsets(
+                context, 1, [self.descriptorlayout])[0]
+            self.descriptorsets.append(descriptorset)
+
+        return descriptorset
+
+    def reset(self):
+        self.descriptorset_id = -1
 
 
 class SpriteBatch():
@@ -49,21 +109,16 @@ class SpriteBatch():
         self.mesh = self.init_mesh(context, size)
         self.init_indices(size)
         self.uniformblock = self.init_uniform(context)
+        self.cbpool = self.init_commandpool(context)
+        self.dspool = self.init_descriptorpool(context)
         self.renderpass = self.init_renderpass(context)
-        self.descriptorlayout = self.init_descriptorlayout(context)
-        self.descriptorpool = self.init_descriptorpool(context)
-        self.descriptorset = self.init_descriptorset(context)
         self.pipelinelayout = self.init_pipelinelayout(context)
         self.pipeline = self.init_pipeline(context)
-        self.commandpool = self.init_commandpool(context)
-        self.commandbuffer = self.init_commandbuffer(context)
         self.framebuffer = self.init_framebuffer(context)
 
         # Others attributes
-        self.semaphores_in = []
-        self.semaphore_out = vo.Semaphore(context)
         self.drawing = False
-        self.drawing_context = None
+        self.context = None
         self.projection_matrix = Matrix4()
         self.projection_matrix.to_orthographic_2d(
             0, 0, context.width, context.height)
@@ -72,6 +127,7 @@ class SpriteBatch():
         self.idx = 0
         self.last_texture = None
         self.matrices_dirty = True
+        self.first_commandbuffer = True
 
     def init_mesh(self, context, size):
         '''Initialize the Mesh handling sprites
@@ -127,6 +183,12 @@ class SpriteBatch():
 
         return uniform.UniformBlock(context, uniform_attributes)
 
+    def init_commandpool(self, context):
+        return vu.CommandBufferSynchronizedPool(context)
+
+    def init_descriptorpool(self, context):
+        return TextureDescriptorPool(context)
+
     def init_renderpass(self, context):
         '''Initialize `SpriteBatch` renderpass
 
@@ -153,56 +215,6 @@ class SpriteBatch():
         )
         return vo.Renderpass(context, [attachment], [subpass], [dependency])
 
-    def init_descriptorlayout(self, context):
-        '''Initialize descriptor layout for one uniform and one texture
-
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        '''
-        ubo_descriptor = vo.DescriptorSetLayoutBinding(
-            0, vc.DescriptorType.UNIFORM_BUFFER, 1,
-            vc.ShaderStage.VERTEX, None)
-        texture_descriptor = vo.DescriptorSetLayoutBinding(
-            1, vc.DescriptorType.COMBINED_IMAGE_SAMPLER, 1,
-            vc.ShaderStage.FRAGMENT, None)
-        layout_bindings = [ubo_descriptor, texture_descriptor]
-        return vo.DescriptorSetLayout(context, layout_bindings)
-
-    def init_descriptorpool(self, context):
-        '''Create the `SpriteBatch` descriptor pool
-
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        '''
-        pool_sizes = [
-            vo.DescriptorPoolSize(vc.DescriptorType.UNIFORM_BUFFER, 1),
-            vo.DescriptorPoolSize(vc.DescriptorType.COMBINED_IMAGE_SAMPLER, 1)
-        ]
-        return vo.DescriptorPool(context, pool_sizes, 1)
-
-    def init_descriptorset(self, context):
-        '''Initialize descriptor set for uniform and texture
-
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        '''
-        descriptorset = self.descriptorpool.allocate_descriptorsets(
-            context, 1, [self.descriptorlayout])[0]
-
-        descriptorub_info = vo.DescriptorBufferInfo(
-            self.uniformblock.uniform_buffer.final_buffer, 0,
-            self.uniformblock.size)
-        descriptorub_write = vo.WriteDescriptorSet(
-            descriptorset, 0, 0, vc.DescriptorType.UNIFORM_BUFFER,
-            [descriptorub_info])
-
-        vo.update_descriptorsets(context, [descriptorub_write], [])
-
-        return descriptorset
-
     def init_pipelinelayout(self, context):
         '''Initialize pipeline layout
 
@@ -210,7 +222,7 @@ class SpriteBatch():
 
         - `context`: `VulkContext`
         '''
-        return vo.PipelineLayout(context, [self.descriptorlayout])
+        return vo.PipelineLayout(context, [self.dspool.descriptorlayout])
 
     def init_pipeline(self, context):
         '''Initialize pipeline
@@ -269,28 +281,6 @@ class SpriteBatch():
             viewport_state, rasterization, multisample, depth,
             blend, dynamic, self.pipelinelayout, self.renderpass)
 
-    def init_commandpool(self, context):
-        '''
-        Initialize command pool as `TRANSIENT` because we reset it each frame
-
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        '''
-        flags = vc.CommandPoolCreate.TRANSIENT | vc.CommandPoolCreate.RESET_COMMAND_BUFFER # noqa
-        return vo.CommandPool(
-            context, context.queue_family_indices['graphic'], flags)
-
-    def init_commandbuffer(self, context):
-        '''Create the command buffer
-
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        '''
-        return self.commandpool.allocate_buffers(
-            context, vc.CommandBufferLevel.PRIMARY, 1)[0]
-
     def init_framebuffer(self, context):
         '''Create the framebuffer with the final_image (from context)
 
@@ -324,7 +314,7 @@ class SpriteBatch():
 
         return vo.ShaderProgram(context, shaders_mapping)
 
-    def update_texture(self, context, texture):
+    def get_descriptor(self, context, texture):
         '''Update descriptor set containing texture
 
         *Parameters:*
@@ -332,14 +322,26 @@ class SpriteBatch():
         - `context`: `VulkContext`
         - `texture`: `RawTexture` to update
         '''
+        descriptorset = self.dspool.pull(context)
+
+        descriptorub_info = vo.DescriptorBufferInfo(
+            self.uniformblock.uniform_buffer.final_buffer, 0,
+            self.uniformblock.size)
+        descriptorub_write = vo.WriteDescriptorSet(
+            descriptorset, 0, 0, vc.DescriptorType.UNIFORM_BUFFER,
+            [descriptorub_info])
+
         descriptorimage_info = vo.DescriptorImageInfo(
             texture.sampler, texture.view,
             vc.ImageLayout.SHADER_READ_ONLY_OPTIMAL)
         descriptorimage_write = vo.WriteDescriptorSet(
-            self.descriptorset, 1, 0, vc.DescriptorType.COMBINED_IMAGE_SAMPLER,
+            descriptorset, 1, 0, vc.DescriptorType.COMBINED_IMAGE_SAMPLER,
             [descriptorimage_info])
 
-        vo.update_descriptorsets(context, [descriptorimage_write], [])
+        vo.update_descriptorsets(
+            context, [descriptorub_write, descriptorimage_write], [])
+
+        return descriptorset
 
     def begin(self, context, semaphores=None):
         '''Begin drawing sprites
@@ -359,10 +361,10 @@ class SpriteBatch():
             self.upload_matrices(context)
 
         self.drawing = True
-        self.semaphores_in = semaphores if semaphores else []
 
         # Keep the context only during rendering and release it at `end` call
-        self.drawing_context = context
+        self.context = context
+        self.cbpool.begin(context, semaphores)
 
     def end(self):
         '''End drawing of sprite
@@ -380,11 +382,11 @@ class SpriteBatch():
             raise Exception("Not currently drawing")
 
         self.flush()
-        self.semaphores_in = []
         self.drawing = False
-        self.drawing_context = None
+        self.context = None
+        self.dspool.reset()
 
-        return self.semaphore_out
+        return self.cbpool.end()
 
     def flush(self):
         '''Flush all draws to graphic card.
@@ -401,27 +403,23 @@ class SpriteBatch():
             raise Exception("Not currently drawing")
 
         # Upload mesh data
-        self.mesh.upload(self.drawing_context)
+        self.mesh.upload(self.context)
 
         # Bind texture
-        self.update_texture(self.drawing_context, self.last_texture)
+        descriptorset = self.get_descriptor(self.context, self.last_texture)
 
         # Compute indices count
         sprites_in_batch = self.idx / 4  # 4 idx per vertex
         indices_count = int(sprites_in_batch) * 6
 
-        # Explicitly reset command buffer
-        self.commandbuffer.reset()
-
-        # Register command
-        flags = vc.CommandBufferUsage.ONE_TIME_SUBMIT
-        with self.commandbuffer.bind(flags) as cmd:
+        # Register commands
+        with self.cbpool.pull() as cmd:
             vk_clear = []
             if self.clear:
                 vk_clear.append(vo.ClearColorValue(float32=self.clear))
 
-            width = self.drawing_context.width
-            height = self.drawing_context.height
+            width = self.context.width
+            height = self.context.height
             cmd.begin_renderpass(
                 self.renderpass,
                 self.framebuffer,
@@ -432,16 +430,9 @@ class SpriteBatch():
             cmd.bind_pipeline(self.pipeline)
             self.mesh.bind(cmd)
             cmd.bind_descriptor_sets(self.pipelinelayout, 0,
-                                     [self.descriptorset], [])
+                                     [descriptorset], [])
             self.mesh.draw(cmd, 0, indices_count)
             cmd.end_renderpass()
-
-        # Submit command
-        submit = vo.SubmitInfo(
-            [s for s in self.semaphores_in if s],
-            [vc.PipelineStage.VERTEX_INPUT], [self.semaphore_out],
-            [self.commandbuffer])
-        vo.submit_to_graphic_queue(self.drawing_context, [submit])
 
         self.idx = 0
 
