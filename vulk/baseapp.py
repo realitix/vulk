@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from collections import namedtuple
 import logging
 
-from vulk.utils import millis, time_since_millis
+from vulk.util import millis, time_since_millis
 from vulk.context import VulkWindow, VulkContext
 from vulk.event import QuitEventListener
 
