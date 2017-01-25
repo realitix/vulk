@@ -63,6 +63,7 @@ class SpriteBatch():
         self.semaphores_in = []
         self.semaphore_out = vo.Semaphore(context)
         self.drawing = False
+        self.drawing_context = None
         self.projection_matrix = Matrix4()
         self.projection_matrix.to_orthographic_2d(
             0, 0, context.width, context.height)
@@ -348,16 +349,22 @@ class SpriteBatch():
         - `context`: `VulkContext`
         - `semaphore`: `list` of `Semaphore` to wait on before
                        starting all drawing operations
+
+        **Note: `context` is borrowed until `end` call**
         '''
         if self.drawing:
             raise Exception("Currently drawing")
 
         if self.matrices_dirty:
-            self.setup_matrices(context)
+            self.upload_matrices(context)
+
         self.drawing = True
         self.semaphores_in = semaphores if semaphores else []
 
-    def end(self, context):
+        # Keep the context only during rendering and release it at `end` call
+        self.drawing_context = context
+
+    def end(self):
         '''End drawing of sprite
 
         *Parameters:*
@@ -372,13 +379,14 @@ class SpriteBatch():
         if not self.drawing:
             raise Exception("Not currently drawing")
 
-        self.flush(context)
+        self.flush()
         self.semaphores_in = []
         self.drawing = False
+        self.drawing_context = None
 
         return self.semaphore_out
 
-    def flush(self, context):
+    def flush(self):
         '''Flush all draws to graphic card.
         Currently, `flush` register and submit command.
 
@@ -389,11 +397,14 @@ class SpriteBatch():
         if not self.idx:
             return
 
+        if not self.drawing:
+            raise Exception("Not currently drawing")
+
         # Upload mesh data
-        self.mesh.upload(context)
+        self.mesh.upload(self.drawing_context)
 
         # Bind texture
-        self.update_texture(context, self.last_texture)
+        self.update_texture(self.drawing_context, self.last_texture)
 
         # Compute indices count
         sprites_in_batch = self.idx / 4  # 4 idx per vertex
@@ -408,11 +419,14 @@ class SpriteBatch():
             vk_clear = []
             if self.clear:
                 vk_clear.append(vo.ClearColorValue(float32=self.clear))
+
+            width = self.drawing_context.width
+            height = self.drawing_context.height
             cmd.begin_renderpass(
                 self.renderpass,
                 self.framebuffer,
                 vo.Rect2D(vo.Offset2D(0, 0),
-                          vo.Extent2D(context.width, context.height)),
+                          vo.Extent2D(width, height)),
                 vk_clear
             )
             cmd.bind_pipeline(self.pipeline)
@@ -427,11 +441,11 @@ class SpriteBatch():
             [s for s in self.semaphores_in if s],
             [vc.PipelineStage.VERTEX_INPUT], [self.semaphore_out],
             [self.commandbuffer])
-        vo.submit_to_graphic_queue(context, [submit])
+        vo.submit_to_graphic_queue(self.drawing_context, [submit])
 
         self.idx = 0
 
-    def setup_matrices(self, context):
+    def upload_matrices(self, context):
         '''
         Compute combined matrix from transform and projection matrix.
         Then upload combined matrix.
@@ -447,6 +461,32 @@ class SpriteBatch():
         self.uniformblock.upload(context)
         self.matrices_dirty = False
 
+    def update_transform(self, matrix):
+        '''Update the transfrom matrix with `matrix`
+
+        *Parameters:*
+
+        - `matrix`: `Matrix4`
+
+        **Note: This function doesn't keep a reference to the matrix,
+                it only copies data**
+        '''
+        self.transform_matrix.to_matrix(matrix)
+        self.matrices_dirty = True
+
+    def update_projection(self, matrix):
+        '''Update the projection matrix with `matrix`
+
+        *Parameters:*
+
+        - `matrix`: `Matrix4`
+
+        **Note: This function doesn't keep a reference to the matrix,
+                it only copies data**
+        '''
+        self.projection_matrix.to_matrix(matrix)
+        self.matrices_dirty = True
+
     def draw(self, texture, x, y, width, height):
         '''
         Draw `texture` at position x, y of size `width`, `height`
@@ -461,6 +501,9 @@ class SpriteBatch():
         '''
         if not self.drawing:
             raise Exception("Not currently drawing")
+
+        if self.last_texture is not texture:
+            self.flush()
 
         self.last_texture = texture
 
