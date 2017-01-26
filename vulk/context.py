@@ -343,6 +343,9 @@ class VulkContext():
                                                           configuration)
         layers = VulkContext._get_layers(configuration)
 
+        if configuration.extra_vulkan_layers:
+            layers.extend(configuration.extra_vulkan_layers)
+
         app_info = vk.VkApplicationInfo(
             sType=vk.VK_STRUCTURE_TYPE_APPLICATION_INFO,
             pApplicationName=configuration.name,
@@ -533,6 +536,9 @@ class VulkContext():
         '''
         extensions = VulkContext._get_device_extensions(self.physical_device)
         layers = VulkContext._get_layers(configuration)
+
+        if configuration.extra_vulkan_layers:
+            layers.extend(configuration.extra_vulkan_layers)
 
         graphic_index, present_index = VulkContext._get_queue_families(
             self.physical_device, self.surface,

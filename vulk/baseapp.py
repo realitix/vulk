@@ -16,7 +16,7 @@ class BaseApp(ABC):
 
     def __init__(self, name='Vulk', x=-1, y=-1, width=640, height=480,
                  fullscreen=False, resizable=True, decorated=True,
-                 highdpi=False, debug=False):
+                 highdpi=False, debug=False, extra_vulkan_layers=None):
         # pylint: disable=W0612,W0613
         '''Set initial configuration
 
@@ -32,6 +32,7 @@ class BaseApp(ABC):
         - `decorated`: Should the window be decorated (button close)
         - `highdpi`: Enable highdpi mode if supported
         - `debug`: Enable debug mode (for development only)
+        - `extra_vulkan_layers`: `list` of custom vulkan layers
 
         **Note: When full screen mode is enabled, you can set width and
                 height to 0 to use the native resolution, otherwise the
