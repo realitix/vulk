@@ -478,7 +478,7 @@ class SpriteBatch():
         self.projection_matrix.to_matrix(matrix)
         self.matrices_dirty = True
 
-    def draw(self, texture, x, y, width, height):
+    def draw(self, texture, x, y, width, height, u=0, v=0, u2=1, v2=1):
         '''
         Draw `texture` at position x, y of size `width`, `height`
 
@@ -500,10 +500,6 @@ class SpriteBatch():
 
         x2 = x + width
         y2 = y + height
-        u = 0
-        v = 0
-        u2 = 1
-        v2 = 1
         r = 1
         g = 1
         b = 1
@@ -515,3 +511,21 @@ class SpriteBatch():
                     ([x2, y], [u2, v], [r, g, b, a])]:
             self.mesh.set_vertex(self.idx, val)
             self.idx += 1
+
+    def draw_region(self, region, x, y, width, height):
+        '''
+        Draw `region` at position x, y of size `width`, `height`
+
+        *Parameters:*
+
+        - `region`: `TextureRegion`
+        - `x`: X position
+        - `y`: Y position
+        - `width`: Width
+        - `heigth`: Height
+        '''
+        u = region.u
+        v = region.v
+        u2 = region.u2
+        v2 = region.v2
+        self.draw(region.texture, x, y, width, height, u, u2, v, v2)

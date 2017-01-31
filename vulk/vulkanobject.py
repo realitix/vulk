@@ -1477,6 +1477,9 @@ class HighPerformanceImage():
     When we create an image, we first upload the pixels in the staging
     image and then copy the memory in the final image. Of course, both of
     the image have the same properties.
+
+    **Note: MipMap generation is done only on the final image, the staging
+            image don't need mipmap.**
     '''
 
     def __init__(self, context, image_type, image_format, width, height,
@@ -1493,7 +1496,7 @@ class HighPerformanceImage():
         - `width`: Image width
         - `heigth`: Image height
         - `depth`: Image depth
-        - `mip_level`: Level of mip (`int`)
+        - `mip_level`: Level of mip (`int`) (only for final_image)
         - `layers`: Number of layers (`int`)
         - `samples`: This `SampleCount` vulk constant is related
                      to multisampling
@@ -1505,8 +1508,11 @@ class HighPerformanceImage():
         if not queue_families:
             queue_families = []
 
+        # Miplevel is applied automatically on final image if > 1
+        self.mip_level = mip_level
+
         self.staging_image = Image(
-            context, image_type, image_format, width, height, depth, mip_level,
+            context, image_type, image_format, width, height, depth, 1,
             layers, samples, sharing_mode, queue_families,
             vc.ImageLayout.PREINITIALIZED, vc.ImageTiling.LINEAR,
             vc.ImageUsage.TRANSFER_SRC,
@@ -1520,7 +1526,7 @@ class HighPerformanceImage():
             vc.MemoryProperty.DEVICE_LOCAL
         )
 
-    def _finalize(self, context):
+    def _copy_staging_to_final(self, context):
         '''
         Prepare and copy the staging image to the final image.
 
@@ -1567,6 +1573,17 @@ class HighPerformanceImage():
                 vc.Access.TRANSFER_WRITE,
                 vc.Access.SHADER_READ
             )
+
+    def _finalize(self, context):
+        '''
+        Prepare and copy the staging image to the final image.
+        Generate Mipmap if needed.
+
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        '''
+        self._copy_staging_to_final(context)
 
     @contextmanager
     def bind(self, context):
@@ -1626,6 +1643,7 @@ class Image():
         self.width = width
         self.height = height
         self.depth = depth
+        self.mip_level = mip_level
         self.format = image_format
         self.memory_properties = memory_properties
         image_type = image_type.value
@@ -1725,6 +1743,18 @@ class Image():
 
         cmd.pipeline_barrier(src_stage, dst_stage, vc.Dependency.NONE,
                              [], [], [barrier])
+
+    def generate_mipmap(self, cmd):
+        '''
+        Generate mipmap of this image based on `self.mip_level`.
+
+        *Parameters:*
+
+        - `cmd`: `CommandBufferRegister` used to register commands
+
+        **Note: TODO about layout**
+        '''
+        pass
 
     def copy_to(self, cmd, dst_image):
         '''
