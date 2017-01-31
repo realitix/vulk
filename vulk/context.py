@@ -16,17 +16,13 @@ import sdl2
 import sdl2.ext
 import vulkan as vk  # pylint: disable=import-error
 
-from vulk.exception import VulkError
+from vulk.exception import VulkError, SDL2Error
 from vulk import vulkanconstant as vc
 from vulk import vulkanobject as vo
 
 
 logger = logging.getLogger()
 ENGINE_NAME = "Vulk 3D Engine"
-
-
-class SDL2Error(VulkError):
-    pass
 
 
 class VulkWindow():
@@ -41,7 +37,7 @@ class VulkWindow():
 
         - `configuration`: Configurations parameters from Application
         '''
-        if sdl2.SDL_Init(sdl2.SDL_INIT_VIDEO) != 0:
+        if sdl2.SDL_InitSubSystem(sdl2.SDL_INIT_VIDEO) != 0:
             msg = "Can't open window: %s" % sdl2.SDL_GetError()
             logger.critical(msg)
             raise SDL2Error(msg)
