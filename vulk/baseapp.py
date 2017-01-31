@@ -2,9 +2,10 @@ from abc import ABC, abstractmethod
 from collections import namedtuple
 import logging
 
-from vulk.util import millis, time_since_millis
+from vulk.audio import VulkAudio
 from vulk.context import VulkWindow, VulkContext
 from vulk.event import QuitEventListener
+from vulk.util import millis, time_since_millis
 
 
 class BaseApp(ABC):
@@ -64,17 +65,20 @@ class BaseApp(ABC):
         logger.addHandler(steam_handler)
 
     def __enter__(self):
-        '''Create window and Vulkan context'''
+        '''Create window, Vulkan context, audio'''
         self.window = VulkWindow()
         self.window.open(self.configuration)
         self.context = VulkContext()
         self.context.create(self.window, self.configuration)
+        self.audio = VulkAudio()
+        self.audio.open(self.configuration)
         self.start()
         return self
 
     def __exit__(self, *args):
         '''Clean Vulkan resource'''
         self.end()
+        self.audio.close()
         self.window.close()
 
     def quit(self):
