@@ -17,7 +17,8 @@ class BaseApp(ABC):
 
     def __init__(self, name='Vulk', x=-1, y=-1, width=640, height=480,
                  fullscreen=False, resizable=True, decorated=True,
-                 highdpi=False, debug=False, extra_vulkan_layers=None):
+                 highdpi=False, debug=False, extra_vulkan_layers=None,
+                 audio_channel=8):
         # pylint: disable=W0612,W0613
         '''Set initial configuration
 
@@ -46,6 +47,7 @@ class BaseApp(ABC):
         self._init_logger()
         self.context = None
         self.window = None
+        self.audio = None
         self.event_listeners = []
         self.request_quit = False
 

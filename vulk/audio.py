@@ -35,6 +35,8 @@ class VulkAudio():
             logger.critical(msg)
             raise SDL2Error(msg)
 
+        mixer.Mix_AllocateChannels(configuration.audio_channel)
+
         logger.info("Audio initialized")
 
     def close(self):
