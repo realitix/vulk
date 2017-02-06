@@ -11,7 +11,7 @@ from vulk import vulkanobject as vo
 from vulk import vulkanutil as vu
 from vulk.graphic import mesh as me
 from vulk.graphic import uniform
-from vulk.math.matrix import Matrix4
+from vulk.math.matrix import ProjectionMatrix, TransformationMatrix, Matrix4
 
 
 class TextureDescriptorPool():
@@ -80,7 +80,7 @@ class SpriteBatch():
     '''
 
     def __init__(self, context, size=1000, shaderprogram=None,
-                 clear=None, out_view=None):
+                 out_view=None):
         '''Initialize SpriteBatch
 
         *Parameters:*
@@ -102,7 +102,6 @@ class SpriteBatch():
             self.shaderprogram = self.get_default_shaderprogram(context)
 
         # Stored parameters
-        self.clear = clear
         self.out_view = out_view if out_view else context.final_image_view
 
         # Init rendering attributes
@@ -119,10 +118,10 @@ class SpriteBatch():
         # Others attributes
         self.drawing = False
         self.context = None
-        self.projection_matrix = Matrix4()
+        self.projection_matrix = ProjectionMatrix()
         self.projection_matrix.to_orthographic_2d(
             0, 0, context.width, context.height)
-        self.transform_matrix = Matrix4()
+        self.transform_matrix = TransformationMatrix()
         self.combined_matrix = Matrix4()
         self.idx = 0
         self.last_texture = None
@@ -196,10 +195,9 @@ class SpriteBatch():
 
         - `context`: `VulkContext`
         '''
-        vk_load = vc.AttachmentLoadOp.CLEAR if self.clear else vc.AttachmentLoadOp.LOAD # noqa
         attachment = vo.AttachmentDescription(
             self.out_view.image.format, vc.SampleCount.COUNT_1,
-            vk_load, vc.AttachmentStoreOp.STORE,
+            vc.AttachmentLoadOp.LOAD, vc.AttachmentStoreOp.STORE,
             vc.AttachmentLoadOp.DONT_CARE,
             vc.AttachmentStoreOp.DONT_CARE,
             vc.ImageLayout.COLOR_ATTACHMENT_OPTIMAL,
@@ -414,10 +412,6 @@ class SpriteBatch():
 
         # Register commands
         with self.cbpool.pull() as cmd:
-            vk_clear = []
-            if self.clear:
-                vk_clear.append(vo.ClearColorValue(float32=self.clear))
-
             width = self.context.width
             height = self.context.height
             cmd.begin_renderpass(
@@ -425,7 +419,7 @@ class SpriteBatch():
                 self.framebuffer,
                 vo.Rect2D(vo.Offset2D(0, 0),
                           vo.Extent2D(width, height)),
-                vk_clear
+                []
             )
             cmd.bind_pipeline(self.pipeline)
             self.mesh.bind(cmd)
@@ -445,10 +439,9 @@ class SpriteBatch():
 
         - `context`: `VulkContext`
         '''
-        self.combined_matrix.to_matrix(self.projection_matrix)
+        self.combined_matrix.set(self.projection_matrix)
         self.combined_matrix.mul(self.transform_matrix)
         self.uniformblock.set_uniform(0, self.combined_matrix.values)
-        self.uniformblock.set_uniform(0, self.projection_matrix.values)
         self.uniformblock.upload(context)
         self.matrices_dirty = False
 
@@ -462,7 +455,7 @@ class SpriteBatch():
         **Note: This function doesn't keep a reference to the matrix,
                 it only copies data**
         '''
-        self.transform_matrix.to_matrix(matrix)
+        self.transform_matrix.set(matrix)
         self.matrices_dirty = True
 
     def update_projection(self, matrix):
@@ -475,10 +468,10 @@ class SpriteBatch():
         **Note: This function doesn't keep a reference to the matrix,
                 it only copies data**
         '''
-        self.projection_matrix.to_matrix(matrix)
+        self.projection_matrix.set(matrix)
         self.matrices_dirty = True
 
-    def draw(self, texture, x, y, width, height, u=0, v=0, u2=1, v2=1):
+    def draw(self, texture, x, y, width=0, height=0, u=0, v=0, u2=1, v2=1):
         '''
         Draw `texture` at position x, y of size `width`, `height`
 
@@ -489,12 +482,18 @@ class SpriteBatch():
         - `y`: Y position
         - `width`: Width
         - `heigth`: Height
+
+        **Note: if width and height are set to 0, we take the image size**
         '''
         if not self.drawing:
             raise Exception("Not currently drawing")
 
         if self.last_texture is not texture:
             self.flush()
+
+        if not width and not height:
+            width = texture.width
+            height = texture.height
 
         self.last_texture = texture
 
