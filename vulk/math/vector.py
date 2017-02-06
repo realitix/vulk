@@ -27,7 +27,7 @@ class Vector():
 
         - `values`: `list` of `float`
         '''
-        self._values = np.array(values, dtype=np.float32)
+        self._values = np.fromiter(values, dtype=np.float32, count=len(values))
 
     def __iter__(self):
         return iter(self._values)
@@ -83,8 +83,8 @@ class Vector():
         return self._values
 
     @values.setter
-    def values(self, value):
-        self._values = value
+    def values(self, values):
+        self._values[:] = values
 
     @property
     def size(self):
@@ -97,14 +97,66 @@ class Vector():
         '''Normalize the vector and return it for chaining'''
         return self * (1 / self.size)
 
-    def crs(self, value):
-        '''Return the croos product between the two vectors
+    def crs(self, vector):
+        '''Return the cross product between the two vectors
 
         *Parameters:*
 
-        - `value`: `Vector` of the same size
+        - `vector`: `Vector` of the same size
         '''
-        return np.cross(self._values, value)
+        return self.crs2(vector.values)
+
+    def crs2(self, values):
+        '''Set this vector to the cross product with `values`
+
+        *Parameters:*
+
+        - `values`: `list` of 3 float
+        '''
+        self._values[:] = np.cross(self._values, values)
+        return self
+
+    def sub(self, vector):
+        '''
+        Substract vector from this vector
+
+        *Parameters:*
+
+        - `vector`: `Vector3`
+        '''
+        return self.sub2(vector.values)
+
+    def sub2(self, values):
+        '''
+        Substract values from this vector
+
+        *Parameters:*
+
+        - `values`: `list` of `float`
+        '''
+        self._values -= values
+        return self
+
+    def add(self, vector):
+        '''
+        Add vector to this vector
+
+        *Parameters:*
+
+        - `vector`: `Vector3`
+        '''
+        return self.add2(vector.values)
+
+    def add2(self, values):
+        '''
+        Add values to this vector
+
+        *Parameters:*
+
+        - `values`: `list` of `float`
+        '''
+        self._values += values
+        return self
 
 
 class XMixin():
@@ -195,6 +247,18 @@ class Vector3(Vector, XMixin, YMixin, ZMixin):
         mv = np.reshape(matrix.values, (4, 4), order='F')
         np.dot(mv, self.tmp, out=self.tmp1)
         self._values[:] = self.tmp1[0:3]
+        return self
+
+    def set(self, x, y, z):
+        '''Set values of this vector
+
+        *Parameters:*
+
+        - `x`, `y`, `z`: `float`
+        '''
+        self._values[0] = x
+        self._values[1] = y
+        self._values[2] = z
 
 
 # Vector2 constants
