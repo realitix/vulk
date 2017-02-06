@@ -98,7 +98,7 @@ class CommandBufferSynchronizedPool():
         '''
         Pull a new command buffer.
         This function is a context manager, you should call it with
-        `with` keyword to auto-submit the previous create buffer.
+        `with` keyword to auto-submit the last created buffer.
 
         *Returns:*
 
