@@ -4,7 +4,7 @@ import logging
 
 from vulk.audio import VulkAudio
 from vulk.context import VulkWindow, VulkContext
-from vulk.event import QuitEventListener
+from vulk.event import CallbackEventListener
 from vulk.util import millis, time_since_millis
 
 
@@ -117,7 +117,7 @@ class BaseApp(ABC):
     @abstractmethod
     def start(self):
         '''This function is called when your App starts'''
-        self.event_listeners.append(QuitEventListener(self.quit))
+        self.event_listeners.append(CallbackEventListener(quit=self.quit))
 
     @abstractmethod
     def end(self):

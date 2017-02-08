@@ -19,6 +19,7 @@ import vulkan as vk  # pylint: disable=import-error
 from vulk.exception import VulkError, SDL2Error
 from vulk import vulkanconstant as vc
 from vulk import vulkanobject as vo
+from vulk.eventconstant import to_vulk_event
 
 
 logger = logging.getLogger()
@@ -881,4 +882,5 @@ class VulkContext():
         vk.vkDeviceWaitIdle(self.device)
 
     def get_events(self):
-        return sdl2.ext.get_events()
+        for sdl_event in sdl2.ext.get_events():
+            yield to_vulk_event(sdl_event)
