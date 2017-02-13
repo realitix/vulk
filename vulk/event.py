@@ -30,8 +30,8 @@ class RawEventListener(ABC):
 class EventChainListener(RawEventListener):
     '''
     Allow to chain events.
-    When an event in sended to the `EventChain`, included event listeners
-    will intercept event until one of them return False.
+    When an event is sent to the `EventChain`, included event listeners
+    will intercept events until one of them return False.
     '''
 
     def __init__(self, event_listeners=None):
@@ -54,8 +54,12 @@ class EventChainListener(RawEventListener):
         return any(list(takewhile(lambda x: x.handle(event), self.listeners)))
 
 
-class BaseEventListener(RawEventListener):
-    '''This class convert event to specific function.'''
+class DispatchEventListener(RawEventListener):
+    '''
+    This class dispatch each event to its specific function.
+    This class is very basic and performs no logic.
+    To get more logic, you must use `BaseEventListener`.
+    '''
     def handle(self, e):
         '''Called for each event received
 
@@ -81,7 +85,7 @@ class BaseEventListener(RawEventListener):
         elif e.type == ec.EventType.MOUSE_BUTTONDOWN:
             return self.mouse_down(e.x, e.y, e.button)
         elif e.type == ec.EventType.MOUSE_MOTION:
-            return self.mouse_move(e.x, e.y)
+            return self.mouse_move(e.x, e.y, e.xr, e.yr)
         elif e.type == ec.EventType.QUIT:
             return self.quit()
 
@@ -127,13 +131,15 @@ class BaseEventListener(RawEventListener):
         '''
         return False
 
-    def mouse_move(self, x, y):
+    def mouse_move(self, x, y, xr, yr):
         '''Called when mouse is moving
 
         *Parameters:*
 
         - `x`: X position in Screen coordinate
         - `y`: Y position in Screen coordinate
+        - `xr`: X relative position since the last move
+        - `yr`: Y relative position since the last move
         '''
         return False
 
@@ -142,10 +148,57 @@ class BaseEventListener(RawEventListener):
         return False
 
 
+class BaseEventListener(DispatchEventListener):
+    '''Extends `DispatchEventListener` with smarter functions'''
+
+    def __init__(self):
+        self.mouse_clicked = -1
+
+    def mouse_down(self, x, y, button):
+        self.mouse_clicked = button
+        return False
+
+    def mouse_up(self, x, y, button):
+        self.mouse_clicked = -1
+        return False
+
+    def mouse_move(self, x, y, xr, yr):
+        if self.mouse_clicked != -1:
+            return self.mouse_drag(x, y, xr, yr, self.mouse_clicked)
+        return False
+
+    def mouse_drag(self, x, y, xr, yr, button):
+        '''Called when mouse is dragged
+
+        *Parameters:*
+
+        - `x`: X position in Screen coordinate
+        - `y`: Y position in Screen coordinate
+        - `xr`: X relative position since the last move
+        - `yr`: Y relative position since the last move
+        - `button`: `vulk.input.Button`
+        '''
+        return False
+
+
+def wrap_callback(f):
+    '''
+    Decorator used in `CallbackEventListener`.
+    If a callback exists for the event, we call the callback, else we
+    return False.
+    '''
+    def wrapper(self, *args):
+        getattr(BaseEventListener, f.__name__)(self, *args)
+        cb = getattr(self, f.__name__ + '_callback')
+        if cb:
+            return cb(*args)
+        return False
+    return wrapper
+
+
 class CallbackEventListener(BaseEventListener):
     '''
     Like `BaseEventListener` but with callback.
-    Lot of black magic here!
     You must pass named parameters with the exact same name as in
     `BaseEventListener`.
 
@@ -156,19 +209,39 @@ class CallbackEventListener(BaseEventListener):
     ```
     '''
 
-    def __init__(self, **kwargs):
-        '''
-        *Parameters:*
+    def __init__(self, key_down=None, key_up=None, mouse_down=None,
+                 mouse_drag=None, mouse_move=None, mouse_up=None,
+                 quit=None):
+        # We use a custom dict instead of locals() to avoid black magic
+        parameters = {
+            'key_down': key_down,
+            'key_up': key_up,
+            'mouse_down': mouse_down,
+            'mouse_drag': mouse_drag,
+            'mouse_move': mouse_move,
+            'mouse_up': mouse_up,
+            'quit': quit
+        }
+        for key, value in parameters.items():
+            setattr(self, key + '_callback', value)
+        super().__init__()
 
-        - `key_down`: Callback to call when key down
-        - `key_up`: Callback to call when key up
-        - `quit`: Callback to call when quit
-        '''
-        for key, value in kwargs.items():
-            setattr(self, key, CallbackEventListener.gen(value))
+    @wrap_callback
+    def key_down(self, *args):
+        pass
 
-    @staticmethod
-    def gen(callback):
-        def f(*args):
-            return callback(*args)
-        return f
+    @wrap_callback
+    def key_up(self, *args):
+        pass
+
+    @wrap_callback
+    def mouse_drag(self, *args):
+        pass
+
+    @wrap_callback
+    def mouse_move(self, *args):
+        pass
+
+    @wrap_callback
+    def quit(self, *args):
+        pass

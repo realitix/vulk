@@ -1,8 +1,16 @@
-import enum
+from enum import IntEnum
 import sdl2
 
 
-class EventType(enum.IntEnum):
+class Button(IntEnum):
+    LEFT = sdl2.SDL_BUTTON_LEFT
+    MIDDLE = sdl2.SDL_BUTTON_MIDDLE
+    RIGHT = sdl2.SDL_BUTTON_RIGHT
+    X1 = sdl2.SDL_BUTTON_X1
+    X2 = sdl2.SDL_BUTTON_X2
+
+
+class EventType(IntEnum):
     AUDIO_DEVICE_ADDED = sdl2.SDL_AUDIODEVICEADDED
     AUDIO_DEVICE_REMOVED = sdl2.SDL_AUDIODEVICEREMOVED
     CONTROLLER_AXIS_MOTION = sdl2.SDL_CONTROLLERAXISMOTION
@@ -36,6 +44,11 @@ class EventType(enum.IntEnum):
     WINDOW = sdl2.SDL_WINDOWEVENT
 
 
+class KeyCode(IntEnum):
+    LEFT = sdl2.SDL_SCANCODE_LEFT
+    RIGHT = sdl2.SDL_SCANCODE_RIGHT
+
+
 class BaseEvent():
     def __init__(self, event):
         self.type = event.common.type
@@ -54,6 +67,20 @@ class KeyboardEvent(BaseEvent):
         self.key = event.key.keysym.scancode
 
 
+class MouseButtonEvent(BaseEvent):
+    def __init__(self, event):
+        '''Create mouse button event from `event`
+
+        *Parameters:*
+
+        - `event`: `SDL_MouseButtonEvent`
+        '''
+        super().__init__(event)
+        self.x = event.motion.x
+        self.y = event.motion.y
+        self.button = event.button.button
+
+
 class MouseMotionEvent(BaseEvent):
     def __init__(self, event):
         '''Create mouse motion event from `event`
@@ -65,6 +92,8 @@ class MouseMotionEvent(BaseEvent):
         super().__init__(event)
         self.x = event.motion.x
         self.y = event.motion.y
+        self.xr = event.motion.xrel
+        self.yr = event.motion.yrel
 
 
 class QuitEvent(BaseEvent):
@@ -81,6 +110,8 @@ class QuitEvent(BaseEvent):
 map_sdl_vulk = {
     EventType.KEY_UP: KeyboardEvent,
     EventType.KEY_DOWN: KeyboardEvent,
+    EventType.MOUSE_BUTTONUP: MouseButtonEvent,
+    EventType.MOUSE_BUTTONDOWN: MouseButtonEvent,
     EventType.MOUSE_MOTION: MouseMotionEvent,
     EventType.QUIT: QuitEvent
 }
