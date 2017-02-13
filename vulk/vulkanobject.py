@@ -28,6 +28,10 @@ from vulk import vulkanconstant as vc
 
 logger = logging.getLogger()
 
+# Set physical device memory properties in cache since it depends
+# only on the physical device
+cache_properties = None
+
 
 # ----------
 # FUNCTIONS
@@ -55,11 +59,12 @@ def find_memory_type(context, type_filter, properties):
     **Todo: I made a bitwise comparaison with `type_filter`, I have to test
             it to be sure it's working**
     '''
-    if not find_memory_type.cache_properties:
-        find_memory_type.properties = vk.vkGetPhysicalDeviceMemoryProperties(
+    global cache_properties
+    if not cache_properties:
+        cache_properties = vk.vkGetPhysicalDeviceMemoryProperties(
             context.physical_device)
 
-    for i, memory_type in enumerate(find_memory_type.properties.memoryTypes):
+    for i, memory_type in enumerate(cache_properties.memoryTypes):
         # TODO: Test type_filter
         if (type_filter & (1 << i)) and \
            (memory_type.propertyFlags & properties) == properties:
@@ -68,11 +73,6 @@ def find_memory_type(context, type_filter, properties):
     msg = "Can't find suitable memory type"
     logger.critical(msg)
     raise VulkError(msg)
-
-
-# Set physical device memory properties in cache since it depends
-# only on the physical device
-find_memory_type.cache_properties = None
 
 
 @contextmanager
@@ -482,8 +482,6 @@ PipelineShaderStage.__doc__ = '''
 
 PipelineVertexInputState = namedtuple('PipelineVertexInputState',
                                       ['bindings', 'attributes'])
-PipelineVertexInputState.__new__.__defaults__ = \
-        ([],) * len(PipelineVertexInputState._fields)
 PipelineVertexInputState.__doc__ = '''
     *Parameters:*
 

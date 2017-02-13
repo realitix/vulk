@@ -207,6 +207,10 @@ class Vector2(Vector, XMixin, YMixin):
     '''Vector2 class represents a Vector in 2D space.
     It has two components `x` and `y`.
     '''
+    X = None
+    Y = None
+    Zero = None
+
     def __init__(self, values=None):
         '''
         *Parameters:*
@@ -225,6 +229,11 @@ class Vector3(Vector, XMixin, YMixin, ZMixin):
     '''Vector3 class represents a Vector in 3D space.
     It has three components `x`, `y` and `z`.
     '''
+    X = None
+    Y = None
+    Z = None
+    Zero = None
+
     def __init__(self, values=None):
         '''
         *Parameters:*
