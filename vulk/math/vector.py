@@ -294,7 +294,7 @@ class Vector3(Vector, XMixin, YMixin, ZMixin):
 
         - `vector`: `Vector3`
         '''
-        self.set2(vector.x, vector.y, vector.z)
+        self.set(vector.x, vector.y, vector.z)
 
 
 class Vector4(Vector, XMixin, YMixin, ZMixin, WMixin):
