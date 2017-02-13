@@ -114,18 +114,24 @@ class Matrix4(Matrix):
         - `matrix`: `Matrix4`
         '''
         # Make a matrix4 shape to matmul function
-        view1 = self._values.view()
-        view2 = matrix.values.view()
-        view1.shape = (4, 4)
-        view2.shape = (4, 4)
+        view1 = np.reshape(self._values, (4, 4))
+        view2 = np.reshape(matrix.values, (4, 4))
         self.tmp.shape = (4, 4)
 
+        # np.matmul(view2, view1, out=out)
         np.matmul(view2, view1, out=self.tmp)
 
         self.tmp.shape = (16,)
         self._values[:] = self.tmp
 
         return self
+
+    def inv(self):
+        '''Inverse this matrix'''
+        view = self._values.view()
+        view.shape = (4, 4)
+        tmp_mat = np.matrix(view, copy=False)
+        self._values[:] = tmp_mat.I.flatten()
 
     def to_identity(self):
         '''Set this matrix to identity matrix'''

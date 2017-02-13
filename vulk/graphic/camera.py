@@ -18,6 +18,23 @@ class Camera(ABC):
         self.viewport_width = 0.0
         self.viewport_height = 0.0
 
+    def unproject(self, position, viewport_x, viewport_y,
+                  viewport_width, viewport_height):
+        '''
+        Unproject `position` to view matrix.
+        Allow to get world coordinate from screen coordinate.
+
+        *Parameters:*
+
+        - `position`: `Vector3` screen position right-handed.
+                      z(0) = near plane, z(1) = far plane
+        '''
+        x = position.x - viewport_x
+        y = position.y - viewport_y
+        position.x = (2 * x) / viewport_width - 1
+        position.y = (2 * y) / viewport_height - 1
+        return position.prj(self.inv_projection_view)
+
     @abstractmethod
     def update(self, update_frustum=True):
         pass
@@ -55,6 +72,7 @@ class OrthographicCamera(Camera):
         target = Vector3(self.position).add(self.direction)
         self.view.to_look_at(self.position, target, self.up)
         self.combined.set(self.projection).mul(self.view)
+        self.inv_projection_view.set(self.combined).inv()
 
 
 class PerspectiveCamera(Camera):
