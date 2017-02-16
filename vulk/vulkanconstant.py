@@ -738,15 +738,3 @@ def index_type_size(t):
     if t == IndexType.UINT16:
         return 2
     return 4
-
-
-# Mapping between layout value and its name
-VK_LAYOUT_NAME = {}
-for name in (
-    'UNDEFINED', 'GENERAL', 'COLOR_ATTACHMENT_OPTIMAL',
-    'DEPTH_STENCIL_ATTACHMENT_OPTIMAL', 'DEPTH_STENCIL_READ_ONLY_OPTIMAL',
-    'SHADER_READ_ONLY_OPTIMAL', 'TRANSFER_SRC_OPTIMAL',
-    'TRANSFER_DST_OPTIMAL', 'PREINITIALIZED', 'PRESENT_SRC_KHR'
-):
-    fn = 'VK_IMAGE_LAYOUT_%s' % name
-    VK_LAYOUT_NAME[getattr(vk, fn)] = fn
