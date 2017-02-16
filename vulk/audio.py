@@ -15,6 +15,7 @@ logger = logging.getLogger()
 
 class VulkAudio():
     '''This class is only used in baseapp.
+
     It initializes and close the audio system.
     '''
     def open(self, configuration):

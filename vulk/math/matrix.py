@@ -216,7 +216,7 @@ class ProjectionMatrix(Matrix4):
         - `near`: Near plane
         - `Far`: Far plane
         '''
-        return self.to_orthographic(x, x + width, y, y + height, near, far)
+        return self.to_orthographic(x, x + width, y + height, y, near, far)
 
     def to_orthographic(self, left, right, bottom, top, near, far):
         '''
