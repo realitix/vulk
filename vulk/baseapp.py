@@ -43,7 +43,7 @@ class BaseApp(ABC):
         c = {k: v for k, v in locals().items() if k != 'self'}
         self.configuration = namedtuple('AppConfiguration', c.keys())(**c)
 
-        self.last_time = 0
+        self.last_time = millis()
         self._init_logger()
         self.context = None
         self.window = None
@@ -99,8 +99,9 @@ class BaseApp(ABC):
                 for listener in self.event_listeners:
                     listener.handle(event)
 
-            self.render(time_since_millis(self.last_time))
+            delta = time_since_millis(self.last_time)
             self.last_time = millis()
+            self.render(delta)
 
     @abstractmethod
     def render(self, delta):
