@@ -4,6 +4,7 @@ SpriteBatch is the pillar of 2D rendering. It has to be very performant
 and reliable.
 '''
 from os import path
+import math
 
 from vulk import PATH_VULK_SHADER
 from vulk import vulkanconstant as vc
@@ -471,7 +472,8 @@ class SpriteBatch():
         self.projection_matrix.set(matrix)
         self.matrices_dirty = True
 
-    def draw(self, texture, x, y, width=0, height=0, u=0, v=0, u2=1, v2=1):
+    def draw(self, texture, x, y, width=0, height=0, u=0, v=0, u2=1, v2=1,
+             r=1, g=1, b=1, a=1, scale_x=1, scale_y=1, rotation=0):
         '''
         Draw `texture` at position x, y of size `width`, `height`
 
@@ -482,6 +484,15 @@ class SpriteBatch():
         - `y`: Y position
         - `width`: Width
         - `heigth`: Height
+        - `u`: U texture coordinate
+        - `v`: V texture coordinate
+        - `r`: Red channel
+        - `g`: Green channel
+        - `b`: Blue channel
+        - `a`: Alpha channel
+        - `scale_x`: Scaling on x axis
+        - `scale_y`: Scaling on y axis
+        - `rotation`: Rotation in radian (clockwise)
 
         **Note: if width and height are set to 0, we take the image size**
         '''
@@ -497,21 +508,58 @@ class SpriteBatch():
 
         self.last_texture = texture
 
+        width *= scale_x
+        height *= scale_y
+
         x2 = x + width
         y2 = y + height
-        r = 1
-        g = 1
-        b = 1
-        a = 1
 
-        for val in [([x, y], [u, v], [r, g, b, a]),
-                    ([x, y2], [u, v2], [r, g, b, a]),
-                    ([x2, y2], [u2, v2], [r, g, b, a]),
-                    ([x2, y], [u2, v], [r, g, b, a])]:
+        p1x, p2x, p3x, p4x = x, x, x2, x2
+        p1y, p2y, p3y, p4y = y, y2, y2, y
+
+        if rotation:
+            cos = math.cos(rotation)
+            sin = math.sin(rotation)
+
+            # Set coordinates at origin to do a proper rotation
+            w1 = -width / 2
+            w2 = width / 2
+            h1 = -height / 2
+            h2 = height / 2
+
+            x1 = cos * w1 - sin * h1
+            y1 = sin * w1 + cos * h1
+
+            x2 = cos * w1 - sin * h2
+            y2 = sin * w1 + cos * h2
+
+            x3 = cos * w2 - sin * h2
+            y3 = sin * w2 + cos * h2
+
+            x4 = x1 + (x3 - x2)
+            y4 = y3 - (y2 - y1)
+
+            x1 += p1x
+            x2 += p1x
+            x3 += p1x
+            x4 += p1x
+            y1 += p1y
+            y2 += p1y
+            y3 += p1y
+            y4 += p1y
+        else:
+            x1, x2, x3, x4 = p1x, p2x, p3x, p4x
+            y1, y2, y3, y4 = p1y, p2y, p3y, p4y
+
+        for val in [([x1, y1], [u, v], [r, g, b, a]),
+                    ([x2, y2], [u, v2], [r, g, b, a]),
+                    ([x3, y3], [u2, v2], [r, g, b, a]),
+                    ([x4, y4], [u2, v], [r, g, b, a])]:
             self.mesh.set_vertex(self.idx, val)
             self.idx += 1
 
-    def draw_region(self, region, x, y, width, height):
+    def draw_region(self, region, x, y, width, height, r=1, g=1, b=1, a=1,
+                    scale_x=1, scale_y=1, rotation=0):
         '''
         Draw `region` at position x, y of size `width`, `height`
 
@@ -522,9 +570,17 @@ class SpriteBatch():
         - `y`: Y position
         - `width`: Width
         - `heigth`: Height
+        - `r`: Red channel
+        - `g`: Green channel
+        - `b`: Blue channel
+        - `a`: Alpha channel
+        - `scale_x`: Scaling on x axis
+        - `scale_y`: Scaling on y axis
+        - `rotation`: Rotation in radian (clockwise)
         '''
         u = region.u
         v = region.v
         u2 = region.u2
         v2 = region.v2
-        self.draw(region.texture, x, y, width, height, u, u2, v, v2)
+        self.draw(region.texture, x, y, width, height, u, u2, v, v2,
+                  r, g, b, a, scale_x, scale_y, rotation)
