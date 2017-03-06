@@ -21,6 +21,7 @@ module.
 from collections import namedtuple
 from contextlib import contextmanager
 import logging
+import pyshaderc
 import vulkan as vk  # pylint: disable=import-error
 
 from vulk.exception import VulkError
@@ -2393,3 +2394,68 @@ class ShaderProgram():
 
             module = ShaderModule(context, spirv)
             self.stages.append(PipelineShaderStage(module, stage))
+
+
+class ShaderProgramGlsl(ShaderProgram):
+    '''ShaderProgramGlsl
+
+    A `ShaderProgramGlsl` is a `ShaderProgram` which compiles glsl to spirv.
+    '''
+    shaderc_mapping = {
+        vc.ShaderStage.VERTEX: 'vert',
+        vc.ShaderStage.TESSELLATION_CONTROL: 'tesc',
+        vc.ShaderStage.TESSELLATION_EVALUATION: 'tese',
+        vc.ShaderStage.GEOMETRY: 'geom',
+        vc.ShaderStage.FRAGMENT: 'frag',
+        vc.ShaderStage.COMPUTE: 'comp',
+    }
+
+    def __init__(self, context, modules):
+        '''
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        - `modules`: `dict` containing a mapping between `ShaderStage` and
+                     shader information.
+                     modules = {
+                         'stage': {
+                             'glsl': glsl shader, `bytes` object,
+                             'path': path to file, needed if #include "file"
+                         }
+                     }
+        '''
+        spirv_modules = {}
+        for stage, data in modules.items():
+            glsl = data['glsl']
+            path = data.get('path', 'nofile')
+
+            if not isinstance(glsl, bytes):
+                raise TypeError("shader must be a bytes object")
+
+            stage_shaderc = ShaderProgramGlsl.shaderc_mapping[stage]
+            spirv = pyshaderc.compile_into_spirv(glsl, stage_shaderc, path)
+            spirv_modules[stage] = spirv
+
+        super().__init__(context, spirv_modules)
+
+
+class ShaderProgramGlslFile(ShaderProgramGlsl):
+    '''ShaderProgramGlslFile
+
+    It's a `ShaderProgramGlsl` which needs only file paths.
+    '''
+
+    def __init__(self, context, modules):
+        '''
+        *Parameters:*
+
+        - `context`: `VulkContext`
+        - `modules`: `dict` containing a mapping between `ShaderStage` and
+                     shader path (glsl format).
+        '''
+        glsl_modules = {}
+        for stage, path in modules.items():
+            with open(path, 'rb') as f:
+                glsl_modules[stage] = {'glsl': f.read(), 'path': path}
+
+        super().__init__(context, glsl_modules)

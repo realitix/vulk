@@ -298,20 +298,15 @@ class SpriteBatch():
 
         - `context`: `VulkContext`
         '''
-        vs = path.join(PATH_VULK_SHADER, "spritebatch.vs.spv")
-        fs = path.join(PATH_VULK_SHADER, "spritebatch.fs.spv")
-
-        with open(vs, 'rb') as f:
-            spirv_v = f.read()
-        with open(fs, 'rb') as f:
-            spirv_f = f.read()
+        vs = path.join(PATH_VULK_SHADER, "spritebatch.vs.glsl")
+        fs = path.join(PATH_VULK_SHADER, "spritebatch.fs.glsl")
 
         shaders_mapping = {
-            vc.ShaderStage.VERTEX: spirv_v,
-            vc.ShaderStage.FRAGMENT: spirv_f
+            vc.ShaderStage.VERTEX: vs,
+            vc.ShaderStage.FRAGMENT: fs
         }
 
-        return vo.ShaderProgram(context, shaders_mapping)
+        return vo.ShaderProgramGlslFile(context, shaders_mapping)
 
     def get_descriptor(self, context, texture):
         '''Update descriptor set containing texture
