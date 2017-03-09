@@ -212,7 +212,7 @@ class CallbackEventListener(BaseEventListener):
 
     def __init__(self, key_down=None, key_up=None, mouse_down=None,
                  mouse_drag=None, mouse_move=None, mouse_up=None,
-                 quit=None):
+                 quit_event=None):
         # We use a custom dict instead of locals() to avoid black magic
         parameters = {
             'key_down': key_down,
@@ -221,7 +221,7 @@ class CallbackEventListener(BaseEventListener):
             'mouse_drag': mouse_drag,
             'mouse_move': mouse_move,
             'mouse_up': mouse_up,
-            'quit': quit
+            'quit': quit_event
         }
         for key, value in parameters.items():
             setattr(self, key + '_callback', value)

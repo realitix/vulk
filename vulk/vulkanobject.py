@@ -60,7 +60,7 @@ def find_memory_type(context, type_filter, properties):
     **Todo: I made a bitwise comparaison with `type_filter`, I have to test
             it to be sure it's working**
     '''
-    global cache_properties
+    global cache_properties  # noqa
     if not cache_properties:
         cache_properties = vk.vkGetPhysicalDeviceMemoryProperties(
             context.physical_device)
