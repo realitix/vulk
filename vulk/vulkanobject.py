@@ -29,10 +29,6 @@ from vulk import vulkanconstant as vc
 
 logger = logging.getLogger()
 
-# Set physical device memory properties in cache since it depends
-# only on the physical device
-cache_properties = None
-
 
 # ----------
 # FUNCTIONS
@@ -60,10 +56,8 @@ def find_memory_type(context, type_filter, properties):
     **Todo: I made a bitwise comparaison with `type_filter`, I have to test
             it to be sure it's working**
     '''
-    global cache_properties  # noqa
-    if not cache_properties:
-        cache_properties = vk.vkGetPhysicalDeviceMemoryProperties(
-            context.physical_device)
+    cache_properties = vk.vkGetPhysicalDeviceMemoryProperties(
+        context.physical_device)
 
     for i, memory_type in enumerate(cache_properties.memoryTypes):
         # TODO: Test type_filter
