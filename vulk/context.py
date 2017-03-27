@@ -80,6 +80,8 @@ class VulkWindow():
 
 class VulkContext():
     def __init__(self):
+        # Vulkan debug enabled
+        self.debug_enabled = True
         # Vulkan instance
         self.instance = None
         # Extension functions in a dict
@@ -124,8 +126,7 @@ class VulkContext():
         # Command buffers
         self.commandbuffers = None
 
-    @staticmethod
-    def _get_instance_extensions(window, configuration):
+    def _get_instance_extensions(self, window, configuration):
         '''Get extensions which depend on the window and configuration
 
         *Parameters:*
@@ -164,14 +165,14 @@ class VulkContext():
         enabled_extensions.append(vk.VK_KHR_SURFACE_EXTENSION_NAME)
         enabled_extensions.append(extension_mapping[sdl_subsystem])
 
-        if configuration.debug:
+        if self.debug_enabled:
             if vk.VK_EXT_DEBUG_REPORT_EXTENSION_NAME in available_extensions:
                 enabled_extensions.append(
                     vk.VK_EXT_DEBUG_REPORT_EXTENSION_NAME)
             else:
-                configuration.debug = False
+                self.debug_enabled = False
                 logger.warning("Vulkan debug extension not present and debug"
-                               "mode asked, disabling debug mode")
+                               "mode asked, disabling Vulkan debug mode")
 
         # Check extensions availability
         if not all(e in available_extensions for e in enabled_extensions):
@@ -227,7 +228,7 @@ class VulkContext():
         List of all enabled layers
         '''
 
-        if not configuration.debug:
+        if not self.debug_enabled:
             return []
 
         layers = [l.layerName for l in
@@ -321,7 +322,7 @@ class VulkContext():
             'vkDestroyDebugReportCallbackEXT',
         }
 
-        if configuration.debug:
+        if self.debug_enabled:
             extension_functions.update(debug_extension_functions)
 
         for name in extension_functions:
@@ -336,8 +337,7 @@ class VulkContext():
         - `configuration`: Configuration from Application
         '''
 
-        extensions = VulkContext._get_instance_extensions(window,
-                                                          configuration)
+        extensions = self._get_instance_extensions(window, configuration)
         layers = VulkContext._get_layers(configuration)
 
         if configuration.extra_vulkan_layers:
@@ -371,7 +371,7 @@ class VulkContext():
 
         - `configuration`: Configuration from Application
         '''
-        if not configuration.debug:
+        if not self.debug_enabled:
             return
 
         vulkan_debug_mapping = {
@@ -781,6 +781,7 @@ class VulkContext():
         - `window`: The `VulkWindow`
         - `configuration`: Configuration from Application
         '''
+        self.debug_enabled = configuration.debug
         self._create_instance(window, configuration)
 
         # Next functions need extension pointers
