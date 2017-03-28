@@ -213,8 +213,7 @@ class VulkContext():
 
         return enabled_extensions
 
-    @staticmethod
-    def _get_layers(configuration):
+    def _get_layers(self, configuration):
         '''Get all enabled layers
 
         Simple algorythm: return everything in debug mode else nothing
@@ -232,7 +231,7 @@ class VulkContext():
             return []
 
         layers = [l.layerName for l in
-                  vk.vkEnumerateInstanceLayerProperties(None)]
+                  vk.vkEnumerateInstanceLayerProperties()]
         logger.debug("Available layers: %s", layers)
 
         # Standard validation is a meta layer containing the others
@@ -338,7 +337,7 @@ class VulkContext():
         '''
 
         extensions = self._get_instance_extensions(window, configuration)
-        layers = VulkContext._get_layers(configuration)
+        layers = self._get_layers(configuration)
 
         if configuration.extra_vulkan_layers:
             layers.extend(configuration.extra_vulkan_layers)
@@ -532,7 +531,7 @@ class VulkContext():
         - `configuration`: Configuration from Application
         '''
         extensions = VulkContext._get_device_extensions(self.physical_device)
-        layers = VulkContext._get_layers(configuration)
+        layers = self._get_layers(configuration)
 
         if configuration.extra_vulkan_layers:
             layers.extend(configuration.extra_vulkan_layers)
@@ -543,14 +542,25 @@ class VulkContext():
 
         queues_create = [
             vk.VkDeviceQueueCreateInfo(
-                vk.VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO, 0, i, 1, [1]
+                sType=vk.VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
+                flags=0,
+                queueFamilyIndex=i,
+                queueCount=1,
+                pQueuePriorities=[1]
             )
             for i in {graphic_index, present_index}]
 
         device_create = vk.VkDeviceCreateInfo(
-            vk.VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO, 0, len(queues_create),
-            queues_create, len(layers), layers, len(extensions), extensions,
-            self.physical_device_features)
+            sType=vk.VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
+            flags=0,
+            queueCreateInfoCount=len(queues_create),
+            pQueueCreateInfos=queues_create,
+            enabledLayerCount=len(layers),
+            ppEnabledLayerNames=layers,
+            enabledExtensionCount=len(extensions),
+            ppEnabledExtensionNames=extensions,
+            pEnabledFeatures=self.physical_device_features
+        )
 
         self.device = vk.vkCreateDevice(self.physical_device, device_create)
         self.graphic_queue = vk.vkGetDeviceQueue(self.device, graphic_index, 0)
