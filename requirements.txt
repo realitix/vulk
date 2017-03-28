@@ -7,7 +7,7 @@ pylint
 pysdl2
 pytest
 pytest-runner
-cvulkan
+vulkan
 pdoc
 Pygments
 mock-import

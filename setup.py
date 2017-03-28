@@ -60,7 +60,7 @@ setup(
     author_email="realitix@gmail.com",
     description="Vulk: Advanced 3D engine",
     long_description=open("README.rst").read(),
-    install_requires=['vulkbare', 'docopt', 'numpy', 'pysdl2', 'cvulkan',
+    install_requires=['vulkbare', 'docopt', 'numpy', 'pysdl2', 'vulkan',
                       'pyshaderc'],
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],
