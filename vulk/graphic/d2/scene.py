@@ -1,4 +1,9 @@
 '''This module contains scene related functions and classes'''
+from os import path
+
+from vulk import PATH_VULK_SHADER
+from vulk import vulkanconstant as vc
+from vulk import vulkanobject as vo
 from vulk.math.shape import Rectangle
 from vulk.math.interpolation import Linear
 from vulk.graphic.d2.spritebatch import SpriteBatch
@@ -167,6 +172,19 @@ class Scene(Widget):
         self.shape.width = width
         self.shape.height = height
         self.spritebatch = SpriteBatch(context)
+        self.block_spritebatch = SpriteBatch(
+            context, shaderprogram=self._get_block_shaderprogram(context))
+
+    def _get_block_shaderprogram(self, context):
+        vs = path.join(PATH_VULK_SHADER, "block.vs.glsl")
+        fs = path.join(PATH_VULK_SHADER, "block.fs.glsl")
+
+        shaders_mapping = {
+            vc.ShaderStage.VERTEX: vs,
+            vc.ShaderStage.FRAGMENT: fs
+        }
+
+        return vo.ShaderProgramGlslFile(context, shaders_mapping)
 
     def render(self, context):
         self.spritebatch.begin(context)
@@ -193,6 +211,19 @@ class Image(Widget):
         spritebatch.draw(self.texture_region.texture, self.shape.x,
                          self.shape.y, self.shape.width, self.shape.height,
                          r=c[0], g=c[1], b=c[2], a=c[3])
+
+
+class Block(Widget):
+    """Widget using the shader 'block' with allow lot of customization"""
+    def __init__(self, parent, texture_region, *args, **kwargs):
+        super().__init__(parent, *args, **kwargs)
+
+    def render(self, spritebatch):
+        c = self.color_abs
+        spritebatch.draw(self.texture_region.texture, self.shape.x,
+                         self.shape.y, self.shape.width, self.shape.height,
+                         r=c[0], g=c[1], b=c[2], a=c[3])
+
 
 
 # ----------

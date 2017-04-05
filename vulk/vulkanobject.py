@@ -2109,7 +2109,7 @@ class PipelineLayout():
         - `context`: `VulkContext`
         - `descriptors`: `list` of `DescriptorSetLayout`
 
-        **Todo: push constant muse be implemented**
+        **Todo: push constants must be implemented**
         '''
         vk_descriptors = []
         for d in descriptors:
