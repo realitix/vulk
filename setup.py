@@ -3,7 +3,6 @@ from distutils.cmd import Command
 from subprocess import call
 import os
 
-from apigenerator.apicommand import APICommand
 import vulk
 
 
@@ -50,6 +49,25 @@ class DocCommand(Command):
             f.write('(https://realitix.github.io/vulk-doc)\n\n')
             f.write('[LINK TO VULK ENGINE]')
             f.write('(https://github.com/realitix/vulk)')
+
+
+class APICommand(Command):
+    '''Generate API doc with sphinx'''
+
+    description = "Generate API documentation"
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        # Generate doc
+        call(['sphinx-apidoc', '-f', '-o', 'vulk-api', 'vulk'])
+        call(['make', '-C', 'vulk-api', 'html'])
+        call(['mv', 'vulk-api/_build', 'vulk-api/docs'])
 
 
 setup(

@@ -8,10 +8,9 @@ pysdl2
 pytest
 pytest-runner
 vulkan
-pdoc
 Pygments
 mock-import
-markdown2
 mkdocs
 mkdocs-material
 pyshaderc
+Sphinx
