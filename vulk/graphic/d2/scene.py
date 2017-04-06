@@ -6,7 +6,7 @@ from vulk import vulkanconstant as vc
 from vulk import vulkanobject as vo
 from vulk.math.shape import Rectangle
 from vulk.math.interpolation import Linear
-from vulk.graphic.d2.spritebatch import SpriteBatch
+from vulk.graphic.d2.batch import SpriteBatch
 
 
 # ----------
@@ -223,7 +223,6 @@ class Block(Widget):
         spritebatch.draw(self.texture_region.texture, self.shape.x,
                          self.shape.y, self.shape.width, self.shape.height,
                          r=c[0], g=c[1], b=c[2], a=c[3])
-
 
 
 # ----------
