@@ -1,6 +1,8 @@
 # loads a BMFont Text format glyph atlas into a dictionary
 # see https://71squared.com/blog/bitmap-font-file-format for more info
-def loadGlyphAtlas(filename):
+
+
+def load_glyph_atlas(filename):
     atlas = {}
     for line in open(filename):
         attributes = line.split(" ")
@@ -30,13 +32,9 @@ def loadGlyphAtlas(filename):
                     if ',' in strval:
                         arry = strval.split(',')
                         try:
-                            arry = map(float,arry)
+                            arry = map(float, arry)
                         finally:
                             attribdict[key] = arry
                     else:
                         attribdict[key] = strval
     return atlas
-
-atlas = loadGlyphAtlas("arial.fnt")
-import pprint
-pprint.pprint(atlas)
