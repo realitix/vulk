@@ -215,7 +215,7 @@ class Image(Widget):
 
 class Block(Widget):
     """Widget using the shader 'block' with allow lot of customization"""
-    def __init__(self, parent, texture_region, *args, **kwargs):
+    def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
 
     def render(self, spritebatch):

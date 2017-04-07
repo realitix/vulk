@@ -126,13 +126,12 @@ class VulkContext():
         # Command buffers
         self.commandbuffers = None
 
-    def _get_instance_extensions(self, window, configuration):
+    def _get_instance_extensions(self, window):
         '''Get extensions which depend on the window and configuration
 
         *Parameters:*
 
         - `window`: The `VulkWindow`
-        - `configuration`: Configuration from App
 
         *Returns:*
 
@@ -213,14 +212,10 @@ class VulkContext():
 
         return enabled_extensions
 
-    def _get_layers(self, configuration):
+    def _get_layers(self):
         '''Get all enabled layers
 
         Simple algorythm: return everything in debug mode else nothing
-
-        *Parameters:*
-
-        - configuration: configuration from App
 
         *Returns:*
 
@@ -281,14 +276,10 @@ class VulkContext():
 
         return graphic_index, present_index
 
-    def _get_pfn(self, configuration):
+    def _get_pfn(self):
         '''Get extension function pointers
 
         Get only functions used in `VulkContext`, vulkan instance must exist
-
-        *Parameters:*
-
-        - `configuration`: Configuration from Application
         '''
 
         if not self.instance:
@@ -336,8 +327,8 @@ class VulkContext():
         - `configuration`: Configuration from Application
         '''
 
-        extensions = self._get_instance_extensions(window, configuration)
-        layers = self._get_layers(configuration)
+        extensions = self._get_instance_extensions(window)
+        layers = self._get_layers()
 
         if configuration.extra_vulkan_layers:
             layers.extend(configuration.extra_vulkan_layers)
@@ -361,14 +352,10 @@ class VulkContext():
 
         self.instance = vk.vkCreateInstance(pCreateInfo=instance_create_info)
 
-    def _create_debug_callback(self, configuration):
+    def _create_debug_callback(self):
         '''Create debug callback
 
         It works only on debug mode
-
-        *Parameters:*
-
-        - `configuration`: Configuration from Application
         '''
         if not self.debug_enabled:
             return
@@ -446,7 +433,7 @@ class VulkContext():
             surface_create = vk.VkWin32SurfaceCreateInfoKHR(
                 sType=vk.VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR,
                 hinstance=info.info.win.hinstance,
-                hwdn=info.info.win.window,
+                hwnd=info.info.win.window,
                 flags=0)
             return call_platform('vkCreateWin32SurfaceKHR', surface_create)
 
@@ -531,7 +518,7 @@ class VulkContext():
         - `configuration`: Configuration from Application
         '''
         extensions = VulkContext._get_device_extensions(self.physical_device)
-        layers = self._get_layers(configuration)
+        layers = self._get_layers()
 
         if configuration.extra_vulkan_layers:
             layers.extend(configuration.extra_vulkan_layers)
@@ -795,8 +782,8 @@ class VulkContext():
         self._create_instance(window, configuration)
 
         # Next functions need extension pointers
-        self._get_pfn(configuration)
-        self._create_debug_callback(configuration)
+        self._get_pfn()
+        self._create_debug_callback()
         self._create_surface(window.info)
         self._create_physical_device()
         self._create_device(configuration)

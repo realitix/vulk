@@ -524,7 +524,7 @@ class SpriteBatchDescriptorPool():
     Theses sets contain uniform buffer and texture.
     '''
 
-    def __init__(self, context, descriptorpool, descriptorlayout):
+    def __init__(self, descriptorpool, descriptorlayout):
         self.descriptorsets = []
         self.descriptorset_id = -1
         self.descriptorpool = descriptorpool
@@ -556,7 +556,7 @@ class SpriteBatch(BaseBatch):
                  out_view=None):
         super().__init__(context, size, shaderprogram, out_view)
 
-        self.dspool = self.init_dspool(context)
+        self.dspool = self.init_dspool()
         self.last_texture = None
 
     def init_mesh(self, context, size):
@@ -610,9 +610,9 @@ class SpriteBatch(BaseBatch):
         layout_bindings = [ubo_descriptor, texture_descriptor]
         return vo.DescriptorSetLayout(context, layout_bindings)
 
-    def init_dspool(self, context):
-        return SpriteBatchDescriptorPool(
-            context, self.descriptorpool, self.descriptorlayout)
+    def init_dspool(self):
+        return SpriteBatchDescriptorPool(self.descriptorpool,
+                                         self.descriptorlayout)
 
     def get_default_shaderprogram(self, context):
         '''Generate a basic shader program if nono given
@@ -954,76 +954,3 @@ class TextBatch(SpriteBatch):
             cmd.end_renderpass()
 
         self.idx = 0
-
-    def draw(self, properties):
-        '''
-        Draw a block with `properties`
-
-        *Parameters:*
-
-        - `properties`: `BlockProperty`
-        '''
-        if not self.drawing:
-            raise Exception("Not currently drawing")
-
-        width = properties.width * properties.scale[0]
-        height = properties.height * properties.scale[1]
-
-        x = properties.x
-        y = properties.y
-        x2 = x + width
-        y2 = y + height
-
-        p1x, p2x, p3x, p4x = x, x, x2, x2
-        p1y, p2y, p3y, p4y = y, y2, y2, y
-
-        rotation = properties.rotation
-
-        if rotation:
-            cos = math.cos(rotation)
-            sin = math.sin(rotation)
-
-            # Set coordinates at origin to do a proper rotation
-            w1 = -width / 2
-            w2 = width / 2
-            h1 = -height / 2
-            h2 = height / 2
-
-            x1 = cos * w1 - sin * h1
-            y1 = sin * w1 + cos * h1
-
-            x2 = cos * w1 - sin * h2
-            y2 = sin * w1 + cos * h2
-
-            x3 = cos * w2 - sin * h2
-            y3 = sin * w2 + cos * h2
-
-            x4 = x1 + (x3 - x2)
-            y4 = y3 - (y2 - y1)
-
-            x1 += p1x
-            x2 += p1x
-            x3 += p1x
-            x4 += p1x
-            y1 += p1y
-            y2 += p1y
-            y3 += p1y
-            y4 += p1y
-        else:
-            x1, x2, x3, x4 = p1x, p2x, p3x, p4x
-            y1, y2, y3, y4 = p1y, p2y, p3y, p4y
-
-        c = properties.colors
-        bw = properties.border_widths
-        bct = properties.border_colors[0]
-        bcr = properties.border_colors[1]
-        bcb = properties.border_colors[2]
-        bcl = properties.border_colors[3]
-        br = properties.border_radius
-
-        for val in [([x1, y1], [0, 0], c[0], bw, bct, bcr, bcb, bcl, br),
-                    ([x2, y2], [0, 1], c[3], bw, bct, bcr, bcb, bcl, br),
-                    ([x3, y3], [1, 1], c[2], bw, bct, bcr, bcb, bcl, br),
-                    ([x4, y4], [1, 0], c[1], bw, bct, bcr, bcb, bcl, br)]:
-            self.mesh.set_vertex(self.idx, val)
-            self.idx += 1
