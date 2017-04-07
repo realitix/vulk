@@ -5,7 +5,11 @@
 # API_USER and API_PASS are travis secure variable
 
 git clone https://$API_USER:$API_PASS@github.com/realitix/vulk-api.git vulk-api > /dev/null 2>&1
-python setup.py api
+rm -rf vulk-api/docs
+sphinx-apidoc -f -o vulk-api vulk
+make -C vulk-api html
+mv vulk-api/_build/html vulk-api/docs
+rm -rf vulk-api/_build
 git --git-dir=vulk-api/.git --work-tree=vulk-api config user.name "realitix Travis User"
 git --git-dir=vulk-api/.git --work-tree=vulk-api config user.email "realitix@fake.com"
 git --git-dir=vulk-api/.git --work-tree=vulk-api add -A

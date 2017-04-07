@@ -51,25 +51,6 @@ class DocCommand(Command):
             f.write('(https://github.com/realitix/vulk)')
 
 
-class APICommand(Command):
-    '''Generate API doc with sphinx'''
-
-    description = "Generate API documentation"
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        # Generate doc
-        call(['sphinx-apidoc', '-f', '-o', 'vulk-api', 'vulk'])
-        call(['make', '-C', 'vulk-api', 'html'])
-        call(['mv', 'vulk-api/_build', 'vulk-api/docs'])
-
-
 setup(
     name="vulk",
     version=vulk.__version__,
@@ -94,6 +75,6 @@ setup(
         "Topic :: Multimedia :: Graphics :: 3D Rendering"
     ],
     license="Apache 2.0",
-    cmdclass={'api': APICommand, 'doc': DocCommand, 'readme': ReadmeCommand},
+    cmdclass={'doc': DocCommand, 'readme': ReadmeCommand},
     test_suite='vulk.tests'
 )
