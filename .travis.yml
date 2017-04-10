@@ -18,7 +18,7 @@ git:
 
 before_install:
   - "export TRAVIS_COMMIT_MSG=\"$(git log --format=%f --no-merges -n 1)\""
-  - bash ./travis_deploy.sh
+  - bash ./travis_prepare.sh
 
 install:
   - pip install -r requirements.txt
