@@ -10,7 +10,7 @@ specific field `NONE` which is equals to 0.
 '''
 from enum import Enum, IntEnum, IntFlag, auto
 import numpy as np
-import vulkan as vk  # pylint: disable=import-error
+import vulkan as vk
 
 
 # ----------

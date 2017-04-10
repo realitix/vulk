@@ -14,7 +14,7 @@ import ctypes
 import logging
 import sdl2
 import sdl2.ext
-import vulkan as vk  # pylint: disable=import-error
+import vulkan as vk
 
 from vulk.exception import VulkError, SDL2Error
 from vulk import vulkanconstant as vc
