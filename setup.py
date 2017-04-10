@@ -6,27 +6,6 @@ import os
 import vulk
 
 
-class ReadmeCommand(Command):
-    '''Convert the markdown README to Rest format (for pypi)'''
-
-    description = "Prepare README to pypi"
-    user_options = []
-
-    def initialize_options(self):
-        import pypandoc
-        self.pypandoc = pypandoc
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        app_path = os.path.dirname(os.path.realpath(__file__))
-        with open(os.path.join(app_path, 'README.rst'), 'w') as result:
-            result.write(self.pypandoc.convert(
-                os.path.join(app_path, 'README.md'),
-                'rst'))
-
-
 class DocCommand(Command):
     '''Generate doc with mkdocs'''
 
@@ -58,7 +37,7 @@ setup(
     author="realitix",
     author_email="realitix@gmail.com",
     description="Vulk: Advanced 3D engine",
-    long_description=open("README.rst").read(),
+    long_description='Go to http://github.com/realitix/vulk',
     install_requires=['vulkbare', 'docopt', 'numpy', 'pysdl2', 'vulkan',
                       'pyshaderc'],
     setup_requires=['pytest-runner'],
@@ -75,5 +54,5 @@ setup(
         "Topic :: Multimedia :: Graphics :: 3D Rendering"
     ],
     license="Apache 2.0",
-    cmdclass={'doc': DocCommand, 'readme': ReadmeCommand}
+    cmdclass={'doc': DocCommand}
 )
