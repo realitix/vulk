@@ -18,7 +18,7 @@ git:
 
 before_install:
   - "export TRAVIS_COMMIT_MSG=\"$(git log --format=%f --no-merges -n 1)\""
-  - bash ./travis_prepare.sh
+  - source ./travis_prepare.sh
 
 install:
   - pip install -r requirements.txt
@@ -36,6 +36,7 @@ after_success:
   - coveralls
 
 deploy:
+  skip_cleanup: true
   provider: script
   script: 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash ./travis_deploy.sh; fi'
   on:
