@@ -75,6 +75,5 @@ setup(
         "Topic :: Multimedia :: Graphics :: 3D Rendering"
     ],
     license="Apache 2.0",
-    cmdclass={'doc': DocCommand, 'readme': ReadmeCommand},
-    test_suite='vulk.tests'
+    cmdclass={'doc': DocCommand, 'readme': ReadmeCommand}
 )
