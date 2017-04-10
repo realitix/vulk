@@ -6,7 +6,7 @@
 git clone https://$API_USER:$API_PASS@github.com/realitix/vulk-api.git vulk-api > /dev/null 2>&1
 rm -rf vulk-api/docs
 sphinx-apidoc -f -o vulk-api vulk
-make -C vulk-api html
+LD_LIBRARY_PATH=VulkanSDK/1.0.46.0/x86_64/lib make -C vulk-api html
 mv vulk-api/_build/html vulk-api/docs
 rm -rf vulk-api/_build
 git --git-dir=vulk-api/.git --work-tree=vulk-api config user.name "realitix Travis User"
