@@ -7,6 +7,8 @@ addons:
       - libsdl2-2.0-0
 
 language: python
+cache:
+    - pip: true
 
 python:
   - '3.6'
@@ -36,7 +38,6 @@ after_success:
   - coveralls
 
 deploy:
-  skip_cleanup: true
   provider: script
   script: 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash ./travis_deploy.sh; fi'
   on:
