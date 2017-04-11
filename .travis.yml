@@ -38,6 +38,7 @@ after_success:
   - coveralls
 
 deploy:
+  skip_cleanup: true
   provider: script
   script: 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash ./travis_deploy.sh; fi'
   on:
