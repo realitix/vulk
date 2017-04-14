@@ -39,7 +39,7 @@ setup(
     description="Vulk: Advanced 3D engine",
     long_description='Go to http://github.com/realitix/vulk',
     install_requires=['vulkbare', 'docopt', 'numpy', 'pysdl2', 'vulkan',
-                      'pyshaderc'],
+                      'pyshaderc', 'path.py'],
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],
     include_package_data=True,

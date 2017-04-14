@@ -169,7 +169,7 @@ class TextureRegion():
     right and the y axis pointing downwards.
     '''
 
-    def __init__(self, texture, u=0, u2=1, v=0, v2=1):
+    def __init__(self, texture, u=0, v=0, u2=1, v2=1):
         '''Initialize texture region
 
         *Parameters:*
@@ -183,6 +183,26 @@ class TextureRegion():
         self.u2 = u2
         self.v = v
         self.v2 = v2
+
+    @staticmethod
+    def from_pixels(texture, x, y, width, height):
+        """Create a TextureRegion with pixel coordinates
+
+        Args:
+            texture (Texture): Base texture of region
+            x (int): X offset (left to right)
+            y (int): Y offset (top to bottom)
+            width (int): Region width
+            height (int): Region height
+
+        Returns:
+            The new TextureRegion
+        """
+        u = x / texture.width
+        u2 = u + width / texture.width
+        v = y / texture.height
+        v2 = v + height / texture.height
+        return TextureRegion(texture, u, v, u2, v2)
 
     def set_texture(self, texture):
         '''Set texture of `TextureRegion`

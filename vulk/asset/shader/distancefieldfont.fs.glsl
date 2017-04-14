@@ -11,7 +11,10 @@ layout(location = 0) out vec4 o_color;
 
 layout(set = 0, binding = 1) uniform sampler2D u_texture;
 
+const float smoothing = 1.0/16.0;
 
 void main() {
-    o_color = i_color * texture(u_texture, i_textureCoordinates);
+    float distance = texture(u_texture, i_textureCoordinates).a;
+    float alpha = smoothstep(0.5 - smoothing, 0.5 + smoothing, distance);
+    o_color = vec4(i_color.rgb, i_color.a * alpha);
 }

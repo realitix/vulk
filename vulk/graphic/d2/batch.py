@@ -820,92 +820,28 @@ class SpriteBatch(BaseBatch):
         v = region.v
         u2 = region.u2
         v2 = region.v2
-        self.draw(region.texture, x, y, width, height, u, u2, v, v2,
+        self.draw(region.texture, x, y, width, height, u, v, u2, v2,
                   r, g, b, a, scale_x, scale_y, rotation)
 
 
 class TextBatch(SpriteBatch):
-    """
-    TextBatch allows to batch lot of text into minimum of draw calls.
-    """
-
+    """TextBatch allows to batch chars into minimum of draw calls."""
     def __init__(self, context, size=1000, shaderprogram=None,
                  out_view=None):
         super().__init__(context, size, shaderprogram, out_view)
 
-        # Init rendering attributes
-        self.descriptorsets = self.init_descriptorsets(context)
-
-    def init_mesh(self, context, size):
-        '''Initialize the Mesh handling blocks
-
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        - `size`: Number of blocks to handle
-        '''
-        vertex_attributes = me.VertexAttributes([
-            # Position
-            me.VertexAttribute(0, vc.Format.R32G32_SFLOAT),
-            # Texture UV
-            me.VertexAttribute(1, vc.Format.R32G32_SFLOAT),
-            # Color
-            me.VertexAttribute(2, vc.Format.R32G32B32A32_SFLOAT),
-            # Border widths
-            me.VertexAttribute(3, vc.Format.R32G32B32A32_SFLOAT),
-            # Border color (top)
-            me.VertexAttribute(4, vc.Format.R32G32B32A32_SFLOAT),
-            # Border color (right)
-            me.VertexAttribute(5, vc.Format.R32G32B32A32_SFLOAT),
-            # Border color (bottom)
-            me.VertexAttribute(6, vc.Format.R32G32B32A32_SFLOAT),
-            # Border color (left)
-            me.VertexAttribute(7, vc.Format.R32G32B32A32_SFLOAT),
-            # Border radius
-            me.VertexAttribute(8, vc.Format.R32G32B32A32_SFLOAT)
-        ])
-
-        return me.Mesh(context, size * 4, size * 6, vertex_attributes)
-
-    def init_descriptorpool(self, context):
-        # Only 1 uniform buffer
-        size = 1
-        pool_sizes = [vo.DescriptorPoolSize(
-            vc.DescriptorType.UNIFORM_BUFFER, size)]
-        return vo.DescriptorPool(context, pool_sizes, size)
-
-    def init_descriptorlayout(self, context):
-        ubo_descriptor = vo.DescriptorSetLayoutBinding(
-            0, vc.DescriptorType.UNIFORM_BUFFER, 1,
-            vc.ShaderStage.VERTEX, None)
-        bindings = [ubo_descriptor]
-        return vo.DescriptorSetLayout(context, bindings)
-
-    def init_descriptorsets(self, context):
-        """Create the descriptor set (for mat4)"""
-        descriptorsets = self.descriptorpool.allocate_descriptorsets(
-            context, 1, [self.descriptorlayout])
-
-        descriptorub_info = vo.DescriptorBufferInfo(
-            self.uniformblock.uniform_buffer.final_buffer, 0,
-            self.uniformblock.size)
-        descriptorub_write = vo.WriteDescriptorSet(
-            descriptorsets[0], 0, 0, vc.DescriptorType.UNIFORM_BUFFER,
-            [descriptorub_info])
-
-        vo.update_descriptorsets(context, [descriptorub_write], [])
-
-        return descriptorsets
+        self.dspool = self.init_dspool()
+        self.last_texture = None
 
     def get_default_shaderprogram(self, context):
-        '''Generate a basic shader program if none given
+        '''Generate a basic shader program if nono given
 
         *Parameters:*
 
         - `context`: `VulkContext`
         '''
-        vs = path.join(PATH_VULK_SHADER, "block.vs.glsl")
-        fs = path.join(PATH_VULK_SHADER, "block.fs.glsl")
+        vs = path.join(PATH_VULK_SHADER, "distancefieldfont.vs.glsl")
+        fs = path.join(PATH_VULK_SHADER, "distancefieldfont.fs.glsl")
 
         shaders_mapping = {
             vc.ShaderStage.VERTEX: vs,
@@ -914,43 +850,25 @@ class TextBatch(SpriteBatch):
 
         return vo.ShaderProgramGlslFile(context, shaders_mapping)
 
-    def flush(self):
-        '''Flush all draws to graphic card.
-        Currently, `flush` register and submit command.
+    def draw_char(self, fontdata, char, x, y, width, height, r=1, g=1, b=1,
+                  a=1, scale_x=1, scale_y=1, rotation=0):
+        """Draw a char
 
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        '''
-        if not self.idx:
-            return
-
-        if not self.drawing:
-            raise Exception("Not currently drawing")
-
-        # Upload mesh data
-        self.mesh.upload(self.context)
-
-        # Compute indices count
-        blocks_in_batch = self.idx / 4  # 4 idx per vertex
-        indices_count = int(blocks_in_batch) * 6
-
-        # Register commands
-        with self.cbpool.pull() as cmd:
-            width = self.context.width
-            height = self.context.height
-            cmd.begin_renderpass(
-                self.renderpass,
-                self.framebuffer,
-                vo.Rect2D(vo.Offset2D(0, 0),
-                          vo.Extent2D(width, height)),
-                []
-            )
-            cmd.bind_pipeline(self.pipeline)
-            self.mesh.bind(cmd)
-            cmd.bind_descriptor_sets(self.pipelinelayout, 0,
-                                     self.descriptorsets, [])
-            self.mesh.draw(cmd, 0, indices_count)
-            cmd.end_renderpass()
-
-        self.idx = 0
+        Args:
+            fontdata (FontData): Data on font
+            char (str): One character to draw
+            x (int): X position
+            y (int): Y position
+            width (int): Width
+            heigth (int): Height
+            r (float): Red channel
+            g (float): Green channel
+            b (float): Blue channel
+            a (float): Alpha channel
+            scale_x (flaot): Scaling on x axis
+            scale_y (float): Scaling on y axis
+            rotation (float): Rotation in radian (clockwise)
+        """
+        region = fontdata.chars[char]
+        super().draw_region(region, x, y, width, height, r, g,
+                            b, a, scale_x, scale_y, rotation)
