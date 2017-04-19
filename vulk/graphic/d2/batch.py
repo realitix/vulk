@@ -824,8 +824,8 @@ class SpriteBatch(BaseBatch):
                   r, g, b, a, scale_x, scale_y, rotation)
 
 
-class TextBatch(SpriteBatch):
-    """TextBatch allows to batch chars into minimum of draw calls."""
+class CharBatch(SpriteBatch):
+    """CharBatch allows to batch chars into minimum of draw calls."""
     def __init__(self, context, size=1000, shaderprogram=None,
                  out_view=None):
         super().__init__(context, size, shaderprogram, out_view)
@@ -850,25 +850,25 @@ class TextBatch(SpriteBatch):
 
         return vo.ShaderProgramGlslFile(context, shaders_mapping)
 
-    def draw_char(self, fontdata, char, x, y, width, height, r=1, g=1, b=1,
-                  a=1, scale_x=1, scale_y=1, rotation=0):
+    def draw_char(self, fontdata, char, x, y, r=1., g=1., b=1., a=1.,
+                  scale_x=1., scale_y=1., rotation=0.):
         """Draw a char
 
         Args:
             fontdata (FontData): Data on font
             char (str): One character to draw
+            size (float): Size
             x (int): X position
             y (int): Y position
-            width (int): Width
-            heigth (int): Height
             r (float): Red channel
             g (float): Green channel
             b (float): Blue channel
             a (float): Alpha channel
-            scale_x (flaot): Scaling on x axis
+            scale_x (float): Scaling on x axis
             scale_y (float): Scaling on y axis
             rotation (float): Rotation in radian (clockwise)
         """
-        region = fontdata.chars[char]
+        region = fontdata.get_region(char)
+        width, height = fontdata.get_sizes(char)
         super().draw_region(region, x, y, width, height, r, g,
                             b, a, scale_x, scale_y, rotation)

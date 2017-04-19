@@ -2262,30 +2262,29 @@ class Sampler():
                  anisotropy_enable, max_anisotropy, compare_enable,
                  compare_op, min_lod, max_lod, border_color,
                  unnormalized_coordinates):
-        '''
-        *Parameters:*
+        """Construct a new sampler
 
-        - `context`: `VulkContext`
-        - `mag_filter`: Magnification `Filter` to apply to lookups
-        - `min_filter`: Minification `Filter` to apply to lookups
-        - `mipmap_mode`: `SamplerMipmapMode` mipmap filter to apply to
-                         lookups
-        - `address_mode_u`: `SamplerAddressMode` vulk constant
-        - `address_mode_v`: `SamplerAddressMode` vulk contant
-        - `address_mode_w`: `SamplerAddressMode` vulk contant
-        - `mip_lod_bias`: Bias to be added to mipmap LOD calculation
-        - `anisotropy_enable`: `True` to enable anisotropic filtering
-        - `max_anisotropy`: Anisotropy value clamp
-        - `compare_enable`: `True` to enable comparison against a reference
-                            value during lookups
-        - `compare_op`: `CompareOp` vulk constant comparison function to apply
-                        to fetched data before filtering
-        - `min_lod`: Value used to clamp the computed level-of-detail value
-        - `max_lod`: Value used to clamp the computed level-of-detail value
-        - `border_color`: `BorderColor` predefined border color to use
-        - `unnormalized_coordinates`: `True` to use unnormalized texel
-                                      coordinates
-        '''
+        Args:
+            context (VulkContext): Context containing device
+            mag_filter (Filter): Magnification filter to apply to lookups
+            min_filter (Filter): Minification filter to apply to lookups
+            mipmap_mode (SamplerMipmapMode): mipmap filter to apply to lookups
+            address_mode_u (SamplerAddressMode): Repeat X
+            address_mode_v (SamplerAddressMode): Repeat Y
+            address_mode_w (SamplerAddressMode): Repeat W
+            mip_lod_bias (float): Bias to be added to mipmap LOD calculation
+            anisotropy_enable (bool): enable anisotropic filtering
+            max_anisotropy (int): Anisotropy value clamp
+            compare_enable (bool): enable comparison against a reference value
+                                   during lookups
+            compare_op (CompareOp): comparison function to apply to fetched
+                                    data before filtering
+            min_lod (float): clamp the computed level-of-detail value
+            max_lod (float): clamp the computed level-of-detail value
+            border_color (BorderColor): predefined border color to use
+            unnormalized_coordinates (bool): True to use unnormalized texel
+                                             coordinates
+        """
         sampler_create = vk.VkSamplerCreateInfo(
             sType=vk.VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
             flags=0,
@@ -2307,6 +2306,14 @@ class Sampler():
         )
 
         self.sampler = vk.vkCreateSampler(context.device, sampler_create)
+
+    def destroy(self, context):
+        """Destroy sampler
+
+        Args:
+            context (VulkContext): Context containing device
+        """
+        vk.vkDestroySampler(context.device, self.sampler)
 
 
 class Semaphore():

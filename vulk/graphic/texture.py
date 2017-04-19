@@ -77,6 +77,9 @@ class RawTexture():
         - `address_mode_u`: `SamplerAddressMode` vulk constant
         - `address_mode_v`: `SamplerAddressMode` vulk constant
         '''
+        if self.sampler:
+            self.sampler.destroy(context)
+
         self.sampler = vo.Sampler(
             context, mag_filter, min_filter, vc.SamplerMipmapMode.LINEAR,
             address_mode_u, address_mode_v, vc.SamplerAddressMode.REPEAT,

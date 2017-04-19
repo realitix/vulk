@@ -12,10 +12,11 @@ class FontData():
     def __init__(self, context, filepath):
         self.filepath = Path(filepath)
         self.raw_data = FontData.load_bmfont(filepath)
-        self.pages = self.init_pages(context)
-        self.chars = self.init_chars()
+        self.pages = self._init_pages(context)
+        self.regions = self._init_regions()
+        self.sizes = self._init_sizes()
 
-    def init_pages(self, context):
+    def _init_pages(self, context):
         """Create Texture for each page
 
         Args:
@@ -31,7 +32,7 @@ class FontData():
 
         return res
 
-    def init_chars(self):
+    def _init_regions(self):
         """Create a TextureRegion for each char
 
         Returns:
@@ -48,6 +49,35 @@ class FontData():
             res[k] = TextureRegion.from_pixels(t, x, y, w, h)
 
         return res
+
+    def _init_sizes(self):
+        """Create dimensions for each char
+
+        Returns:
+            Char indexed dict
+        """
+        res = {}
+        for c in self.raw_data['char']:
+            k = chr(c['id'])
+            res[k] = (c['width'], c['height'])
+
+        return res
+
+    def get_region(self, char):
+        """Get texture region of char in this FontData
+
+        Args:
+            char (str): One character to find
+        """
+        return self.regions[char]
+
+    def get_sizes(self, char):
+        """Get size of char in this FontData
+
+        Args:
+            char (str): One character to find
+        """
+        return self.sizes[char]
 
     @staticmethod
     def load_bmfont(filepath):
