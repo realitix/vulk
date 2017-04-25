@@ -16,6 +16,7 @@ class FontData():
         self.pages = self._init_pages(context)
         self.regions = self._init_regions()
         self.chars = self._init_chars()
+        self.kernings = self._init_kernings()
 
     def _init_pages(self, context):
         """Create Texture for each page
@@ -64,6 +65,20 @@ class FontData():
 
         return res
 
+    def _init_kernings(self):
+        """Create tuple(char1, char2) indexed key for each kerning
+
+        Returns:
+            tuple indexed dict
+        """
+        res = {}
+        for k in self.raw_data['kerning']:
+            c1 = chr(k['first'])
+            c2 = chr(k['second'])
+            res[(c1, c2)] = k['amount']
+
+        return res
+
     def get_region(self, char):
         """Get texture region of char in this FontData
 
@@ -79,6 +94,20 @@ class FontData():
             char (str): One character to find
         """
         return (self.chars[char]['width'], self.chars[char]['height'])
+
+    def get_kerning(self, previous_char, current_char):
+        """Get kerning between last and current char
+
+        Args:
+            previous_char (str): Previous character
+            current_char (str): Current character
+        """
+        try:
+            x = self.kernings[(previous_char, current_char)]
+        except KeyError:
+            x = 0
+
+        return x
 
     @staticmethod
     def load_bmfont(filepath):
@@ -172,11 +201,23 @@ class TextRenderer():
         current_x = x
         current_y = y
         scale = size / self.fontdata.raw_data['info']['size']
+        previous_char = None
 
         for char in text:
+            # Compute kerning
+            kerning = 0
+            if previous_char is not None:
+                kerning = self.fontdata.get_kerning(previous_char, char)
+
+            # Compute position
             char_info = self.fontdata.chars[char]
-            x = current_x + char_info['xoffset']
+            x = current_x + char_info['xoffset'] + kerning
             y = current_y + char_info['yoffset']
+
+            # Draw char
             self.batch.draw_char(self.fontdata, char, x, y, r, g, b, a, scale,
                                  scale, rotation)
+
+            # Register variable
             current_x += char_info['xadvance']
+            previous_char = char
