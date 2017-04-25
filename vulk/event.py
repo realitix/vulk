@@ -252,5 +252,5 @@ class CallbackEventListener(BaseEventListener):
         pass
 
     @wrap_callback
-    def quit(self, *args):
+    def quit(self):
         pass
