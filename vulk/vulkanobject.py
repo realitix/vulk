@@ -674,7 +674,7 @@ class Buffer():
             pQueueFamilyIndices=queue_families if queue_families else None
         )
 
-        self.buffer = vk.vkCreateBuffer(context.device, buffer_create)
+        self.buffer = vk.vkCreateBuffer(context.device, buffer_create, None)
 
         # Get memory requirements
         requirements = vk.vkGetBufferMemoryRequirements(context.device,
@@ -691,7 +691,7 @@ class Buffer():
         )
 
         # Create memory
-        self.memory = vk.vkAllocateMemory(context.device, alloc_info)
+        self.memory = vk.vkAllocateMemory(context.device, alloc_info, None)
 
         # Bind device memory to the buffer
         vk.vkBindBufferMemory(context.device, self.buffer, self.memory, 0)
@@ -1163,8 +1163,8 @@ class CommandPool():
         )
 
         # The Vulkan command pool
-        self.commandpool = vk.vkCreateCommandPool(context.device,
-                                                  commandpool_create)
+        self.commandpool = vk.vkCreateCommandPool(
+            context.device, commandpool_create, None)
         # Command buffers allocated from this pool
         self.commandbuffers = []
 
@@ -1225,7 +1225,7 @@ class CommandPool():
 
         - `context`: `VulkContext`
         '''
-        vk.vkDestroyCommandPool(context.device, self.commandpool)
+        vk.vkDestroyCommandPool(context.device, self.commandpool, None)
 
 
 class DescriptorPool():
@@ -1263,7 +1263,7 @@ class DescriptorPool():
         )
 
         self.descriptorpool = vk.vkCreateDescriptorPool(
-            context.device, descriptorpool_create)
+            context.device, descriptorpool_create, None)
 
     def allocate_descriptorsets(self, context, count, layouts):
         '''
@@ -1350,7 +1350,7 @@ class DescriptorSetLayout():
         )
 
         self.descriptorsetlayout = vk.vkCreateDescriptorSetLayout(
-            context.device, layout_create)
+            context.device, layout_create, None)
 
 
 class Framebuffer():
@@ -1383,7 +1383,7 @@ class Framebuffer():
         )
 
         self.framebuffer = vk.vkCreateFramebuffer(context.device,
-                                                  framebuffer_create)
+                                                  framebuffer_create, None)
 
 
 class HighPerformanceBuffer():
@@ -1675,7 +1675,7 @@ class Image():
             initialLayout=layout.value
         )
 
-        self.image = vk.vkCreateImage(context.device, image_create)
+        self.image = vk.vkCreateImage(context.device, image_create, None)
 
         # Get memory requirements
         requirements = vk.vkGetImageMemoryRequirements(context.device,
@@ -1691,7 +1691,7 @@ class Image():
             )
         )
 
-        self.memory = vk.vkAllocateMemory(context.device, alloc_info)
+        self.memory = vk.vkAllocateMemory(context.device, alloc_info, None)
 
         # Bind device memory to the image
         vk.vkBindImageMemory(context.device, self.image, self.memory, 0)
@@ -1874,7 +1874,8 @@ class ImageView():
         )
 
         self.image = image
-        self.imageview = vk.vkCreateImageView(context.device, imageview_create)
+        self.imageview = vk.vkCreateImageView(context.device,
+                                              imageview_create, None)
 
 
 class Pipeline():
@@ -2085,8 +2086,8 @@ class Pipeline():
             basePipelineIndex=-1
         )
 
-        self.pipeline = vk.vkCreateGraphicsPipelines(context.device, None,
-                                                     1, [pipeline_create])
+        self.pipeline = vk.vkCreateGraphicsPipelines(
+            context.device, None, 1, [pipeline_create], None)
 
 
 class PipelineLayout():
@@ -2124,7 +2125,7 @@ class PipelineLayout():
             pPushConstantRanges=None
         )
         self.layout = vk.vkCreatePipelineLayout(context.device,
-                                                layout_create)
+                                                layout_create, None)
 
 
 class Renderpass():
@@ -2247,7 +2248,7 @@ class Renderpass():
         )
 
         self.renderpass = vk.vkCreateRenderPass(
-            context.device, renderpass_create)
+            context.device, renderpass_create, None)
 
 
 class Sampler():
@@ -2305,7 +2306,8 @@ class Sampler():
             unnormalizedCoordinates=btov(unnormalized_coordinates)
         )
 
-        self.sampler = vk.vkCreateSampler(context.device, sampler_create)
+        self.sampler = vk.vkCreateSampler(context.device, sampler_create,
+                                          None)
 
     def destroy(self, context):
         """Destroy sampler
@@ -2337,7 +2339,8 @@ class Semaphore():
             flags=0
         )
 
-        self.semaphore = vk.vkCreateSemaphore(context.device, semaphore_create)
+        self.semaphore = vk.vkCreateSemaphore(context.device,
+                                              semaphore_create, None)
 
 
 class ShaderModule():
@@ -2370,7 +2373,8 @@ class ShaderModule():
         shader_create = vk.VkShaderModuleCreateInfo(
             sType=vk.VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
             flags=0, codeSize=len(code), pCode=code)
-        self.module = vk.vkCreateShaderModule(context.device, shader_create)
+        self.module = vk.vkCreateShaderModule(context.device, shader_create,
+                                              None)
 
 
 class ShaderProgram():

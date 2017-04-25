@@ -1,12 +1,13 @@
 from path import Path
 
 from vulk.graphic.texture import Texture, TextureRegion
+from vulk.graphic.d2.batch import CharBatch
 
 
 class FontData():
     """Load a BMFont Text file into a FontData
 
-    The FontData can be rendered with the TextBatch.
+    The FontData can be rendered with the CharBatch.
     See http://www.angelcode.com/products/bmfont/doc/file_format.html
     """
     def __init__(self, context, filepath):
@@ -14,7 +15,7 @@ class FontData():
         self.raw_data = FontData.load_bmfont(filepath)
         self.pages = self._init_pages(context)
         self.regions = self._init_regions()
-        self.sizes = self._init_sizes()
+        self.chars = self._init_chars()
 
     def _init_pages(self, context):
         """Create Texture for each page
@@ -50,8 +51,8 @@ class FontData():
 
         return res
 
-    def _init_sizes(self):
-        """Create dimensions for each char
+    def _init_chars(self):
+        """Create dict indexed key for each char
 
         Returns:
             Char indexed dict
@@ -59,7 +60,7 @@ class FontData():
         res = {}
         for c in self.raw_data['char']:
             k = chr(c['id'])
-            res[k] = (c['width'], c['height'])
+            res[k] = c
 
         return res
 
@@ -77,7 +78,7 @@ class FontData():
         Args:
             char (str): One character to find
         """
-        return self.sizes[char]
+        return (self.chars[char]['width'], self.chars[char]['height'])
 
     @staticmethod
     def load_bmfont(filepath):
@@ -120,3 +121,62 @@ class FontData():
                 atlas[k] = res
 
         return atlas
+
+
+class TextRenderer():
+    """TextRenderer performs computation to draw text"""
+    def __init__(self, context, fontdata, batch=None):
+        """Initialize TextRenderer
+
+        Args:
+            context (VulkContext): Context
+            fontdata (FontData): Font to use
+            batch: Batch with `draw_char` function
+        """
+        if not batch:
+            batch = CharBatch(context)
+
+        self.fontdata = fontdata
+        self.batch = batch
+
+    def begin(self, context):
+        """Start rendering
+
+        Args:
+            context (VulkContext): Context
+        """
+        self.batch.begin(context)
+
+    def end(self):
+        """Stop rendering
+
+        Returns:
+            Semaphore signaled when all drawing operations are finished
+        """
+        return self.batch.end()
+
+    def draw(self, text, x, y, size, r=1., g=1., b=1., a=1., rotation=0.):
+        """Render text on screen
+
+        Args:
+            text (str): String to render
+            x (int): X position (from left)
+            y (int): Y position (from top)
+            size (float): Pixel size of font
+            r (float): Red channel
+            g (float): Green channel
+            b (float): Blue channel
+            a (float): Alpha channel
+            rotation (float): Rotation in radian (clockwise)
+        """
+        current_x = x
+        current_y = y
+        scale = size / self.fontdata.raw_data['info']['size']
+
+        for char in text:
+            char_info = self.fontdata.chars[char]
+            x = current_x + char_info['xoffset']
+            y = current_y + char_info['yoffset']
+            self.batch.draw_char(self.fontdata, char, x, y, r, g, b, a, scale,
+                                 scale, rotation)
+            current_x += char_info['xadvance']

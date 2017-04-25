@@ -61,12 +61,12 @@ class DispatchEventListener(RawEventListener):
     This class is very basic and performs no logic.
     To get more logic, you must use `BaseEventListener`.
     '''
-    def handle(self, e):
+    def handle(self, event):
         '''Called for each event received
 
         *Parameters:*
 
-        - `e`: `eventconstant.BaseEvent`
+        - `event`: `eventconstant.BaseEvent`
 
         *Returns:*
 
@@ -74,20 +74,20 @@ class DispatchEventListener(RawEventListener):
         - `False` otherwise
         '''
         # Unknow event
-        if not e:
+        if not event:
             return False
 
-        if e.type == ec.EventType.KEY_DOWN:
-            return self.key_down(e.key)
-        elif e.type == ec.EventType.KEY_UP:
-            return self.key_up(e.key)
-        elif e.type == ec.EventType.MOUSE_BUTTONUP:
-            return self.mouse_up(e.x, e.y, e.button)
-        elif e.type == ec.EventType.MOUSE_BUTTONDOWN:
-            return self.mouse_down(e.x, e.y, e.button)
-        elif e.type == ec.EventType.MOUSE_MOTION:
-            return self.mouse_move(e.x, e.y, e.xr, e.yr)
-        elif e.type == ec.EventType.QUIT:
+        if event.type == ec.EventType.KEY_DOWN:
+            return self.key_down(event.key)
+        elif event.type == ec.EventType.KEY_UP:
+            return self.key_up(event.key)
+        elif event.type == ec.EventType.MOUSE_BUTTONUP:
+            return self.mouse_up(event.x, event.y, event.button)
+        elif event.type == ec.EventType.MOUSE_BUTTONDOWN:
+            return self.mouse_down(event.x, event.y, event.button)
+        elif event.type == ec.EventType.MOUSE_MOTION:
+            return self.mouse_move(event.x, event.y, event.xr, event.yr)
+        elif event.type == ec.EventType.QUIT:
             return self.quit()
 
         return False

@@ -350,7 +350,7 @@ class VulkContext():
             enabledLayerCount=len(layers),
             ppEnabledLayerNames=layers)
 
-        self.instance = vk.vkCreateInstance(pCreateInfo=instance_create_info)
+        self.instance = vk.vkCreateInstance(instance_create_info, None)
 
     def _create_debug_callback(self):
         '''Create debug callback
@@ -383,8 +383,7 @@ class VulkContext():
             pfnCallback=debug_function)
 
         self.debug_callback = self.pfn['vkCreateDebugReportCallbackEXT'](
-            instance=self.instance,
-            pCreateInfo=debug_create_info)
+            self.instance, debug_create_info, None)
 
     def _create_surface(self, info):
         '''Create Vulkan surface
@@ -395,7 +394,7 @@ class VulkContext():
         '''
         def call_platform(name, surface_create):
             f = vk.vkGetInstanceProcAddr(self.instance, name)
-            return f(instance=self.instance, pCreateInfo=surface_create)
+            return f(self.instance, surface_create, None)
 
         def xlib():
             logger.info("Create XLIB surface")
@@ -549,7 +548,8 @@ class VulkContext():
             pEnabledFeatures=self.physical_device_features
         )
 
-        self.device = vk.vkCreateDevice(self.physical_device, device_create)
+        self.device = vk.vkCreateDevice(self.physical_device, device_create,
+                                        None)
         self.graphic_queue = vk.vkGetDeviceQueue(self.device, graphic_index, 0)
         self.present_queue = vk.vkGetDeviceQueue(self.device, present_index, 0)
         self.queue_family_indices = {'graphic': graphic_index,
@@ -641,7 +641,7 @@ class VulkContext():
             preTransform=surface_capabilities.currentTransform)
 
         self.swapchain = self.pfn['vkCreateSwapchainKHR'](
-            self.device, swapchain_create)
+            self.device, swapchain_create, None)
         self.width = extent.width
         self.height = extent.height
         self.swapchain_format = surface_format.format
