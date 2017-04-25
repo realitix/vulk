@@ -2315,7 +2315,7 @@ class Sampler():
         Args:
             context (VulkContext): Context containing device
         """
-        vk.vkDestroySampler(context.device, self.sampler)
+        vk.vkDestroySampler(context.device, self.sampler, None)
 
 
 class Semaphore():

@@ -42,7 +42,7 @@ class RawTexture():
         self.set_view(context)
         self.set_sampler(context)
 
-    def init_bitmap(self):
+    def init_bitmap(self, **kwargs):
         '''Return the numpy array containing bitmap'''
         _, _, pixel_size = vc.format_info(self.format)
         return np.zeros(self.width*self.height*pixel_size, dtype=np.uint8)

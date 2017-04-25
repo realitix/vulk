@@ -97,14 +97,7 @@ class MouseMotionEvent(BaseEvent):
 
 
 class QuitEvent(BaseEvent):
-    def __init__(self, event):
-        '''Create quit event from `event`
-
-        *Parameters:*
-
-        - `event`: `SDL_QuitEvent`
-        '''
-        super().__init__(event)
+    pass
 
 
 map_sdl_vulk = {

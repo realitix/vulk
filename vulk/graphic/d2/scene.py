@@ -215,9 +215,6 @@ class Image(Widget):
 
 class Block(Widget):
     """Widget using the shader 'block' with allow lot of customization"""
-    def __init__(self, parent, *args, **kwargs):
-        super().__init__(parent, *args, **kwargs)
-
     def render(self, spritebatch):
         c = self.color_abs
         spritebatch.draw(self.texture_region.texture, self.shape.x,
@@ -452,12 +449,6 @@ class Sequence(Composite):
 
 
 class Parallel(Composite):
-    def __init__(self, actions):
-        """
-        actions: list of Action
-        """
-        super().__init__(actions)
-
     def init(self, widget):
         super().init(widget)
 

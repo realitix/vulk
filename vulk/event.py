@@ -228,19 +228,27 @@ class CallbackEventListener(BaseEventListener):
         super().__init__()
 
     @wrap_callback
-    def key_down(self, *args):
+    def key_down(self, keycode):
         pass
 
     @wrap_callback
-    def key_up(self, *args):
+    def key_up(self, keycode):
         pass
 
     @wrap_callback
-    def mouse_drag(self, *args):
+    def mouse_drag(self, x, y, xr, yr, button):
         pass
 
     @wrap_callback
-    def mouse_move(self, *args):
+    def mouse_down(self, x, y, button):
+        pass
+
+    @wrap_callback
+    def mouse_up(self, x, y, button):
+        pass
+
+    @wrap_callback
+    def mouse_move(self, x, y, xr, yr):
         pass
 
     @wrap_callback
