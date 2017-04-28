@@ -39,6 +39,10 @@ class RawTexture():
         # Init view and sampler
         self.view = None
         self.sampler = None
+        self.init(context)
+
+    def init(self, context):
+        """Init view and sampler"""
         self.set_view(context)
         self.set_sampler(context)
 
@@ -49,42 +53,48 @@ class RawTexture():
         return np.zeros(self.width*self.height*pixel_size, dtype=np.uint8)
 
     def set_view(self, context):
-        '''
-        Allow to customize the texture view
+        """Set texture view
 
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        '''
+        Args:
+            context (VulkContext)
+        """
         texture_range = vo.ImageSubresourceRange(
             vc.ImageAspect.COLOR, 0, 1, 0, 1)
         self.view = vo.ImageView(
             context, self.texture.final_image,
             vc.ImageViewType.TYPE_2D, self.format, texture_range)
 
-    def set_sampler(self, context, mag_filter=vc.Filter.LINEAR,
-                    min_filter=vc.Filter.LINEAR,
+    def set_sampler(self, context, mag_filter=vc.Filter.NEAREST,
+                    min_filter=vc.Filter.NEAREST,
+                    mipmap_mode=vc.SamplerMipmapMode.NEAREST,
                     address_mode_u=vc.SamplerAddressMode.REPEAT,
                     address_mode_v=vc.SamplerAddressMode.REPEAT,
-                    anisotropy_enable=True, max_anisotropy=16):
-        '''
-        Allow to customize the texture sampler
+                    address_mode_w=vc.SamplerAddressMode.REPEAT,
+                    anisotropy_enable=False, max_anisotropy=16):
+        """Set the texture sampler
 
-        *Parameters:*
+        By default, sampler is configured for the best performance.
+        If you want better quality, you must enable manually bilinear,
+        trilinear or anisotropic filtering.
 
-        - `context`: `VulkContext`
-        - `mag_filter`: `Filter` vulk constant
-        - `min_filter`: `Filter` vulk constant
-        - `address_mode_u`: `SamplerAddressMode` vulk constant
-        - `address_mode_v`: `SamplerAddressMode` vulk constant
-        '''
+        Args:
+            context (VulkContext): Context
+            mag_filter (Filter): Magnification filter to apply to lookups
+            min_filter (Filter): Minification filter to apply to lookups
+            mipmap_mode (SamplerMipmapMode): Mipmap filter to apply to lookups
+            address_mode_u (SamplerAddressMode):
+            address_mode_v (SamplerAddressMode):
+            address_mode_w (SamplerAddressMode):
+            anisotropy_enable (bool): Whether to enable anisotropy
+            max_anisotropy (int): Anisotropy value clamp
+        """
         if self.sampler:
             self.sampler.destroy(context)
 
         self.sampler = vo.Sampler(
-            context, mag_filter, min_filter, vc.SamplerMipmapMode.LINEAR,
-            address_mode_u, address_mode_v, vc.SamplerAddressMode.REPEAT,
-            0, anisotropy_enable, max_anisotropy, False, vc.CompareOp.ALWAYS,
+            context, mag_filter, min_filter, mipmap_mode,
+            address_mode_u, address_mode_v, address_mode_w, 0,
+            anisotropy_enable, max_anisotropy, False, vc.CompareOp.ALWAYS,
             0, 0, vc.BorderColor.INT_OPAQUE_BLACK, False)
 
     def upload(self, context):
@@ -109,15 +119,16 @@ class BinaryTexture(RawTexture):
 
     def __init__(self, context, width, height, texture_format, raw_bitmap,
                  *args, **kwargs):
-        '''
-        *Parameter:*
+        """
+        Args:
+            context (VulkContext)
+            width (int): Texture width
+            height (int): Texture height
+            texture_format (Format): Texture format
+            raw_bitmap (buffer): Bitmap buffer
+        """
+        self.raw_bitmap = raw_bitmap
 
-        - `context`: `VulkContext`
-        - `width`: Width of the texture
-        - `height`: Height of the texture
-        - `texture_format`: `Format` of the vulkan texture
-        - `raw_bitmap`: Buffer to a bitmap
-        '''
         # Create all the components by calling parent init
         super().__init__(context, width, height, texture_format,
                          raw_bitmap=raw_bitmap, *args, **kwargs)

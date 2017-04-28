@@ -634,32 +634,28 @@ WriteDescriptorSet.__doc__ = '''
 # CLASSES
 # ----------
 class Buffer():
-    '''
-    `Buffer` wrap a `VkBuffer` and a `VkMemory`
-    '''
+    """`Buffer` wrap a `VkBuffer` and a `VkMemory`"""
 
     def __init__(self, context, flags, size, usage, sharing_mode,
                  queue_families, memory_properties):
-        '''Create a new buffer
+        """Create a new buffer
 
         Creating a buffer is made of several steps:
+            - Create the buffer
+            - Allocate the memory
+            - Bind the memory to the buffer
 
-        - Create the buffer
-        - Allocate the memory
-        - Bind the memory to the buffer
-
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        - `flags`: `BufferCreate` vulk constant
-        - `size`: Buffer size in bytes
-        - `usage`: `BufferUsage` vulk constant
-        - `sharing_mode`: `SharingMode` vulk constant
-        - `queue_families`: List of queue families accessing this image
-                            (ignored if sharingMode is not
-                            `CONCURRENT`) (can be [])
-        - `memory_properties`: `MemoryProperty` vulk constant
-        '''
+        Args:
+            context (VulkContext)
+            flags (BufferCreate): Set sparse properties
+            size(int): Buffer size in bytes
+            usage (BufferUsage): All usages available for this buffer
+            sharing_mode (SharingMode): Shared between queues
+            queue_families (list): List of queue families accessing this
+                                   buffer (ignored if sharingMode is not
+                                   `CONCURRENT` - can be [])
+            memory_properties (MemoryProperty): Type of memory for this buffer
+        """
         self.memory_properties = memory_properties.value
         self.size = size
 
@@ -697,18 +693,17 @@ class Buffer():
         vk.vkBindBufferMemory(context.device, self.buffer, self.memory, 0)
 
     def copy_to(self, cmd, dst_buffer):
-        '''
-        Copy this buffer to the destination buffer.
+        """Copy this buffer to the destination buffer
+
         Commands to copy are registered in the commandbuffer but it's up to
         you to start and submit the command buffer to the execution queue.
 
-        *Parameters:*
-
-        - `cmd`: `CommandBufferRegister` used to register commands
-        - `dst_buffer`: Destination `Buffer`
+        Args:
+            cmd (CommandBufferRegister): used to register commands
+            dst_buffer (Buffer): Destination buffer
 
         **Note: Buffers must have the same size**
-        '''
+        """
         if self.size != dst_buffer.size:
             msg = "Buffers must have the same size"
             logger.error(msg)
@@ -721,6 +716,41 @@ class Buffer():
         )
 
         cmd.copy_buffer(self, dst_buffer, [region])
+
+    def copy_to_image(self, cmd, dst_image, mip_level):
+        """Copy this buffer to the destination image
+
+        Commands to copy are registered in the commandbuffer but it's up to
+        you to start and submit the command buffer to the execution queue.
+
+        Args:
+            cmd (CommandBufferRegister): used to register commands
+            dst_image (Image): Destination image
+            mip_level (int): Image mip number
+
+        **Note: Layout of destination image must be `TRANSFERT_DST_OPTIMAL`.
+                It's up to you.**
+        """
+        subresource = vk.VkImageSubresourceLayers(
+            aspectMask=vc.ImageAspect.COLOR,
+            baseArrayLayer=0,
+            mipLevel=mip_level,
+            layerCount=1
+        )
+        extent = vk.VkExtent3D(width=dst_image.width, height=dst_image.height,
+                               depth=dst_image.depth)
+        offset = vk.VkOffset3D(x=0, y=0, z=0)
+        region = vk.VkBufferImageCopy(
+            bufferOffset=0,
+            bufferRowLength=0,
+            bufferImageHeight=0,
+            imageSubresource=subresource,
+            imageOffset=offset,
+            imageExtent=extent
+        )
+        dst_layout = vc.ImageLayout.TRANSFER_DST_OPTIMAL
+
+        cmd.copy_buffer_to_image(self, dst_image, dst_layout, [region])
 
     @contextmanager
     def bind(self, context):
@@ -1123,6 +1153,21 @@ class CommandBufferRegister():
             dst_image.image, dst_layout.value, len(regions), regions
         )
 
+    def copy_buffer_to_image(self, src_buffer, dst_image, dst_layout,
+                             regions):
+        """Copy a buffer into an image
+
+        Args:
+            src_buffer (Buffer): Source buffer
+            dst_image (Image): Destination image
+            dst_layout (ImageLayout): Image layout
+            regions (list): List of `VkBufferImageCopy`
+        """
+        vk.vkCmdCopyBufferToImage(
+            self.commandbuffer, src_buffer.buffer, dst_image.image,
+            dst_layout.value, len(regions), regions
+        )
+
     def copy_buffer(self, src_buffer, dst_buffer, regions):
         '''
         Copy data between buffers
@@ -1460,57 +1505,50 @@ class HighPerformanceBuffer():
 
 
 class HighPerformanceImage():
-    '''
+    """
     `HighPerformanceImage` allows to use high performance image to be
     sampled in your shaders.
 
-    To get the maximum performance, we are going to create two `Image`,
-    a staging image which memory can be updated (with our texture) and
-    a final image with very fast memory that we will use in shaders.
-    When we create an image, we first upload the pixels in the staging
-    image and then copy the memory in the final image. Of course, both of
-    the image have the same properties.
-
-    **Note: MipMap generation is done only on the final image, the staging
-            image don't need mipmap.**
-    '''
+    To get the maximum performance, we are going to create a staging buffer
+    which memory can be updated (with our texture) and a final image with very
+    fast memory that we will use in shaders. When we create an image, we first
+    upload the pixels in the staging buffer and then copy the memory in the
+    final image.
+    """
 
     def __init__(self, context, image_type, image_format, width, height,
                  depth, mip_level, layers, samples,
                  sharing_mode=vc.SharingMode.EXCLUSIVE,
                  queue_families=None):
-        '''Create a high performance image
+        """Create a high performance image
 
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        - `image_type`: `ImageType` vulk constant
-        - `image_format`: `Format` of the image
-        - `width`: Image width
-        - `heigth`: Image height
-        - `depth`: Image depth
-        - `mip_level`: Level of mip (`int`) (only for final_image)
-        - `layers`: Number of layers (`int`)
-        - `samples`: This `SampleCount` vulk constant is related
-                     to multisampling
-        - `sharing_mode`: `SharingMode` vulk constant
-        - `queue_families`: List of queue families accessing this image
-                            (ignored if sharingMode is not `CONCURRENT`)
-                            (can be [])
-        '''
+        Args:
+            context (VulkContext)
+            image_type (ImageType): 1D, 2D or 3D
+            image_format (Format)`: RGBA...
+            width (int): Image width
+            heigth (int): Image height
+            depth (int): Image depth
+            mip_level (int): Number of mips (only for final_image)
+            layers (int): Number of layers
+            samples (SampleCount)`: Related to multisampling
+            sharing_mode (SharingMode): Shared between queues or exclusive
+            queue_families (list)`: List of queue families accessing this image
+                                    (ignored if sharingMode is not
+                                    `CONCURRENT`, can be [])
+        """
         if not queue_families:
             queue_families = []
 
-        # Miplevel is applied automatically on final image if > 1
         self.mip_level = mip_level
 
-        self.staging_image = Image(
-            context, image_type, image_format, width, height, depth, 1,
-            layers, samples, sharing_mode, queue_families,
-            vc.ImageLayout.PREINITIALIZED, vc.ImageTiling.LINEAR,
-            vc.ImageUsage.TRANSFER_SRC,
+        buffer_size = width * height * depth * vc.format_info(image_format)[2]
+        self.staging_buffer = Buffer(
+            context, vc.BufferCreate.NONE, buffer_size,
+            vc.BufferUsage.TRANSFER_SRC, sharing_mode, queue_families,
             vc.MemoryProperty.HOST_VISIBLE | vc.MemoryProperty.HOST_COHERENT
         )
+
         self.final_image = Image(
             context, image_type, image_format, width, height, depth, mip_level,
             layers, samples, sharing_mode, queue_families,
@@ -1530,17 +1568,6 @@ class HighPerformanceImage():
         commandpool = CommandPool(context,
                                   context.queue_family_indices['graphic'])
 
-        # Transition the staging image to optimal source transfert layout
-        with immediate_buffer(context, commandpool) as cmd:
-            self.staging_image.update_layout(
-                cmd, vc.ImageLayout.PREINITIALIZED,
-                vc.ImageLayout.TRANSFER_SRC_OPTIMAL,
-                vc.PipelineStage.TOP_OF_PIPE,
-                vc.PipelineStage.TOP_OF_PIPE,
-                vc.Access.HOST_WRITE,
-                vc.Access.TRANSFER_READ
-            )
-
         # Transition the final image to optimal destination transfert layout
         with immediate_buffer(context, commandpool) as cmd:
             self.final_image.update_layout(
@@ -1554,7 +1581,7 @@ class HighPerformanceImage():
 
         # Copy staging image into final image
         with immediate_buffer(context, commandpool) as cmd:
-            self.staging_image.copy_to(cmd, self.final_image)
+            self.staging_buffer.copy_to_image(cmd, self.final_image, 0)
 
         # Set the best layout for the final image
         with immediate_buffer(context, commandpool) as cmd:
@@ -1590,7 +1617,7 @@ class HighPerformanceImage():
         - `context`: `VulkContext`
         '''
         try:
-            with self.staging_image.bind(context) as b:
+            with self.staging_buffer.bind(context) as b:
                 yield b
         finally:
             self._finalize(context)
@@ -1737,35 +1764,22 @@ class Image():
         cmd.pipeline_barrier(src_stage, dst_stage, vc.Dependency.NONE,
                              [], [], [barrier])
 
-    def generate_mipmap(self, cmd):
-        '''
-        Generate mipmap of this image based on `self.mip_level`.
-
-        *Parameters:*
-
-        - `cmd`: `CommandBufferRegister` used to register commands
-
-        **Note: TODO about layout**
-        '''
-        pass
-
     def copy_to(self, cmd, dst_image):
-        '''
-        Copy this image to the destination image.
+        """Copy this image to the destination image
+
         Commands to copy are registered in the commandbuffer but it's up to
         you to start and submit the command buffer to the execution queue.
 
-        *Parameters:*
-
-        - `cmd`: `CommandBufferRegister` used to register commands
-        - `dst_image`: Destination `Image`
+        Args:
+            cmd (CommandBufferRegister): Command used to register commands
+            dst_image (Image): Destination image
 
         **Note: Layout of source image must be `TRANSFERT_SRC_OPTIMAL` and
                 layout of destination image must be `TRANSFERT_DST_OPTIMAL`.
                 It's up to you.**
 
         **Warning: Format of both images must be compatible**
-        '''
+        """
         # Copy image
         subresource = vk.VkImageSubresourceLayers(
             aspectMask=vc.ImageAspect.COLOR,
@@ -2306,8 +2320,8 @@ class Sampler():
             unnormalizedCoordinates=btov(unnormalized_coordinates)
         )
 
-        self.sampler = vk.vkCreateSampler(context.device, sampler_create,
-                                          None)
+        self.sampler = vk.vkCreateSampler(
+            context.device, sampler_create, None)
 
     def destroy(self, context):
         """Destroy sampler
