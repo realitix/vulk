@@ -2,51 +2,54 @@
 This module allows to load texture and to sample from it
 '''
 import numpy as np
-from vulkbare import load_image
+from vulkbare import load_image, resize_image
 
 from vulk import vulkanobject as vo
 from vulk import vulkanconstant as vc
+from vulk.util import mipmap_size, mipmap_levels
 
 
 class RawTexture():
-    '''A Raw texture is not initialized with an image file but can be filled
-    manually'''
+    """A Raw texture is not initialized with an image file but can be filled
+    manually"""
 
-    def __init__(self, context, width, height, texture_format,
-                 *args, **kwargs):
-        '''
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        - `width`: Width of the texture
-        - `height`: Height of the texture
-        - `texture_format`: `Format` of the vulkan texture
-
-        **Note: You can use *args and **kwargs to pass data in `init_bitmap`
-                but you must subclass `RawTexture`**
-        '''
-
+    def __init__(self, context, width, height, texture_format, mip_levels=1):
+        """
+        Args:
+            context (VulkContext)
+            width (int): Width of the texture
+            height (int): Height of the texture
+            texture_format (Format): Format of vulkan texture
+            mip_levels (int): Number of mipmaps
+        """
         self.width = width
         self.height = height
         self.format = texture_format
-        self.texture = vo.HighPerformanceImage(
-            context, vc.ImageType.TYPE_2D, self.format, self.width,
-            self.height, 1, 1, 1, vc.SampleCount.COUNT_1)
+        self.mip_levels = mip_levels or mipmap_levels(width, height)
+        self.texture = self.init_texture(context, self.mip_levels)
 
         # Init bitmap
-        self.bitmap = self.init_bitmap(*args, **kwargs)
+        self.bitmap = self.init_bitmap()
 
         # Init view and sampler
         self.view = None
-        self.sampler = None
-        self.init(context)
+        self.init_view(context)
 
-    def init(self, context):
-        """Init view and sampler"""
+        self.sampler = None
+        self.init_sampler(context)
+
+    def init_texture(self, context, mip_levels):
+        return vo.HighPerformanceImage(
+            context, vc.ImageType.TYPE_2D, self.format, self.width,
+            self.height, 1, mip_levels, 1, vc.SampleCount.COUNT_1)
+
+    def init_view(self, context):
         self.set_view(context)
+
+    def init_sampler(self, context):
         self.set_sampler(context)
 
-    def init_bitmap(self, **kwargs):
+    def init_bitmap(self):
         # pylint: disable=unused-argument
         '''Return the numpy array containing bitmap'''
         _, _, pixel_size = vc.format_info(self.format)
@@ -98,27 +101,22 @@ class RawTexture():
             0, 0, vc.BorderColor.INT_OPAQUE_BLACK, False)
 
     def upload(self, context):
-        '''Upload bitmap into Vulkan memory
+        """Make texture accessible for shader
 
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        '''
-        with self.texture.bind(context) as t:
-            np.copyto(np.array(t, copy=False),
-                      self.bitmap,
-                      casting='no')
+        If this function is not called, the texture can't be used.
+        When all your buffers are uploaded, call this function
+        """
+        self.texture.finalize(context)
 
 
 class BinaryTexture(RawTexture):
-    '''
-    RawTexture with provided bitmap buffer.
+    """RawTexture with provided bitmap buffer.
 
     **Warning: You are responsible of the bitmap buffer**
-    '''
+    """
 
     def __init__(self, context, width, height, texture_format, raw_bitmap,
-                 *args, **kwargs):
+                 mip_levels=1):
         """
         Args:
             context (VulkContext)
@@ -126,33 +124,75 @@ class BinaryTexture(RawTexture):
             height (int): Texture height
             texture_format (Format): Texture format
             raw_bitmap (buffer): Bitmap buffer
+            mip_levels (int): Number of mipmaps to generate (0 = until 1x1)
         """
         self.raw_bitmap = raw_bitmap
 
         # Create all the components by calling parent init
         super().__init__(context, width, height, texture_format,
-                         raw_bitmap=raw_bitmap, *args, **kwargs)
+                         mip_levels=mip_levels)
 
         # Upload data
+        self.generate_mipmaps(context)
         self.upload(context)
 
-    def init_bitmap(self, **kwargs):
+    def init_bitmap(self):
         '''Initialize bitmap array with `raw_bitmap`'''
-        return np.array(kwargs['raw_bitmap'], dtype=np.uint8, copy=False)
+        return np.array(self.raw_bitmap, dtype=np.uint8, copy=False)
+
+    def upload_buffer(self, context, mip_level):
+        """Upload bitmap into Vulkan memory
+
+        Args:
+            context (VulkContext)
+            mip_level (int): Level of mip
+        """
+        base_width = self.width
+        base_height = self.height
+        components = vc.format_info(self.format)[1]
+        width, height = mipmap_size(base_width, base_height, mip_level)
+
+        if width == base_width and height == base_height:
+            upload_bitmap = self.bitmap
+        else:
+            upload_raw_bitmap = resize_image(
+                self.raw_bitmap, base_width, base_height, components,
+                width, height
+            )
+            upload_bitmap = np.array(upload_raw_bitmap, dtype=np.uint8,
+                                     copy=False)
+
+        with self.texture.bind_buffer(context, mip_level) as buf:
+            np.copyto(np.array(buf, copy=False),
+                      upload_bitmap,
+                      casting='no')
+
+    def generate_mipmaps(self, context):
+        """Generate mipmap automatically
+
+        This method generates mipmap on processor and then upload it on GPU.
+        This method is heavy, use it with care. You shouldn't need to call it
+        several times unless raw_bitmap is modified.
+
+        You must call `upload` to update the texture in Graphic Card.
+
+        Args:
+            context (VulkContext)
+        """
+        for i in range(self.mip_levels):
+            self.upload_buffer(context, i)
 
 
 class Texture(BinaryTexture):
-    '''
-    BinaryTexture with file managing.
-    '''
+    """BinaryTexture with file managing"""
 
-    def __init__(self, context, path_file, *args, **kwargs):
-        '''
-        *Parameter:*
-
-        - `context`: `VulkContext`
-        - `path_file`: Path to the image to load
-        '''
+    def __init__(self, context, path_file, mip_levels=1):
+        """
+        Args:
+            context (VulkContext)
+            path_file (str): Path to the image to load
+            mip_levels (int): Number of mip level (0=max)
+        """
         # Load bitmap
         with open(path_file, 'rb') as f:
             raw_bitmap, width, height, components = load_image(f.read())
@@ -160,7 +200,7 @@ class Texture(BinaryTexture):
 
         # Create all the components by calling parent init
         super().__init__(context, width, height, texture_format, raw_bitmap,
-                         *args, **kwargs)
+                         mip_levels=mip_levels)
 
     @staticmethod
     def components_to_format(components):
@@ -175,6 +215,28 @@ class Texture(BinaryTexture):
 
         return [vc.Format.NONE, vc.Format.R8_UNORM, vc.Format.R8G8_UNORM,
                 vc.Format.R8G8B8_UNORM, vc.Format.R8G8B8A8_UNORM][components]
+
+
+class HighQualityTexture(Texture):
+    """Texture with best quality
+
+    To get best quality, we generate automatically all mipmaps and
+    set filter to trilinear or anisotropy filtering.
+    It's really just a helper class.
+    """
+
+    def __init__(self, context, path_file, anisotropy=0):
+        self.anisotropy = anisotropy
+        # Set mipmap_levels to 0 to generate all mipmaps
+        super().__init__(context, path_file, 0)
+
+    def init_sampler(self, context):
+        anisotropy_enable = self.anisotropy > 0
+        self.set_sampler(context, mag_filter=vc.Filter.LINEAR,
+                         min_filter=vc.Filter.LINEAR,
+                         mipmap_mode=vc.SamplerMipmapMode.LINEAR,
+                         anisotropy_enable=anisotropy_enable,
+                         max_anisotropy=self.anisotropy)
 
 
 class TextureRegion():

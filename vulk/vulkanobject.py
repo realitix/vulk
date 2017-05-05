@@ -26,6 +26,7 @@ import vulkan as vk  # pylint: disable=import-error
 
 from vulk.exception import VulkError
 from vulk import vulkanconstant as vc
+from vulk.util import mipmap_size, next_multiple
 
 logger = logging.getLogger()
 
@@ -717,7 +718,7 @@ class Buffer():
 
         cmd.copy_buffer(self, dst_buffer, [region])
 
-    def copy_to_image(self, cmd, dst_image, mip_level):
+    def copy_to_image(self, cmd, dst_image, mip_infos):
         """Copy this buffer to the destination image
 
         Commands to copy are registered in the commandbuffer but it's up to
@@ -726,46 +727,54 @@ class Buffer():
         Args:
             cmd (CommandBufferRegister): used to register commands
             dst_image (Image): Destination image
-            mip_level (int): Image mip number
+            mip_infos (list): List containing for each mipmap a dict like
+                              {'offset':, 'size':, 'width':, 'height':}
 
         **Note: Layout of destination image must be `TRANSFERT_DST_OPTIMAL`.
                 It's up to you.**
         """
-        subresource = vk.VkImageSubresourceLayers(
-            aspectMask=vc.ImageAspect.COLOR,
-            baseArrayLayer=0,
-            mipLevel=mip_level,
-            layerCount=1
-        )
-        extent = vk.VkExtent3D(width=dst_image.width, height=dst_image.height,
-                               depth=dst_image.depth)
-        offset = vk.VkOffset3D(x=0, y=0, z=0)
-        region = vk.VkBufferImageCopy(
-            bufferOffset=0,
-            bufferRowLength=0,
-            bufferImageHeight=0,
-            imageSubresource=subresource,
-            imageOffset=offset,
-            imageExtent=extent
-        )
+        regions = []
+
+        for mip_level, info in enumerate(mip_infos):
+            subresource = vk.VkImageSubresourceLayers(
+                aspectMask=vc.ImageAspect.COLOR,
+                baseArrayLayer=0,
+                mipLevel=mip_level,
+                layerCount=1
+            )
+            extent = vk.VkExtent3D(width=info['width'], height=info['height'],
+                                   depth=dst_image.depth)
+            offset = vk.VkOffset3D(x=0, y=0, z=0)
+            region = vk.VkBufferImageCopy(
+                bufferOffset=info['offset'],
+                bufferRowLength=0,
+                bufferImageHeight=0,
+                imageSubresource=subresource,
+                imageOffset=offset,
+                imageExtent=extent
+            )
+            regions.append(region)
+
         dst_layout = vc.ImageLayout.TRANSFER_DST_OPTIMAL
 
-        cmd.copy_buffer_to_image(self, dst_image, dst_layout, [region])
+        cmd.copy_buffer_to_image(self, dst_image, dst_layout, regions)
 
     @contextmanager
-    def bind(self, context):
-        '''
-        Map this buffer to upload data in it.
+    def bind(self, context, offset=0, size=0):
+        """Map this buffer to upload data in it
+
         This function is a context manager and must be called with `with`.
         It return a python buffer and let you do what you want with it,
         be careful!
 
-        *Parameters:*
-
-        - `context`: The `VulkContext`
+        Args:
+            context (VulkContext)
+            offset (int): Where to begin uploading in buffer
+            size (int): Max size to write into the buffer (0 = all)
 
         **Warning: Buffer memory must be host visible**
-        '''
+        """
+        size = size or self.size
         compatible_memories = {vk.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
                                vk.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
                                vk.VK_MEMORY_PROPERTY_HOST_CACHED_BIT}
@@ -775,8 +784,8 @@ class Buffer():
             raise VulkError(msg)
 
         try:
-            data = vk.vkMapMemory(context.device, self.memory, 0,
-                                  self.size, 0)
+            data = vk.vkMapMemory(context.device, self.memory, offset,
+                                  size, 0)
             yield data
         finally:
             vk.vkUnmapMemory(context.device, self.memory)
@@ -1517,7 +1526,7 @@ class HighPerformanceImage():
     """
 
     def __init__(self, context, image_type, image_format, width, height,
-                 depth, mip_level, layers, samples,
+                 depth, mip_levels, layers, samples,
                  sharing_mode=vc.SharingMode.EXCLUSIVE,
                  queue_families=None):
         """Create a high performance image
@@ -1529,7 +1538,7 @@ class HighPerformanceImage():
             width (int): Image width
             heigth (int): Image height
             depth (int): Image depth
-            mip_level (int): Number of mips (only for final_image)
+            mip_levels (int): Number of mips (only for final_image)
             layers (int): Number of layers
             samples (SampleCount)`: Related to multisampling
             sharing_mode (SharingMode): Shared between queues or exclusive
@@ -1540,9 +1549,10 @@ class HighPerformanceImage():
         if not queue_families:
             queue_families = []
 
-        self.mip_level = mip_level
+        self.mip_levels = mip_levels
+        self.buffer_mipmaps, buffer_size = (
+            self._get_buffer_infos(width, height, image_format))
 
-        buffer_size = width * height * depth * vc.format_info(image_format)[2]
         self.staging_buffer = Buffer(
             context, vc.BufferCreate.NONE, buffer_size,
             vc.BufferUsage.TRANSFER_SRC, sharing_mode, queue_families,
@@ -1550,25 +1560,51 @@ class HighPerformanceImage():
         )
 
         self.final_image = Image(
-            context, image_type, image_format, width, height, depth, mip_level,
-            layers, samples, sharing_mode, queue_families,
+            context, image_type, image_format, width, height, depth,
+            mip_levels, layers, samples, sharing_mode, queue_families,
             vc.ImageLayout.PREINITIALIZED, vc.ImageTiling.OPTIMAL,
             vc.ImageUsage.TRANSFER_DST | vc.ImageUsage.SAMPLED,
             vc.MemoryProperty.DEVICE_LOCAL
         )
 
+    def _get_buffer_infos(self, width, height, image_format):
+        """Get buffer infos for construction
+
+        Args:
+            width (int): Image width
+            height (int): Image height
+            image_format (Format): Format of image
+        """
+        mapping = []
+        offset = 0
+        total_size = 0
+        components = vc.format_info(image_format)[1]
+
+        for mip_level in range(self.mip_levels):
+            w, h = mipmap_size(width, height, mip_level)
+            size = w * h * components
+
+            mapping.append({'offset': offset, 'size': size,
+                            'width': w, 'height': h})
+
+            tmp_offset = offset + size
+            offset = next_multiple(tmp_offset, 4 * components)
+            diff_offset = offset - tmp_offset
+
+            total_size += size + diff_offset
+
+        return mapping, total_size
+
     def _copy_staging_to_final(self, context):
-        '''
-        Prepare and copy the staging image to the final image.
+        """Prepare and copy staging buffer to final image
 
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        '''
+        Args:
+            context (VulkContext)
+        """
         commandpool = CommandPool(context,
                                   context.queue_family_indices['graphic'])
 
-        # Transition the final image to optimal destination transfert layout
+        # Transition final image to optimal destination transfert layout
         with immediate_buffer(context, commandpool) as cmd:
             self.final_image.update_layout(
                 cmd, vc.ImageLayout.PREINITIALIZED,
@@ -1576,12 +1612,14 @@ class HighPerformanceImage():
                 vc.PipelineStage.TOP_OF_PIPE,
                 vc.PipelineStage.TOP_OF_PIPE,
                 vc.Access.HOST_WRITE,
-                vc.Access.TRANSFER_WRITE
+                vc.Access.TRANSFER_WRITE,
+                mip_levels=self.mip_levels
             )
 
-        # Copy staging image into final image
+        # Copy staging buffer into final image
         with immediate_buffer(context, commandpool) as cmd:
-            self.staging_buffer.copy_to_image(cmd, self.final_image, 0)
+            self.staging_buffer.copy_to_image(cmd, self.final_image,
+                                              self.buffer_mipmaps)
 
         # Set the best layout for the final image
         with immediate_buffer(context, commandpool) as cmd:
@@ -1591,36 +1629,38 @@ class HighPerformanceImage():
                 vc.PipelineStage.TOP_OF_PIPE,
                 vc.PipelineStage.TOP_OF_PIPE,
                 vc.Access.TRANSFER_WRITE,
-                vc.Access.SHADER_READ
+                vc.Access.SHADER_READ,
+                mip_levels=self.mip_levels
             )
 
-    def _finalize(self, context):
-        '''
-        Prepare and copy the staging image to the final image.
-        Generate Mipmap if needed.
+    def finalize(self, context):
+        """Copy staging buffer to final image
 
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        '''
+        Args:
+            context (VulkContext)
+        """
         self._copy_staging_to_final(context)
 
     @contextmanager
-    def bind(self, context):
-        '''Bind image for writing
+    def bind_buffer(self, context, mip_level):
+        """Bind staging buffer
 
-        It calls `bind` method of the staging image and copy the image
-        when the contextmanager is released. Must be used with `with`.
+        It calls `bind` method of the staging buffer to allow writing.
 
-        *Parameters:*
+        Args:
+            context (VulkContext)
+            offset (int): Offset in buffer
+            size (int): Bytes to reserve in buffer
+            mip_level (int): Mip level to copy image to
+        """
+        if mip_level > self.mip_levels - 1:
+            raise VulkError("Can't upload more mipmap than possible")
 
-        - `context`: `VulkContext`
-        '''
-        try:
-            with self.staging_buffer.bind(context) as b:
-                yield b
-        finally:
-            self._finalize(context)
+        offset = self.buffer_mipmaps[mip_level]['offset']
+        size = self.buffer_mipmaps[mip_level]['size']
+
+        with self.staging_buffer.bind(context, offset=offset, size=size) as b:
+            yield b
 
 
 class Image():
@@ -1724,27 +1764,29 @@ class Image():
         vk.vkBindImageMemory(context.device, self.image, self.memory, 0)
 
     def update_layout(self, cmd, old_layout, new_layout, src_stage,
-                      dst_stage, src_access, dst_access):
-        '''
-        Update the image layout.
+                      dst_stage, src_access, dst_access, base_mip_level=0,
+                      mip_levels=1):
+        """Update the image layout
+
         Command to update layout are registered in the commandbuffer
         but it's up to you to start and submit the command buffer to
         the execution queue.
 
-        *Parameters:*
-
-        - `cmd`: `CommandBufferRegister` used to register commands
-        - `old_layout`: `ImageLayout` vulk constant
-        - `new_layout`: `ImageLayout` vulk constant
-        - `src_stage`: `PipelineStage` vulk constant
-        - `dst_stage`: `PipelineStage` vulk constant
-        - `src_access`: `Access` vulk constant
-        - `dst_access`: `Access` vulk constant
-        '''
+        Args:
+            cmd (CommandBufferRegister): Register commands
+            old_layout (ImageLayout): Previous layout
+            new_layout (ImageLayout): Next layout
+            src_stage (PipelineStage): Source stage
+            dst_stage (PipelineStage): Destination stage
+            src_access (Access): Source access
+            dst_access (Access): Destination access
+            base_mip_level (int): Starting mip level
+            mip_levels (int): Number of mip levels
+        """
         subresource_range = vk.VkImageSubresourceRange(
             aspectMask=vc.ImageAspect.COLOR,
-            baseMipLevel=0,
-            levelCount=1,
+            baseMipLevel=base_mip_level,
+            levelCount=mip_levels,
             baseArrayLayer=0,
             layerCount=1
         )

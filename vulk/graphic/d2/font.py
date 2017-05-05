@@ -1,6 +1,6 @@
 from path import Path
 
-from vulk.graphic.texture import Texture, TextureRegion
+from vulk.graphic.texture import HighQualityTexture, TextureRegion
 from vulk.graphic.d2.batch import CharBatch
 
 
@@ -30,7 +30,7 @@ class FontData():
         res = {}
         dirpath = self.filepath.parent
         for p in self.raw_data['page']:
-            res[p['id']] = Texture(context, dirpath / p['file'])
+            res[p['id']] = HighQualityTexture(context, dirpath / p['file'])
 
         return res
 
@@ -211,8 +211,8 @@ class TextRenderer():
 
             # Compute position
             char_info = self.fontdata.chars[char]
-            x = current_x + char_info['xoffset'] + kerning
-            y = current_y + char_info['yoffset']
+            x = current_x + (char_info['xoffset'] + kerning) * scale
+            y = current_y + char_info['yoffset'] * scale
 
             # Draw char
             self.batch.draw_char(self.fontdata, char, x, y, r, g, b, a, scale,
