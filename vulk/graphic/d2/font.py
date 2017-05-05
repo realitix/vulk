@@ -219,5 +219,5 @@ class TextRenderer():
                                  scale, rotation)
 
             # Register variable
-            current_x += char_info['xadvance']
+            current_x += char_info['xadvance'] * scale
             previous_char = char
