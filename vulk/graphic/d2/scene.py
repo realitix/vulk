@@ -481,6 +481,67 @@ class MoveBy(TemporalAction):
         return True
 
 
+class RotateTo(TemporalAction):
+    def __init__(self, rotation, duration, interpolation=None):
+        super().__init__(duration, interpolation)
+        self.rotation_src = 0
+        self.rotation_dest = rotation
+        self._dest_init = False
+
+    def init(self, widget):
+        super().init(widget)
+
+        self.rotation_src = widget.rotation
+
+        if widget.parent and not self._dest_init:
+            self._dest_init = True
+            self.rotation_dest += widget.parent.rotation
+
+    def update(self, delta):
+        super().update(delta)
+
+        percent = self.percent()
+        if percent >= 1:
+            return False
+
+        percent = self.interpolation.apply(percent)
+        rotation_current = (self.rotation_src +
+                            (self.rotation_dest - self.rotation_src) *
+                            percent)
+        self.widget.rotation = rotation_current
+
+        return True
+
+
+class RotateBy(TemporalAction):
+    def __init__(self, rotation, duration, interpolation=None):
+        super().__init__(duration, interpolation)
+        self.rotation_base = rotation
+        self.rotation_prev = 0
+
+    def init(self, widget):
+        super().init(widget)
+        self.rotation_prev = 0
+
+    def _compute_move(self, percent):
+        rotation_diff = self.rotation_base * percent
+        rotation_res = rotation_diff - self.rotation_prev
+        self.rotation_prev = rotation_diff
+        return rotation_res
+
+    def update(self, delta):
+        super().update(delta)
+
+        percent = self.percent()
+        if percent >= 1:
+            return False
+
+        rotation_rel = self._compute_move(self.interpolation.apply(percent))
+        self.widget.rotation += rotation_rel
+
+        return True
+
+
 class FadeIn(TemporalAction):
     def __init__(self, duration, interpolation=None):
         super().__init__(duration, interpolation)
