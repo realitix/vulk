@@ -1,23 +1,51 @@
 '''This module contains scene related functions and classes'''
 from os import path
+import logging
 
 from vulk import PATH_VULK_SHADER
 from vulk import vulkanconstant as vc
 from vulk import vulkanobject as vo
+from vulk.exception import VulkError
 from vulk.math.shape import Rectangle
 from vulk.math.interpolation import Linear
-from vulk.graphic.d2.batch import SpriteBatch
+from vulk.graphic.d2.batch import SpriteBatch, BlockBatch, BlockProperty
+from vulk.graphic.d2.font import TextRenderer
+
+logger = logging.getLogger()
+
+
+# ----------
+# THEME
+# ----------
+class Theme():
+    """Theme allow to customize Scene
+
+    The theme contains all informations to customize Scene.
+    Font, color...
+    """
+    def __init__(self, fonts=None):
+        """Construct a new theme
+
+        Args:
+            fonts (dict): Mapping between a font name and a `FontData`
+        """
+        self.fonts = fonts or {}
 
 
 # ----------
 # WIDGETS
 # ----------
 class Widget():
+    """Widget is the base of the scene
+
+    All widgets inherit from this class.
+    """
     def __init__(self, parent):
         self.parent = parent
         self.children = []
         self.shape = Rectangle()
         self.color = [1, 1, 1, 1]  # rgba depending on parent color
+        self.rotation = 0
         self.actions = []
 
         # Grid properties
@@ -76,6 +104,17 @@ class Widget():
         self.reshape()
 
     def add_action(self, action):
+        """Add action to the widget
+
+        Actions are executed when you call `update`.
+        Be careful, don't use the same action across several widgets,
+        create a new action each time. Actions are initialized for
+        each widget, if you reuse the same action, it will be initialized
+        two times and the first widget will loose the action
+
+        Args:
+            action (Action): Action to perform
+        """
         action.init(self)
         self.actions.append(action)
 
@@ -166,16 +205,44 @@ class Widget():
 
 class Scene(Widget):
     '''Main 2D Scene'''
-    def __init__(self, context, width, height):
+    def __init__(self, context, width, height, theme, renderers=None):
+        """Construct a new Scene
+
+        Args:
+            context (VulkContext)
+            width (int): Scene width
+            height (int): Scene height
+            theme (Theme): Scene theme
+        """
         super().__init__(None)
 
         self.shape.width = width
         self.shape.height = height
-        self.spritebatch = SpriteBatch(context)
-        self.block_spritebatch = SpriteBatch(
-            context, shaderprogram=self._get_block_shaderprogram(context))
+        self.theme = theme
 
-    def _get_block_shaderprogram(self, context):
+        self.renderers = {
+            'default': SpriteBatch(context),
+            'block': BlockBatch(context)
+        }
+
+        first_font = None
+        for k, v in theme.fonts.items():
+            text_renderer = TextRenderer(context, v)
+            first_font = first_font or text_renderer
+            self.renderers[k] = text_renderer
+
+        if first_font:
+            self.renderers['default_font'] = first_font
+
+    def _get_block_sp(self, context):
+        """Create the `block` shader program
+
+        Args:
+            context (VulkContext)
+
+        Returns:
+            ShaderProgram
+        """
         vs = path.join(PATH_VULK_SHADER, "block.vs.glsl")
         fs = path.join(PATH_VULK_SHADER, "block.fs.glsl")
 
@@ -187,13 +254,32 @@ class Scene(Widget):
         return vo.ShaderProgramGlslFile(context, shaders_mapping)
 
     def render(self, context):
-        self.spritebatch.begin(context)
+        """Render Scene
 
+        For each widget, get renderer and render it.
+
+        Args:
+            context (VulkContext)
+
+        Returns:
+            Sempahore or None if no semaphore
+        """
         widgets = self.collect_children()
+        semaphores = None
         for widget in widgets:
-            widget.render(self.spritebatch)
+            try:
+                renderer = self.renderers[widget.get_renderer_name()]
+            except KeyError:
+                msg = ("Cannot find renderer, have you added "
+                       "the font to the theme ?")
+                logger.critical(msg)
+                raise VulkError(msg)
 
-        return self.spritebatch.end()
+            renderer.begin(context, semaphores)
+            widget.render(renderer)
+            semaphores = [renderer.end()]
+
+        return semaphores[0] if semaphores else None
 
     def update(self, delta):
         widgets = self.collect_children()
@@ -202,9 +288,18 @@ class Scene(Widget):
 
 
 class Image(Widget):
-    def __init__(self, parent, texture_region, *args, **kwargs):
-        super().__init__(parent, *args, **kwargs)
+    def __init__(self, parent, texture_region):
+        """Construct a new Image widget
+
+        Args:
+            parent (Widget): Parent widget (may be a Scene)
+            texture_region (TextureRegion): Region of the texture to draw
+        """
+        super().__init__(parent)
         self.texture_region = texture_region
+
+    def get_renderer_name(self):
+        return 'default'
 
     def render(self, spritebatch):
         c = self.color_abs
@@ -215,11 +310,61 @@ class Image(Widget):
 
 class Block(Widget):
     """Widget using the shader 'block' with allow lot of customization"""
-    def render(self, spritebatch):
+    def __init__(self, parent, border_colors=None, border_widths=None):
+        if not border_colors:
+            border_colors = [[0.]*4]*4
+        if not border_widths:
+            border_widths = [0.]*4
+
+        self.properties = BlockProperty()
+        self.properties.colors = [[1.]*4]*4
+        self.properties.border_colors = border_colors
+        self.properties.border_widths = border_widths
+
+        super().__init__(parent)
+
+    def get_renderer_name(self):
+        return 'block'
+
+    def render(self, blockbatch):
+        self.properties.colors[0][:] = self.color_abs[:]
+        self.properties.colors[1][:] = self.color_abs[:]
+        self.properties.colors[2][:] = self.color_abs[:]
+        self.properties.colors[3][:] = self.color_abs[:]
+        self.properties.width = self.shape.width
+        self.properties.height = self.shape.height
+        self.properties.x = self.shape.x
+        self.properties.y = self.shape.y
+
+        blockbatch.draw(self.properties)
+
+
+class Label(Widget):
+    """Widget used to write text"""
+    def __init__(self, parent, text, font_name='default_font'):
+        """Construct a new label widget
+
+        Args:
+            parent (Widget): Parent widget (may be a Scene)
+            text (str): Text to write
+            font_name (str): Name of the font to use (like set in the theme)
+                             'default_font' equals to the first theme font
+        """
+        super().__init__(parent)
+        self.text = text
+        self.font_name = font_name
+
+    def get_renderer_name(self):
+        return self.font_name
+
+    def render(self, renderer):
+        """
+        Args:
+            renderer (TextRenderer)
+        """
         c = self.color_abs
-        spritebatch.draw(self.texture_region.texture, self.shape.x,
-                         self.shape.y, self.shape.width, self.shape.height,
-                         r=c[0], g=c[1], b=c[2], a=c[3])
+        renderer.draw(self.text, self.shape.x, self.shape.y, 30, r=c[0],
+                      g=c[1], b=c[2], a=c[3], rotation=self.rotation)
 
 
 # ----------
@@ -232,9 +377,6 @@ class Action():
     def init(self, widget):
         """Init action from widget"""
         self.widget = widget
-
-    def unset_widget(self):
-        self.widget = None
 
 
 class TemporalAction(Action):

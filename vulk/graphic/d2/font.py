@@ -168,13 +168,14 @@ class TextRenderer():
         self.fontdata = fontdata
         self.batch = batch
 
-    def begin(self, context):
+    def begin(self, context, semaphores=None):
         """Start rendering
 
         Args:
             context (VulkContext): Context
+            semaphores (list): Semaphore list
         """
-        self.batch.begin(context)
+        self.batch.begin(context, semaphores=semaphores)
 
     def end(self):
         """Stop rendering

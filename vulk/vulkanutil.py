@@ -141,4 +141,9 @@ class CommandBufferSynchronizedPool():
         '''
         del self.semaphores_in[:]
         self.context = None
+
+        # No submission return no semaphore
+        if self.semaphore_id == -1:
+            return None
+
         return self.semaphores[self.semaphore_id]
