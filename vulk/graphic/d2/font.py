@@ -1,4 +1,5 @@
 from path import Path
+from math import cos, sin
 
 from vulk.graphic.texture import HighQualityTexture, TextureRegion
 from vulk.graphic.d2.batch import CharBatch
@@ -199,8 +200,10 @@ class TextRenderer():
             a (float): Alpha channel
             rotation (float): Rotation in radian (clockwise)
         """
-        current_x = x
-        current_y = y
+        x_abs = x
+        y_abs = y
+        x_current = 0
+        y_current = 0
         scale = size / self.fontdata.raw_data['info']['size']
         previous_char = None
 
@@ -212,13 +215,22 @@ class TextRenderer():
 
             # Compute position
             char_info = self.fontdata.chars[char]
-            x = current_x + (char_info['xoffset'] + kerning) * scale
-            y = current_y + char_info['yoffset'] * scale
+            x = x_current + (char_info['xoffset'] + kerning) * scale
+            y = y_current + char_info['yoffset'] * scale
+
+            # Compute rotation
+            t = rotation
+            x2 = x * cos(t) - y * sin(t)
+            y2 = x * sin(t) + y * cos(t)
+
+            # Add absolution position
+            x2 += x_abs
+            y2 += y_abs
 
             # Draw char
-            self.batch.draw_char(self.fontdata, char, x, y, r, g, b, a, scale,
-                                 scale, rotation)
+            self.batch.draw_char(self.fontdata, char, x2, y2, r, g, b, a,
+                                 scale, scale, t)
 
             # Register variable
-            current_x += char_info['xadvance'] * scale
+            x_current += char_info['xadvance'] * scale
             previous_char = char

@@ -335,6 +335,7 @@ class Block(Widget):
         self.properties.height = self.shape.height
         self.properties.x = self.shape.x
         self.properties.y = self.shape.y
+        self.properties.rotation = self.rotation
 
         blockbatch.draw(self.properties)
 

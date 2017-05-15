@@ -667,13 +667,13 @@ class SpriteBatch(BaseBatch):
         return semaphore
 
     def flush(self):
-        '''Flush all draws to graphic card.
-        Currently, `flush` register and submit command.
+        """Flush all draws to graphic card
 
-        *Parameters:*
+        Currently, flush register and submit command.
 
-        - `context`: `VulkContext`
-        '''
+        Args:
+            context (VulkContext)
+        """
         if not self.idx:
             return
 
