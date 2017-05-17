@@ -1,5 +1,6 @@
 '''This module contains scene related functions and classes'''
 from os import path
+from abc import ABC, abstractmethod
 import logging
 
 from vulk import PATH_VULK_SHADER
@@ -35,7 +36,7 @@ class Theme():
 # ----------
 # WIDGETS
 # ----------
-class Widget():
+class BaseWidget():
     """Widget is the base of the scene
 
     All widgets inherit from this class.
@@ -203,7 +204,18 @@ class Widget():
                 self.shape.y + grid_position[1] * self.row_width)
 
 
-class Scene(Widget):
+class Widget(BaseWidget, ABC):
+    @abstractmethod
+    def render(self, renderer):
+        """Render widget
+
+        Args:
+            renderer (object): Renderer compatible with this widget
+        """
+        pass
+
+
+class Scene(BaseWidget):
     '''Main 2D Scene'''
     def __init__(self, context, width, height, theme, renderers=None):
         """Construct a new Scene
@@ -215,16 +227,17 @@ class Scene(Widget):
             theme (Theme): Scene theme
         """
         super().__init__(None)
-
         self.shape.width = width
         self.shape.height = height
         self.theme = theme
 
+        # Default renderers
         self.renderers = {
             'default': SpriteBatch(context),
             'block': BlockBatch(context)
         }
 
+        # Font renderers
         first_font = None
         for k, v in theme.fonts.items():
             text_renderer = TextRenderer(context, v)
@@ -233,6 +246,10 @@ class Scene(Widget):
 
         if first_font:
             self.renderers['default_font'] = first_font
+
+        # Custom renderers
+        if renderers:
+            self.renderers.update(renderers)
 
     def _get_block_sp(self, context):
         """Create the `block` shader program
@@ -262,7 +279,7 @@ class Scene(Widget):
             context (VulkContext)
 
         Returns:
-            Sempahore or None if no semaphore
+            Semaphore or None if no semaphore
         """
         widgets = self.collect_children()
         semaphores = None
@@ -287,6 +304,58 @@ class Scene(Widget):
             widget.update(delta)
 
 
+class BatchedScene(Scene):
+    """Faster Scene but with limitations
+
+    If your scene doesnét contain overlapping elements,
+    this scene will be faster.
+    """
+    def render(self, context):
+        """Render Scene
+
+        Collect renderers and then display all widget by renderer.
+        Renderers are in this order:
+            - Block renderer
+            - Sprite renderer
+            - Text renderer
+
+        Args:
+            context (VulkContext)
+
+        Returns:
+            Semaphore or None if no semaphore
+        """
+        mapping = self.collect_widgets_to_render()
+        semaphore = None
+        for renderer, widgets in mapping.items():
+            semaphores = [semaphore] if semaphore else []
+            renderer.begin(context, semaphores)
+            for widget in widgets:
+                widget.render(renderer)
+            semaphore = renderer.end()
+
+        return semaphore if semaphore else None
+
+    def collect_widgets_to_render(self):
+        """Return a mapping used to render widgets
+
+        Returns:
+            dict[renderer: list[widgets]]
+        """
+        mapping = {}
+
+        widgets = self.collect_children()
+        for renderer_name, renderer in self.renderers.items():
+            for widget in widgets:
+                if widget.get_renderer_name() == renderer_name:
+                    if not mapping.get(renderer):
+                        mapping[renderer] = []
+
+                    mapping[renderer].append(widget)
+
+        return mapping
+
+
 class Image(Widget):
     def __init__(self, parent, texture_region):
         """Construct a new Image widget
@@ -301,11 +370,15 @@ class Image(Widget):
     def get_renderer_name(self):
         return 'default'
 
-    def render(self, spritebatch):
+    def render(self, renderer):
+        """
+        Args:
+            renderer (SpriteBatch)
+        """
         c = self.color_abs
-        spritebatch.draw(self.texture_region.texture, self.shape.x,
-                         self.shape.y, self.shape.width, self.shape.height,
-                         r=c[0], g=c[1], b=c[2], a=c[3])
+        renderer.draw(self.texture_region.texture, self.shape.x,
+                      self.shape.y, self.shape.width, self.shape.height,
+                      r=c[0], g=c[1], b=c[2], a=c[3])
 
 
 class Block(Widget):
@@ -326,7 +399,11 @@ class Block(Widget):
     def get_renderer_name(self):
         return 'block'
 
-    def render(self, blockbatch):
+    def render(self, renderer):
+        """
+        Args:
+            renderer (BlockBatch)
+        """
         self.properties.colors[0][:] = self.color_abs[:]
         self.properties.colors[1][:] = self.color_abs[:]
         self.properties.colors[2][:] = self.color_abs[:]
@@ -337,7 +414,7 @@ class Block(Widget):
         self.properties.y = self.shape.y
         self.properties.rotation = self.rotation
 
-        blockbatch.draw(self.properties)
+        renderer.draw(self.properties)
 
 
 class Label(Widget):
