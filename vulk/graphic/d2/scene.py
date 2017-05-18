@@ -16,24 +16,6 @@ logger = logging.getLogger()
 
 
 # ----------
-# THEME
-# ----------
-class Theme():
-    """Theme allow to customize Scene
-
-    The theme contains all informations to customize Scene.
-    Font, color...
-    """
-    def __init__(self, fonts=None):
-        """Construct a new theme
-
-        Args:
-            fonts (dict): Mapping between a font name and a `FontData`
-        """
-        self.fonts = fonts or {}
-
-
-# ----------
 # WIDGETS
 # ----------
 class BaseWidget():
@@ -217,35 +199,24 @@ class Widget(BaseWidget, ABC):
 
 class Scene(BaseWidget):
     '''Main 2D Scene'''
-    def __init__(self, context, width, height, theme, renderers=None):
+    def __init__(self, context, width, height, renderers=None):
         """Construct a new Scene
 
         Args:
             context (VulkContext)
             width (int): Scene width
             height (int): Scene height
-            theme (Theme): Scene theme
         """
         super().__init__(None)
         self.shape.width = width
         self.shape.height = height
-        self.theme = theme
 
         # Default renderers
         self.renderers = {
             'default': SpriteBatch(context),
-            'block': BlockBatch(context)
+            'block': BlockBatch(context),
+            'text': TextRenderer(context)
         }
-
-        # Font renderers
-        first_font = None
-        for k, v in theme.fonts.items():
-            text_renderer = TextRenderer(context, v)
-            first_font = first_font or text_renderer
-            self.renderers[k] = text_renderer
-
-        if first_font:
-            self.renderers['default_font'] = first_font
 
         # Custom renderers
         if renderers:
@@ -287,8 +258,7 @@ class Scene(BaseWidget):
             try:
                 renderer = self.renderers[widget.get_renderer_name()]
             except KeyError:
-                msg = ("Cannot find renderer, have you added "
-                       "the font to the theme ?")
+                msg = ("Cannot find renderer")
                 logger.critical(msg)
                 raise VulkError(msg)
 
@@ -419,21 +389,20 @@ class Block(Widget):
 
 class Label(Widget):
     """Widget used to write text"""
-    def __init__(self, parent, text, font_name='default_font'):
+    def __init__(self, parent, fontdata, text):
         """Construct a new label widget
 
         Args:
             parent (Widget): Parent widget (may be a Scene)
+            fontdata (FontData): Font to render
             text (str): Text to write
-            font_name (str): Name of the font to use (like set in the theme)
-                             'default_font' equals to the first theme font
         """
         super().__init__(parent)
         self.text = text
-        self.font_name = font_name
+        self.fontdata = fontdata
 
     def get_renderer_name(self):
-        return self.font_name
+        return 'text'
 
     def render(self, renderer):
         """
@@ -441,8 +410,10 @@ class Label(Widget):
             renderer (TextRenderer)
         """
         c = self.color_abs
-        renderer.draw(self.text, self.shape.x, self.shape.y, 30, r=c[0],
-                      g=c[1], b=c[2], a=c[3], rotation=self.rotation)
+        size = 30
+        renderer.draw(self.fontdata, self.text, self.shape.x, self.shape.y,
+                      size, r=c[0], g=c[1], b=c[2], a=c[3],
+                      rotation=self.rotation)
 
 
 # ----------

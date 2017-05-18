@@ -18,6 +18,7 @@ class FontData():
         self.regions = self._init_regions()
         self.chars = self._init_chars()
         self.kernings = self._init_kernings()
+        self.base = int(self.raw_data['common']['base'])
 
     def _init_pages(self, context):
         """Create Texture for each page
@@ -155,18 +156,16 @@ class FontData():
 
 class TextRenderer():
     """TextRenderer performs computation to draw text"""
-    def __init__(self, context, fontdata, batch=None):
+    def __init__(self, context, batch=None):
         """Initialize TextRenderer
 
         Args:
             context (VulkContext): Context
-            fontdata (FontData): Font to use
             batch: Batch with `draw_char` function
         """
         if not batch:
             batch = CharBatch(context)
 
-        self.fontdata = fontdata
         self.batch = batch
 
     def begin(self, context, semaphores=None):
@@ -186,10 +185,12 @@ class TextRenderer():
         """
         return self.batch.end()
 
-    def draw(self, text, x, y, size, r=1., g=1., b=1., a=1., rotation=0.):
+    def draw(self, fontdata, text, x, y, size, r=1., g=1., b=1., a=1.,
+             rotation=0.):
         """Render text on screen
 
         Args:
+            fontdata (FontData): Font to render
             text (str): String to render
             x (int): X position (from left)
             y (int): Y position (from top)
@@ -204,17 +205,17 @@ class TextRenderer():
         y_abs = y
         x_current = 0
         y_current = 0
-        scale = size / self.fontdata.raw_data['info']['size']
+        scale = size / fontdata.raw_data['info']['size']
         previous_char = None
 
         for char in text:
             # Compute kerning
             kerning = 0
             if previous_char is not None:
-                kerning = self.fontdata.get_kerning(previous_char, char)
+                kerning = fontdata.get_kerning(previous_char, char)
 
             # Compute position
-            char_info = self.fontdata.chars[char]
+            char_info = fontdata.chars[char]
             x = x_current + (char_info['xoffset'] + kerning) * scale
             y = y_current + char_info['yoffset'] * scale
 
@@ -228,7 +229,11 @@ class TextRenderer():
             y2 += y_abs
 
             # Draw char
-            self.batch.draw_char(self.fontdata, char, x2, y2, r, g, b, a,
+            # TODO: rotation is not properly handled
+            # Rotation is done at char center, we should add offset
+            # to take rotation into account
+            # I don't have time to do the math work right now
+            self.batch.draw_char(fontdata, char, x2, y2, r, g, b, a,
                                  scale, scale, t)
 
             # Register variable

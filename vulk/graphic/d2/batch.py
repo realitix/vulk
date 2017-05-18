@@ -774,17 +774,20 @@ class SpriteBatch(BaseBatch):
             x3 = cos * w2 - sin * h2
             y3 = sin * w2 + cos * h2
 
-            x4 = x1 + (x3 - x2)
-            y4 = y3 - (y2 - y1)
+            x4 = cos * w2 - sin * h1
+            y4 = sin * w2 + cos * h1
 
-            x1 += p1x
-            x2 += p1x
-            x3 += p1x
-            x4 += p1x
-            y1 += p1y
-            y2 += p1y
-            y3 += p1y
-            y4 += p1y
+            x_abs = p1x + width / 2
+            y_abs = p1y + height / 2
+
+            x1 += x_abs
+            x2 += x_abs
+            x3 += x_abs
+            x4 += x_abs
+            y1 += y_abs
+            y2 += y_abs
+            y3 += y_abs
+            y4 += y_abs
         else:
             x1, x2, x3, x4 = p1x, p2x, p3x, p4x
             y1, y2, y3, y4 = p1y, p2y, p3y, p4y
