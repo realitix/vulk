@@ -1,6 +1,6 @@
 '''This module contains scene related functions and classes'''
+from functools import partial
 from os import path
-from abc import ABC, abstractmethod
 import logging
 
 from vulk import PATH_VULK_SHADER
@@ -18,7 +18,86 @@ logger = logging.getLogger()
 # ----------
 # WIDGETS
 # ----------
-class BaseWidget():
+class PlaceMixin():
+    """Mixin to place widget with absolute position"""
+    def __init__(self):
+        super().__init__()  # need super for MRO
+
+    def place(self, width, height, x=0, y=0):
+        self.parent.add_child_to_place(self, width, height, x, y)
+        self.relocate = partial(self.place, width=width,
+                                height=height, x=x, y=y)
+        self.reload_location()
+
+    def add_child_to_place(self, child, width, height, x, y):
+        self.children.append(child)
+        child.shape.set(Rectangle(self.shape.x + x, self.shape.y + y,
+                                  width, height))
+
+
+class GridMixin():
+    """Mixin to place widget in a table"""
+    def __init__(self):
+        super().__init__()  # need super for MRO
+        self.children_grid = {}
+        self.columns = 1
+        self.rows = 1
+
+    def grid(self, column=0, row=0):
+        self.parent.add_child_to_grid(self, column, row)
+        self.relocate = partial(self.grid, column=column, row=row)
+        self.reload_location()
+
+    @property
+    def column_width(self):
+        return self.shape.width / self.columns
+
+    @property
+    def row_width(self):
+        return self.shape.height / self.rows
+
+    def add_child_to_grid(self, child, column, row):
+        """Called when the child ask a place in the parent grid"""
+        # Increase columns and rows number
+        self.update_grid_size(column, row)
+
+        # Register child
+        self.register_child_grid(child, column, row)
+
+        # Reshape all children
+        self.reshape_grid()
+
+    def reshape_grid(self):
+        for child, grid_position in self.children_grid.items():
+            x, y = self.grid_position_to_xy(grid_position)
+            child.shape.set(Rectangle(x, y, self.column_width, self.row_width))
+
+    def update_grid_size(self, column, row):
+        if column >= self.columns:
+            self.columns = column + 1
+        if row >= self.rows:
+            self.rows = row + 1
+
+    def register_child_grid(self, child, column, row):
+        # Remove child at grid position if exists
+        existing_child = None
+        for key, value in self.children_grid.items():
+            if value == (column, row):
+                existing_child = key
+
+        if existing_child:
+            self.children.remove(existing_child)
+            self.children_grid.pop(existing_child)
+
+        self.children_grid[child] = (column, row)
+        self.children.append(child)
+
+    def grid_position_to_xy(self, grid_position):
+        return (self.shape.x + grid_position[0] * self.column_width,
+                self.shape.y + grid_position[1] * self.row_width)
+
+
+class Widget(PlaceMixin, GridMixin):
     """Widget is the base of the scene
 
     All widgets inherit from this class.
@@ -30,11 +109,14 @@ class BaseWidget():
         self.color = [1, 1, 1, 1]  # rgba depending on parent color
         self.rotation = 0
         self.actions = []
+        self.relocate = None  # partial function which relocates
 
-        # Grid properties
-        self.children_grid = {}
-        self.columns = 1
-        self.rows = 1
+        super().__init__()
+
+    def reload_location(self):
+        for child in self.children:
+            if child.relocate:
+                child.relocate()
 
     @property
     def x_rel(self):
@@ -120,84 +202,20 @@ class BaseWidget():
         for child in self.children:
             child.update(delta)
 
-    # ----------
-    # Place methods
-    # ----------
-    def place(self, width, height, x=0, y=0):
-        self.parent.add_child_to_place(self, width, height, x, y)
+    def get_renderer_name(self):
+        """No renderer by default"""
+        return None
 
-    def add_child_to_place(self, child, width, height, x, y):
-        self.children.append(child)
-        child.shape.set(Rectangle(self.shape.x + x, self.shape.y + y,
-                                  width, height))
-
-    # ----------
-    # Grid methods
-    # ----------
-    def grid(self, column=0, row=0):
-        self.parent.add_child_to_grid(self, column, row)
-
-    @property
-    def column_width(self):
-        return self.shape.width / self.columns
-
-    @property
-    def row_width(self):
-        return self.shape.height / self.rows
-
-    def add_child_to_grid(self, child, column, row):
-        """Called when the child ask a place in the parent grid"""
-        # Increase columns and rows number
-        self.update_grid_size(column, row)
-
-        # Register child
-        self.register_child_grid(child, column, row)
-
-        # Reshape all children
-        self.reshape_grid()
-
-    def reshape_grid(self):
-        for child, grid_position in self.children_grid.items():
-            x, y = self.grid_position_to_xy(grid_position)
-            child.shape.set(Rectangle(x, y, self.column_width, self.row_width))
-
-    def update_grid_size(self, column, row):
-        if column >= self.columns:
-            self.columns = column + 1
-        if row >= self.rows:
-            self.rows = row + 1
-
-    def register_child_grid(self, child, column, row):
-        # Remove child at grid position if exists
-        existing_child = None
-        for key, value in self.children_grid.items():
-            if value == (column, row):
-                existing_child = key
-
-        if existing_child:
-            self.children.remove(existing_child)
-            self.children_grid.pop(existing_child)
-
-        self.children_grid[child] = (column, row)
-        self.children.append(child)
-
-    def grid_position_to_xy(self, grid_position):
-        return (self.shape.x + grid_position[0] * self.column_width,
-                self.shape.y + grid_position[1] * self.row_width)
-
-
-class Widget(BaseWidget, ABC):
-    @abstractmethod
     def render(self, renderer):
-        """Render widget
+        """Render the widget
 
         Args:
-            renderer (object): Renderer compatible with this widget
+            renderer: Renderer which can render this widget
         """
         pass
 
 
-class Scene(BaseWidget):
+class Scene(Widget):
     '''Main 2D Scene'''
     def __init__(self, context, width, height, renderers=None):
         """Construct a new Scene
