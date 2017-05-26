@@ -89,6 +89,8 @@ class DispatchEventListener(RawEventListener):
             return self.mouse_move(event.x, event.y, event.xr, event.yr)
         elif event.type == ec.EventType.QUIT:
             return self.quit()
+        elif event.type == ec.EventType.WINDOW_RESIZED:
+            return self.window_resized(event.width, event.height)
 
         return False
 
@@ -146,6 +148,15 @@ class DispatchEventListener(RawEventListener):
 
     def quit(self):
         '''Called when App must quit'''
+        return False
+
+    def window_resized(self, width, height):
+        """Called when window is resized
+
+        Args:
+            width (int)`: New width of screen
+            height (int)`: New width of screen
+        """
         return False
 
 
@@ -212,7 +223,7 @@ class CallbackEventListener(BaseEventListener):
 
     def __init__(self, key_down=None, key_up=None, mouse_down=None,
                  mouse_drag=None, mouse_move=None, mouse_up=None,
-                 quit=None):  # pylint: disable=redefined-builtin
+                 quit=None, window_resized=None):
         # We use a custom dict instead of locals() to avoid black magic
         parameters = {
             'key_down': key_down,
@@ -221,7 +232,8 @@ class CallbackEventListener(BaseEventListener):
             'mouse_drag': mouse_drag,
             'mouse_move': mouse_move,
             'mouse_up': mouse_up,
-            'quit': quit
+            'quit': quit,
+            'window_resized': window_resized
         }
         for key, value in parameters.items():
             setattr(self, key + '_callback', value)
@@ -253,4 +265,8 @@ class CallbackEventListener(BaseEventListener):
 
     @wrap_callback
     def quit(self):
+        pass
+
+    @wrap_callback
+    def window_resized(self):
         pass

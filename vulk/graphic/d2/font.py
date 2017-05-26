@@ -168,6 +168,18 @@ class TextRenderer():
 
         self.batch = batch
 
+    def update_projection(self, matrix):
+        '''Update the projection matrix with `matrix`
+
+        *Parameters:*
+
+        - `matrix`: `Matrix4`
+
+        **Note: This function doesn't keep a reference to the matrix,
+                it only copies data**
+        '''
+        self.batch.update_projection(matrix)
+
     def begin(self, context, semaphores=None):
         """Start rendering
 
@@ -184,6 +196,14 @@ class TextRenderer():
             Semaphore signaled when all drawing operations are finished
         """
         return self.batch.end()
+
+    def resize(self, context):
+        """Resize the TextRenderer
+
+        Args:
+            context (VulkContext)
+        """
+        self.batch.resize(context)
 
     def draw(self, fontdata, text, x, y, size, r=1., g=1., b=1., a=1.,
              rotation=0.):

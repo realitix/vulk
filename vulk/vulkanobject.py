@@ -112,7 +112,7 @@ def immediate_buffer(context, commandpool=None):
         commandpool.free_buffers(context, commandbuffers)
 
         if own_commandpool:
-            commandpool.free(context)
+            commandpool.destroy(context)
 
 
 def submit_to_graphic_queue(context, submits):
@@ -1203,13 +1203,12 @@ class CommandPool():
 
     def __init__(self, context, queue_family_index,
                  flags=vc.CommandPoolCreate.NONE):
-        '''
-        *Parameters:*
-
-        - `context`: The `VulkContext`
-        - `queue_family_index`: Index of the queue family to use
-        - `flags`: `CommandPoolCreate` vulk constant, default to 0
-        '''
+        """
+        Args:
+            context (VulkContext)
+            queue_family_index (int): Index of the queue family to use
+            flags (CommandPoolCreate): default to 0
+        """
         commandpool_create = vk.VkCommandPoolCreateInfo(
             sType=vk.VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
             queueFamilyIndex=queue_family_index,
@@ -1223,19 +1222,16 @@ class CommandPool():
         self.commandbuffers = []
 
     def allocate_buffers(self, context, level, count):
-        '''
-        Allocate `list` of `CommandBuffer` from pool.
+        """Allocate `list` of `CommandBuffer` from pool
 
-        *Parameters:*
+        Args:
+            context (VulkContext)
+            level (CommandBufferLevel)
+            count (int): Number of `CommandBuffer` to create
 
-        - `context`: The `VulkContext`
-        - `level`: `CommandBufferLevel` vulk constant
-        - `count`: Number of `CommandBuffer` to create
-
-        *Returns:*
-
-        `list` of `CommandBuffer`
-        '''
+        Returns:
+            list[CommandBuffer]
+        """
         commandbuffers_create = vk.VkCommandBufferAllocateInfo(
             sType=vk.VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
             commandPool=self.commandpool,
@@ -1245,7 +1241,8 @@ class CommandPool():
 
         vk_commandbuffers = vk.vkAllocateCommandBuffers(
             context.device,
-            commandbuffers_create)
+            commandbuffers_create
+        )
 
         commandbuffers = [CommandBuffer(cb) for cb in vk_commandbuffers]
         self.commandbuffers.extend(commandbuffers)
@@ -1253,14 +1250,12 @@ class CommandPool():
         return commandbuffers
 
     def free_buffers(self, context, buffers):
-        '''
-        Free list of `CommandBuffer` allocated from this pool.
+        """Free list of command buffers allocated from this pool
 
-        *Parameters:*
-
-        - `context`: The `VulkContext`
-        - `buffers`: `list` of `CommandBuffer` to free
-        '''
+        Args:
+            context (VulkContext)
+            buffers (list[CommandBuffer]): Command buffers to free
+        """
         if any([b not in self.commandbuffers for b in buffers]):
             msg = "Can't free a commandbuffer not allocated by this pool"
             logger.error(msg)
@@ -1271,14 +1266,25 @@ class CommandPool():
             [b.commandbuffer for b in buffers]
         )
 
+        for b in buffers:
+            self.commandbuffers.remove(b)
+
     def free(self, context):
-        '''
-        Free this command pool
+        """Free all command buffers allocated from this pool
 
-        *Parameters:*
+        Args:
+            context (VulkContext)
+        """
+        # We need a copy!
+        buffers = list(self.commandbuffers)
+        self.free_buffers(context, buffers)
 
-        - `context`: `VulkContext`
-        '''
+    def destroy(self, context):
+        """Destroy this command pool
+
+        Args:
+            context (VulkContext)
+        """
         vk.vkDestroyCommandPool(context.device, self.commandpool, None)
 
 
@@ -1408,23 +1414,22 @@ class DescriptorSetLayout():
 
 
 class Framebuffer():
-    '''
+    """
     In Vulkan, a `Framebuffer` references all of the `VkImageView` objects that
     represent the attachments of a `Renderpass`.
-    '''
+    """
 
     def __init__(self, context, renderpass, attachments,
                  width, height, layers):
-        '''
-        *Parameters:*
-
-        - `context`: The `VulkContext`
-        - `renderpass`: The compatible `Renderpass` of this `Framebuffer`
-        - `attachments`: List of `ImageView`
-        - `width`: Width (`int`)
-        - `height`: Height (`int`)
-        - `layers`: Number of layers (`int`)
-        '''
+        """
+        Args:
+            context (VulkContext)
+            renderpass (Renderpass): Compatible renderpass
+            attachments (list[ImageView])
+            width (int): Framebuffer width
+            height (int): Framebuffer width
+            layers (int): Number of layers
+        """
         framebuffer_create = vk.VkFramebufferCreateInfo(
             sType=vk.VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
             flags=0,
@@ -1438,6 +1443,15 @@ class Framebuffer():
 
         self.framebuffer = vk.vkCreateFramebuffer(context.device,
                                                   framebuffer_create, None)
+
+    def destroy(self, context):
+        """Destroy this framebuffer
+
+        Args:
+            context (VulkContext)
+        """
+        vk.vkDestroyFramebuffer(context.device, self.framebuffer, None)
+        self.framebuffer = None
 
 
 class HighPerformanceBuffer():
@@ -1664,42 +1678,37 @@ class HighPerformanceImage():
 
 
 class Image():
-    '''
-    `Image` is a wrapper around a `VkImage` and a `VkMemory`
-    '''
+    """Wrapper around a `VkImage` and a `VkMemory`"""
 
     def __init__(self, context, image_type, image_format, width, height, depth,
                  mip_level, layers, samples, sharing_mode, queue_families,
                  layout, tiling, usage, memory_properties):
-        '''Create a new image
+        """Create a new image
 
         Creating an image is made of several steps:
+            Create the image
+            Allocate the memory
+            Bind the memory to the image
 
-        - Create the image
-        - Allocate the memory
-        - Bind the memory to the image
-
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        - `image_type`: `ImageType` vulk constant
-        - `image_format`: `Format` vulk constant
-        - `width`: Image width
-        - `heigth`: Image height
-        - `depth`: Image depth
-        - `mip_level`: Level of mip (`int`)
-        - `layers`: Number of layers (`int`)
-        - `samples`: This `SampleCount` vulk constant is related
-                     to multisampling
-        - `sharing_mode`: `SharingMode` vulk constant
-        - `queue_families`: List of queue families accessing this image
-                            (ignored if sharingMode is not `CONCURRENT`)
-                            (can be [])
-        - `layout`: `ImageLayout` vulk constant
-        - `tiling`: `ImageTiling` vulk constant
-        - `usage`: `ImageUsage` vulk constant
-        - `memory_properties`: `MemoryProperty` vulk constant
-        '''
+        Args:
+            context (VulkContext)
+            image_type (ImageType)
+            image_format (Format)
+            width (int): Image width
+            height (int): Image height
+            depth (int): Image depth
+            mip_level (int): Level of mip
+            layers (int): Number of layers
+            samples (SampleCount): Related to multisampling
+            sharing_mode (SharingMode)
+            queue_families (list): List of queue families accessing this image
+                                   (ignored if sharingMode is not `CONCURRENT`
+                                   can be [])
+            layout (ImageLayout)
+            tiling (ImageTiling)
+            usage (ImageUsage)
+            memory_properties (MemoryProperty)
+        """
         self.width = width
         self.height = height
         self.depth = depth
@@ -1878,34 +1887,45 @@ class Image():
         finally:
             vk.vkUnmapMemory(context.device, self.memory)
 
+    def destroy(self, context):
+        """Destroy this image
+
+        Args:
+            context (VulkContext)
+        """
+        vk.vkDestroyImage(context.device, self.image, None)
+
+        # Swapchain images have no memory so we check
+        if self.memory:
+            vk.vkFreeMemory(context.device, self.memory, None)
+
 
 class ImageView():
-    '''
+    """
     An image view is quite literally a view into an image.
     It describes how to access the image and which part of the image
     to access, for example if it should be treated as a 2D texture depth
     texture without any mipmapping levels.
-    '''
+    """
 
     def __init__(self, context, image, view_type, image_format,
                  subresource_range, swizzle_r=vc.ComponentSwizzle.IDENTITY,
                  swizzle_g=vc.ComponentSwizzle.IDENTITY,
                  swizzle_b=vc.ComponentSwizzle.IDENTITY,
                  swizzle_a=vc.ComponentSwizzle.IDENTITY):
-        '''Create ImageView
+        """Create ImageView
 
-        *Parameters:*
-
-        - `context`: The `VulkContext`
-        - `image`: The `Image` to work on
-        - `view_type`: `ImageViewType` vulk constant
-        - `image_format`: `Format` vulk constant
-        - `subresource_range`: The `ImageSubresourceRange` to use
-        - `swizzle_r`: `ComponentSwizzle` of the red color channel
-        - `swizzle_g`: `ComponentSwizzle` of the green color channel
-        - `swizzle_b`: `ComponentSwizzle` of the blue color channel
-        - `swizzle_a`: `ComponentSwizzle` of the alpha color channel
-        '''
+        Args:
+            context (VulkContext)
+            image (Image): Image to work on
+            view_type (ImageViewType)
+            image_format (Format)
+            subresource_range (ImageSubresourceRange)
+            swizzle_r (ComponentSwizzle): Swizzle of the red color channel
+            swizzle_g (ComponentSwizzle): Swizzle of the red color channel
+            swizzle_b (ComponentSwizzle): Swizzle of the red color channel
+            swizzle_a (ComponentSwizzle): Swizzle of the red color channel
+        """
         components = vk.VkComponentMapping(
             r=swizzle_r.value, g=swizzle_g.value, b=swizzle_b.value,
             a=swizzle_a.value
@@ -1933,9 +1953,17 @@ class ImageView():
         self.imageview = vk.vkCreateImageView(context.device,
                                               imageview_create, None)
 
+    def destroy(self, context):
+        """Destroy this image view
+
+        Args:
+            context (VulkContext)
+        """
+        vk.vkDestroyImageView(context.device, self.imageview, None)
+
 
 class Pipeline():
-    '''Pipeline (graphic) object
+    """Pipeline (graphic) object
 
     The graphics pipeline is the sequence of operations that take the
     vertices and textures of your meshes all the way to the pixels in
@@ -1951,26 +1979,26 @@ class Pipeline():
                          shader that can be updated at draw time
       - Render pass: the attachments referenced by the pipeline stages
                      and their usage
-    '''
+    """
 
     def __init__(self, context, stages, vertex_input, input_assembly,
                  viewport_state, rasterization, multisample, depth, blend,
                  dynamic, layout, renderpass):
-        '''
-
-        - `context`: The `VulkContext`
-        - `stages`: List of `PipelineShaderStage`
-        - `vertex_input`: `PipelineVertexInputState`
-        - `input_assembly`: `PipelineInputAssemblyState`
-        - `viewport_state`: `PipelineViewportState`
-        - `rasterization`: `PipelineRasterizationState`
-        - `multisample`: `PipelineMultisampleState`
-        - `depth`: `PipelineDepthStencilState` (can be `None`)
-        - `blend`: `PipelineColorBlendState`
-        - `dynamic`: `PipelineDynamicState` (may be `None`)
-        - `layout`: `PipelineLayout`
-        - `renderpass`: The `Renderpass` of this pipeline
-        '''
+        """
+        Args:
+            context (VulkContext)
+            stages (list[PipelineShaderStage])
+            vertex_input (PipelineVertexInputState)
+            input_assembly (PipelineInputAssemblyState)
+            viewport_state (PipelineViewportState)
+            rasterization (PipelineRasterizationState)
+            multisample (PipelineMultisampleState)
+            depth (PipelineDepthStencilState): can be None
+            blend (PipelineColorBlendState)
+            dynamic (PipelineDynamicState): can be None
+            layout (PipelineLayout)
+            renderpass (Renderpass)
+        """
 
         vk_stages = []
         for s in stages:
@@ -2145,6 +2173,15 @@ class Pipeline():
         self.pipeline = vk.vkCreateGraphicsPipelines(
             context.device, None, 1, [pipeline_create], None)
 
+    def destroy(self, context):
+        """Destroy this pipeline
+
+        Args:
+            context (VulkContext)
+        """
+        vk.vkDestroyPipeline(context.device, self.pipeline, None)
+        self.pipeline = None
+
 
 class PipelineLayout():
     '''Pipeline layout object
@@ -2196,19 +2233,17 @@ class Renderpass():
     '''
 
     def __init__(self, context, attachments, subpasses, dependencies):
-        '''Renderpass constructor
+        """Renderpass constructor
 
-        *Parameters:*
-
-        - `context`: The `VulkContext`
-        - `attachments`: `list` of `AttachmentDescription`
-        - `subpasses`: `list` of `SubpassDescription`
-        - `dependencies`: `list` of `SubpassDependency`
+        Args:
+            context (VulkContext)
+            attachments (list[AttachmentDescription])
+            subpasses (list[SubpassDescription])
+            dependencies (list[SubpassDependency])
 
         **Warning: Arguments ar not checked, you must know
                    what you are doing.**
-        '''
-
+        """
         vk_attachments = []
         for a in attachments:
             vk_attachments.append(vk.VkAttachmentDescription(
@@ -2278,7 +2313,7 @@ class Renderpass():
                 pDepthStencilAttachment=depth_stencil
             ))
 
-        # Create the dependancies
+        # Create dependancies
         vk_dependencies = []
         for d in dependencies:
             vk_dependencies.append(vk.VkSubpassDependency(
@@ -2291,7 +2326,7 @@ class Renderpass():
                 dstAccessMask=d.dst_access.value
             ))
 
-        # Create the render pass
+        # Create renderpass
         renderpass_create = vk.VkRenderPassCreateInfo(
             sType=vk.VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,
             flags=0,
@@ -2305,6 +2340,15 @@ class Renderpass():
 
         self.renderpass = vk.vkCreateRenderPass(
             context.device, renderpass_create, None)
+
+    def destroy(self, context):
+        """Destroy this renderpass
+
+        Args:
+            context (VulkContext)
+        """
+        vk.vkDestroyRenderPass(context.device, self.renderpass, None)
+        self.renderpass = None
 
 
 class Sampler():

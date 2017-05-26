@@ -16,7 +16,7 @@ logger = logging.getLogger()
 
 
 # ----------
-# WIDGETS
+# BASE WIDGET
 # ----------
 class PlaceMixin():
     """Mixin to place widget with absolute position"""
@@ -27,7 +27,7 @@ class PlaceMixin():
         self.parent.add_child_to_place(self, width, height, x, y)
         self.relocate = partial(self.place, width=width,
                                 height=height, x=x, y=y)
-        self.reload_location()
+        self.relocate_children()
 
     def add_child_to_place(self, child, width, height, x, y):
         self.children.append(child)
@@ -46,7 +46,7 @@ class GridMixin():
     def grid(self, column=0, row=0):
         self.parent.add_child_to_grid(self, column, row)
         self.relocate = partial(self.grid, column=column, row=row)
-        self.reload_location()
+        self.relocate_children()
 
     @property
     def column_width(self):
@@ -113,7 +113,11 @@ class Widget(PlaceMixin, GridMixin):
 
         super().__init__()
 
-    def reload_location(self):
+    def relocate_children(self):
+        """Ask to all children to relocate
+
+        This function must be call when position or size is updated
+        """
         for child in self.children:
             if child.relocate:
                 child.relocate()
@@ -215,9 +219,12 @@ class Widget(PlaceMixin, GridMixin):
         pass
 
 
+# ----------
+# SCENE
+# ----------
 class Scene(Widget):
     '''Main 2D Scene'''
-    def __init__(self, context, width, height, renderers=None):
+    def __init__(self, context, viewport, renderers=None):
         """Construct a new Scene
 
         Args:
@@ -226,8 +233,7 @@ class Scene(Widget):
             height (int): Scene height
         """
         super().__init__(None)
-        self.shape.width = width
-        self.shape.height = height
+        self.viewport = viewport
 
         # Default renderers
         self.renderers = {
@@ -259,6 +265,15 @@ class Scene(Widget):
 
         return vo.ShaderProgramGlslFile(context, shaders_mapping)
 
+    def resize(self, context):
+        """Resize the Scene
+
+        Args:
+            context (VulkContext)
+        """
+        for renderer in self.renderers.values():
+            renderer.resize(context)
+
     def render(self, context):
         """Render Scene
 
@@ -270,6 +285,7 @@ class Scene(Widget):
         Returns:
             Semaphore or None if no semaphore
         """
+        self.prepare_rendering()
         widgets = self.collect_children()
         semaphores = None
         for widget in widgets:
@@ -285,6 +301,10 @@ class Scene(Widget):
             semaphores = [renderer.end()]
 
         return semaphores[0] if semaphores else None
+
+    def prepare_rendering(self):
+        for renderer in self.renderers.values():
+            renderer.update_projection(self.viewport.camera.combined)
 
     def update(self, delta):
         widgets = self.collect_children()
@@ -313,6 +333,7 @@ class BatchedScene(Scene):
         Returns:
             Semaphore or None if no semaphore
         """
+        self.prepare_rendering()
         mapping = self.collect_widgets_to_render()
         semaphore = None
         for renderer, widgets in mapping.items():
@@ -344,6 +365,9 @@ class BatchedScene(Scene):
         return mapping
 
 
+# ----------
+# WIDGETS
+# ----------
 class Image(Widget):
     def __init__(self, parent, texture_region):
         """Construct a new Image widget
@@ -761,3 +785,52 @@ class Repeat(Action):
         self.current_count += 1
         self.restart_action()
         return True
+
+
+# ----------
+# VIEWPORTS
+# ----------
+class Viewport():
+    """Manages a Camera
+
+    Determines how world coordinates are mapped to and from the screen.
+    """
+    def __init__(self, camera):
+        self.camera = camera
+        self.world_width = 0.
+        self.world_height = 0.
+        self.screen_x = 0
+        self.screen_y = 0
+        self.screen_width = 0
+        self.screen_height = 0
+
+    def apply(self, center_camera):
+        self.camera.viewport_width = self.world_width
+        self.camera.viewport_height = self.world_height
+
+        if center_camera:
+            self.camera.position.set(self.world_width / 2,
+                                     self.world_height / 2, 0)
+
+        self.camera.update()
+
+    def update(self, screen_width, screen_height, center_camera=True):
+        self.apply(center_camera)
+
+    def set_world_size(self, world_width, world_height):
+        self.world_width = world_width
+        self.world_height = world_height
+
+    def set_screen_bounds(self, screen_x, screen_y, screen_width,
+                          screen_height):
+        self.screen_x = screen_x
+        self.screen_y = screen_y
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+
+
+class ScreenViewport(Viewport):
+    def update(self, screen_width, screen_height, center_camera=True):
+        self.set_world_size(screen_width, screen_height)
+        self.set_screen_bounds(0, 0, screen_width, screen_height)
+        super().update(screen_width, screen_height, center_camera)

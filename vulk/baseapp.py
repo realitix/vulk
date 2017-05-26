@@ -7,6 +7,8 @@ from vulk.context import VulkWindow, VulkContext
 from vulk.event import CallbackEventListener
 from vulk.util import millis, time_since_millis
 
+logger = logging.getLogger()
+
 
 class BaseApp(ABC):
     """App must inherit this class
@@ -52,8 +54,6 @@ class BaseApp(ABC):
         self.request_quit = False
 
     def _init_logger(self):
-        logger = logging.getLogger()
-
         if self.configuration.debug:
             logger.setLevel(logging.DEBUG)
         else:
@@ -61,17 +61,18 @@ class BaseApp(ABC):
 
         formatter = logging.Formatter('%(asctime)s :: %(levelname)s '
                                       ':: %(message)s')
-        steam_handler = logging.StreamHandler()
-        steam_handler.setFormatter(formatter)
-        steam_handler.setLevel(logging.DEBUG)
-        logger.addHandler(steam_handler)
+        stream_handler = logging.StreamHandler()
+        stream_handler.setFormatter(formatter)
+        stream_handler.setLevel(logging.DEBUG)
+        logger.addHandler(stream_handler)
 
     def __enter__(self):
         '''Create window, Vulkan context, audio'''
-        self.window = VulkWindow()
-        self.window.open(self.configuration)
-        self.context = VulkContext()
-        self.context.create(self.window, self.configuration)
+        window = VulkWindow()
+        window.open(self.configuration)
+        self.context = VulkContext(window, self.configuration.debug,
+                                   self.configuration.extra_vulkan_layers)
+        self.context.create()
         self.audio = VulkAudio()
         self.audio.open(self.configuration)
         self.start()
@@ -81,7 +82,7 @@ class BaseApp(ABC):
         '''Clean Vulkan resource'''
         self.end()
         self.audio.close()
-        self.window.close()
+        self.context.window.close()
 
     def quit(self):
         '''Quit the App
@@ -118,9 +119,18 @@ class BaseApp(ABC):
     @abstractmethod
     def start(self):
         '''This function is called when your App starts'''
-        self.event_listeners.append(CallbackEventListener(quit=self.quit))
+        listener = CallbackEventListener(
+            quit=self.quit,
+            window_resized=self.resize
+        )
+        self.event_listeners.append(listener)
 
     @abstractmethod
     def end(self):
         '''This function is called when your App ends'''
         return
+
+    @abstractmethod
+    def resize(self, width, height):
+        logger.debug(f"Window resized to {width}x{height}")
+        self.context.reload_swapchain()

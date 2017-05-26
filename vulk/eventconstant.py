@@ -41,7 +41,9 @@ class EventType(IntEnum):
     MOUSE_BUTTONUP = sdl2.SDL_MOUSEBUTTONUP
     MOUSE_WHEEL = sdl2.SDL_MOUSEWHEEL
     QUIT = sdl2.SDL_QUIT
+    # We create custom type for window events
     WINDOW = sdl2.SDL_WINDOWEVENT
+    WINDOW_RESIZED = sdl2.SDL_WINDOWEVENT_RESIZED
 
 
 class KeyCode(IntEnum):
@@ -100,13 +102,38 @@ class QuitEvent(BaseEvent):
     pass
 
 
+class WindowEvent():
+    def __init__(self, event):
+        self.type = event.window.event
+        self.timestamp = event.common.timestamp
+
+
+class WindowResizedEvent(WindowEvent):
+    def __init__(self, event):
+        """Create window resized event from `event`
+
+        Args:
+            event (SDL_WindowEvent)
+        """
+        super().__init__(event)
+        self.width = event.window.data1
+        self.height = event.window.data2
+
+
+def window_event_builder(event):
+    """Create widow event according to event"""
+    if event.window.event == EventType.WINDOW_RESIZED:
+        return WindowResizedEvent(event)
+
+
 map_sdl_vulk = {
     EventType.KEY_UP: KeyboardEvent,
     EventType.KEY_DOWN: KeyboardEvent,
     EventType.MOUSE_BUTTONUP: MouseButtonEvent,
     EventType.MOUSE_BUTTONDOWN: MouseButtonEvent,
     EventType.MOUSE_MOTION: MouseMotionEvent,
-    EventType.QUIT: QuitEvent
+    EventType.QUIT: QuitEvent,
+    EventType.WINDOW: window_event_builder
 }
 
 

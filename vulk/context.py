@@ -58,7 +58,7 @@ class VulkWindow():
 
         self.window = sdl2.SDL_CreateWindow(
             configuration.name.encode('ascii'), configuration.x,
-            configuration.y, configuration.width, configuration.height, 0)
+            configuration.y, configuration.width, configuration.height, flags)
 
         if not self.window:
             msg = "Can't open window: %s" % sdl2.SDL_GetError()
@@ -77,11 +77,27 @@ class VulkWindow():
         sdl2.SDL_DestroyWindow(self.window)
         sdl2.SDL_Quit()
 
+    def get_size(self):
+        width = ctypes.c_int()
+        height = ctypes.c_int()
+        sdl2.SDL_GetWindowSize(self.window, ctypes.byref(width),
+                               ctypes.byref(height))
+        return width, height
+
 
 class VulkContext():
-    def __init__(self):
-        # Vulkan debug enabled
-        self.debug_enabled = True
+    def __init__(self, window, debug=False, extra_layers=None):
+        """Create context
+
+        Args:
+            window (VulkWindow): SDL2 window
+            debug (bool): Enable debug
+            extra_layers (list[str]): List of Vulkan layers
+        """
+        self.window = window
+        self.debug_enabled = debug
+        self.extra_layers = extra_layers or []
+
         # Vulkan instance
         self.instance = None
         # Extension functions in a dict
@@ -123,20 +139,17 @@ class VulkContext():
         self._semaphore_copied = None
         # Semaphores used for direct rendering
         self._direct_semaphores = []
+        # Comman pool
+        self.commandpool = None
         # Command buffers
         self.commandbuffers = None
 
-    def _get_instance_extensions(self, window):
-        '''Get extensions which depend on the window and configuration
+    def _get_instance_extensions(self):
+        """Get extensions which depend on the window
 
-        *Parameters:*
-
-        - `window`: The `VulkWindow`
-
-        *Returns:*
-
-        Extension list
-        '''
+        Returns:
+            Extensions list (list[str])
+        """
 
         # Get available extensions
         available_extensions = [
@@ -152,7 +165,7 @@ class VulkContext():
             sdl2.SDL_SYSWM_WAYLAND: vk.VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME,
             sdl2.SDL_SYSWM_MIR: vk.VK_KHR_MIR_SURFACE_EXTENSION_NAME
         }
-        sdl_subsystem = window.info.subsystem
+        sdl_subsystem = self.window.info.subsystem
 
         if sdl_subsystem not in extension_mapping:
             msg = "Vulkan not supported on this plateform: %s" % sdl_subsystem
@@ -235,6 +248,7 @@ class VulkContext():
             logger.debug("Selecting only %s", standard)
             layers = [standard]
 
+        layers.extend(self.extra_layers)
         return layers
 
     @staticmethod
@@ -302,6 +316,7 @@ class VulkContext():
             'vkGetPhysicalDeviceSurfaceFormatsKHR',
             'vkGetPhysicalDeviceSurfacePresentModesKHR',
             'vkCreateSwapchainKHR',
+            'vkDestroySwapchainKHR',
             'vkGetSwapchainImagesKHR',
             'vkAcquireNextImageKHR',
             'vkQueuePresentKHR'
@@ -318,24 +333,14 @@ class VulkContext():
         for name in extension_functions:
             add_pfn(name)
 
-    def _create_instance(self, window, configuration):
-        '''Create Vulkan instance
-
-        *Parameters:*
-
-        - `window`: The window for Vulkan
-        - `configuration`: Configuration from Application
-        '''
-
-        extensions = self._get_instance_extensions(window)
+    def _create_instance(self):
+        """Create Vulkan instance"""
+        extensions = self._get_instance_extensions()
         layers = self._get_layers()
-
-        if configuration.extra_vulkan_layers:
-            layers.extend(configuration.extra_vulkan_layers)
 
         app_info = vk.VkApplicationInfo(
             sType=vk.VK_STRUCTURE_TYPE_APPLICATION_INFO,
-            pApplicationName=configuration.name,
+            pApplicationName="Vulk-app",
             applicationVersion=vk.VK_MAKE_VERSION(1, 0, 0),
             pEngineName=ENGINE_NAME,
             engineVersion=vk.VK_MAKE_VERSION(1, 0, 0),
@@ -385,13 +390,10 @@ class VulkContext():
         self.debug_callback = self.pfn['vkCreateDebugReportCallbackEXT'](
             self.instance, debug_create_info, None)
 
-    def _create_surface(self, info):
-        '''Create Vulkan surface
+    def _create_surface(self):
+        """Create Vulkan surface"""
+        info = self.window.info
 
-        *Parameters:*
-
-        - `info`: The window information for Vulkan
-        '''
         def call_platform(name, surface_create):
             f = vk.vkGetInstanceProcAddr(self.instance, name)
             return f(self.instance, surface_create, None)
@@ -509,18 +511,10 @@ class VulkContext():
         logger.debug("%s device selected",
                      self.physical_device_properties.deviceName)
 
-    def _create_device(self, configuration):
-        '''Create Vulkan logical device
-
-        *Parameters:*
-
-        - `configuration`: Configuration from Application
-        '''
+    def _create_device(self):
+        """Create Vulkan logical device"""
         extensions = VulkContext._get_device_extensions(self.physical_device)
         layers = self._get_layers()
-
-        if configuration.extra_vulkan_layers:
-            layers.extend(configuration.extra_vulkan_layers)
 
         graphic_index, present_index = VulkContext._get_queue_families(
             self.physical_device, self.surface,
@@ -555,13 +549,8 @@ class VulkContext():
         self.queue_family_indices = {'graphic': graphic_index,
                                      'present': present_index}
 
-    def _create_swapchain(self, configuration):
-        '''Create Vulkan swapchain
-
-        *Parameters:*
-
-        - `configuration`: Configuration from Application
-        '''
+    def _create_swapchain(self):
+        """Create Vulkan swapchain"""
         surface_capabilities = self.pfn['vkGetPhysicalDeviceSurfaceCapabilitiesKHR'](self.physical_device, self.surface) # noqa
         surface_formats = self.pfn['vkGetPhysicalDeviceSurfaceFormatsKHR'](self.physical_device, self.surface) # noqa
         surface_present_modes = self.pfn['vkGetPhysicalDeviceSurfacePresentModesKHR'](self.physical_device, self.surface) # noqa
@@ -588,17 +577,18 @@ class VulkContext():
 
         def get_swap_extent(capabilities):
             uint32_max = 4294967295
-
             if capabilities.currentExtent.width != uint32_max:
                 return capabilities.currentExtent
 
+            width, height = self.window.get_size()
+
             width = max(
                 capabilities.minImageExtent.width,
-                min(capabilities.maxImageExtent.width, configuration.width))
+                min(capabilities.maxImageExtent.width, width))
 
             height = max(
                 capabilities.minImageExtent.height,
-                min(capabilities.maxImageExtent.height, configuration.height))
+                min(capabilities.maxImageExtent.height, height))
 
             return vk.VkExtent2D(width=width, height=height)
 
@@ -655,6 +645,7 @@ class VulkContext():
             # It's a bad practice but for this specific use case, it's good
             img = vo.Image.__new__(vo.Image)
             img.image = raw_image
+            img.memory = None
             img.format = surface_format.format
             img.width = self.width
             img.height = self.height
@@ -720,11 +711,14 @@ class VulkContext():
             self, self.final_image, vc.ImageViewType.TYPE_2D,
             vc.Format(self.swapchain_format), subresource_range)
 
-    def _create_commandbuffers(self):
-        '''Create the command buffers used to copy image'''
-        commandpool = vo.CommandPool(
+    def _create_commanpool(self):
+        """Create the command pool used to allocate buffers"""
+        self.commandpool = vo.CommandPool(
             self, self.queue_family_indices['graphic'])
-        self.commandbuffers = commandpool.allocate_buffers(
+
+    def _create_commandbuffers(self):
+        """Create the command buffers used to copy image"""
+        self.commandbuffers = self.commandpool.allocate_buffers(
             self, vc.CommandBufferLevel.PRIMARY,
             len(self.swapchain_images))
 
@@ -770,27 +764,55 @@ class VulkContext():
         self._semaphore_copied = vo.Semaphore(self)
         self._direct_semaphores = [vo.Semaphore(self), vo.Semaphore(self)]
 
-    def create(self, window, configuration):
-        '''Create Vulkan context
-
-        *Parameters:*
-
-        - `window`: The `VulkWindow`
-        - `configuration`: Configuration from Application
-        '''
-        self.debug_enabled = configuration.debug
-        self._create_instance(window, configuration)
+    def create(self):
+        """Create Vulkan context"""
+        self._create_instance()
 
         # Next functions need extension pointers
         self._get_pfn()
         self._create_debug_callback()
-        self._create_surface(window.info)
+        self._create_surface()
         self._create_physical_device()
-        self._create_device(configuration)
-        self._create_swapchain(configuration)
+        self._create_device()
+        self._create_commanpool()
+        self._create_swapchain_global()
+
+    def _create_swapchain_global(self):
+        self._create_swapchain()
         self._create_final_image()
         self._create_commandbuffers()
         self._create_semaphores()
+
+    def _destroy_swapchain_global(self):
+        # Destroy Framebuffers
+        # In Vulkan spec 2.3.1 - Object Lifetime
+        # It's legal to destroy Swapchain before pipelines
+        # but pipelines, renderpass and framebuffers must be reloaded too
+
+        # Be sure all operations are done
+        vk.vkDeviceWaitIdle(self.device)
+
+        # Command buffers
+        self.commandpool.free(self)
+
+        # Final image
+        self.final_image_view.destroy(self)
+        self.final_image_view = None
+        self.final_image.destroy(self)
+        self.final_image = None
+
+        # Swapchain
+        self.pfn['vkDestroySwapchainKHR'](self.device, self.swapchain, None)
+        self.swapchain = None
+
+    def reload_swapchain(self):
+        """Create a new swapchain
+
+        This function creates a swapchain and all that depends on it
+        """
+        logger.debug("Reloading swapchain")
+        self._destroy_swapchain_global()
+        self._create_swapchain_global()
 
     def clear_final_image(self, colors):
         '''
@@ -824,24 +846,28 @@ class VulkContext():
             )
 
     def swap(self, semaphores=None):
-        '''Display final image on screen.
+        """Display final image on screen.
 
         This function makes all the rendering work. To proceed, it copies the
         `final_image` into the current swapchain image previously acquired.
         You can pass custom semaphores (and you should) to synchronize the
         command.
 
-        *Parameters:*
-
-        - `semaphore`: A `list` of `Semaphore` to wait on
+        Args:
+            semaphore (list[Semaphore]): semaphores to wait on
 
         **Note: `final_image` layout is handled by `VulkContext`. You must
                  let it to COLOR_ATTACHMENT_OPTIMAL**
-        '''
+        """
         # Acquire image
-        index = self.pfn['vkAcquireNextImageKHR'](
-            self.device, self.swapchain, vk.UINT64_MAX,
-            self._semaphore_available.semaphore, None)
+        try:
+            index = self.pfn['vkAcquireNextImageKHR'](
+                self.device, self.swapchain, vk.UINT64_MAX,
+                self._semaphore_available.semaphore, None)
+        except vk.VkErrorOutOfDateKhr:
+            logger.warning("Swapchain out of date, reloading...")
+            self.reload_swapchain()
+            return
 
         wait_semaphores = [self._semaphore_available]
         if semaphores:

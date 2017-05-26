@@ -2,6 +2,7 @@
 
 BaseBatch is used by SpriteBatch and BlockBatch.
 '''
+from abc import ABC, abstractmethod
 from os import path
 import math
 
@@ -14,31 +15,31 @@ from vulk.graphic import uniform
 from vulk.math.matrix import ProjectionMatrix, TransformationMatrix, Matrix4
 
 
-class BaseBatch():
+class BaseBatch(ABC):
     def __init__(self, context, size=1000, shaderprogram=None,
                  out_view=None):
-        '''Initialize BaseBatch
+        """Initialize BaseBatch
 
-        *Parameters:*
-
-        - `context`: `VulkContext`
-        - `size`: Max number of block in one batch
-        - `shaderprogram`: Custom `ShaderProgram`
-        - `clear`: `list` of 4 `float` (r,g,b,a) or `None`
-        - `out_view`: Out `ImageView` to render into
+        Args:
+            context (VulkContext)
+            size (int): Max number of blocks in one batch
+            shaderprogram (ShaderProgram): Custom shader program
+            clear (list[float]): 4 `float` (r,g,b,a) or `None`
+            out_view (ImageView): Out image view to render into
 
         **Note: By default, `BaseBatch` doesn't clear `out_image`, you have
                 to fill `clear` to clear `out_image`**
 
         **Note: By default, out image is the context `final_image`, you can
                 override this behavior with the `out_view` parameter**
-        '''
+        """
         # ShaderProgram
         if not shaderprogram:
             shaderprogram = self.get_default_shaderprogram(context)
         self.shaderprogram = shaderprogram
 
         # Stored parameters
+        self.custom_out_view = out_view is not None
         self.out_view = out_view if out_view else context.final_image_view
 
         # Init rendering attributes
@@ -46,10 +47,11 @@ class BaseBatch():
         self.init_indices(size)
         self.uniformblock = self.init_uniform(context)
         self.cbpool = self.init_commandpool(context)
-        self.renderpass = self.init_renderpass(context)
         self.descriptorpool = self.init_descriptorpool(context)
         self.descriptorlayout = self.init_descriptorlayout(context)
         self.pipelinelayout = self.init_pipelinelayout(context)
+
+        self.renderpass = self.init_renderpass(context)
         self.pipeline = self.init_pipeline(context)
         self.framebuffer = self.init_framebuffer(context)
 
@@ -63,6 +65,38 @@ class BaseBatch():
         self.combined_matrix = Matrix4()
         self.idx = 0
         self.matrices_dirty = True
+
+    @abstractmethod
+    def init_descriptorlayout(self, context):
+        """Initialize and return descriptor layout
+
+        Args:
+            context (VulkContext)
+
+        Returns:
+            DescriptorSetLayout
+        """
+        pass
+
+    def resize(self, context):
+        """Resize the spritebatch
+
+        Args:
+            context (VulkContext)
+        """
+        # Reload out view
+        if not self.custom_out_view:
+            self.out_view = context.final_image_view
+
+        # Reload renderpass, pipeline and framebuffer
+        self.renderpass.destroy(context)
+        self.renderpass = self.init_renderpass(context)
+
+        self.pipeline.destroy(context)
+        self.pipeline = self.init_pipeline(context)
+
+        self.framebuffer.destroy(context)
+        self.framebuffer = self.init_framebuffer(context)
 
     def init_indices(self, size):
         '''Initialize mesh's indices.
