@@ -7,6 +7,8 @@ from vulk.context import VulkWindow, VulkContext
 from vulk.event import CallbackEventListener
 from vulk.util import millis, time_since_millis
 
+__all__ = ['BaseApp']
+
 logger = logging.getLogger()
 
 
@@ -121,7 +123,7 @@ class BaseApp(ABC):
         '''This function is called when your App starts'''
         listener = CallbackEventListener(
             quit=self.quit,
-            window_resized=self.resize
+            window_resized=lambda width, height: self.resize()
         )
         self.event_listeners.append(listener)
 
@@ -131,6 +133,8 @@ class BaseApp(ABC):
         return
 
     @abstractmethod
-    def resize(self, width, height):
+    def resize(self):
+        width = self.context.width
+        height = self.context.height
         logger.debug(f"Window resized to {width}x{height}")
         self.context.reload_swapchain()

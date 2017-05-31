@@ -2,7 +2,12 @@
 
 Cross-plateform 3D engine
 """
+# flake8: noqa
+
 from os import path as p
+
+from vulk.baseapp import *
+
 
 __version__ = "0.2.0"
 
