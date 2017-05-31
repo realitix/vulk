@@ -432,7 +432,7 @@ class VulkContext():
             logger.info("Create WINDOWS surface")
             # pylint: disable=no-member
             surface_create = vk.VkWin32SurfaceCreateInfoKHR(
-                sType=vk.VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR,
+                sType=vk.VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,
                 hinstance=info.info.win.hinstance,
                 hwnd=info.info.win.window,
                 flags=0)
@@ -871,7 +871,7 @@ class VulkContext():
 
         wait_semaphores = [self._semaphore_available]
         if semaphores:
-            wait_semaphores.extend(semaphores)
+            wait_semaphores.extend([s for s in semaphores if s])
 
         wait_masks = [vc.PipelineStage.COLOR_ATTACHMENT_OUTPUT]
         wait_masks *= len(wait_semaphores)
