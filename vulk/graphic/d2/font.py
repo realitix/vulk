@@ -197,13 +197,13 @@ class TextRenderer():
         """
         return self.batch.end()
 
-    def resize(self, context):
-        """Resize the TextRenderer
+    def reload(self, context):
+        """Reload the TextRenderer
 
         Args:
             context (VulkContext)
         """
-        self.batch.resize(context)
+        self.batch.reload(context)
 
     def draw(self, fontdata, text, x, y, size, r=1., g=1., b=1., a=1.,
              rotation=0.):

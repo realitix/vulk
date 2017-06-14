@@ -234,6 +234,7 @@ class Scene(Widget):
         """
         super().__init__(None)
         self.viewport = viewport
+        self._update_dimension(context.width, context.height)
 
         # Default renderers
         self.renderers = {
@@ -245,6 +246,12 @@ class Scene(Widget):
         # Custom renderers
         if renderers:
             self.renderers.update(renderers)
+
+    def _update_dimension(self, width, height):
+        self.shape.x = 0
+        self.shape.y = 0
+        self.shape.width = width
+        self.shape.height = height
 
     def _get_block_sp(self, context):
         """Create the `block` shader program
@@ -265,14 +272,20 @@ class Scene(Widget):
 
         return vo.ShaderProgramGlslFile(context, shaders_mapping)
 
+    def reload(self, context):
+        for renderer in self.renderers.values():
+            renderer.reload(context)
+
     def resize(self, context):
         """Resize the Scene
 
         Args:
             context (VulkContext)
         """
-        for renderer in self.renderers.values():
-            renderer.resize(context)
+        self.reload(context)
+        self._update_dimension(context.width, context.height)
+        self.viewport.update(context.width, context.height)
+        self.reshape_all()
 
     def render(self, context):
         """Render Scene
@@ -315,7 +328,7 @@ class Scene(Widget):
 class BatchedScene(Scene):
     """Faster Scene but with limitations
 
-    If your scene doesnét contain overlapping elements,
+    If your scene doesn't contain overlapping elements,
     this scene will be faster.
     """
     def render(self, context):

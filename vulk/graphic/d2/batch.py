@@ -78,8 +78,8 @@ class BaseBatch(ABC):
         """
         pass
 
-    def resize(self, context):
-        """Resize the spritebatch
+    def reload(self, context):
+        """Reload the spritebatch
 
         Args:
             context (VulkContext)
