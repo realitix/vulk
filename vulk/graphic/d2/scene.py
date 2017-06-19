@@ -2,6 +2,7 @@
 from functools import partial
 from os import path
 import logging
+import re
 
 from vulk import PATH_VULK_SHADER
 from vulk import vulkanconstant as vc
@@ -23,14 +24,40 @@ class PlaceMixin():
     def __init__(self):
         super().__init__()  # need super for MRO
 
-    def place(self, width, height, x=0, y=0):
+    def place(self, width, height, x, y):
+        """Place a widget on parent
+
+        You can use int values (=pixel) or percent values
+        like "50%"
+
+        Args:
+            width (str|int): Widget's width
+            height (str|int): Widget's height
+            x (str|int): Widget's x
+            y (str|int): Widget's y
+        """
+        if not self.relocate:
+            self.parent.children.append(self)
+
         self.parent.add_child_to_place(self, width, height, x, y)
         self.relocate = partial(self.place, width=width,
                                 height=height, x=x, y=y)
         self.relocate_children()
 
     def add_child_to_place(self, child, width, height, x, y):
-        self.children.append(child)
+        def ptv(v):
+            return float(re.sub("[^0-9\.]", "", v))
+
+        if isinstance(x, str):
+            x = ptv(x)/100. * self.shape.width
+        if isinstance(y, str):
+            y = ptv(y)/100. * self.shape.height
+
+        if isinstance(width, str):
+            width = ptv(width)/100. * self.shape.width
+        if isinstance(height, str):
+            height = ptv(height)/100. * self.shape.height
+
         child.shape.set(Rectangle(self.shape.x + x, self.shape.y + y,
                                   width, height))
 
@@ -44,6 +71,9 @@ class GridMixin():
         self.rows = 1
 
     def grid(self, column=0, row=0):
+        if not self.relocate:
+            self.parent.register_child_grid(self, column, row)
+
         self.parent.add_child_to_grid(self, column, row)
         self.relocate = partial(self.grid, column=column, row=row)
         self.relocate_children()
@@ -60,9 +90,6 @@ class GridMixin():
         """Called when the child ask a place in the parent grid"""
         # Increase columns and rows number
         self.update_grid_size(column, row)
-
-        # Register child
-        self.register_child_grid(child, column, row)
 
         # Reshape all children
         self.reshape_grid()
@@ -160,17 +187,6 @@ class Widget(PlaceMixin, GridMixin):
             result_children += child.collect_children()
 
         return result_children
-
-    def reshape(self):
-        self.reshape_grid()
-
-    def reshape_all(self):
-        """Ascend all parent until root and ask to reshape all"""
-        if self.parent:
-            self.parent.reshape_all()
-            return
-
-        self.reshape()
 
     def add_action(self, action):
         """Add action to the widget
@@ -285,7 +301,7 @@ class Scene(Widget):
         self.reload(context)
         self._update_dimension(context.width, context.height)
         self.viewport.update(context.width, context.height)
-        self.reshape_all()
+        self.relocate_children()
 
     def render(self, context):
         """Render Scene
