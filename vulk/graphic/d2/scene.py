@@ -481,7 +481,7 @@ class Label(Widget):
             renderer (TextRenderer)
         """
         c = self.color_abs
-        size = 30
+        size = self.shape.height
         renderer.draw(self.fontdata, self.text, self.shape.x, self.shape.y,
                       size, r=c[0], g=c[1], b=c[2], a=c[3],
                       rotation=self.rotation)
