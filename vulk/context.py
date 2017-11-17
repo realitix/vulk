@@ -683,8 +683,8 @@ class VulkContext():
             self.final_image.update_layout(
                 cmd, vc.ImageLayout.UNDEFINED,
                 vc.ImageLayout.TRANSFER_DST_OPTIMAL,
-                vc.PipelineStage.TOP_OF_PIPE,
-                vc.PipelineStage.TOP_OF_PIPE,
+                vc.PipelineStage.BOTTOM_OF_PIPE,
+                vc.PipelineStage.TRANSFER,
                 vc.Access.NONE, vc.Access.TRANSFER_WRITE
             )
             cmd.clear_color_image(
@@ -693,8 +693,8 @@ class VulkContext():
             self.final_image.update_layout(
                 cmd, vc.ImageLayout.TRANSFER_DST_OPTIMAL,
                 vc.ImageLayout.COLOR_ATTACHMENT_OPTIMAL,
-                vc.PipelineStage.BOTTOM_OF_PIPE,
-                vc.PipelineStage.BOTTOM_OF_PIPE,
+                vc.PipelineStage.TRANSFER,
+                vc.PipelineStage.COLOR_ATTACHMENT_OUTPUT,
                 vc.Access.TRANSFER_WRITE, vc.Access.COLOR_ATTACHMENT_WRITE
             )
 
@@ -727,16 +727,16 @@ class VulkContext():
                 self.final_image.update_layout(
                     cmd, vc.ImageLayout.COLOR_ATTACHMENT_OPTIMAL,
                     vc.ImageLayout.TRANSFER_SRC_OPTIMAL,
-                    vc.PipelineStage.TOP_OF_PIPE,
-                    vc.PipelineStage.TOP_OF_PIPE,
+                    vc.PipelineStage.COLOR_ATTACHMENT_OUTPUT,
+                    vc.PipelineStage.TRANSFER,
                     vc.Access.COLOR_ATTACHMENT_WRITE,
                     vc.Access.TRANSFER_READ
                 )
                 self.swapchain_images[i].update_layout(
                     cmd, vc.ImageLayout.PRESENT_SRC_KHR,
                     vc.ImageLayout.TRANSFER_DST_OPTIMAL,
-                    vc.PipelineStage.TOP_OF_PIPE,
-                    vc.PipelineStage.TOP_OF_PIPE,
+                    vc.PipelineStage.ALL_GRAPHICS,
+                    vc.PipelineStage.TRANSFER,
                     vc.Access.MEMORY_READ,
                     vc.Access.TRANSFER_WRITE
                 )
@@ -744,16 +744,16 @@ class VulkContext():
                 self.swapchain_images[i].update_layout(
                     cmd, vc.ImageLayout.TRANSFER_DST_OPTIMAL,
                     vc.ImageLayout.PRESENT_SRC_KHR,
-                    vc.PipelineStage.BOTTOM_OF_PIPE,
-                    vc.PipelineStage.BOTTOM_OF_PIPE,
+                    vc.PipelineStage.TRANSFER,
+                    vc.PipelineStage.ALL_GRAPHICS,
                     vc.Access.TRANSFER_WRITE,
                     vc.Access.MEMORY_READ
                 )
                 self.final_image.update_layout(
                     cmd, vc.ImageLayout.TRANSFER_SRC_OPTIMAL,
                     vc.ImageLayout.COLOR_ATTACHMENT_OPTIMAL,
-                    vc.PipelineStage.BOTTOM_OF_PIPE,
-                    vc.PipelineStage.BOTTOM_OF_PIPE,
+                    vc.PipelineStage.TRANSFER,
+                    vc.PipelineStage.COLOR_ATTACHMENT_OUTPUT,
                     vc.Access.TRANSFER_READ,
                     vc.Access.COLOR_ATTACHMENT_WRITE
                 )
@@ -829,8 +829,8 @@ class VulkContext():
                 cmd,
                 vc.ImageLayout.COLOR_ATTACHMENT_OPTIMAL,
                 vc.ImageLayout.TRANSFER_DST_OPTIMAL,
-                vc.PipelineStage.TOP_OF_PIPE,
-                vc.PipelineStage.TOP_OF_PIPE,
+                vc.PipelineStage.COLOR_ATTACHMENT_OUTPUT,
+                vc.PipelineStage.TRANSFER,
                 vc.Access.COLOR_ATTACHMENT_WRITE,
                 vc.Access.TRANSFER_WRITE
             )
@@ -840,9 +840,10 @@ class VulkContext():
             self.final_image.update_layout(
                 cmd, vc.ImageLayout.TRANSFER_DST_OPTIMAL,
                 vc.ImageLayout.COLOR_ATTACHMENT_OPTIMAL,
-                vc.PipelineStage.BOTTOM_OF_PIPE,
-                vc.PipelineStage.BOTTOM_OF_PIPE,
-                vc.Access.TRANSFER_WRITE, vc.Access.COLOR_ATTACHMENT_WRITE
+                vc.PipelineStage.TRANSFER,
+                vc.PipelineStage.COLOR_ATTACHMENT_OUTPUT,
+                vc.Access.TRANSFER_WRITE,
+                vc.Access.COLOR_ATTACHMENT_WRITE
             )
 
     def swap(self, semaphores=None):
