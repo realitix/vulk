@@ -168,16 +168,16 @@ class BaseEventListener(DispatchEventListener):
 
     def mouse_down(self, x, y, button):
         self.mouse_clicked = button
-        return False
+        return super().mouse_down(x, y, button)
 
     def mouse_up(self, x, y, button):
         self.mouse_clicked = -1
-        return False
+        return super().mouse_up(x, y, button)
 
     def mouse_move(self, x, y, xr, yr):
         if self.mouse_clicked != -1:
             return self.mouse_drag(x, y, xr, yr, self.mouse_clicked)
-        return False
+        return super().mouse_move(x, y, xr, yr)
 
     def mouse_drag(self, x, y, xr, yr, button):
         '''Called when mouse is dragged

@@ -22,7 +22,6 @@ class RenderHandler():
         self.texture = None
 
     def GetViewRect(self, browser, rect_out):
-        print(f"RENDER RESIZE: {self.width} {self.height}")
         self.texture = BinaryTexture(self.context, self.width, self.height,
                                      vc.Format.R8G8B8A8_UNORM, None)
         rect_out.extend([0, 0, self.width, self.height])
@@ -41,36 +40,30 @@ class RenderHandler():
             self.texture.upload_buffer(self.context, 0)
             self.texture.upload(self.context)
             self.texture_ready = True
-            print(paint_buffer)
 
     def OnLoadingStateChange(self, browser, is_loading, **_):
-        """Called when the loading state has changed."""
         if not is_loading:
             self.loaded = True
-            print("[screenshot.py] Web page loading is complete")
 
 
 class Ui():
-    def __init__(self, context, html_file):
-        self.html_file = html_file
+    def __init__(self, context, html):
         self.batch = SpriteBatch(context)
         self.handler = RenderHandler(context)
-        self.browser = self._create_browser()
+        self.browser = self._create_browser(html)
         self.resize(context)
 
-    def _create_browser(self):
+    def _create_browser(self, html):
         parent_window_handle = 0
         window_info = cef.WindowInfo()
         window_info.SetAsOffscreen(parent_window_handle)
         window_info.SetTransparentPainting(True)
-        browser = cef.CreateBrowserSync(window_info=window_info,
-                                        url="http://google.fr")
+        browser = cef.CreateBrowserSync(window_info=window_info, url=html)
         browser.SetClientHandler(self.handler)
         browser.SendFocusEvent(True)
         return browser
 
     def resize(self, context):
-        print("resize: {}, {}", context.width, context.height)
         self.handler.width = context.width
         self.handler.height = context.height
         self.batch.reload(context)
@@ -83,3 +76,7 @@ class Ui():
             self.batch.draw(self.handler.texture, 0, 0)
             return self.batch.end()
         return []
+
+    def dispose(self):
+        self.browser.CloseBrowser()
+        cef.QuitMessageLoop()
