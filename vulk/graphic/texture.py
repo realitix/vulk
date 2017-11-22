@@ -123,7 +123,7 @@ class BinaryTexture(RawTexture):
             width (int): Texture width
             height (int): Texture height
             texture_format (Format): Texture format
-            raw_bitmap (buffer): Bitmap buffer
+            raw_bitmap (buffer): Bitmap buffer (can be None)
             mip_levels (int): Number of mipmaps to generate (0 = until 1x1)
         """
         self.raw_bitmap = raw_bitmap
@@ -133,11 +133,14 @@ class BinaryTexture(RawTexture):
                          mip_levels=mip_levels)
 
         # Upload data
-        self.generate_mipmaps(context)
-        self.upload(context)
+        if self.raw_bitmap:
+            self.generate_mipmaps(context)
+            self.upload(context)
 
     def init_bitmap(self):
         '''Initialize bitmap array with `raw_bitmap`'''
+        if not self.raw_bitmap:
+            return
         return np.array(self.raw_bitmap, dtype=np.uint8, copy=False)
 
     def upload_buffer(self, context, mip_level):

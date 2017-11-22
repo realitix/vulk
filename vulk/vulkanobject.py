@@ -1563,6 +1563,7 @@ class HighPerformanceImage():
         if not queue_families:
             queue_families = []
 
+        self.copied = False
         self.mip_levels = mip_levels
         self.buffer_mipmaps, buffer_size = (
             self._get_buffer_infos(width, height, image_format))
@@ -1619,16 +1620,29 @@ class HighPerformanceImage():
                                   context.queue_family_indices['graphic'])
 
         # Transition final image to optimal destination transfert layout
-        with immediate_buffer(context, commandpool) as cmd:
-            self.final_image.update_layout(
-                cmd, vc.ImageLayout.PREINITIALIZED,
-                vc.ImageLayout.TRANSFER_DST_OPTIMAL,
-                vc.PipelineStage.TOP_OF_PIPE,
-                vc.PipelineStage.TOP_OF_PIPE,
-                vc.Access.HOST_WRITE,
-                vc.Access.TRANSFER_WRITE,
-                mip_levels=self.mip_levels
-            )
+        if not self.copied:
+            with immediate_buffer(context, commandpool) as cmd:
+                self.final_image.update_layout(
+                    cmd, vc.ImageLayout.PREINITIALIZED,
+                    vc.ImageLayout.TRANSFER_DST_OPTIMAL,
+                    vc.PipelineStage.HOST,
+                    vc.PipelineStage.TRANSFER,
+                    vc.Access.HOST_WRITE,
+                    vc.Access.TRANSFER_WRITE,
+                    mip_levels=self.mip_levels
+                )
+            self.copied = True
+        else:
+            with immediate_buffer(context, commandpool) as cmd:
+                self.final_image.update_layout(
+                    cmd, vc.ImageLayout.SHADER_READ_ONLY_OPTIMAL,
+                    vc.ImageLayout.TRANSFER_DST_OPTIMAL,
+                    vc.PipelineStage.FRAGMENT_SHADER,
+                    vc.PipelineStage.TRANSFER,
+                    vc.Access.SHADER_READ,
+                    vc.Access.TRANSFER_WRITE,
+                    mip_levels=self.mip_levels
+                )
 
         # Copy staging buffer into final image
         with immediate_buffer(context, commandpool) as cmd:
@@ -1640,12 +1654,13 @@ class HighPerformanceImage():
             self.final_image.update_layout(
                 cmd, vc.ImageLayout.TRANSFER_DST_OPTIMAL,
                 vc.ImageLayout.SHADER_READ_ONLY_OPTIMAL,
-                vc.PipelineStage.TOP_OF_PIPE,
-                vc.PipelineStage.TOP_OF_PIPE,
+                vc.PipelineStage.TRANSFER,
+                vc.PipelineStage.FRAGMENT_SHADER,
                 vc.Access.TRANSFER_WRITE,
                 vc.Access.SHADER_READ,
                 mip_levels=self.mip_levels
             )
+
 
     def finalize(self, context):
         """Copy staging buffer to final image

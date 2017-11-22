@@ -84,6 +84,11 @@ class BaseBatch(ABC):
         Args:
             context (VulkContext)
         """
+        # Relaod projection matrix
+        self.projection_matrix.to_orthographic_2d(
+            0, 0, context.width, context.height)
+        self.matrices_dirty = True
+
         # Reload out view
         if not self.custom_out_view:
             self.out_view = context.final_image_view
