@@ -13,11 +13,11 @@ logger = logging.getLogger()
 
 
 class BaseApp(ABC):
-    """App must inherit this class
+    '''App must inherit this class
 
     The App is responsible of creating the window and manage the life
     cycle of the program.
-    """
+    '''
 
     def __init__(self, name='Vulk', x=-1, y=-1, width=640, height=480,
                  fullscreen=False, resizable=True, decorated=True,
@@ -78,6 +78,7 @@ class BaseApp(ABC):
         self.audio = VulkAudio()
         self.audio.open(self.configuration)
         self.start()
+        self.resize()
         return self
 
     def __exit__(self, *args):
@@ -137,4 +138,59 @@ class BaseApp(ABC):
         width = self.context.width
         height = self.context.height
         logger.debug(f"Window resized to {width}x{height}")
-        self.context.reload_swapchain()
+        self.context.resize()
+
+
+class Screen(ABC):
+    def __init__(self):
+        self.context = None
+
+    @abstractmethod
+    def render(self, delta):
+        return
+
+    @abstractmethod
+    def show(self):
+        return
+
+    @abstractmethod
+    def hide(self):
+        self.context = None
+
+    @abstractmethod
+    def resize(self):
+        return
+
+
+class MultiScreenApp(BaseApp):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._screen = None
+
+    @property
+    def screen(self):
+        return self._screen
+
+    @screen.setter
+    def screen(self, screen):
+        if self._screen:
+            self._screen.hide()
+            self._screen.context = None
+        if screen:
+            self._screen = screen
+            screen.context = self.context
+            screen.show()
+            screen.resize()
+
+    def render(self, delta):
+        super().render(delta)
+        if self._screen:
+            self._screen.render(delta)
+
+    def resize(self):
+        super().resize()
+        if self._screen:
+            self._screen.resize()
+
+    def end(self):
+        self.screen = None

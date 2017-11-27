@@ -814,6 +814,13 @@ class VulkContext():
         self._destroy_swapchain_global()
         self._create_swapchain_global()
 
+    def resize(self):
+        """Resize context when window is resized"""
+        width, height = self.window.get_size()
+
+        if self.width != width and self.height != height:
+            self.reload_swapchain()
+
     def clear_final_image(self, colors):
         '''
         Clear the final image with `colors`
