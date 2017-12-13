@@ -9,7 +9,6 @@ from vulk.graphic.texture import BinaryTexture
 
 
 sys.excepthook = cef.ExceptHook
-cef.Initialize(settings={"windowless_rendering_enabled": True})
 
 
 class RenderHandler():
@@ -48,6 +47,7 @@ class RenderHandler():
 
 class Ui():
     def __init__(self, context, html):
+        cef.Initialize(settings={"windowless_rendering_enabled": True})
         self.batch = SpriteBatch(context)
         self.handler = RenderHandler(context)
         self.browser = self._create_browser(html)
@@ -80,3 +80,4 @@ class Ui():
     def dispose(self):
         self.browser.CloseBrowser()
         cef.QuitMessageLoop()
+        cef.Shutdown()

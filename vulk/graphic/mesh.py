@@ -81,7 +81,7 @@ class Mesh():
                 context, max_indices * vc.index_type_size(self.index_type),
                 vc.BufferUsage.INDEX_BUFFER)
 
-        # Create othens attributes
+        # Create others attributes
         self.dirty_indices = True
         self.dirty_vertices = True
 
