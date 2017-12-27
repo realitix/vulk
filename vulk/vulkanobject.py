@@ -23,6 +23,7 @@ from contextlib import contextmanager
 import logging
 import pyshaderc
 import vulkan as vk  # pylint: disable=import-error
+import pyvma as vma
 
 from vulk.exception import VulkError
 from vulk import vulkanconstant as vc
@@ -37,38 +38,6 @@ logger = logging.getLogger()
 def btov(b):
     '''Convert boolean to Vulkan boolean'''
     return vk.VK_TRUE if b else vk.VK_FALSE
-
-
-def find_memory_type(context, type_filter, properties):
-    '''
-    Graphics cards can offer different types of memory to allocate from.
-    Each type of memory varies in terms of allowed operations and performance
-    characteristics. We need to combine the requirements of the memory and our
-    own application requirements to find the right type of memory to use.
-
-    *Parameters:*
-
-    - `context`: The `VulkContext`
-    - `type_filter`: Bit field of the memory types that are suitable
-                     for the memory (int)
-    - `properties`: `MemoryProperty` Vulkan constant, type of
-                    memory we want
-
-    **Todo: I made a bitwise comparaison with `type_filter`, I have to test
-            it to be sure it's working**
-    '''
-    cache_properties = vk.vkGetPhysicalDeviceMemoryProperties(
-        context.physical_device)
-
-    for i, memory_type in enumerate(cache_properties.memoryTypes):
-        # TODO: Test type_filter
-        if (type_filter & (1 << i)) and \
-           (memory_type.propertyFlags & properties) == properties:
-            return i
-
-    msg = "Can't find suitable memory type"
-    logger.critical(msg)
-    raise VulkError(msg)
 
 
 @contextmanager
@@ -638,7 +607,7 @@ class Buffer():
     """`Buffer` wrap a `VkBuffer` and a `VkMemory`"""
 
     def __init__(self, context, flags, size, usage, sharing_mode,
-                 queue_families, memory_properties):
+                 queue_families, vma_usage):
         """Create a new buffer
 
         Creating a buffer is made of several steps:
@@ -655,43 +624,22 @@ class Buffer():
             queue_families (list): List of queue families accessing this
                                    buffer (ignored if sharingMode is not
                                    `CONCURRENT` - can be [])
-            memory_properties (MemoryProperty): Type of memory for this buffer
+            vma_usage (VmaMemoryUsage): Usage of this buffer
         """
-        self.memory_properties = memory_properties.value
-        self.size = size
-
         # Create VkBuffer
         buffer_create = vk.VkBufferCreateInfo(
-            sType=vk.VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
             flags=flags.value,
-            size=self.size,
+            size=size,
             usage=usage.value,
             sharingMode=sharing_mode.value,
             queueFamilyIndexCount=len(queue_families),
             pQueueFamilyIndices=queue_families if queue_families else None
         )
-
-        self.buffer = vk.vkCreateBuffer(context.device, buffer_create, None)
-
-        # Get memory requirements
-        requirements = vk.vkGetBufferMemoryRequirements(context.device,
-                                                        self.buffer)
-
-        alloc_info = vk.VkMemoryAllocateInfo(
-            sType=vk.VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
-            allocationSize=requirements.size,
-            memoryTypeIndex=find_memory_type(
-                context,
-                requirements.memoryTypeBits,
-                self.memory_properties
-            )
-        )
-
-        # Create memory
-        self.memory = vk.vkAllocateMemory(context.device, alloc_info, None)
-
-        # Bind device memory to the buffer
-        vk.vkBindBufferMemory(context.device, self.buffer, self.memory, 0)
+        vma_alloc_info = vma.VmaAllocationCreateInfo(usage=vma_usage)
+        self.buffer, self.allocation, self.info = vma.vmaCreateBuffer(
+            context.vma_allocator,
+            buffer_create,
+            vma_alloc_info)
 
     def copy_to(self, cmd, dst_buffer):
         """Copy this buffer to the destination buffer
@@ -705,15 +653,15 @@ class Buffer():
 
         **Note: Buffers must have the same size**
         """
-        if self.size != dst_buffer.size:
+        if self.info.size != dst_buffer.info.size:
             msg = "Buffers must have the same size"
             logger.error(msg)
             raise VulkError(msg)
 
         region = vk.VkBufferCopy(
-            srcOffset=0,
-            dstOffset=0,
-            size=self.size
+            srcOffset=self.info.offset,
+            dstOffset=dst_buffer.info.offset,
+            size=self.info.size
         )
 
         cmd.copy_buffer(self, dst_buffer, [region])
@@ -746,7 +694,7 @@ class Buffer():
                                    depth=dst_image.depth)
             offset = vk.VkOffset3D(x=0, y=0, z=0)
             region = vk.VkBufferImageCopy(
-                bufferOffset=info['offset'],
+                bufferOffset=self.info.offset+info['offset'],
                 bufferRowLength=0,
                 bufferImageHeight=0,
                 imageSubresource=subresource,
@@ -760,7 +708,7 @@ class Buffer():
         cmd.copy_buffer_to_image(self, dst_image, dst_layout, regions)
 
     @contextmanager
-    def bind(self, context, offset=0, size=0):
+    def bind(self, context):
         """Map this buffer to upload data in it
 
         This function is a context manager and must be called with `with`.
@@ -774,21 +722,11 @@ class Buffer():
 
         **Warning: Buffer memory must be host visible**
         """
-        size = size or self.size
-        compatible_memories = {vk.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
-                               vk.VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-                               vk.VK_MEMORY_PROPERTY_HOST_CACHED_BIT}
-        if not any([self.memory_properties & m for m in compatible_memories]):
-            msg = "Can't map this buffer, memory must be host visible"
-            logger.error(msg)
-            raise VulkError(msg)
-
         try:
-            data = vk.vkMapMemory(context.device, self.memory, offset,
-                                  size, 0)
+            data = vma.vmaMapMemory(context.vma_allocator, self.allocation)
             yield data
         finally:
-            vk.vkUnmapMemory(context.device, self.memory)
+            vma.vmaUnmapMemory(context.vma_allocator, self.allocation)
 
 
 class ClearColorValue():
@@ -1487,15 +1425,14 @@ class HighPerformanceBuffer():
 
         self.staging_buffer = Buffer(
             context, vc.BufferCreate.NONE, size, vc.BufferUsage.TRANSFER_SRC,
-            sharing_mode, queue_families,
-            vc.MemoryProperty.HOST_VISIBLE | vc.MemoryProperty.HOST_COHERENT
+            sharing_mode, queue_families, vc.VmaMemoryUsage.CPU_ONLY
         )
 
         self.final_buffer = Buffer(
             context, vc.BufferCreate.NONE, size,
             vc.BufferUsage.TRANSFER_DST | usage,
             sharing_mode, queue_families,
-            vc.MemoryProperty.DEVICE_LOCAL
+            vc.VmaMemoryUsage.GPU_ONLY
         )
 
     def _finalize(self, context):
@@ -1565,25 +1502,38 @@ class HighPerformanceImage():
 
         self.copied = False
         self.mip_levels = mip_levels
-        self.buffer_mipmaps, buffer_size = (
-            self._get_buffer_infos(width, height, image_format))
-
-        self.staging_buffer = Buffer(
-            context, vc.BufferCreate.NONE, buffer_size,
-            vc.BufferUsage.TRANSFER_SRC, sharing_mode, queue_families,
-            vc.MemoryProperty.HOST_VISIBLE | vc.MemoryProperty.HOST_COHERENT
-        )
+        self.staging_buffers = self._init_staging_buffers(
+            context, width, height, image_format, sharing_mode,
+            queue_families)
 
         self.final_image = Image(
             context, image_type, image_format, width, height, depth,
             mip_levels, layers, samples, sharing_mode, queue_families,
             vc.ImageLayout.PREINITIALIZED, vc.ImageTiling.OPTIMAL,
             vc.ImageUsage.TRANSFER_DST | vc.ImageUsage.SAMPLED,
-            vc.MemoryProperty.DEVICE_LOCAL
+            vc.VmaMemoryUsage.GPU_ONLY
         )
 
+    def _init_staging_buffers(self, context, width, height, image_format,
+                              sharing_mode, queue_families):
+        buffers = []
+        components = vc.format_info(image_format)[1]
+
+        for mip_level in range(self.mip_levels):
+            w, h = mipmap_size(width, height, mip_level)
+            size = w * h * components
+            buffers.append(Buffer(
+                context, vc.BufferCreate.NONE, size,
+                vc.BufferUsage.TRANSFER_SRC, sharing_mode, queue_families,
+                vc.VmaMemoryUsage.CPU_ONLY
+            ))
+
+        return buffers
+
     def _get_buffer_infos(self, width, height, image_format):
-        """Get buffer infos for construction
+        """
+        TODO: Delete this method
+        Get buffer infos for construction
 
         Args:
             width (int): Image width
@@ -1661,7 +1611,6 @@ class HighPerformanceImage():
                 mip_levels=self.mip_levels
             )
 
-
     def finalize(self, context):
         """Copy staging buffer to final image
 
@@ -1697,7 +1646,7 @@ class Image():
 
     def __init__(self, context, image_type, image_format, width, height, depth,
                  mip_level, layers, samples, sharing_mode, queue_families,
-                 layout, tiling, usage, memory_properties):
+                 layout, tiling, usage, vma_usage):
         """Create a new image
 
         Creating an image is made of several steps:
@@ -1722,18 +1671,18 @@ class Image():
             layout (ImageLayout)
             tiling (ImageTiling)
             usage (ImageUsage)
-            memory_properties (MemoryProperty)
+            vma_usage (VmaMemoryUsage): Usage of this image
         """
         self.width = width
         self.height = height
         self.depth = depth
         self.mip_level = mip_level
         self.format = image_format
-        self.memory_properties = memory_properties
         image_type = image_type.value
         tiling = tiling.value
         usage = usage.value
         flags = 0
+        self.is_swapchain = False
 
         # Check that image can be created
         try:
@@ -1750,7 +1699,6 @@ class Image():
                                   depth=depth)
 
         image_create = vk.VkImageCreateInfo(
-            sType=vk.VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
             flags=0,
             imageType=image_type,
             format=self.format.value,
@@ -1765,27 +1713,12 @@ class Image():
             pQueueFamilyIndices=queue_families if queue_families else None,
             initialLayout=layout.value
         )
+        vma_alloc_info = vma.VmaAllocationCreateInfo(usage=vma_usage)
 
-        self.image = vk.vkCreateImage(context.device, image_create, None)
-
-        # Get memory requirements
-        requirements = vk.vkGetImageMemoryRequirements(context.device,
-                                                       self.image)
-
-        alloc_info = vk.VkMemoryAllocateInfo(
-            sType=vk.VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
-            allocationSize=requirements.size,
-            memoryTypeIndex=find_memory_type(
-                context,
-                requirements.memoryTypeBits,
-                self.memory_properties
-            )
-        )
-
-        self.memory = vk.vkAllocateMemory(context.device, alloc_info, None)
-
-        # Bind device memory to the image
-        vk.vkBindImageMemory(context.device, self.image, self.memory, 0)
+        self.image, self.allocation, self.info = vma.vmaCreateImage(
+            context.vma_allocator,
+            image_create,
+            vma_alloc_info)
 
     def update_layout(self, cmd, old_layout, new_layout, src_stage,
                       dst_stage, src_access, dst_access, base_mip_level=0,
@@ -1892,15 +1825,11 @@ class Image():
             logger.error(msg)
             raise VulkError(msg)
 
-        _, _, format_size = vc.format_info(self.format)
-        image_size = (self.width * self.height * self.depth * format_size)
-
         try:
-            data = vk.vkMapMemory(context.device, self.memory, 0,
-                                  image_size, 0)
+            data = vma.vmaMapMemory(context.vma_allocator, self.allocation)
             yield data
         finally:
-            vk.vkUnmapMemory(context.device, self.memory)
+            vk.vmaUnmapMemory(context.vma_allocator, self.allocation)
 
     def destroy(self, context):
         """Destroy this image
@@ -1908,11 +1837,12 @@ class Image():
         Args:
             context (VulkContext)
         """
-        vk.vkDestroyImage(context.device, self.image, None)
-
-        # Swapchain images have no memory so we check
-        if self.memory:
-            vk.vkFreeMemory(context.device, self.memory, None)
+        # Swapchain images have no allocation
+        if self.is_swapchain:
+            vk.vkDestroyImage(context.device, self.image, None)
+        else:
+            vma.vmaDestroyImage(context.vma_allocator, self.image,
+                                self.allocation)
 
 
 class ImageView():
