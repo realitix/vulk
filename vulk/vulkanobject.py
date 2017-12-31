@@ -635,7 +635,10 @@ class Buffer():
             queueFamilyIndexCount=len(queue_families),
             pQueueFamilyIndices=queue_families if queue_families else None
         )
-        vma_alloc_info = vma.VmaAllocationCreateInfo(usage=vma_usage)
+        vma_alloc_info = vma.VmaAllocationCreateInfo(
+            usage=vma_usage,
+            flags=vma.VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT
+        )
         self.buffer, self.allocation, self.info = vma.vmaCreateBuffer(
             context.vma_allocator,
             buffer_create,
@@ -666,7 +669,7 @@ class Buffer():
 
         cmd.copy_buffer(self, dst_buffer, [region])
 
-    def copy_to_image(self, cmd, dst_image, mip_infos):
+    def copy_to_image(self, cmd, dst_image, mip_level):
         """Copy this buffer to the destination image
 
         Commands to copy are registered in the commandbuffer but it's up to
@@ -681,31 +684,30 @@ class Buffer():
         **Note: Layout of destination image must be `TRANSFERT_DST_OPTIMAL`.
                 It's up to you.**
         """
-        regions = []
+        width, height = mipmap_size(
+            dst_image.width, dst_image.height, mip_level)
 
-        for mip_level, info in enumerate(mip_infos):
-            subresource = vk.VkImageSubresourceLayers(
-                aspectMask=vc.ImageAspect.COLOR,
-                baseArrayLayer=0,
-                mipLevel=mip_level,
-                layerCount=1
-            )
-            extent = vk.VkExtent3D(width=info['width'], height=info['height'],
-                                   depth=dst_image.depth)
-            offset = vk.VkOffset3D(x=0, y=0, z=0)
-            region = vk.VkBufferImageCopy(
-                bufferOffset=self.info.offset+info['offset'],
-                bufferRowLength=0,
-                bufferImageHeight=0,
-                imageSubresource=subresource,
-                imageOffset=offset,
-                imageExtent=extent
-            )
-            regions.append(region)
+        subresource = vk.VkImageSubresourceLayers(
+            aspectMask=vc.ImageAspect.COLOR,
+            baseArrayLayer=0,
+            mipLevel=mip_level,
+            layerCount=1
+        )
+        extent = vk.VkExtent3D(width=width, height=height,
+                               depth=dst_image.depth)
+        offset = vk.VkOffset3D(x=0, y=0, z=0)
+        region = vk.VkBufferImageCopy(
+            bufferOffset=self.info.offset,
+            bufferRowLength=0,
+            bufferImageHeight=0,
+            imageSubresource=subresource,
+            imageOffset=offset,
+            imageExtent=extent
+        )
 
         dst_layout = vc.ImageLayout.TRANSFER_DST_OPTIMAL
 
-        cmd.copy_buffer_to_image(self, dst_image, dst_layout, regions)
+        cmd.copy_buffer_to_image(self, dst_image, dst_layout, [region])
 
     @contextmanager
     def bind(self, context):
@@ -1502,7 +1504,7 @@ class HighPerformanceImage():
 
         self.copied = False
         self.mip_levels = mip_levels
-        self.staging_buffers = self._init_staging_buffers(
+        self.buffers = self._init_buffers(
             context, width, height, image_format, sharing_mode,
             queue_families)
 
@@ -1514,8 +1516,8 @@ class HighPerformanceImage():
             vc.VmaMemoryUsage.GPU_ONLY
         )
 
-    def _init_staging_buffers(self, context, width, height, image_format,
-                              sharing_mode, queue_families):
+    def _init_buffers(self, context, width, height, image_format,
+                      sharing_mode, queue_families):
         buffers = []
         components = vc.format_info(image_format)[1]
 
@@ -1525,8 +1527,7 @@ class HighPerformanceImage():
             buffers.append(Buffer(
                 context, vc.BufferCreate.NONE, size,
                 vc.BufferUsage.TRANSFER_SRC, sharing_mode, queue_families,
-                vc.VmaMemoryUsage.CPU_ONLY
-            ))
+                vc.VmaMemoryUsage.CPU_ONLY))
 
         return buffers
 
@@ -1566,8 +1567,8 @@ class HighPerformanceImage():
         Args:
             context (VulkContext)
         """
-        commandpool = CommandPool(context,
-                                  context.queue_family_indices['graphic'])
+        commandpool = CommandPool(
+            context, context.queue_family_indices['graphic'])
 
         # Transition final image to optimal destination transfert layout
         if not self.copied:
@@ -1596,8 +1597,8 @@ class HighPerformanceImage():
 
         # Copy staging buffer into final image
         with immediate_buffer(context, commandpool) as cmd:
-            self.staging_buffer.copy_to_image(cmd, self.final_image,
-                                              self.buffer_mipmaps)
+            for mip_level, buf in enumerate(self.buffers):
+                buf.copy_to_image(cmd, self.final_image, mip_level)
 
         # Set the best layout for the final image
         with immediate_buffer(context, commandpool) as cmd:
@@ -1634,10 +1635,7 @@ class HighPerformanceImage():
         if mip_level > self.mip_levels - 1:
             raise VulkError("Can't upload more mipmap than possible")
 
-        offset = self.buffer_mipmaps[mip_level]['offset']
-        size = self.buffer_mipmaps[mip_level]['size']
-
-        with self.staging_buffer.bind(context, offset=offset, size=size) as b:
+        with self.buffers[mip_level].bind(context) as b:
             yield b
 
 
@@ -1713,7 +1711,12 @@ class Image():
             pQueueFamilyIndices=queue_families if queue_families else None,
             initialLayout=layout.value
         )
-        vma_alloc_info = vma.VmaAllocationCreateInfo(usage=vma_usage)
+        # TODO: VMA bug, I should not have to use dedicated memory
+        # when my image is TILING.OPTIMAL, VMA must do it itself
+        vma_alloc_info = vma.VmaAllocationCreateInfo(
+            usage=vma_usage,
+            flags=vma.VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT
+        )
 
         self.image, self.allocation, self.info = vma.vmaCreateImage(
             context.vma_allocator,

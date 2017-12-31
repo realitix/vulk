@@ -15,6 +15,7 @@ import logging
 import sdl2
 import sdl2.ext
 import vulkan as vk
+import pyvma as vma
 
 from vulk.exception import VulkError, SDL2Error
 from vulk import vulkanconstant as vc
@@ -139,10 +140,15 @@ class VulkContext():
         self._semaphore_copied = None
         # Semaphores used for direct rendering
         self._direct_semaphores = []
-        # Comman pool
+        # Command pool
         self.commandpool = None
         # Command buffers
         self.commandbuffers = None
+        # VMA Allocator
+        self.vma_allocator = None
+        # Counter used externally to context
+        # You can use it if you want to know if context is reloaded
+        self.reload_count = 0
 
     def _get_instance_extensions(self):
         """Get extensions which depend on the window
@@ -645,7 +651,7 @@ class VulkContext():
             # It's a bad practice but for this specific use case, it's good
             img = vo.Image.__new__(vo.Image)
             img.image = raw_image
-            img.memory = None
+            img.is_swapchain = True
             img.format = surface_format.format
             img.width = self.width
             img.height = self.height
@@ -673,7 +679,7 @@ class VulkContext():
             self.width, self.height, 1, 1,
             1, vc.SampleCount.COUNT_1, vc.SharingMode.EXCLUSIVE, [],
             vc.ImageLayout.UNDEFINED, vc.ImageTiling.OPTIMAL, usage,
-            vc.MemoryProperty.DEVICE_LOCAL
+            vc.VmaMemoryUsage.GPU_ONLY
         )
 
         # Fill image memory and put it into color attachment layout
@@ -764,6 +770,12 @@ class VulkContext():
         self._semaphore_copied = vo.Semaphore(self)
         self._direct_semaphores = [vo.Semaphore(self), vo.Semaphore(self)]
 
+    def _create_vma(self):
+        vma_createinfo = vma.VmaAllocatorCreateInfo(
+            physicalDevice=self.physical_device,
+            device=self.device)
+        self.vma_allocator = vma.vmaCreateAllocator(vma_createinfo)
+
     def create(self):
         """Create Vulkan context"""
         self._create_instance()
@@ -774,6 +786,7 @@ class VulkContext():
         self._create_surface()
         self._create_physical_device()
         self._create_device()
+        self._create_vma()
         self._create_commanpool()
         self._create_swapchain_global()
 
@@ -782,6 +795,7 @@ class VulkContext():
         self._create_final_image()
         self._create_commandbuffers()
         self._create_semaphores()
+        self.reload_count += 1
 
     def _destroy_swapchain_global(self):
         # Destroy Framebuffers

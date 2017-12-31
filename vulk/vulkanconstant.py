@@ -11,6 +11,7 @@ specific field `NONE` which is equals to 0.
 from enum import Enum, IntEnum, IntFlag, auto
 import numpy as np
 import vulkan as vk
+import pyvma as vma
 
 
 # ----------
@@ -666,6 +667,15 @@ class VertexInputRate(IntEnum):
     NONE = 0
     VERTEX = vk.VK_VERTEX_INPUT_RATE_VERTEX
     INSTANCE = vk.VK_VERTEX_INPUT_RATE_INSTANCE
+
+
+class VmaMemoryUsage(IntEnum):
+    NONE = 0
+    UNKNOWN = vma.VMA_MEMORY_USAGE_UNKNOWN
+    GPU_ONLY = vma.VMA_MEMORY_USAGE_GPU_ONLY
+    CPU_ONLY = vma.VMA_MEMORY_USAGE_CPU_ONLY
+    CPU_TO_GPU = vma.VMA_MEMORY_USAGE_CPU_TO_GPU
+    GPU_TO_CPU = vma.VMA_MEMORY_USAGE_GPU_TO_CPU
 
 
 # ----------

@@ -65,6 +65,7 @@ class BaseBatch(ABC):
         self.combined_matrix = Matrix4()
         self.idx = 0
         self.matrices_dirty = True
+        self.reload_count = context.reload_count
 
     @abstractmethod
     def init_descriptorlayout(self, context):
@@ -84,7 +85,7 @@ class BaseBatch(ABC):
         Args:
             context (VulkContext)
         """
-        # Relaod projection matrix
+        # Reload projection matrix
         self.projection_matrix.to_orthographic_2d(
             0, 0, context.width, context.height)
         self.matrices_dirty = True
@@ -102,6 +103,9 @@ class BaseBatch(ABC):
 
         self.framebuffer.destroy(context)
         self.framebuffer = self.init_framebuffer(context)
+
+        # Update reload count
+        self.reload_count = context.reload_count
 
     def init_indices(self, size):
         '''Initialize mesh's indices.
@@ -256,6 +260,9 @@ class BaseBatch(ABC):
         '''
         if self.drawing:
             raise Exception("Currently drawing")
+
+        if self.reload_count != context.reload_count:
+            raise Exception("Batch not reloaded, can't draw")
 
         if self.matrices_dirty:
             self.upload_matrices(context)
