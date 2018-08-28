@@ -637,6 +637,7 @@ class Buffer():
         )
         vma_alloc_info = vma.VmaAllocationCreateInfo(
             usage=vma_usage,
+            # TODO: I don't know exactly how VMA works but I need that flag
             flags=vma.VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT
         )
         self.buffer, self.allocation, self.info = vma.vmaCreateBuffer(
@@ -1437,19 +1438,19 @@ class HighPerformanceBuffer():
             vc.VmaMemoryUsage.GPU_ONLY
         )
 
-    def _finalize(self, context):
+    def upload(self, context, cmd):
         '''
         Copy the staging buffer to the final buffer.
 
         *Parameters:*
 
         - `context`: `VulkContext`
+        - `cmd`: `CommandBuffer` or automatically created if not specified
         '''
-        with immediate_buffer(context) as cmd:
-            self.staging_buffer.copy_to(cmd, self.final_buffer)
+        self.staging_buffer.copy_to(cmd, self.final_buffer)
 
     @contextmanager
-    def bind(self, context):
+    def bind(self, context, auto_upload=True):
         '''Bind buffer for writing
 
         It calls `bind` method of the staging buffer and copy the buffer
@@ -1458,12 +1459,15 @@ class HighPerformanceBuffer():
         *Parameters:*
 
         - `context`: `VulkContext`
+        - `auto_upload`: Automatically upload this buffer after the write
         '''
         try:
             with self.staging_buffer.bind(context) as b:
                 yield b
         finally:
-            self._finalize(context)
+            if auto_upload:
+                with immediate_buffer(context) as cmd:
+                    self.upload(context, cmd)
 
 
 class HighPerformanceImage():
@@ -1947,7 +1951,6 @@ class Pipeline():
             layout (PipelineLayout)
             renderpass (Renderpass)
         """
-
         vk_stages = []
         for s in stages:
             vk_stages.append(vk.VkPipelineShaderStageCreateInfo(
@@ -2120,6 +2123,15 @@ class Pipeline():
 
         self.pipeline = vk.vkCreateGraphicsPipelines(
             context.device, None, 1, [pipeline_create], None)
+        self.layout = layout
+
+    def bind(self, cmd):
+        """Bind this pipeline in the command buffer
+
+        Args:
+            cmd (CommandBuffer)
+        """
+        cmd.bind_pipeline(self)
 
     def destroy(self, context):
         """Destroy this pipeline
@@ -2288,6 +2300,28 @@ class Renderpass():
 
         self.renderpass = vk.vkCreateRenderPass(
             context.device, renderpass_create, None)
+
+    def begin(self, cmd, framebuffer, renderarea, clears,
+              contents=vc.SubpassContents.INLINE):
+        """Begin the renderpass
+
+        Args:
+            cmd (CommandBuffer)
+            framebuffer (Framebuffer): Contains attachment used during
+                                       the renderpass
+            renderarea (Rect2D): Size to render
+            clears (list[ClearValue]): For each framebuffer
+            contents (SubpassContents) [default: INLINE]
+        """
+        cmd.begin_renderpass(self, framebuffer, renderarea, clears, contents)
+
+    def end(self, cmd):
+        """End the renderpass
+
+        Args:
+            cmd (CommandBuffer)
+        """
+        cmd.end_renderpass()
 
     def destroy(self, context):
         """Destroy this renderpass

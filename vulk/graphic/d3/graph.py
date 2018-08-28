@@ -1,8 +1,25 @@
+from vulk import vulkanconstant as vc
+from vulk.math import matrix
+from vulk.graphic import uniform
+
+
+class GraphContext():
+    def __init__(self, context):
+        self.context = context
+        self.model_matrix = matrix.Matrix4()
+
+        matrix_attribute = uniform.UniformAttribute(
+            uniform.UniformShapeType.MATRIX4,
+            vc.DataType.SFLOAT32)
+        uniform_attributes = uniform.UniformAttributes([matrix_attribute])
+        self.uniform_root = uniform.UniformBlock(context, uniform_attributes)
+
+
 class Node():
     def __init__(self):
         self.children = []
 
-    def render(self, context):
+    def update(self, context):
         for child in self.children:
             child.update(context)
 
@@ -17,9 +34,9 @@ class RootNode(Node):
         super().__init__()
         self.camera = camera
 
-    def render(self, context):
-        # update uniform buffer with constant values across the frame
-        pass
+    def update(self, context):
+        context.uniform_root.set_uniform(self.camera.combined.values)
+        context.uniform_root.upload(context.context)
 
 
 class ModelNode(Node):
@@ -27,7 +44,7 @@ class ModelNode(Node):
         super().__init__()
         self.model = model
 
-    def render(self, context):
+    def update(self, context):
         self.model.render(context)
         super().update(context)
 
@@ -37,6 +54,6 @@ class TransformationNode(Node):
         super().__init__()
         self.matrix = matrix
 
-    def render(self, context):
+    def udpate(self, context):
         # Update push constant with model matrix
         pass
